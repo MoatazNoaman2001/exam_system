@@ -15,6 +15,7 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -110,7 +111,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container-fluid">
                 @auth
-                @if (Auth::user()->role === 'admin')
+                @if (Auth::user()->role === 'admin'&&!in_array(Route::currentRouteName(), ['index']))
                 <button class="btn btn-sm me-2" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
                 </button>

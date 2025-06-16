@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LogoController;
 
 Route::view("/" , 'welcome');
 
@@ -32,6 +33,8 @@ Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name(
 Route::get('/email/verify', [VerificationController::class, 'show'])->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+
+Route::get('/logo', [LogoController::class, 'index'])->name('index');
 
 Route::get('/test-verification', function() {
     $user = App\Models\User::first();
