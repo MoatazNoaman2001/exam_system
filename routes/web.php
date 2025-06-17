@@ -116,6 +116,8 @@ Route::get('/email/verify', [VerificationController::class, 'show'])->name('veri
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
+Route::get('/logo', [LogoController::class, 'index'])->name('index');
+
 Route::get('/test-verification', function() {
     $user = App\Models\User::first();
     return $user->getKey(); // Should return the user's ID
