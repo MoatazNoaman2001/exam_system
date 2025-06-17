@@ -42,7 +42,7 @@ class RegisterController extends Controller
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
-            'password' => $request->password, // Hashed via setPasswordAttribute
+            'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'role' => $request->role,
             'preferred_language' => $request->preferred_language,
