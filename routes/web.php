@@ -10,6 +10,12 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\FeaturesController;
+use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\SplashController;
+use App\Http\Controllers\ForgetController;
+use App\Http\Controllers\LogoController;
+
 
 Route::get("/" , function (Request $request){ 
    if (Auth::user() != null){
@@ -117,6 +123,11 @@ Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'
 Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
 Route::get('/logo', [LogoController::class, 'index'])->name('index');
+Route::get('/feature', [FeaturesController::class, 'features'])->name('feature');
+Route::get('/welcome', [WelcomeController::class, 'welcome'])->name('welcome');
+Route::get('/splash', [SplashController::class, 'splash'])->name('splash');
+Route::get('/forget-password', [ForgetController::class, 'forgetPassword'])->name('forget-password');
+
 
 Route::get('/test-verification', function() {
     $user = App\Models\User::first();
