@@ -39,6 +39,7 @@ class RegisterController extends Controller
             'is_agree' => 'accepted',
         ]);
 
+        // dd($request->all());
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,

@@ -7,9 +7,14 @@
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Exams Management</h1>
-        <a href="{{ route('admin.exams.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Create New Exam
-        </a>
+        <div>
+            <a href="{{ route('admin.exams.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-2">
+                <i class="fas fa-plus fa-sm text-white-50"></i> Create New Exam
+            </a>
+            <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" data-toggle="modal" data-target="#importModal">
+                <i class="fas fa-file-excel fa-sm text-white-50"></i> Import from Excel
+            </button>
+        </div>
     </div>
 
     <div class="card shadow mb-4">
@@ -57,6 +62,39 @@
                 </table>
             </div>
             {{ $exams->links() }}
+        </div>
+    </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Import Exam from Excel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('admin.exams.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="excel_file">Excel File</label>
+                        <input type="file" class="form-control-file" id="excel_file" name="excel_file" required accept=".xlsx,.xls,.csv">
+                        <small class="form-text text-muted">Please upload an Excel file with the correct format</small>
+                    </div>
+                    <div class="form-group">
+                        <a href="{{ asset('templates/exam_import_template.xlsx') }}" class="btn btn-sm btn-info">
+                            <i class="fas fa-download"></i> Download Template
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Import Exam</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

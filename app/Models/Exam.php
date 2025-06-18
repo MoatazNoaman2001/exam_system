@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ExamQuestions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Exam extends Model
 {
@@ -14,13 +15,15 @@ class Exam extends Model
     protected $fillable = [
         'text',
         'description',
+        'text-ar',
+        'description-ar',
         'number_of_questions',
         'time',
         'is_completed',
     ];
 
-    public function introQuestions()
+    public function questions()
     {
-        return $this->hasMany(IntroQuestion::class);
+        return $this->hasMany(ExamQuestions::class);
     }
 }

@@ -1,15 +1,24 @@
 <?php
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Auth\LoginController;
 // use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+
+Route::get('/lang/{lang}' , function ($lang) {
+    if (in_array($lang, ['en', 'ar'])) {
+        App::setLocale($lang);
+        session(['applocale' => $lang]);
+    }
+    return redirect()->back();
+})->name("lang.switch");
 
 Route::get("/" , function (Request $request){ 
    if (Auth::user() != null){
@@ -70,6 +79,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     // Exams Management
     Route::get('/exams', [AdminController::class, 'exams'])->name('exams');
     Route::get('/exams/create', [AdminController::class, 'createExam'])->name('exams.create');
+    Route::post('/admin/exams/import', [AdminController::class, 'import'])->name('exams.import');
     Route::post('/exams', [AdminController::class, 'storeExam'])->name('exams.store');
     Route::get('/exams/{exam}/edit', [AdminController::class, 'editExam'])->name('exams.edit');
     Route::put('/exams/{exam}', [AdminController::class, 'updateExam'])->name('exams.update');

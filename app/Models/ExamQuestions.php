@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class ExamQuestion extends Model
+class ExamQuestions extends Model
 {
     use HasUuids;
     protected $fillable = [
         'question',
+        'question-ar',
+        'text-ar',
         'type',
         'marks',
         'exam_id',
@@ -23,6 +25,11 @@ class ExamQuestion extends Model
     public function exam(): BelongsTo
     {
         return $this->belongsTo(Exam::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(ExamQuestionAnswer::class, 'exam_question_id');
     }
 
 }

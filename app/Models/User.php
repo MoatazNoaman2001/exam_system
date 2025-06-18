@@ -41,6 +41,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->attributes['password'] = Hash::make($value);
     }
+    public function getIsAdminAttribute(): bool
+    {
+       return $this->role === 'admin';
+    }
 
     public function comparePassword(string $value): bool
     {
@@ -94,27 +98,21 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Notification::class);
     }
 
-    // public function hasVerifiedEmail(): bool{
-    //     return $this->verified;
-    // }
+    public function hasVerifiedEmail(): bool
+    {
+        return $this->verified;
+    }
 
-    // public function markEmailAsVerified(): void
-    // {
-    //     $this->verified = true;
-    //     $this->save();
-    // }
-    // public function getEmailForVerification(): string
-    // {
-    //     return $this->email;
-    // }
-    // public function getEmailForPasswordReset(): string
-    // {
-    //     return $this->email;
-    // }
-    // public function sendEmailVerificationNotification(): void
-    // {
-    //     // Implement the logic to send email verification notification
-    //     // This could be a notification class that sends an email
-    //     // For example: $this->notify(new VerifyEmailNotification());
-    // }
+    public function markEmailAsVerified()
+    {
+        return $this->forceFill([
+            'verified' => true,
+            'email_verified_at' => $this->freshTimestamp(),
+        ])->save();
+    }
+
+    public function getEmailForVerification()
+    {
+        return $this->email;
+    }
 }

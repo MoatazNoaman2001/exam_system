@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{app()->getLocale() == 'ar'? 'rtl' : 'ltr'}}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,7 +39,6 @@
             min-height: 100vh;
             width: var(--sidebar-width);
             position: fixed;
-            left: 0;
             top: var(--navbar-height);
             background: var(--sidebar-bg);
             color: var(--sidebar-color);
@@ -50,6 +49,17 @@
             transform: translateX(-100%);
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
+        @if(app()->getLocale() == 'ar')
+            .sidebar {
+                right: 0;
+                left: auto;
+            }
+        @else
+            .sidebar {
+                left: 0;
+                right: auto;
+            }
+        @endif
         
         .sidebar.show {
             transform: translateX(0);
@@ -114,9 +124,16 @@
         /* Main Content */
         @auth
             @if(Auth::user()->role === 'admin')
-                .main-content {
-                    margin-left: var(--sidebar-width);
-                }
+                @if(app()->getLocale() == 'ar')
+                    .main-content {
+                        margin-right: var(--sidebar-width);
+                    } 
+                @else
+                    .main-content {
+                        margin-left: var(--sidebar-width);
+                    }
+                @endif
+
             @endif
         @endauth
 
@@ -229,50 +246,50 @@
         @if (Auth::user()->role === 'admin')
         <div class="overlay" id="overlay"></div>
         
-        <div class="sidebar" id="sidebar">
+        <div class="sidebar" id="sidebar" >
             <div class="sidebar-header">
-                <h3><i class="fas fa-cog"></i> Admin Panel</h3>
+                <h3><i class="fas fa-cog"></i> {{__('lang.admin-panal')}}</h3>
             </div>
             
             <div class="sidebar-menu">
                 <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
+                    <span>{{__('lang.Dashbaord')}}</span>
                 </a>
                 
                 <a href="{{ route('admin.users') }}" class="sidebar-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
                     <i class="fas fa-users"></i>
-                    <span>Users</span>
+                    <span>{{__('lang.Users')}}</span>
                 </a>
                 
                 <a href="{{ route('admin.domains') }}" class="sidebar-link {{ request()->routeIs('admin.domains*') ? 'active' : '' }}">
                     <i class="fas fa-globe"></i>
-                    <span>Domains</span>
+                    <span>{{__('lang.Domains')}}</span>
                 </a>
                 
                 <a href="{{ route('admin.slides') }}" class="sidebar-link {{ request()->routeIs('admin.slides*') ? 'active' : '' }}">
                     <i class="fas fa-images"></i>
-                    <span>Slides</span>
+                    <span>{{__('lang.Slides')}}</span>
                 </a>
                 
                 <a href="{{ route('admin.exams') }}" class="sidebar-link {{ request()->routeIs('admin.exams*') ? 'active' : '' }}">
                     <i class="fas fa-file-alt"></i>
-                    <span>Exams</span>
+                    <span>{{__('lang.Exams')}}</span>
                 </a>
                 
                 <a href="{{ route('admin.quiz-attempts') }}" class="sidebar-link {{ request()->routeIs('admin.quiz-attempts*') ? 'active' : '' }}">
                     <i class="fas fa-question-circle"></i>
-                    <span>Quiz Attempts</span>
+                    <span>{{__('lang.quiz-attempts')}}</span>
                 </a>
                 
                 <a href="{{ route('admin.test-attempts') }}" class="sidebar-link {{ request()->routeIs('admin.test-attempts*') ? 'active' : '' }}">
                     <i class="fas fa-clipboard-check"></i>
-                    <span>Test Attempts</span>
+                    <span>{{__('lang.test-attempts')}}</span>
                 </a>
                 
                 <a href="{{ route('admin.notifications') }}" class="sidebar-link {{ request()->routeIs('admin.notifications*') ? 'active' : '' }}">
                     <i class="fas fa-bell"></i>
-                    <span>Notifications</span>
+                    <span>{{__('lang.notifications')}}</span>
                 </a>
             </div>
             

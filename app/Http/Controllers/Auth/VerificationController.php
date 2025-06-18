@@ -16,7 +16,8 @@ class VerificationController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except('verify');
+        $this->middleware('auth')->except(['verify', 'show']);
+        $this->middleware('guest')->only(['show']);
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
@@ -30,7 +31,6 @@ class VerificationController extends Controller
     public function verify(Request $request)
     {
         $user = User::find($request->route('id'));
-
         if (!$user) {
             return redirect()->route('login')->with('error', 'User not found');
         }

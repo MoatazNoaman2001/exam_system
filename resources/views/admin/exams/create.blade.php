@@ -107,13 +107,13 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>{{ __('Question Text (English)') }}</label>
-                        <textarea class="form-control question-text-en" name="questions[0][text_en]" rows="2" required></textarea>
+                        <textarea class="form-control question-text-en" rows="2" required></textarea>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>{{ __('Question Text (Arabic)') }} <span class="text-muted">(النص بالعربية)</span></label>
-                        <textarea class="form-control question-text-ar" name="questions[0][text_ar]" rows="2" dir="rtl" required></textarea>
+                        <textarea class="form-control question-text-ar" rows="2" dir="rtl" required></textarea>
                     </div>
                 </div>
             </div>
@@ -148,14 +148,14 @@
     <div class="option-item mb-2">
         <div class="row">
             <div class="col-md-5">
-                <input type="text" class="form-control option-text-en" name="questions[0][options][0][text_en]" placeholder="Option (English)" required>
+                <input type="text" class="form-control option-text-en" placeholder="Option (English)" required>
             </div>
             <div class="col-md-5">
-                <input type="text" class="form-control option-text-ar" name="questions[0][options][0][text_ar]" placeholder="الخيار (العربية)" dir="rtl" required>
+                <input type="text" class="form-control option-text-ar" placeholder="الخيار (العربية)" dir="rtl" required>
             </div>
             <div class="col-md-2 d-flex align-items-center">
                 <div class="form-check me-2">
-                    <input class="form-check-input is-correct" type="checkbox" name="questions[0][options][0][is_correct]">
+                    <input class="form-check-input is-correct" type="checkbox" >
                     <label class="form-check-label">{{ __('Correct') }}</label>
                 </div>
                 <button type="button" class="btn btn-sm btn-outline-danger remove-option">
@@ -169,6 +169,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     let questionCount = 0;
+    let answersIndex = {};
     const questionsContainer = document.getElementById('questions-container');
     const questionTemplate = document.getElementById('question-template');
     const optionTemplate = document.getElementById('option-template');
@@ -177,7 +178,6 @@
     console.log(`questionTemplate: ${questionTemplate}, questionContainer: ${questionsContainer}`);
     
 
-    // Add first question by default
     addQuestion();
 
     // Add question event
@@ -187,6 +187,7 @@
 
     function addQuestion() {
         questionCount++;
+        answersIndex[questionCount] = 0;
         
         // Clone the inner card from the template
         const questionCard = questionTemplate.querySelector('.question-card');
@@ -194,6 +195,8 @@
         
         // Update question number
         newQuestion.querySelector('.question-number').textContent = questionCount;
+        newQuestion.querySelector('.question-text-en').name = `questions[${questionCount}][text_en]`;
+        newQuestion.querySelector('.question-text-ar').name = `questions[${questionCount}][text_ar]`;
         
         // Update all name attributes with the new index
         const questionElements = newQuestion.querySelectorAll('[name]');
@@ -260,10 +263,17 @@
 
     // Add option to question
     function addOption(questionElement, questionIndex, textEn = '', textAr = '', isCorrect = false) {
+        
         const optionsContainer = questionElement.querySelector('.options-container');
         const newOption = optionTemplate.cloneNode(true);
         newOption.style.display = 'block';
         
+        answersIndex[questionIndex]++;
+        const optionIndexZ = answersIndex[questionIndex];
+        
+        // Set names using the consistent index
+        newOption.querySelector('.option-text-en').name = `questions[${questionIndex}][options][${optionIndexZ}][text_en]`;
+        newOption.querySelector('.option-text-ar').name = `questions[${questionIndex}][options][${optionIndexZ}][text_ar]`;
         // Update name attributes with the current question index and new option index
         const optionIndex = optionsContainer.querySelectorAll('.option-item').length;
         const optionElements = newOption.querySelectorAll('[name]');

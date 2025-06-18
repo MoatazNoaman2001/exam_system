@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Domain;
-use App\Models\Slide;
+use Carbon\Carbon;
 use App\Models\Exam;
 use App\Models\Quiz;
 use App\Models\Test;
+use App\Models\User;
+use App\Models\Slide;
+use App\Models\Domain;
+use App\Models\Chapter;
+use App\Models\Application;
 use App\Models\QuizAttempt;
 use App\Models\TestAttempt;
-use App\Models\Application;
 use App\Models\Notification;
-use App\Models\Chapter;
 use Illuminate\Http\Request;
+use App\Models\ExamQuestions;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
+// use Maatwebsite\Excel\Facades\Excel;
+// use App\Imports\ExamsImport;
 
 class AdminController extends Controller
 {
@@ -309,7 +314,7 @@ class AdminController extends Controller
      */
     public function exams()
     {
-        $exams = Exam::withCount('introQuestions')->latest()->paginate(20);
+        $exams = Exam::withCount('questions')->latest()->paginate(20);
         return view('admin.exams.index', compact('exams'));
     }
 
@@ -321,37 +326,170 @@ class AdminController extends Controller
     public function storeExam(Request $request)
     {
         $request->validate([
-            'text' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'number_of_questions' => 'required|integer|min:1',
-            'time' => 'required|integer|min:1',
+            'title_en' => 'required|string|max:255',
+            'title_ar' => 'required|string|max:255',
+            'description_en' => 'nullable|string',
+            'description_ar' => 'nullable|string',
+            'duration' => 'required|integer|min:1',
+            'questions' => 'required|array|min:1',
+            'questions.*.text_en' => 'required|string',
+            'questions.*.text_ar' => 'required|string',
+            'questions.*.type' => 'required|string|in:single_choice,multiple_choice', // example types
+            'questions.*.points' => 'required|integer|min:1',
+            'questions.*.options' => 'required|array|min:1',
+            'questions.*.options.*.text_en' => 'required|string',
+            'questions.*.options.*.text_ar' => 'required|string',
+            // For single_choice questions, ensure exactly one correct answer
+            'questions.*.options.*.is_correct' => [
+                'sometimes',
+                'boolean',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->input(str_replace('.is_correct', '.type', $attribute)) === 'single_choice') {
+                        $correctCount = collect($request->input(str_replace('.options.*.is_correct', '.options', $attribute)))
+                            ->filter(fn ($opt) => $opt['is_correct'] ?? false)
+                            ->count();
+                        if ($correctCount !== 1) {
+                            $fail('Single choice questions must have exactly one correct answer.');
+                        }
+                    }
+                }
+            ]
         ]);
 
-        Exam::create($request->only(['text', 'description', 'number_of_questions', 'time']));
+        
+        DB::transaction(function () use ($request) {
+            // Create exam with proper field mapping
+            $exam = Exam::create([
+                'text' => $request->title_en,
+                'text-ar' => $request->title_ar, // Changed from text_ar to title_ar
+                'description' => $request->description_en,
+                'description-ar' => $request->description_ar,
+                'number_of_questions' => count($request->questions),
+                'time' => $request->duration,
+                'is_completed' => $request->is_completed ?? false,
+            ]);
+            foreach ($request->questions as $questionData) {
+
+                // dd($questionData);
+                $question = ExamQuestions::create([
+                    'question' => $questionData['text_en'],
+                    'question-ar' => $questionData['text_ar'],
+                    'text-ar' => '',
+                    'type' => $questionData['type'],
+                    'marks' => $questionData['points'],
+                    'exam_id' => $exam->id,
+                ]);
+        
+                foreach ($questionData['options'] as $optionData) { // Changed from answers to options
+                    $question->answers()->create([
+                        'answer' => $optionData['text_en'],
+                        'answer-ar' => $optionData['text_ar'],
+                        'is_correct' => $optionData['is_correct'] ?? false,
+                    ]);
+                }
+            }
+        });
 
         return redirect()->route('admin.exams')->with('success', 'Exam created successfully.');
     }
 
     public function editExam(Exam $exam)
     {
+        // Load the exam with its questions and answers
+        $exam->load(['questions' => function($query) {
+            $query->with('answers');
+        }]);
+        
         return view('admin.exams.edit', compact('exam'));
     }
-
+    
     public function updateExam(Request $request, Exam $exam)
     {
-        $request->validate([
-            'text' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'number_of_questions' => 'required|integer|min:1',
-            'time' => 'required|integer|min:1',
-            'is_completed' => 'boolean',
+
+        $validated = $request->validate([
+            'title_en' => 'required|string|max:255',
+            'title_ar' => 'required|string|max:255',
+            'description_en' => 'nullable|string',
+            'description_ar' => 'nullable|string',
+            'duration' => 'required|integer|min:1',
+            'questions' => 'required|array|min:1',
+            'questions.*.question' => 'required|string',
+            'questions.*.question-ar' => 'required|string',
+            'questions.*.type' => 'required|string|in:single_choice,multiple_choice,true_false',
+            'questions.*.marks' => 'required|integer|min:1',
+            'questions.*.answers' => 'required|array|min:1',
+            'questions.*.answers.*.answer' => 'required|string',
+            'questions.*.answers.*.answer-ar' => 'required|string',
+            'questions.*.answers.*.is_correct' => 'boolean'
         ]);
+    
 
-        $exam->update($request->only(['text', 'description', 'number_of_questions', 'time', 'is_completed']));
-
+        DB::transaction(function () use ($request, $exam) {
+            $exam->update([
+                'text' => $request->title_en,
+                'text-ar' => $request->title_ar,
+                'description' => $request->description_en,
+                'description-ar' => $request->description_ar,
+                'time' => $request->duration,
+                'number_of_questions' => count($request->questions),
+            ]);
+    
+            $existingQuestionIds = $exam->questions->pluck('id')->toArray();
+            $updatedQuestionIds = [];
+    
+            foreach ($request->questions as $questionData) {
+                $question = $exam->questions()->updateOrCreate(
+                    ['id' => $questionData['id'] ?? null],
+                    [
+                        'question' => $questionData['question'],
+                        'question-ar' => $questionData['question-ar'],
+                        'type' => $questionData['type'],
+                        'marks' => $questionData['marks'],
+                    ]
+                );
+    
+                $updatedQuestionIds[] = $question->id;
+    
+                // Get existing answer IDs for this question
+                $existingAnswerIds = $question->answers->pluck('id')->toArray();
+                $updatedAnswerIds = [];
+    
+                foreach ($questionData['answers'] as $optionData) {
+                    $answer = $question->answers()->updateOrCreate(
+                        ['id' => $optionData['id'] ?? null],
+                        [
+                            'answer' => $optionData['answer'],
+                            'answer-ar' => $optionData['answer-ar'],
+                            'is_correct' => $optionData['is_correct'] ?? false,
+                        ]
+                    );
+    
+                    $updatedAnswerIds[] = $answer->id;
+                }
+    
+                $question->answers()->whereNotIn('id', $updatedAnswerIds)->delete();
+            }
+    
+            $exam->questions()->whereNotIn('id', $updatedQuestionIds)->delete();
+        });
+    
         return redirect()->route('admin.exams')->with('success', 'Exam updated successfully.');
     }
 
+    public function import(Request $request)
+    {
+        // $request->validate([
+        //     'excel_file' => 'required|mimes:xlsx,xls,csv'
+        // ]);
+
+        // try {
+        //     Excel::import(new ExamsImport, $request->file('excel_file'));
+
+        //     return redirect()->back()->with('success', 'Exam imported successfully!');
+        // } catch (\Exception $e) {
+        //     return redirect()->back()->with('error', 'Error importing exam: '.$e->getMessage());
+        // }
+    }
     public function destroyExam(Exam $exam)
     {
         $exam->delete();
