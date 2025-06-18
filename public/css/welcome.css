@@ -1,0 +1,210 @@
+  a,
+   button,
+   input,
+   select,
+   h1,
+   h2,
+   h3,
+   h4,
+   h5,
+   * {
+       box-sizing: border-box;
+       margin: 0;
+       padding: 0;
+       border: none;
+       text-decoration: none;
+       background: none;
+   
+       -webkit-font-smoothing: antialiased;
+   }
+   
+   menu, ol, ul {
+       list-style-type: none;
+       margin: 0;
+       padding: 0;
+   }
+
+.web-onboarding-welcome,
+.web-onboarding-welcome * {
+  box-sizing: border-box;
+}
+.web-onboarding-welcome {
+  background: var(--surface, #f9fafb);
+  border-radius: 24px;
+  height: 1024px;
+  position: relative;
+  overflow: hidden;
+}
+.line-3 {
+  width: 506.29px;
+  height: 0px;
+  position: absolute;
+  left: -31px;
+  top: 620px;
+  transform: translate(31px, -414px);
+  overflow: visible;
+}
+.line-1 {
+  width: 673.17px;
+  height: 0px;
+  position: absolute;
+  left: 72px;
+  top: -35px;
+  transform: translate(-56px, 35px);
+  overflow: visible;
+}
+.line-4 {
+  width: 821.66px;
+  height: 0px;
+  position: absolute;
+  left: -72px;
+  top: 239px;
+  transform: translate(72px, -56px);
+  overflow: visible;
+}
+.line-2 {
+  width: 506.29px;
+  height: 0px;
+  position: absolute;
+  left: -48.34px;
+  top: 344px;
+  transform: translate(48.34px, -344px);
+  overflow: visible;
+}
+.homeindicator {
+  width: 375px;
+  height: 34px;
+  position: absolute;
+  left: 548px;
+  bottom: 23px;
+}
+.home-indicator {
+  background: var(--label-color-light-primary, #000000);
+  border-radius: 100px;
+  width: 134px;
+  height: 5px;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  bottom: 8px;
+}
+.frame-3 {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: calc(50% - 572px);
+  top: 860px;
+}
+.arrow-left {
+  flex-shrink: 0;
+  width: 36px;
+  height: 32px;
+  position: relative;
+}
+.vuesax-outline-arrow-left {
+  height: auto;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+.div {
+  color: var(--primary, #2f80ed);
+  text-align: center;
+  font-family: "Tajawal-Medium", sans-serif;
+  font-size: 32px;
+  font-weight: 500;
+  position: relative;
+}
+.frame-8 {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  width: 620px;
+  height: 282px;
+  position: absolute;
+  left: 50%;
+  translate: -50% -50%;
+  top: 50%;
+}
+.pmp-app {
+  text-align: center;
+  font-family: "Tajawal-Bold", sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  position: relative;
+  width: 461px;
+}
+.pmp-app-span {
+  color: var(--text-primary, #181818);
+}
+.pmp-app-span2 {
+  color: var(--primary, #2f80ed);
+}
+.div2 {
+  color: var(--text-secondary, #6c737f);
+  text-align: center;
+  font-family: "Tajawal-Regular", sans-serif;
+  font-size: 32px;
+  line-height: 60px;
+  font-weight: 400;
+  position: relative;
+  width: 612px;
+  height: 117px;
+}
+.button {
+  background: var(--primary, #2f80ed);
+  border-radius: 10px;
+  padding: 10px 24px 10px 24px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 327px;
+  height: 48px;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 725px;
+  box-shadow: 4px 4px 25px 0px rgba(47, 128, 237, 0.15);
+  overflow: hidden;
+}
+.text {
+  color: var(--color-white, #ffffff);
+  text-align: center;
+  font-family: "Tajawal-Bold", sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  position: relative;
+}
+.frame-9 {
+  width: 520.31px;
+  height: 634.75px;
+  position: absolute;
+  left: 1116.49px;
+  top: 91px;
+  transform-origin: 0 0;
+  transform: rotate(7.012deg) scale(1, 1);
+}
+.svax-blob-2-1080-x-1080-2-1 {
+  background: linear-gradient(
+    180deg,
+    rgba(47, 128, 237, 1) 13.254547119140625%,
+    rgba(47, 128, 237, 1) 44.05777454376221%,
+    rgba(47, 128, 237, 1) 71.05523347854614%
+  );
+  width: 535.28px;
+  height: 528.52px;
+  position: absolute;
+  left: 528.52px;
+  top: 0px;
+  transform-origin: 0 0;
+  transform: rotate(90deg) scale(1, 1);
+  object-fit: cover;
+}

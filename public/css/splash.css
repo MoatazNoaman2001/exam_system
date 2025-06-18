@@ -1,0 +1,49 @@
+body {
+    font-family: "Tajawal", sans-serif;
+    direction: rtl;
+    background: #ffffff;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* لإخفاء التمرير */
+}
+
+.web-splash {
+    background: #f9fafb;
+    border-radius: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* كامل ارتفاع الشاشة */
+    width: 100vw;  /* كامل عرض الشاشة */
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.web-splash__logo {
+    color: #2f80ed;
+    text-align: center;
+    font-family: "Tajawal-Bold", sans-serif;
+    font-size: 4.5rem;
+    font-weight: 700;
+}
+
+/* Adjust font size on smaller screens */
+@media (max-width: 768px) {
+    .web-splash__logo {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .web-splash__logo {
+        font-size: 2.5rem;
+    }
+}
+
+nav {
+    display: none !important;
+}

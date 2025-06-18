@@ -1,0 +1,222 @@
+.background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+            border-radius: clamp(1.5rem, 2vw, 1.5rem); /* 24px */
+        }
+
+        .background img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100vw;
+            min-height: 100vh;
+            object-fit: cover;
+            object-position: center;
+            z-index: -1;
+            opacity: 0.9;
+        }
+
+        nav {
+            display: none !important;
+        }
+
+        .frame10 {
+            display: flex;
+            background-color: rgba(0, 0, 0, 0.226);
+            width: 100vw;
+            min-height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(0.625rem, 1vw, 1rem); /* 10px */
+            position: relative; /* لضبط موضع الزائر */
+        }
+
+        .visitor {
+            position: absolute;
+            top: clamp(1rem, 2vh, 2rem); /* مسافة من الأعلى */
+            right: clamp(1rem, 2vw, 2rem); /* نهاية اليمين */
+            width: clamp(2rem, 4vw, 3rem); /* حجم الزائر */
+            height: auto;
+            z-index: 2; /* فوق الـ frame8 وframe4 */
+        }
+
+        .frame8 {
+            width: clamp(47.4375rem, 90vw, 47.4375rem); /* 759px */
+            height: auto; /* يتكيف تلقائيًا */
+            padding-top: clamp(4.6875rem, 5vh, 5rem); /* 75px تقريبًا */
+            text-align: center;
+        }
+
+        .frame8 p:first-of-type {
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            font-size: clamp(2rem, 6vw, 4rem); /* 32px إلى 64px */
+            line-height: 1.2;
+            letter-spacing: 0;
+            color: white;
+            margin-bottom: clamp(0.3125rem, 1vh, 0.5rem); /* 5px */
+        }
+
+        .frame8 p:nth-of-type(2) {
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 400;
+            font-size: clamp(1.125rem, 3vw, 2rem); /* 18px إلى 32px */
+            line-height: 1.4;
+            letter-spacing: 0;
+            color: white;
+            margin-bottom: clamp(0.625rem, 1vh, 1rem); /* 10px */
+        }
+
+        .frame4 {
+            display: flex;
+            justify-content: space-between;
+            gap: clamp(1.5rem, 3vw, 1.5rem); /* 24px */
+            margin-top: clamp(1.25rem, 2vh, 2rem); /* 20px تقريبًا */
+            flex-wrap: wrap;
+            width: clamp(56.125rem, 90vw, 56.125rem); /* 898px */
+            height: auto; /* يتكيف تلقائيًا */
+        }
+
+        .frame4 button:first-of-type {
+            width: clamp(18.75rem, 30vw, 18.75rem); /* 300px */
+            height: clamp(6.25rem, 10vh, 6.25rem); /* 100px */
+            border: 1px solid #2F80ED;
+            border-radius: clamp(0.625rem, 1vw, 0.625rem); /* 10px */
+            padding: clamp(0.625rem, 1vh, 0.625rem) clamp(1.5rem, 2vw, 1.5rem); /* 10px و24px */
+            background: #2F80ED;
+            box-shadow: clamp(0.25rem, 0.5vw, 0.25rem) clamp(0.25rem, 0.5vw, 0.25rem) clamp(1.5625rem, 2vw, 1.5625rem) 0px rgba(47, 128, 237, 0.15);
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.5rem, 3vw, 2rem); /* 24px إلى 32px */
+            line-height: 100%;
+            color: white;
+            cursor: pointer;
+        }
+
+        .frame4 button:nth-of-type(2) {
+            width: clamp(18.75rem, 30vw, 18.75rem); /* 300px */
+            height: clamp(6.25rem, 10vh, 6.25rem); /* 100px */
+            border: 1px solid #2F80ED;
+            border-radius: clamp(0.625rem, 1vw, 0.625rem); /* 10px */
+            padding: clamp(0.625rem, 1vh, 0.625rem) clamp(1.5rem, 2vw, 1.5rem); /* 10px و24px */
+            background: transparent;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.5rem, 3vw, 2rem); /* 24px إلى 32px */
+            line-height: 100%;
+            color: #2F80ED;
+            cursor: pointer;
+            background-color: white;
+        }
+
+        .frame3 {
+            position: fixed;
+            bottom: clamp(1.875rem, 2vh, 1.875rem); /* 30px */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1vw, 0.5rem); /* 8px */
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 500;
+            font-size: clamp(1.125rem, 2vw, 2rem); /* 18px إلى 32px */
+            line-height: 100%;
+            color: white;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .frame3 i {
+            font-size: clamp(1.5rem, 2vw, 1.5rem); /* 24px */
+        }
+
+        /* Media Queries للتحكم حسب حجم الشاشة */
+        @media (max-width: 1024px) {
+            .frame8 {
+                max-width: clamp(40rem, 85vw, 47.4375rem);
+                padding-top: clamp(3.75rem, 4vh, 4.6875rem);
+            }
+            .frame4 {
+                max-width: clamp(45rem, 85vw, 56.125rem);
+                gap: clamp(1rem, 2vw, 1.5rem);
+                margin-top: clamp(1rem, 1.5vh, 1.25rem);
+            }
+            .frame4 button {
+                width: clamp(16rem, 25vw, 18.75rem);
+                height: clamp(5.5rem, 9vh, 6.25rem);
+            }
+            .visitor {
+                right: clamp(0.75rem, 1.5vw, 1rem);
+                width: clamp(1.5rem, 3vw, 2rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .frame8 {
+                max-width: clamp(30rem, 80vw, 40rem);
+                padding-top: clamp(2.5rem, 3vh, 3.75rem);
+            }
+            .frame4 {
+                max-width: clamp(35rem, 80vw, 45rem);
+                gap: clamp(0.75rem, 1.5vw, 1rem);
+            }
+            .frame4 button {
+                width: clamp(14rem, 20vw, 16rem);
+                height: clamp(5rem, 8vh, 5.5rem);
+                font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+                padding: clamp(0.5rem, 1vh, 0.625rem) clamp(1rem, 1.5vw, 1.5rem);
+            }
+            .frame3 {
+                bottom: clamp(1.25rem, 1.5vh, 1.875rem);
+                font-size: clamp(1rem, 1.5vw, 1.125rem);
+            }
+            .frame3 i {
+                font-size: clamp(1.25rem, 1.5vw, 1.5rem);
+            }
+            .visitor {
+                right: clamp(0.5rem, 1vw, 0.75rem);
+                width: clamp(1.25rem, 2.5vw, 1.5rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .frame8 {
+                max-width: clamp(20rem, 75vw, 30rem);
+                padding-top: clamp(1.875rem, 2vh, 2.5rem);
+            }
+            .frame4 {
+                max-width: clamp(18rem, 70vw, 35rem);
+                gap: clamp(0.5rem, 1vw, 0.75rem);
+            }
+            .frame4 button {
+                width: clamp(12rem, 18vw, 14rem);
+                height: clamp(4.5rem, 7vh, 5rem);
+                font-size: clamp(1rem, 2vw, 1.25rem);
+                padding: clamp(0.375rem, 0.5vh, 0.5rem) clamp(0.75rem, 1vw, 1rem);
+            }
+            .frame3 {
+                bottom: clamp(1rem, 1vh, 1.25rem);
+                font-size: clamp(0.875rem, 1.5vw, 1rem);
+            }
+            .frame3 i {
+                font-size: clamp(1rem, 1.25vw, 1.25rem);
+            }
+            .visitor {
+                right: clamp(0.25rem, 0.5vw, 0.5rem);
+                width: clamp(1rem, 2vw, 1.25rem);
+            }
+        }
+
+
+
+
+
+
+        
