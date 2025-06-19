@@ -16,6 +16,8 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\SplashController;
 use App\Http\Controllers\ForgetController;
 use App\Http\Controllers\LogoController;
+use App\Http\Controllers\VerificationCodeController;
+use App\Http\Controllers\NewPasswordController;
 
 App::setLocale('en');
 Route::get('/lang/{lang}' , function ($lang) {
@@ -137,6 +139,8 @@ Route::get('/feature', [FeaturesController::class, 'features'])->name('feature')
 Route::get('/welcome', [WelcomeController::class, 'welcome'])->name('welcome');
 Route::get('/splash', [SplashController::class, 'splash'])->name('splash');
 Route::get('/forget-password', [ForgetController::class, 'forgetPassword'])->name('forget-password');
+Route::get('/verificationCode', [VerificationCodeController::class, 'verificationCode'])->name('verificationCode');
+Route::get('/newPassword', [NewPasswordController::class, 'NewPassword'])->name('NewPassword');
 
 
 Route::get('/test-verification', function() {

@@ -12,10 +12,10 @@
     <p>.محتوى محدث، تمارين واقعية، وتتبع لتقدمك خطوة بخطوة</p>
    
    <div class=frame4>
-    <button>التالى </button>
-    <button>السابق</button>
+    <button onclick="window.location.href='{{ route('welcome') }}'" >التالى </button>
+    <button onclick="window.location.href='{{ route('index') }}'"  >السابق</button>
    </div>
-<div class="frame3">
+<div class="frame3" onclick="window.location.href='{{ route('splash') }}'">
   <i class="fas fa-arrow-left"></i>
   <span>تخطي</span>
 </div>

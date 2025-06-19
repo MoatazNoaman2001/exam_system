@@ -11,8 +11,9 @@
         <h1 class="logo-text mb-2">Logo</h1>
         <p class="ready">جاهز للانطلاق؟</p>
         <p class="start">.ابدأ اﻵن رحلتك نحو الاحترافية</p>
-        <button class="use btn btn-primary mt-3">بدء الاستخدام</button>
+        <button class="use btn btn-primary mt-3" onclick="window.location.href='{{ route('feature') }}'">بدء الاستخدام</button>    
+      </div>
     </div>
-    </div>
-  </div>
+</div>
+
 @endsection

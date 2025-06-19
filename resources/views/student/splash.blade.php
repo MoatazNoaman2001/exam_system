@@ -10,4 +10,9 @@
   <div class="web-splash__logo">Logo</div>
 </div>
 
+ <script>
+        setTimeout(function () {
+            window.location.href = "{{ route('feature') }}"; // هنا الصفحة اللي هيروح لها بعد ثانية
+        }, 1000);
+    </script>
 @endsection
