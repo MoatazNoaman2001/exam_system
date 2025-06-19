@@ -35,7 +35,6 @@
                         <div class="form-group mb-4">
                             <label for="content" class="font-weight-bold">PDF File*</label>
                             <div class="mb-3">
-                                <label for="formFileSm" class="form-label">Small file input example</label>
                                 <input class="form-control form-control-sm" id="formFileSm" type="file"
                                 accept="application/pdf" name="content" required>
                                 @error('content')

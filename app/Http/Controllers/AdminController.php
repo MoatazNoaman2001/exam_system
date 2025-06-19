@@ -380,16 +380,18 @@ class AdminController extends Controller
 
     public function updateSlide(Request $request, Slide $slide)
     {
-        $request->validate([
+
+        // dd($request->all());
+        $validated= $request->validate([
             'text' => 'required|string|max:255',
-            'content' => 'required|string',
-            'domain_id' => 'required|exists:domains,id',
-            'chapter_id' => 'required|exists:chapters,id',
-            'count' => 'nullable|integer|min:0',
-            'is_completed' => 'boolean',
+            'content' => 'nullable|file|mimes:pdf|max:5120',
+            'domain_id' => 'nullable|exists:domains,id',
+            'chapter_id' => 'nullable|exists:chapters,id'
         ]);
 
-        $slide->update($request->only(['text', 'content', 'domain_id', 'chapter_id', 'count', 'is_completed']));
+        // dd($validated);
+
+        $slide->update($request->only($validated));
 
         return redirect()->route('admin.slides')->with('success', 'Slide updated successfully.');
     }
