@@ -37,9 +37,9 @@
                             <td>{{ $notification->user->username ?? 'All Users' }}</td>
                             <td>
                                 @if($notification->is_seen)
-                                    <span class="badge badge-success">Seen</span>
+                                    <span class="badge badge-success text-primary">Seen</span>
                                 @else
-                                    <span class="badge badge-warning">Unread</span>
+                                    <span class="badge badge-warning text-muted">Unread</span>
                                 @endif
                             </td>
                             <td>{{ $notification->created_at->format('M d, Y') }}</td>

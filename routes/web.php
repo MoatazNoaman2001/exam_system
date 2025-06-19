@@ -17,7 +17,7 @@ use App\Http\Controllers\SplashController;
 use App\Http\Controllers\ForgetController;
 use App\Http\Controllers\LogoController;
 
-
+App::setLocale('en');
 Route::get('/lang/{lang}' , function ($lang) {
     if (in_array($lang, ['en', 'ar'])) {
         App::setLocale($lang);
@@ -55,7 +55,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
     Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
     Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
     Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
-    Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
+    Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
     Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('users.destroy');
     
     // Domains Management
@@ -68,11 +68,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 
     // Chapters Management
     Route::get('/chapters', [AdminController::class, 'chapters'])->name('chapters');
-    Route::get('/chapters/create', [AdminController::class, 'createChapter'])->name('chapter.create');
-    Route::post('/chapters', [AdminController::class, 'storeChapter'])->name('chapter.store');
-    Route::get('/chapters/{chapter}/edit', [AdminController::class, 'editChapter'])->name('chapter.edit');
-    Route::put('/chapters/{chapter}', [AdminController::class, 'updateChapter'])->name('chapter.update');
-    Route::delete('/chapters/{chapter}', [AdminController::class, 'destroyChapter'])->name('chapter.destroy');
+    Route::get('/chapters/create', [AdminController::class, 'createChapter'])->name('chapters.create');
+    Route::post('/chapters', [AdminController::class, 'storeChapter'])->name('chapters.store');
+    Route::get('/chapters/{chapter}/edit', [AdminController::class, 'editChapter'])->name('chapters.edit');
+    Route::put('/chapters/{chapter}', [AdminController::class, 'updateChapter'])->name('chapters.update');
+    Route::delete('/chapters/{chapter}', [AdminController::class, 'destroyChapter'])->name('chapters.destroy');
     
     // Slides Management
     Route::get('/slides', [AdminController::class, 'slides'])->name('slides');

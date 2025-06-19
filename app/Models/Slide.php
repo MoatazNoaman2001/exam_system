@@ -11,7 +11,7 @@ class Slide extends Model
 {
     use HasFactory, SoftDeletes, HasUuids;
 
-    protected $fillable = ['text', 'content', 'is_completed', 'count', 'chapter_id', 'domain_id'];
+    protected $fillable = ['text', 'content', 'chapter_id', 'domain_id'];
 
     public function chapter()
     {

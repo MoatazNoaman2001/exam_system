@@ -36,7 +36,7 @@
         
         /* Sidebar Styles */
         .sidebar {
-            min-height: 100vh;
+            min-height: 100%;
             width: var(--sidebar-width);
             position: fixed;
             top: var(--navbar-height);
@@ -120,6 +120,16 @@
             padding: 15px;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
+
+        [dir="rtl"] .navbar-text {
+            padding-right: 0;
+            padding-left: 0.5rem;
+        }
+        
+        [dir="rtl"] .nav-link {
+            padding-right: 0.5rem;
+            padding-left: 0;
+        }
         
         /* Main Content */
         @auth
@@ -180,13 +190,18 @@
             @endauth
         }
         
-        /* Navbar fix */
         .navbar {
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1100;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand{
+            align-content: center;
+            align-self: center;
+            align-self: center;
         }
         
         /* Better scrollbar for sidebar */
@@ -209,35 +224,61 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container-fluid">
                 @auth
-                @if (Auth::user()->role === 'admin'&&!in_array(Route::currentRouteName(), ['index']))
-                <button class="btn btn-sm me-2" id="sidebarToggle">
+                <button class="btn btn-sm me-2 d-none d-md-block" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                @endif
                 @endauth
                 
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 
-                <div class="d-flex align-items-center">
-                    @guest
-                        @if (Route::has('login'))
-                            <a class="nav-link me-3" href="{{ route('login') }}">{{ __('Login') }}</a>
-                        @endif
+                <!-- Mobile toggle button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <!-- Collapsible content -->
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="d-flex ms-auto align-items-center">
+                        @guest
+                            @if (Route::has('login'))
+                                <a class="nav-link me-3" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            @endif
+                    
+                            @if (Route::has('register'))
+                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            @endif
+                        @else
+                            <div class="d-flex align-items-center gap-3" dir="{{ app()->isLocale('ar') ? 'rtl' : 'ltr' }}"
+                                style="position: absolute; {{ app()->isLocale('ar') ? 'left: 12' : 'right: 12;' }}">
+                                <!-- User Info Section -->
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-primary rounded-pill text-uppercase ms-2 ms-sm-0">
+                                        {{ Auth::user()->role }}
+                                    </span>
+                                    <span class="fw-semibold text-truncate" style="max-width: 120px;">
+                                        {{ Auth::user()->username }}
+                                    </span>
+                                </div>
 
-                        @if (Route::has('register'))
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                        @endif
-                    @else
-                        <span class="navbar-text me-3 d-none d-sm-inline">
-                            {{ Auth::user()->name }}
-                        </span>
-                        <a class="btn btn-outline-danger btn-sm" href="{{ route('logout') }}"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </a>
-                    @endguest
+                                <!-- Logout Section -->
+                                <div class="vr d-none d-sm-inline-block" style="height: 24px;"></div>
+
+                                <a class="nav-link p-0" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <span class="d-flex align-items-center gap-1 text-danger">
+                                        <i class="fas fa-sign-out-alt fa-sm"></i>
+                                        <span class="d-none d-sm-inline">{{ __('Logout') }}</span>
+                                    </span>
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </div>
+                        @endguest
+                    </div>
                 </div>
             </div>
         </nav>
@@ -267,6 +308,11 @@
                     <span>{{__('lang.Domains')}}</span>
                 </a>
                 
+                <a href="{{ route('admin.chapters') }}" class="sidebar-link {{ request()->routeIs('admin.chapter*') ? 'active' : '' }}">
+                    <i class="fas fa-building"></i>
+                    <span>{{__('lang.chapters')}}</span>
+                </a>
+                
                 <a href="{{ route('admin.slides') }}" class="sidebar-link {{ request()->routeIs('admin.slides*') ? 'active' : '' }}">
                     <i class="fas fa-images"></i>
                     <span>{{__('lang.Slides')}}</span>
@@ -291,17 +337,20 @@
                     <i class="fas fa-bell"></i>
                     <span>{{__('lang.notifications')}}</span>
                 </a>
+
+                <div class="sidebar-footer">
+                    <a class="btn btn-outline-light w-100" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </div>
+                
             </div>
             
-            <div class="sidebar-footer">
-                <a class="btn btn-outline-light w-100" href="{{ route('logout') }}"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fas fa-sign-out-alt me-2"></i> Logout
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
-            </div>
+
         </div>
         @endif
         @endauth

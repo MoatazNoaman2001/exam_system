@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Chapters Management</h1>
-        <a href="{{ route('admin.chapter.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+        <a href="{{ route('admin.chapters.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
             <i class="fas fa-plus fa-sm text-white-50"></i> Create New Domain
         </a>
     </div>
@@ -21,26 +21,18 @@
                             <th>ID</th>
                             <th>Name</th>
                             <th>Slides Count</th>
-                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($chapters as $chapter)
                         <tr>
-                            <td>{{ $chapter->id }}</td>
+                            <td>{{ substr($chapter->id, 20) }}</td>
                             <td>{{ $chapter->text }}</td>
                             <td>{{ $chapter->slides_count }}</td>
                             <td>
-                                @if($chapter->is_completed)
-                                    <span class="badge badge-success">Completed</span>
-                                @else
-                                    <span class="badge badge-warning">In Progress</span>
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ route('admin.chapter.edit', $chapter) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                                <form action="{{ route('admin.chapter.destroy', $chapter) }}" method="POST" style="display: inline;">
+                                <a href="{{ route('admin.chapters.edit', $chapter) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
+                                <form action="{{ route('admin.chapters.destroy', $chapter) }}" method="POST" style="display: inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>

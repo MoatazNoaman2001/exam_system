@@ -30,7 +30,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Users</div>
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{__('lang.total_user')}}</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalUsers ?? '1,234' }}</div>
                         </div>
                         <div class="col-auto">
@@ -46,7 +46,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Active Learners</div>
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">{{__('lang.active-learners')}}</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $activeLearners ?? '892' }}</div>
                         </div>
                         <div class="col-auto">
@@ -62,7 +62,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Quiz Attempts</div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{__('lang.quiz-attempts')}}</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $quizAttempts ?? '3,456' }}</div>
                         </div>
                         <div class="col-auto">
@@ -78,7 +78,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Download PDFs</div>
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">{{__('lang.download_pdfs')}}</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $jobApplications ?? '0' }}</div>
                         </div>
                         <div class="col-auto">
@@ -96,7 +96,7 @@
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Learning Progress Overview</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.learing-progress-overview')}}</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
 
@@ -120,7 +120,7 @@
         <div class="col-xl-4 col-lg-5">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Domain Completion</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.domain_compeletion')}}</h6>
                 </div>
                 <div class="card-body">
                     <canvas id="domainChart" width="300" height="300"></canvas>
@@ -142,10 +142,10 @@
                         <table class="table table-bordered" id="recentUsersTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
+                                    <th>{{__('lang.name')}}</th>
+                                    <th>{{__('lang.email')}}</th>
+                                    <th>{{__('lang.role')}}</th>
+                                    <th>{{__('lang.status')}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -192,10 +192,10 @@
                         <table class="table table-bordered" id="recentQuizzesTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>User</th>
-                                    <th>Quiz</th>
-                                    <th>Score</th>
-                                    <th>Date</th>
+                                    <th>{{__('lang.user')}}</th>
+                                    <th>{{__('lang.quiz')}}</th>
+                                    <th>{{__('lang.score')}}</th>
+                                    <th>{{__('lang.Date')}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -231,25 +231,25 @@
         <div class="col-lg-8 mb-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">System Overview</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.system-overview')}}</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <div class="border-left-primary p-3">
-                                <div class="text-primary font-weight-bold">Total Domains</div>
+                                <div class="text-primary font-weight-bold">{{__('lang.total_domain')}}</div>
                                 <div class="h4">{{ $totalDomains ?? '12' }}</div>
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="border-left-success p-3">
-                                <div class="text-success font-weight-bold">Total Slides</div>
+                                <div class="text-success font-weight-bold">{{__('lang.total-slides')}}</div>
                                 <div class="h4">{{ $totalSlides ?? '456' }}</div>
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="border-left-info p-3">
-                                <div class="text-info font-weight-bold">Active Exams</div>
+                                <div class="text-info font-weight-bold">{{__('lang.active-exams')}}</div>
                                 <div class="h4">{{ $activeExams ?? '8' }}</div>
                             </div>
                         </div>
@@ -271,7 +271,7 @@
                         <a href="{{ route('admin.domains.create') }}" class="btn btn-success btn-sm">
                             <i class="fas fa-plus"></i> Create Domain
                         </a>
-                        <a href="{{ route('admin.chapter.create') }}" class="btn btn-success btn-sm">
+                        <a href="{{ route('admin.chapters.create') }}" class="btn btn-success btn-sm">
                             <i class="fas fa-plus"></i> Create Chapter
                         </a>
                         <a href="{{ route('admin.slides.create') }}" class="btn btn-info btn-sm">
@@ -294,7 +294,7 @@
         <div class="col-12">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Recent System Notifications</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.recent-system-notifications')}}</h6>
                 </div>
                 <div class="card-body">
                     @forelse($recentNotifications ?? [] as $notification)
@@ -318,7 +318,7 @@
                     @empty
                     <div class="text-center text-muted">
                         <i class="fas fa-bell-slash fa-2x mb-2"></i>
-                        <p>No recent notifications</p>
+                        <p>{{__('lang.no recent notifications')}}</p>
                     </div>
                     @endforelse
                 </div>
@@ -382,24 +382,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 @push('styles')
 <style>
-.border-left-primary {
-    border-left: 0.25rem solid #4e73df !important;
-}
-.border-left-success {
-    border-left: 0.25rem solid #1cc88a !important;
-}
-.border-left-info {
-    border-left: 0.25rem solid #36b9cc !important;
-}
-.border-left-warning {
-    border-left: 0.25rem solid #f6c23e !important;
-}
-.text-gray-800 {
-    color: #5a5c69 !important;
-}
-.text-gray-300 {
-    color: #dddfeb !important;
-}
+    :root{
+        --sidebar-bg: #2c3e50;
+    }
+    .card-header{
+        background-color: var(--sidebar-bg) !important;
+    }
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+    .text-gray-800 {
+        color: #5a5c69 !important;
+    }
+    .text-gray-300 {
+        color: #dddfeb !important;
+    }
 </style>
 @endpush
 @endsection

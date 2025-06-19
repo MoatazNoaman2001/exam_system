@@ -22,23 +22,19 @@
                             <th>Title</th>
                             <th>Domain</th>
                             <th>Chapter</th>
-                            <th>Status</th>
+                            <th>Attempts Number</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($slides as $slide)
                         <tr>
-                            <td>{{ $slide->id }}</td>
+                            <td>{{ substr($slide->id, 20) }}</td>
                             <td>{{ $slide->text }}</td>
-                            <td>{{ $slide->domain->text }}</td>
-                            <td>{{ $slide->chapter->name ?? 'N/A' }}</td>
+                            <td>{{ $slide->domain->text ?? 'N/A' }}</td>
+                            <td>{{ $slide->chapter->text ?? 'N/A' }}</td>
                             <td>
-                                @if($slide->is_completed)
-                                    <span class="badge badge-success">Completed</span>
-                                @else
-                                    <span class="badge badge-warning">In Progress</span>
-                                @endif
+                                {{$slide->slideAttempts->count()}}
                             </td>
                             <td>
                                 <a href="{{ route('admin.slides.edit', $slide) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>

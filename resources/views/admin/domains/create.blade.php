@@ -25,16 +25,7 @@
                         </span>
                     @enderror
                 </div>
-                
-                <div class="form-group">
-                    <label for="icon">Icon (Font Awesome class)</label>
-                    <input type="text" class="form-control" id="icon" name="icon" value="{{ old('icon') }}" placeholder="e.g. fas fa-code">
-                </div>
-                
-                <div class="form-group">
-                    <label for="count">Initial Count</label>
-                    <input type="number" class="form-control" id="count" name="count" value="{{ old('count', 0) }}" min="0">
-                </div>
+                <br/>
                 
                 <button type="submit" class="btn btn-primary">Create Domain</button>
             </form>

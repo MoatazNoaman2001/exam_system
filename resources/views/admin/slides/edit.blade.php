@@ -54,7 +54,7 @@
                     <label for="chapter_id">Chapter</label>
                     <select class="form-control" id="chapter_id" name="chapter_id" required>
                         @foreach($chapters as $chapter)
-                        <option value="{{ $chapter->id }}" {{ $slide->chapter_id == $chapter->id ? 'selected' : '' }}>{{ $chapter->name }}</option>
+                        <option value="{{ $chapter->id }}" {{ $slide->chapter_id == $chapter->id ? 'selected' : '' }}>{{ $chapter->text }}</option>
                         @endforeach
                     </select>
                 </div>

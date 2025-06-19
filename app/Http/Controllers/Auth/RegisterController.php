@@ -30,16 +30,25 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|min:3|max:50',
+            'username' => 'required|string|max:255|unique:users|regex:/^[a-zA-Z0-9_]+$/',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],
             'phone' => 'required|regex:/^\+?[1-9]\d{1,14}$/',
             'role' => 'required|in:student,admin',
             'preferred_language' => 'required|in:ar,en',
             'is_agree' => 'accepted',
+        ], [
+            'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+            'username.regex' => 'Username may only contain letters, numbers, and underscores.',
         ]);
 
-        // dd($request->all());
+        dd($request->all());
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,

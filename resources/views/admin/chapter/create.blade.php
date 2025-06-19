@@ -14,7 +14,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Chapter Details</h6>
         </div>
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.chapter.store') }}">
+            <form method="POST" action="{{ route('admin.chapters.store') }}">
                 @csrf
                 <div class="form-group">
                     <label for="text">Chapter Name</label>
@@ -25,17 +25,10 @@
                         </span>
                     @enderror
                 </div>
-                
-                <div class="form-group">
-                    <label for="icon">Icon (Font Awesome class)</label>
-                    <input type="text" class="form-control" id="icon" name="icon" value="{{ old('icon') }}" placeholder="e.g. fas fa-code">
-                </div>
-                
-                <div class="form-group">
-                    <label for="count">Initial Count</label>
-                    <input type="number" class="form-control" id="count" name="count" value="{{ old('count', 0) }}" min="0">
-                </div>
-                
+
+                <br/>
+
+            
                 <button type="submit" class="btn btn-primary">Create Chapter</button>
             </form>
         </div>

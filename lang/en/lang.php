@@ -6,6 +6,7 @@ return [
     "Domains" => "Domains",
     "Slides" => "Slides",
     "Exams" => "Exams",
+    "chapters" => "Chapters",
     "quiz-attempts" => "Quiz Attempts",
     "test-attempts" => "Test Attempts",
     "notifications" => "Notifications",
@@ -15,6 +16,20 @@ return [
     "domain_compeletion" => "Domain Completion",
     "Create Exam" => "Create Exam",
     "Edit Exam" => "Edit Exam",
+    "learing-progress-overview" => "Learning Progress Overview",
+    "quiz-completion" => "Quiz Completion",
+    "test-completion" => "Test Completion",
+    "name" => "Name",
+    "email" => "Email",
+    "role" => "Role",
+    "status" => "Status",
+    "Date" => "Date",
+    "score" => "Score",
+    "quiz" => "Quiz",
+    "user" => "User",
+    "system-overview" => "System Overview",
+    "recent-system-notifications" => "Recent System Notifications",
+    "no recent notifications" => "No Recent Notifications",
 ];
 
 

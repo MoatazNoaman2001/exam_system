@@ -21,6 +21,7 @@
                             <th>ID</th>
                             <th>Username</th>
                             <th>Email</th>
+                            <th>phone</th>
                             <th>Role</th>
                             <th>Verified</th>
                             <th>Actions</th>
@@ -29,13 +30,14 @@
                     <tbody>
                         @foreach($users as $user)
                         <tr>
-                            <td>{{ $user->id }}</td>
+                            <td>{{ substr($user->id, 20) }}</td>
                             <td>{{ $user->username }}</td>
                             <td>{{ $user->email }}</td>
-                            <td><span class="badge badge-{{ $user->role === 'admin' ? 'danger' : 'primary' }}">{{ ucfirst($user->role) }}</span></td>
-                            <td>{!! $user->verified ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-warning">No</span>' !!}</td>
+                            <td> +{{ $user->phone }}</td>
+                            <td><span class="badge badge-{{ $user->role === 'admin' ? 'danger' : 'primary' }} text-black">{{ ucfirst($user->role) }}</span></td>
+                            <td>{!! $user->verified ? '<span class="badge badge-success text-success ">Yes</span>' : '<span class="badge badge-warning text-warning">No</span>' !!}</td>
                             <td>
-                                <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-info"><i class="far fa-eye" style="color: #075d9f;"></i></a>
                                 <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
                                 <form action="{{ route('admin.users.destroy', $user) }}" method="POST" style="display: inline;">
                                     @csrf

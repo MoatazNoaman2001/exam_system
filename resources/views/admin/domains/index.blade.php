@@ -21,23 +21,15 @@
                             <th>ID</th>
                             <th>Name</th>
                             <th>Slides Count</th>
-                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($domains as $domain)
                         <tr>
-                            <td>{{ $domain->id }}</td>
+                            <td>{{ substr($domain->id, 20) }}</td>
                             <td>{{ $domain->text }}</td>
                             <td>{{ $domain->slides_count }}</td>
-                            <td>
-                                @if($domain->is_completed)
-                                    <span class="badge badge-success">Completed</span>
-                                @else
-                                    <span class="badge badge-warning">In Progress</span>
-                                @endif
-                            </td>
                             <td>
                                 <a href="{{ route('admin.domains.edit', $domain) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
                                 <form action="{{ route('admin.domains.destroy', $domain) }}" method="POST" style="display: inline;">

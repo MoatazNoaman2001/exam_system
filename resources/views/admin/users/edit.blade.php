@@ -1,73 +1,327 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Edit User</h1>
-        <a href="{{ route('admin.users') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
+<div class="container-fluid px-4">
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-4">
+        <div class="mb-3 mb-md-0">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-student-plus mr-2" style="color: var(--sidebar-bg);"></i> Edit user {{ $user->username }}
+            </h1>
+            <nav aria-label="breadcrumb" class="d-none d-md-block mt-2">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.users') }}">students</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">edit</li>
+                </ol>
+            </nav>
+        </div>
+        <a href="{{ route('admin.users') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left mr-2"></i> Back to users
         </a>
     </div>
 
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Edit User Details</h6>
+    <div class="card border-0 shadow-lg rounded-lg overflow-hidden">
+        <div class="card-header text-white py-3" style="background-color: var(--sidebar-bg);">
+            <div class="d-flex align-items-center gap-3">
+                <i class="fas fa-student-plus mr-2"></i> 
+                <h5 class="m-0">{{$user->role == 'student' ? "student" : "admin"}} Information</h5>
+            </div>
         </div>
-        <div class="card-body">
-            <form method="POST" action="{{ route('admin.users.update', $user) }}">
+        <div class="card-body p-4 p-md-5">
+            <form method="POST" action="{{ route('admin.users.update', $user) }}" enctype="multipart/form-data">
                 @csrf
-                @method('PUT')
-                
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username', $user->username) }}" required>
-                    @error('username')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                @method('PATCH')
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-4">
+                            <h6 class="mb-3 pb-2 border-bottom " style="color: var(--sidebar-bg);">
+                                <i class="fas fa-id-card mr-2" style="color: var(--sidebar-bg);"></i> Personal Information
+                            </h6>
+                            
+                            <div class="text-center mb-4">
+                                <div class="position-relative d-inline-block">
+                                    <img id="image-preview" src="https://ui-avatars.com/api/?name={{$user->username}}&size=200&background=random" 
+                                         class="rounded-circle shadow-sm border" width="150" height="150">
+                                    <label for="image" class="btn btn-sm  rounded-circle position-absolute d-flex align-items-center justify-content-center" 
+                                           style="bottom: 10px; right: 10px; width: 36px; height: 36px; line-height: 36px;
+                                           background-color: var(--sidebar-bg) !important; color:white">
+                                        <i class="fas fa-camera"></i>
+                                        <input type="file" class="d-none" id="image" name="image" accept="image/*">
+                                    </label>
+                                </div>
+                                @error('image')
+                                    <div class="invalid-feedback d-block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </div>
+                                @enderror
+                                <small class="text-muted d-block mt-2">JPG, PNG or GIF (Max 2MB)</small>
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control @error('username') is-invalid @enderror" 
+                                       id="username" name="username" value="{{ $user->username }}" 
+                                       placeholder="username" required>
+                                <label for="username">username</label>
+                                @error('username')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                                       id="email" name="email" value="{{ $user->email }}" 
+                                       placeholder="Email Address" required>
+                                <label for="email">Email Address</label>
+                                @error('email')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <input type="tel" class="form-control @error('phone') is-invalid @enderror" 
+                                       id="phone" name="phone" value="{{ $user->phone }}" 
+                                       placeholder="Phone Number">
+                                <label for="phone">Phone Number</label>
+                                @error('phone')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column - Account Info -->
+                    <div class="col-lg-6">
+                        <div class="mb-4">
+                            <h6 class="mb-3 pb-2 border-bottom" style="color: var(--sidebar-bg);">
+                                <i class="fas fa-lock mr-2" style="color: var(--sidebar-bg);"></i> Account Settings
+                            </h6>
+                            
+                            <!-- Password -->
+                            <div class="form-floating mb-3 position-relative">
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                                       id="password" name="password"
+                                       placeholder="Password">
+                                <label for="password">Password</label>
+                                <button type="button" class="btn btn-link text-muted position-absolute" 
+                                        style="right: 10px; top: 50%; transform: translateY(-50%);"
+                                        onclick="togglePassword('password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                                <small class="text-muted">Minimum 8 characters with at least one number and special character</small>
+                            </div>
+                            
+                            <!-- Confirm Password -->
+                            <div class="form-floating mb-3 position-relative">
+                                <input type="password" class="form-control" 
+                                       id="password-confirm" name="password_confirmation" 
+                                       placeholder="Confirm Password">
+                                <label for="password-confirm">Confirm Password</label>
+                                <button type="button" class="btn btn-link text-muted position-absolute" 
+                                        style="right: 10px; top: 50%; transform: translateY(-50%);"
+                                        onclick="togglePassword('password-confirm')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Role -->
+                            <div class="mb-3">
+                                <label class="form-label">Role</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" 
+                                           name="role" id="role-student" 
+                                           value="student" {{ $user->role == 'student' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-warning" for="role-student">
+                                        <i class="fas fa-student me-2"></i> student
+                                    </label>
+                                    
+                                    <input type="radio" class="btn-check" name="role" id="role-admin" 
+                                           value="admin" {{ $user->role == 'admin' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-warning" for="role-admin">
+                                        <i class="fas fa-shield-alt me-2"></i> Admin
+                                    </label>
+                                </div>
+                                @error('role')
+                                    <div class="invalid-feedback d-block">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            
+                            <!-- Language -->
+                            <div class="form-floating mb-3">
+                                <select class="form-select" id="preferred_language" name="preferred_language">
+                                    <option value="en" {{ $user->preferred_language == 'en' ? 'selected' : '' }}>English</option>
+                                    <option value="fr" {{ $user->preferred_language == 'ar' ? 'selected' : '' }}>Arabic</option>
+                                </select>
+                                <label for="preferred_language">Preferred Language</label>
+                            </div>
+                            
+                            <!-- Email Verification -->
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="verified" name="verified" 
+                                       {{ $user->verified ? 'checked' : '' }}>
+                                <label class="form-check-label" for="verified">
+                                    Email Verified
+                                </label>
+                                <small class="text-muted d-block">If checked, student won't need to verify their email</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email) }}" required>
-                    @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                <!-- Form Actions -->
+                <div class="d-flex justify-content-between border-top pt-4 mt-3">
+                    <button type="reset" class="btn btn-outline-secondary px-4">
+                        <i class="fas fa-undo mr-2"></i> Reset
+                    </button>
+                    <button type="submit" class="btn px-4" style="background-color: var(--sidebar-bg); color: white">
+                        <i class="fas fa-student-plus mr-2" style="color: white"></i> Update student
+                    </button>
                 </div>
-                
-                <div class="form-group">
-                    <label for="role">Role</label>
-                    <select class="form-control" id="role" name="role" required>
-                        <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>User</option>
-                        <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone">Phone</label>
-                    <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $user->phone) }}">
-                </div>
-                
-                <div class="form-group">
-                    <label for="preferred_language">Preferred Language</label>
-                    <select class="form-control" id="preferred_language" name="preferred_language">
-                        <option value="en" {{ $user->preferred_language === 'en' ? 'selected' : '' }}>English</option>
-                        <option value="fr" {{ $user->preferred_language === 'fr' ? 'selected' : '' }}>French</option>
-                        <option value="es" {{ $user->preferred_language === 'es' ? 'selected' : '' }}>Spanish</option>
-                    </select>
-                </div>
-                
-                <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" id="verified" name="verified" value="1" {{ $user->verified ? 'checked' : '' }}>
-                    <label class="form-check-label" for="verified">Verified</label>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Update User</button>
             </form>
         </div>
     </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+    
+    .card {
+        border: none;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+    }
+
+    .form-floating label {
+        color: #6c757d;
+    }
+    
+    .form-control, .form-select {
+        border-radius: 0.375rem;
+        padding: 1rem 1.25rem;
+        border: 1px solid #e0e0e0;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+    }
+    
+    .btn-check:checked + .btn-outline-primary {
+        background-color: #4e73df;
+        color: white;
+        border-color: #4e73df;
+    }
+    
+    .form-switch .form-check-input {
+        width: 2.5em;
+        height: 1.5em;
+        margin-left: -2.5em;
+    }
+    
+    #image-preview {
+        object-fit: cover;
+        border: 3px solid #fff;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    
+    .breadcrumb {
+        background: none;
+        padding: 0;
+    }
+    
+    .breadcrumb-item a {
+        color: #4e73df;
+        text-decoration: none;
+    }
+    :root{
+        --sidebar-bg: #2c3e50;
+    }
+    .card-header{
+        background-color: var(--sidebar-bg) !important;
+    }
+    .btn-outline-primary {
+        color: #2c3e50 !important;
+        border-color: #2c3e50 !important;
+    }
+    
+    .btn-outline-primary:hover,
+    .btn-check:checked + .btn-outline-primary {
+        background-color: #2c3e50 !important;
+        color: white !important;
+        border-color: #2c3e50 !important;
+    }
+    
+    .btn-check:focus + .btn-outline-primary {
+        box-shadow: 0 0 0 0.25rem rgba(44, 62, 80, 0.25) !important;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+    // Image preview
+    document.getElementById('image').addEventListener('change', function(e) {
+        const preview = document.getElementById('image-preview');
+        const file = e.target.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+            
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Toggle password visibility
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const icon = field.nextElementSibling.querySelector('i');
+        
+        if (field.type === 'password') {
+            field.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            field.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+    
+    // Form validation
+    (function() {
+        'use strict';
+        
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation');
+        
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+@endpush

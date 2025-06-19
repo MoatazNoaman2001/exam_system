@@ -27,21 +27,7 @@
                         </span>
                     @enderror
                 </div>
-                
-                <div class="form-group">
-                    <label for="icon">Icon (Font Awesome class)</label>
-                    <input type="text" class="form-control" id="icon" name="icon" value="{{ old('icon', $domain->icon) }}" placeholder="e.g. fas fa-code">
-                </div>
-                
-                <div class="form-group">
-                    <label for="count">Count</label>
-                    <input type="number" class="form-control" id="count" name="count" value="{{ old('count', $domain->count) }}" min="0">
-                </div>
-                
-                <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" id="is_completed" name="is_completed" value="1" {{ $domain->is_completed ? 'checked' : '' }}>
-                    <label class="form-check-label" for="is_completed">Mark as completed</label>
-                </div>
+                <br/>
                 
                 <button type="submit" class="btn btn-primary">Update Domain</button>
             </form>

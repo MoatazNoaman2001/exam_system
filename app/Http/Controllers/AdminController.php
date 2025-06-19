@@ -7,6 +7,7 @@ use App\Models\Exam;
 use App\Models\Quiz;
 use App\Models\Test;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Slide;
 use App\Models\Domain;
 use App\Models\Chapter;
@@ -19,9 +20,8 @@ use App\Models\ExamQuestions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-// use Maatwebsite\Excel\Facades\Excel;
-// use App\Imports\ExamsImport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ExamsImport;
 
 class AdminController extends Controller
 {
@@ -90,27 +90,58 @@ class AdminController extends Controller
 
     public function storeUser(Request $request)
     {
-        $request->validate([
-            'username' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:admin,user',
-            'phone' => 'nullable|string|max:20',
-            'preferred_language' => 'nullable|string|max:10',
+        // dd($request->all());
+        $validatedData = $request->validate([
+            'username' => 'required|string|max:255|unique:users|regex:/^[a-zA-Z0-9_]+$/',
+            'email' => 'required|string|email:rfc,dns|max:255|unique:users',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],
+            'role' => 'required|in:admin,student',
+            'phone' => 'nullable|string|max:20|regex:/^[+\-\d\s]+$/',
+            'preferred_language' => 'nullable|string|in:en,fr,es,de,it',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+            'username.regex' => 'Username may only contain letters, numbers, and underscores.',
         ]);
-
-        User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => $request->password, // Will be hashed by mutator
-            'role' => $request->role,
-            'phone' => $request->phone,
-            'preferred_language' => $request->preferred_language ?? 'en',
-            'verified' => true,
-            'is_agree' => true,
-        ]);
-
-        return redirect()->route('admin.users')->with('success', 'User created successfully.');
+        try {
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('profile-images', 'public');
+            }
+    
+            $user = User::create([
+                'username' => $validatedData['username'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']),
+                'role' => $validatedData['role'],
+                'phone' => $validatedData['phone'] ?? null,
+                'preferred_language' => $validatedData['preferred_language'] ?? 'en',
+                'email_verified_at' => $request->verified ? now() : null,
+                'profile_image' => $imagePath,
+                'is_agree' => true,
+            ]);
+    
+            if (!$request->verified) {
+                $user->sendEmailVerificationNotification();
+            }
+    
+            return redirect()->route('admin.users')
+                   ->with('success', 'User created successfully.');
+    
+        } catch (\Exception $e) {
+            if (isset($imagePath) && Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+    
+            return back()->withInput()
+                   ->with('error', 'Error creating user: '.$e->getMessage());
+        }
     }
 
     public function showUser(User $user)
@@ -126,22 +157,71 @@ class AdminController extends Controller
 
     public function updateUser(Request $request, User $user)
     {
-        $request->validate([
-            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'role' => 'required|in:admin,user',
-            'phone' => 'nullable|string|max:20',
-            'preferred_language' => 'nullable|string|max:10',
-            'verified' => 'boolean',
+        $validatedData = $request->validate([
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:users,username,' . $user->id,
+                'regex:/^[a-zA-Z0-9_]+$/'
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email:rfc,dns',
+                'max:255',
+                'unique:users,email,' . $user->id
+            ],
+            'password' => [
+                'nullable',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],
+            'role' => 'required|in:admin,student',
+            'phone' => 'nullable|string|max:20|regex:/^[+\-\d\s]+$/',
+            'preferred_language' => 'nullable|string|in:en,fr,es,ar',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'email_verified' => 'boolean',
+            'is_active' => 'boolean'
+        ], [
+            'password.regex' => 'Password must contain at least one uppercase, one lowercase, one number and one special character.',
+            'username.regex' => 'Username may only contain letters, numbers and underscores.',
+            'phone.regex' => 'Please enter a valid phone number.'
         ]);
-
-        $user->update($request->only([
-            'username', 'email', 'role', 'phone', 'preferred_language', 'verified'
-        ]));
-
-        return redirect()->route('admin.users')->with('success', 'User updated successfully.');
+    
+        try {
+            if ($request->hasFile('image')) {
+                if ($user->profile_image) {
+                    Storage::delete('public/'.$user->profile_image);
+                }
+                $validatedData['profile_image'] = $request->file('image')->store('profile-images', 'public');
+            }
+    
+            if (!empty($validatedData['password'])) {
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            } else {
+                unset($validatedData['password']);
+            }
+    
+            $validatedData['email_verified_at'] = $request->email_verified ? now() : null;
+            unset($validatedData['email_verified']);
+    
+            $user->update($validatedData);
+    
+            return redirect()->route('admin.users')
+                   ->with('success', 'User updated successfully.');
+    
+        } catch (\Exception $e) {
+            if (isset($validatedData['profile_image'])) {
+                Storage::delete('public/'.$validatedData['profile_image']);
+            }
+    
+            return back()->withInput()
+                   ->with('error', 'Error updating user: '.$e->getMessage());
+        }
     }
-
     public function destroyUser(User $user)
     {
         $user->delete();
@@ -166,11 +246,9 @@ class AdminController extends Controller
     {
         $request->validate([
             'text' => 'required|string|max:255',
-            'icon' => 'nullable|string|max:100',
-            'count' => 'nullable|integer|min:0',
         ]);
 
-        Domain::create($request->only(['text', 'icon', 'count']));
+        Domain::create($request->only(['text']));
 
         return redirect()->route('admin.domains')->with('success', 'Domain created successfully.');
     }
@@ -184,12 +262,9 @@ class AdminController extends Controller
     {
         $request->validate([
             'text' => 'required|string|max:255',
-            'icon' => 'nullable|string|max:100',
-            'count' => 'nullable|integer|min:0',
-            'is_completed' => 'boolean',
         ]);
 
-        $domain->update($request->only(['text', 'icon', 'count', 'is_completed']));
+        $domain->update($request->only(['text']));
 
         return redirect()->route('admin.domains')->with('success', 'Domain updated successfully.');
     }
@@ -225,7 +300,7 @@ class AdminController extends Controller
         return redirect()->route('admin.chapters')->with('success', 'Chapter created successfully.');
     }
 
-    public function editChapter(Chapter $domain)
+    public function editChapter(Chapter $chapter)
     {
         return view('admin.chapter.edit', compact('chapter'));
     }
@@ -234,11 +309,9 @@ class AdminController extends Controller
     {
         $request->validate([
             'text' => 'required|string|max:255',
-            'icon' => 'nullable|string|max:100',
-            'is_completed' => 'boolean',
         ]);
 
-        $chapter->update($request->only(['text', 'count', 'is_completed']));
+        $chapter->update($request->only(['text']));
 
         return redirect()->route('admin.chapters')->with('success', 'Chapter updated successfully.');
     }
@@ -267,17 +340,35 @@ class AdminController extends Controller
 
     public function storeSlide(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'text' => 'required|string|max:255',
-            'content' => 'required|string',
-            'domain_id' => 'required|exists:domains,id',
-            'chapter_id' => 'required|exists:chapters,id',
-            'count' => 'nullable|integer|min:0',
+            'content' => 'required|file|mimes:pdf|max:5120',
+            'domain_id' => 'nullable|exists:domains,id',
+            'chapter_id' => 'nullable|exists:chapters,id'
         ]);
-
-        Slide::create($request->only(['text', 'content', 'domain_id', 'chapter_id', 'count']));
-
-        return redirect()->route('admin.slides')->with('success', 'Slide created successfully.');
+    
+        // dd($validatedData);
+        // try {
+            $filePath = $request->file('content')->store('slides', 'public');
+            
+            Slide::create([
+                'text' => $validatedData['text'],
+                'content' => $filePath,
+                'domain_id' => null,
+                'chapter_id' => $validatedData['chapter_id']
+            ]);
+    
+            return redirect()->route('admin.slides')
+                   ->with('success', 'Slide created successfully.');
+    
+        // } catch (\Exception $e) {
+        //     if (isset($filePath)) {
+        //         Storage::disk('public')->delete($filePath);
+        //     }
+    
+        //     return back()->withInput()
+        //            ->with('error', 'Error creating slide: ' . $e->getMessage());
+        // }
     }
 
     public function editSlide(Slide $slide)
@@ -478,17 +569,19 @@ class AdminController extends Controller
 
     public function import(Request $request)
     {
-        // $request->validate([
-        //     'excel_file' => 'required|mimes:xlsx,xls,csv'
-        // ]);
+        print_r($request->all());
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls,csv'
+        ]);
 
-        // try {
-        //     Excel::import(new ExamsImport, $request->file('excel_file'));
+        try {
+            Excel::import(new ExamsImport, $request->file('excel_file'));
 
-        //     return redirect()->back()->with('success', 'Exam imported successfully!');
-        // } catch (\Exception $e) {
-        //     return redirect()->back()->with('error', 'Error importing exam: '.$e->getMessage());
-        // }
+            return redirect()->back()->with('success', 'Exam imported successfully!');
+        } catch (\Exception $e) {
+            print_r($e->getMessage());
+            // return redirect()->back()->with('error', 'Error importing exam: '.$e->getMessage());
+        }
     }
     public function destroyExam(Exam $exam)
     {

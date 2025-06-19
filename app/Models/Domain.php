@@ -12,7 +12,7 @@ class Domain extends Model
 {
     use HasFactory, SoftDeletes, HasUuids;
 
-    protected $fillable = ['text', 'count', 'icon', 'is_completed'];
+    protected $fillable = ['text'];
 
     public function slides()
     {
