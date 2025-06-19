@@ -4,23 +4,24 @@ body {
     background: #ffffff;
     min-height: 100vh;
     margin: 0;
-    display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* لإخفاء التمرير */
+    overflow: hidden; 
 }
 
 .web-splash {
     background: #f9fafb;
     border-radius: 1.5rem;
-    display: flex;
+    
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* كامل ارتفاع الشاشة */
-    width: 100vw;  /* كامل عرض الشاشة */
-    padding: 2rem;
+    height: 100vh; 
+    width: 100vw; 
     box-sizing: border-box;
+    padding-top:15%
+  
+    
 }
 
 .web-splash__logo {
@@ -29,9 +30,10 @@ body {
     font-family: "Tajawal-Bold", sans-serif;
     font-size: 4.5rem;
     font-weight: 700;
+   
+   
 }
 
-/* Adjust font size on smaller screens */
 @media (max-width: 768px) {
     .web-splash__logo {
         font-size: 3.5rem;
