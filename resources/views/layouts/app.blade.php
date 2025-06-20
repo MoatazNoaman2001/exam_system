@@ -356,7 +356,7 @@
         @endauth
 
         <main class="main-content" id="mainContent">
-            <div class="container-fluid p-4">
+            <div class="container-fluid">
                 @yield('content')
             </div>
         </main>

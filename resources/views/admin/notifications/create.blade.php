@@ -42,7 +42,7 @@
                         </label>
                     </div>
                 </div>
-                
+                <br/>
                 <div class="form-group" id="userSelectGroup">
                     <label for="user_id">Select User</label>
                     <select class="form-control" id="user_id" name="user_id">
@@ -51,7 +51,7 @@
                         @endforeach
                     </select>
                 </div>
-                
+                <br/>
                 <button type="submit" class="btn btn-primary">Send Notification</button>
             </form>
         </div>
