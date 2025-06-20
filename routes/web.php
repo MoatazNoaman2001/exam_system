@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\AdminController;
 // use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\IntroController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -150,4 +151,9 @@ Route::get('/test-verification', function() {
     return $user->getKey(); // Should return the user's ID
 });
 
+// ✅ الاستبيان - بدون تسجيل دخول (مؤقتًا)
+Route::get('/intro', [IntroController::class, 'index'])->name('intro.index');
+Route::get('/intro/step/{step}', [IntroController::class, 'step'])->name('intro.step');
+Route::post('/intro/step/{step}', [IntroController::class, 'store'])->name('intro.store');
+Route::get('/intro/complete', [IntroController::class, 'complete'])->name('intro.complete');
 
