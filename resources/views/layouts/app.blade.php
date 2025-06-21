@@ -221,73 +221,11 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container-fluid">
-                @auth
-                <button class="btn btn-sm me-2 d-none d-md-block" id="sidebarToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                @endauth
-                
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                
-                <!-- Mobile toggle button -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                
-                <!-- Collapsible content -->
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <div class="d-flex ms-auto align-items-center">
-                        @guest
-                            @if (Route::has('login'))
-                                <a class="nav-link me-3" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            @endif
-                    
-                            @if (Route::has('register'))
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                            @endif
-                        @else
-                            <div class="d-flex align-items-center gap-3" dir="{{ app()->isLocale('ar') ? 'rtl' : 'ltr' }}"
-                                style="position: absolute; {{ app()->isLocale('ar') ? 'left: 12' : 'right: 12;' }}">
-                                <!-- User Info Section -->
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="badge bg-primary rounded-pill text-uppercase ms-2 ms-sm-0">
-                                        {{ Auth::user()->role }}
-                                    </span>
-                                    <span class="fw-semibold text-truncate" style="max-width: 120px;">
-                                        {{ Auth::user()->username }}
-                                    </span>
-                                </div>
-
-                                <!-- Logout Section -->
-                                <div class="vr d-none d-sm-inline-block" style="height: 24px;"></div>
-
-                                <a class="nav-link p-0" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <span class="d-flex align-items-center gap-1 text-danger">
-                                        <i class="fas fa-sign-out-alt fa-sm"></i>
-                                        <span class="d-none d-sm-inline">{{ __('Logout') }}</span>
-                                    </span>
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        @endguest
-                    </div>
-                </div>
-            </div>
-        </nav>
 
         @auth
         @if (Auth::user()->role === 'admin')
         <div class="overlay" id="overlay"></div>
-        
-        <div class="sidebar" id="sidebar" >
+            <div class="sidebar" id="sidebar" >
             <div class="sidebar-header">
                 <h3><i class="fas fa-cog"></i> {{__('lang.admin-panal')}}</h3>
             </div>
@@ -356,7 +294,7 @@
         @endauth
 
         <main class="main-content" id="mainContent">
-            <div class="container-fluid p-4">
+            <div class="container-fluid">
                 @yield('content')
             </div>
         </main>

@@ -44,7 +44,7 @@ Route::get("/" , function (Request $request){
     }
    }
    return view('welcome'); 
-});
+})->name('welcome');
 
 Route::view("/home", "home")->middleware('auth')
     ->middleware(['auth', 'verified'])
@@ -131,6 +131,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
+
+Route::view("/terms" , "aggrement_terms")->name('terms');
 
 Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
