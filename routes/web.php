@@ -24,6 +24,7 @@ use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\AchievementPointController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\certificationController;
 
 App::setLocale('en');
 Route::get('/lang/{lang}' , function ($lang) {
@@ -153,6 +154,7 @@ Route::get('/Achievement-Point', [AchievementPointController::class, 'Achievemen
 Route::get('/Plan', [PlanController::class, 'Plan'])->name('Plan');
 Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
 Route::get('/setting', [SettingController::class, 'Setting'])->name('setting');
+Route::get('/certification', [certificationController::class, 'certification'])->name('certification');
 
 
 Route::get('/test-verification', function() {
