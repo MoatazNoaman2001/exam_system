@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\IntroAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -54,9 +55,17 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
             
-            return $user->is_admin 
-                ? redirect()->intended('/admin/dashboard')
-                : redirect()->intended('/home');
+            if( $user->is_admin){
+                return redirect()->intended('/admin/dashboard');
+            } else{
+
+                $isFirstTime = IntroAnswer::where('user_id' , $user->id)->count() > 0;
+                if (!$isFirstTime) {
+                    return redirect()->route('student.intro.step', 1);
+                }else{
+                    return redirect()->intended('/student/home');
+                }
+            }
         }
 
         // If authentication fails

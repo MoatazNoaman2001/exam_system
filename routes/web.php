@@ -151,9 +151,15 @@ Route::get('/test-verification', function() {
     return $user->getKey(); // Should return the user's ID
 });
 
-// ✅ الاستبيان - بدون تسجيل دخول (مؤقتًا)
-Route::get('/intro', [IntroController::class, 'index'])->name('intro.index');
-Route::get('/intro/step/{step}', [IntroController::class, 'step'])->name('intro.step');
-Route::post('/intro/step/{step}', [IntroController::class, 'store'])->name('intro.store');
-Route::get('/intro/complete', [IntroController::class, 'complete'])->name('intro.complete');
 
+
+Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->group(function () {
+    // ✅ الاستبيان - بدون تسجيل دخول (مؤقتًا)
+    Route::get('/intro', [IntroController::class, 'index'])->name('intro.index');
+    Route::get('/intro/step/{step}', [IntroController::class, 'step'])->name('intro.step');
+    Route::post('/intro/step/{step}', [IntroController::class, 'store'])->name('intro.store');
+    Route::get('/intro/complete', [IntroController::class, 'complete'])->name('intro.complete');
+
+    // Student Dashboard
+    Route::view('/home','home')->name('home');
+});

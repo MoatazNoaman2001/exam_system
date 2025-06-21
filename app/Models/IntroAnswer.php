@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class IntroAnswer extends Model
 {
     use HasFactory;
-
+    protected $primaryKey = null;
+    public $incrementing = false;
     protected $fillable = ['user_id', 'question_id', 'selection_id', 'extra_text'];
 
     public function user()
