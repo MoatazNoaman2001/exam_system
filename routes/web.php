@@ -18,6 +18,11 @@ use App\Http\Controllers\ForgetController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\VerificationCodeController;
 use App\Http\Controllers\NewPasswordController;
+use App\Http\Controllers\CompletedActionController;
+use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\AchievementPointController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\SettingController;
 
 App::setLocale('en');
 Route::get('/lang/{lang}' , function ($lang) {
@@ -141,6 +146,12 @@ Route::get('/splash', [SplashController::class, 'splash'])->name('splash');
 Route::get('/forget-password', [ForgetController::class, 'forgetPassword'])->name('forget-password');
 Route::get('/verificationCode', [VerificationCodeController::class, 'verificationCode'])->name('verificationCode');
 Route::get('/newPassword', [NewPasswordController::class, 'NewPassword'])->name('NewPassword');
+Route::get('/completedAction', [CompletedActionController::class, 'completedAction'])->name('completedAction');
+Route::get('/Achievement', [AchievementController::class, 'Achievement'])->name('Achievement');
+Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
+Route::get('/Plan', [PlanController::class, 'Plan'])->name('Plan');
+Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
+Route::get('/setting', [SettingController::class, 'Setting'])->name('setting');
 
 
 Route::get('/test-verification', function() {

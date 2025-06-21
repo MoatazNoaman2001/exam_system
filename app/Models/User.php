@@ -16,6 +16,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, SoftDeletes,HasUuids;
     use Notifiable;
+    use SoftDeletes;
 
     protected $primaryKey = 'id';
     public $incrementing = false;
@@ -114,5 +115,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getEmailForVerification()
     {
         return $this->email;
+    }
+
+  protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    public function progress()
+    {
+        return $this->hasOne(UserProgress::class, 'user_id');
     }
 }
