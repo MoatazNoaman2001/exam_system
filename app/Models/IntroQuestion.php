@@ -17,10 +17,10 @@ class IntroQuestion extends Model
         return $this->belongsTo(Exam::class);
     }
 
-    public function introSelections()
-    {
-        return $this->hasMany(IntroSelection::class);
-    }
+       public function introSelections()
+{
+    return $this->hasMany(IntroSelection::class, 'question_id');
+}
 
     public function introAnswers()
     {
