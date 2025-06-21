@@ -31,9 +31,10 @@
                     <label for="email">{{ __('Email Address') }}</label>
                     <div class="input-with-icon">
                         <i class="fas fa-envelope"></i>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
+                        <input id="email" type="email" @error('email') is-invalid @enderror 
                                name="email" value="{{ old('email') }}" required autocomplete="email" 
                                autofocus placeholder="Enter your email">
+                            
                     </div>
                     @error('email')
                         <span class="error-message">
@@ -191,7 +192,7 @@
         position: relative;
         display: flex;
         align-items: center;
-        width: 100%; /* Ensure it takes full width */
+        width: 100%;
     }
 
     .input-with-icon i.fa-lock {

@@ -48,11 +48,11 @@ class RegisterController extends Controller
             'username.regex' => 'Username may only contain letters, numbers, and underscores.',
         ]);
 
-        dd($request->all());
+        // dd($request->all());
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'phone' => $request->phone,
             'role' => $request->role,
             'preferred_language' => $request->preferred_language,

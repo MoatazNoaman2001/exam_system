@@ -38,7 +38,7 @@ Route::get("/" , function (Request $request){
     }
    }
    return view('welcome'); 
-});
+})->name('welcome');
 
 Route::view("/home", "home")->middleware('auth')
     ->middleware(['auth', 'verified'])
