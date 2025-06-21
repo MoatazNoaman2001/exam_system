@@ -51,13 +51,13 @@ class LoginController extends Controller
         }
 
         // Use Laravel's built-in authentication
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $request->session()->regenerate();
-            
-            return $user->is_admin 
-                ? redirect()->intended('/admin/dashboard')
-                : redirect()->intended('/home');
-        }
+ if (Auth::attempt($credentials, $request->filled('remember'))) {
+    $request->session()->regenerate();
+    
+    return $user->is_admin 
+        ? redirect('/admin/dashboard')
+        : redirect('/completedAction');
+}
 
         // If authentication fails
         return back()->withErrors([

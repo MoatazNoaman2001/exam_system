@@ -62,32 +62,52 @@ class PlanController extends Controller
         return view('student.plan', compact('progress', 'weeklyLessons', 'weeklyQuestions', 'days_left'));
     }
 
-    public function update(Request $request)
-    {
-        if (!Auth::check()) {
-            return redirect()->back()->with('error', 'هذه الميزة متاحة فقط بعد تسجيل الدخول');
-        }
+public function update(Request $request)
+{
+    if (!Auth::check()) {
+        return redirect()->back()->with('error', 'هذه الميزة متاحة فقط بعد تسجيل الدخول');
+    }
 
-        $user = Auth::user();
-        $progress = $user->progress;
+    $user = Auth::user();
+    $progress = $user->progress;
 
-        if ($request->has('plan_duration') && in_array($request->plan_duration, [30, 60, 90])) {
-            $progress->update(['plan_duration' => $request->plan_duration, 'plan_end_date' => null]);
-            $endDate = now()->addDays($request->plan_duration);
-            $progress->plan_end_date = $endDate;
-        } elseif ($request->has('start_date') && $request->has('end_date')) {
-            $start = Carbon::createFromFormat('Y-m-d', $request->start_date);
-            $end = Carbon::createFromFormat('Y-m-d', $request->end_date);
-            if ($start->lte($end)) {
-                $progress->update(['plan_duration' => 0, 'plan_end_date' => $end]);
-            }
-        }
+    $totalDays = 0; // عدد الأيام الكلي في الخطة
 
-        // حساب الأيام المتبقية بعد التحديث
-        $days_left = $progress->plan_end_date ? max(0, Carbon::parse($progress->plan_end_date)->diffInDays(now())) : 0;
-        $progress->days_left = $days_left;
+    if ($request->has('plan_duration') && in_array((int)$request->plan_duration, [30, 60, 90])) {
+        $planDuration = (int)$request->plan_duration;
+        $progress->plan_duration = $planDuration;
+
+        $startDate = Carbon::now();
+        $endDate = $startDate->copy()->addDays($planDuration);
+
+        $progress->plan_end_date = $endDate;
         $progress->save();
 
-        return redirect()->back()->with('success', 'تم تحديث الخطة بنجاح');
+        // حساب الفرق
+        $totalDays = $startDate->diffInDays($endDate);
+
+    } elseif ($request->has('start_date') && $request->has('end_date') && $request->start_date && $request->end_date) {
+        $startDate = Carbon::createFromFormat('Y-m-d', $request->start_date);
+        $endDate = Carbon::createFromFormat('Y-m-d', $request->end_date);
+
+        if ($startDate->lte($endDate)) {
+            $progress->plan_duration = 0;
+            $progress->plan_end_date = $endDate;
+            $progress->save();
+
+            // حساب الفرق
+            $totalDays = $startDate->diffInDays($endDate);
+        }
     }
+
+    // حساب الأيام المتبقية بعد التحديث
+    $days_left = $progress->plan_end_date ? max(0, Carbon::parse($progress->plan_end_date)->diffInDays(Carbon::now())) : 0;
+    $progress->days_left = $days_left;
+    $progress->save();
+
+    return redirect()->back()->with([
+        'success' => "تم تحديث الخطة بنجاح! مدة الخطة هي $totalDays يوم."
+    ]);
+}
+
 }

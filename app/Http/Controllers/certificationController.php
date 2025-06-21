@@ -29,7 +29,7 @@ class certificationController extends Controller
             'streak_days' => 0,
         ]);
 
-        return view('certificate', compact('user', 'progress'));
+        return view('student.certification', compact('user', 'progress'));
     }
 
     public function download()

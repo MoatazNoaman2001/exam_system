@@ -35,25 +35,25 @@ Route::get('/lang/{lang}' , function ($lang) {
     return redirect()->back();
 })->name("lang.switch");
 
-Route::get("/" , function (Request $request){ 
-   if (Auth::user() != null){
-    if (Auth::user()->role == "admin"){
-        return redirect()->intended('/admin/dashboard');
-    }else{
-        return view("home");
+Route::get("/", function (Request $request) {
+    if (Auth::user() != null) {
+        if (Auth::user()->role == "admin") {
+            return redirect('/admin/dashboard');
+        } else {
+            return redirect('/completedAction');
+        }
     }
-   }
-   return view('welcome'); 
+    return view('welcome');
 })->name('welcome');
 
 Route::view("/home", "home")->middleware('auth')
-    ->middleware(['auth', 'verified'])
+    
     ->name('home');
 // Route::get('/admin', [DashboardController::class, 'index'])
 //     ->middleware(['auth', 'verified', 'admin'])
 //     ->name('admin.dashboard');
 // Admin Routes Group
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -147,17 +147,25 @@ Route::get('/logo', [LogoController::class, 'index'])->name('index');
 Route::get('/feature', [FeaturesController::class, 'features'])->name('feature');
 Route::get('/welcome', [WelcomeController::class, 'welcome'])->name('welcome');
 Route::get('/splash', [SplashController::class, 'splash'])->name('splash');
-Route::get('/forget-password', [ForgetController::class, 'forgetPassword'])->name('forget-password');
-Route::get('/verificationCode', [VerificationCodeController::class, 'verificationCode'])->name('verificationCode');
-Route::get('/newPassword', [NewPasswordController::class, 'NewPassword'])->name('NewPassword');
-Route::get('/completedAction', [CompletedActionController::class, 'completedAction'])->name('completedAction');
+// سير عمل إعادة تعيين كلمة المرور
+Route::get('/forget-password', [ForgetController::class, 'showForgetPasswordForm'])->name('forget-password');
+Route::post('/forget-password', [ForgetController::class, 'sendResetLinkEmail'])->name('forget-password.submit');
+
+Route::get('/verification-code', [VerificationCodeController::class, 'showVerificationCodeForm'])->name('verification-code')->middleware('auth');
+Route::post('/verification-code', [VerificationCodeController::class, 'verifyCode'])->name('verification-code.submit');
+
+Route::get('/new-password', [NewPasswordController::class, 'showNewPasswordForm'])->name('new-password');
+Route::post('/new-password', [NewPasswordController::class, 'resetPassword'])->name('new-password.submit');
+
+Route::get('/completedAction/{user}', [CompletedActionController::class, 'completedAction'])->name('completedAction')->middleware('auth');;
 Route::get('/Achievement', [AchievementController::class, 'Achievement'])->name('Achievement');
 Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
 Route::get('/Plan', [PlanController::class, 'Plan'])->name('Plan');
 Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
 Route::get('/setting', [SettingController::class, 'Setting'])->name('setting');
 Route::get('/certification', [certificationController::class, 'certification'])->name('certification');
-
+Route::get('/certificate/download', [CertificationController::class, 'download'])->name('certificate.download');
+Route::get('/certificate/view', [CertificationController::class, 'view'])->name('certificate.view');
 
 Route::get('/test-verification', function() {
     $user = App\Models\User::first();

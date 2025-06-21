@@ -5,56 +5,51 @@
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/forgert-password.css') }}">
 
-    <div class="mobile-forget-password">
-        <form method="POST" action="{{ route('password.email') }}">
-            @csrf
-            <div class="mobile-forget-password__frame-446">
-                <div class="mobile-forget-password__frame-2">
-                    <div class="mobile-forget-password__frame-582">
-                        <div class="mobile-forget-password__div">نسيت كلمة المرور؟</div>
-                        <div class="mobile-forget-password__vuesax-linear-arrow-right">
-                            <img class="mobile-forget-password__vuesax-linear-arrow-right2" src="/images/arrow-right.png" />
-                        </div>
-                    </div>
-                    <div class="mobile-forget-password__div2">
-                        قم بإدخال بريدك الإلكتروني المُسجل واستعيد الوصول إلى حسابك
-                    </div>
-                </div>
-
-                <div class="mobile-forget-password__input-filed">
-                    <div class="mobile-forget-password__top-text">البريد الالكتروني</div>
-                    <div class="mobile-forget-password__box-frame">
-                        <div class="mobile-forget-password__inner-frame">
-                            <input
-                                type="email"
-                                name="email"
-                                required
-                                placeholder="abc@gmail.com"
-                                class="mobile-forget-password__input"
-                            >
-                            <div class="mobile-forget-password__sms">
-                                <img class="mobile-forget-password__vuesax-outline-sms" src="/images/sms.png" />
+<div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="custom-card">
+                    <form method="POST" action="{{ route('password.email') }}">
+                        @csrf
+                        <div class="form-section">
+                            <div class="header-group">
+                                <div class="title">نسيت كلمة المرور؟</div>
+                                <div class="mobile-forget-password__vuesax-linear-arrow-right">
+                                    <img class="mobile-forget-password__vuesax-linear-arrow-right2 arrow-icon" src="{{ asset('images/arrow-right.png') }}" />
+                                </div>
+                            </div>
+                            <div class="instruction">
+                                قم بإدخال بريدك الإلكتروني المُسجل واستعيد الوصول إلى حسابك
                             </div>
                         </div>
-                    </div>
-                    @error('email')
-                        <div style="color:red; font-size: 14px; margin-top: 5px;">{{ $message }}</div>
-                    @enderror
+
+                        <div class="input-field">
+                            <div class="label">البريد الالكتروني</div>
+                            <div class="input-box">
+                                <div class="input-inner">
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        required
+                                        placeholder="abc@gmail.com"
+                                        class="input"
+                                    >
+                                    <div class="mobile-forget-password__sms">
+                                        <img class="mobile-forget-password__vuesax-outline-sms sms-icon" src="{{ asset('images/sms.png') }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            @error('email')
+                                <div class="error">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="submit-button">
+                            <button type="submit" class="button-text">ارسل كود التحقق</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="mobile-forget-password__button">
-                <button type="submit" class="mobile-forget-password__text">ارسل كود التحقق</button>
-            </div>
-        </form>
+        </div>
     </div>
 @endsection
-
-
-
-
-
-
-
-
-
