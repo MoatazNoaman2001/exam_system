@@ -14,9 +14,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, SoftDeletes,HasUuids;
-    use Notifiable;
-    use SoftDeletes;
+
+    use HasFactory, SoftDeletes, HasUuids, Notifiable;
 
     protected $primaryKey = 'id';
     public $incrementing = false;
@@ -38,35 +37,20 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $hidden = ['password', 'reset_password_token'];
 
+    protected $casts = [
+        'verified' => 'boolean',
+        'is_agree' => 'boolean',
+        'email_verified_at' => 'datetime',
+    ];
+
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = Hash::make($value);
-    }
-    public function getIsAdminAttribute(): bool
-    {
-       return $this->role === 'admin';
+        $this->attributes['password'] = bcrypt($value);
     }
 
-    public function comparePassword(string $value): bool
+    public function getIsAdminAttribute()
     {
-        return Hash::check($value, $this->password);
-    }
-
-    public function omitPassword(): array
-    {
-        return $this->only([
-            'id',
-            'username',
-            'email',
-            'role',
-            'phone',
-            'image',
-            'is_agree',
-            'preferred_language',
-            'verified',
-            'created_at',
-            'updated_at',
-        ]);
+        return $this->role === 'admin';
     }
 
     public function introAnswers()
@@ -99,30 +83,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Notification::class);
     }
 
-    // public function hasVerifiedEmail(): bool
-    // {
-    //     return $this->verified;
-    // }
 
-    // public function markEmailAsVerified()
-    // {
-    //     return $this->forceFill([
-    //         'verified' => true,
-    //         'email_verified_at' => $this->freshTimestamp(),
-    //     ])->save();
-    // }
 
-    // public function getEmailForVerification()
-    // {
-    //     return $this->email;
-    // }
-
-  protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
+  
     
-    public function progress()
+    public function progress(){
+      
+        return $this->hasOne(UserProgress::class, 'user_id');
+    }
+
+    public function hasVerifiedEmail()
     {
         return $this->hasOne(UserProgress::class, 'user_id');
     }

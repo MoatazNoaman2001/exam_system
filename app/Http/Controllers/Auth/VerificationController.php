@@ -10,6 +10,7 @@ use Illuminate\Auth\Events\Verified;
 
 class VerificationController extends Controller
 {
+
     use VerifiesEmails;
 
     protected $redirectTo = '/home';
@@ -22,21 +23,16 @@ class VerificationController extends Controller
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
 
-    /**
-     * Mark the authenticated user's email address as verified.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function verify(Request $request)
     {
         $user = User::find($request->route('id'));
+
         if (!$user) {
-            return redirect()->route('login')->with('error', 'User not found');
+            return redirect()->route('login')->with('error', __('lang.user_not_found'));
         }
 
         if (!hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
-            return redirect()->route('login')->with('error', 'Invalid verification link');
+            return redirect()->route('login')->with('error', __('lang.invalid_verification_link'));
         }
 
         if ($user->hasVerifiedEmail()) {
@@ -49,6 +45,7 @@ class VerificationController extends Controller
 
         return redirect($this->redirectPath())->with('verified', true);
     }
+
     public function resend(Request $request)
     {
         $user = $request->user();
@@ -65,5 +62,14 @@ class VerificationController extends Controller
     public function show()
     {
         return view('auth.verify');
+    }
+
+    protected function redirectTo()
+    {
+        $user = auth()->user();
+        if ($user && $user->isAdmin) {
+            return '/admin/dashboard';
+        }
+        return '/student/home';
     }
 }

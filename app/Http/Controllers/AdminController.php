@@ -77,9 +77,26 @@ class AdminController extends Controller
     /**
      * Users Management
      */
-    public function users()
+    public function users(Request $request)
     {
-        $users = User::latest()->paginate(20);
+        $query = User::query();
+
+        if ($search = $request->input('search')) {
+            $query->where('username', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+        }
+
+        if ($role = $request->input('role')) {
+            $query->where('role', $role);
+        }
+
+        // Handle verified filter only if explicitly set to '1' or '0'
+        if ($request->has('verified') && in_array($request->input('verified'), ['0', '1'])) {
+            $query->where('verified', $request->input('verified') === '1');
+        }
+
+        $users = $query->paginate(10);
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -348,7 +365,7 @@ class AdminController extends Controller
         ]);
     
         // dd($validatedData);
-        // try {
+        try {
             $filePath = $request->file('content')->store('slides', 'public');
             
             Slide::create([
@@ -361,14 +378,14 @@ class AdminController extends Controller
             return redirect()->route('admin.slides')
                    ->with('success', 'Slide created successfully.');
     
-        // } catch (\Exception $e) {
-        //     if (isset($filePath)) {
-        //         Storage::disk('public')->delete($filePath);
-        //     }
+        } catch (\Exception $e) {
+            if (isset($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
     
-        //     return back()->withInput()
-        //            ->with('error', 'Error creating slide: ' . $e->getMessage());
-        // }
+            return back()->withInput()
+                   ->with('error', 'Error creating slide: ' . $e->getMessage());
+        }
     }
 
     public function editSlide(Slide $slide)

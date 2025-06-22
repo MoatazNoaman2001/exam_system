@@ -111,8 +111,8 @@
                                 <select class="form-select @error('role') is-invalid @enderror" 
                                         id="role" name="role" required>
                                     <option value="" disabled >Select professional role</option>
-                                    <option value="student" selected {{ old('role') == 'student' ? 'selected' : '' }}>PMP Candidate</option>
-                                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrator</option>
+                                    <option value="student" {{ old('role') == 'student' ? 'selected' : '' }}>PMP Candidate</option>
+                                    <option value="admin" selected {{ old('role') == 'admin' ? 'selected' : '' }}>Administrator</option>
                                 </select>
                                 @error('role')
                                     <div class="invalid-feedback">{{ $message }}</div>

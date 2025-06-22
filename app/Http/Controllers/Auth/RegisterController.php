@@ -22,16 +22,18 @@ class RegisterController extends Controller
     |
     */
 
+    use RegistersUsers;
+
     public function showRegistrationForm()
     {
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    protected function validator(array $data)
     {
-        $request->validate([
-            'username' => 'required|string|max:255|unique:users|regex:/^[a-zA-Z0-9_]+$/',
-            'email' => 'required|email|unique:users,email',
+        return Validator::make($data, [
+            'username' => ['required', 'string', 'max:255', 'unique:users', 'regex:/^[a-zA-Z0-9_]+$/'],
+            'email' => ['required', 'email', 'unique:users,email'],
             'password' => [
                 'required',
                 'string',
@@ -39,33 +41,42 @@ class RegisterController extends Controller
                 'confirmed',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_])[A-Za-z\d@$!%*?&_]{8,}$/'
             ],
-            'phone' => 'required|regex:/^\+?[1-9]\d{1,14}$/',
-            'role' => 'required|in:student,admin',
-            'preferred_language' => 'required|in:ar,en',
-            'is_agree' => 'accepted',
+            'phone' => ['required', 'regex:/^\+?[1-9]\d{1,14}$/'],
+            'role' => ['required', 'in:student,admin'],
+            'preferred_language' => ['required', 'in:ar,en'],
+            'is_agree' => ['accepted'],
         ], [
-            'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
-            'username.regex' => 'Username may only contain letters, numbers, and underscores.',
+            'password.regex' => __('lang.password_requirements'),
+            'username.regex' => __('lang.username_requirements'),
+            'is_agree.accepted' => __('lang.must_agree_terms'),
         ]);
+    }
 
-        // dd($request->all());
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => $request->password,
-            'phone' => $request->phone,
-            'role' => $request->role,
-            'preferred_language' => $request->preferred_language,
+    protected function create(array $data)
+    {
+        return User::create([
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'phone' => $data['phone'],
+            'role' => $data['role'],
+            'preferred_language' => $data['preferred_language'],
             'is_agree' => true,
             'verified' => false,
         ]);
+<<<<<<< HEAD
 
         $user->sendEmailVerificationNotification();
 
  if ($user->role === 'student') {
         return redirect()->route('completedAction');
+=======
+>>>>>>> d0b1d966fba367e712ef0d580c61e24498aa833f
     }
 
+    protected function registered(Request $request, $user)
+    {
+        $user->sendEmailVerificationNotification();
         return redirect()->route('verification.notice');
     }
 }
