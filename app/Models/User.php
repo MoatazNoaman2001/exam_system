@@ -99,30 +99,38 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Notification::class);
     }
 
-    public function hasVerifiedEmail(): bool
-    {
-        return $this->verified;
-    }
+    // public function hasVerifiedEmail(): bool
+    // {
+    //     return $this->verified;
+    // }
 
-    public function markEmailAsVerified()
-    {
-        return $this->forceFill([
-            'verified' => true,
-            'email_verified_at' => $this->freshTimestamp(),
-        ])->save();
-    }
+    // public function markEmailAsVerified()
+    // {
+    //     return $this->forceFill([
+    //         'verified' => true,
+    //         'email_verified_at' => $this->freshTimestamp(),
+    //     ])->save();
+    // }
 
-    public function getEmailForVerification()
-    {
-        return $this->email;
-    }
+    // public function getEmailForVerification()
+    // {
+    //     return $this->email;
+    // }
 
   protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
+    
     public function progress()
     {
         return $this->hasOne(UserProgress::class, 'user_id');
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'user_id');
+    }
+
+
 }

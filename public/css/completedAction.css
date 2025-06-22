@@ -9,7 +9,8 @@ body {
     background: #f9fafb;
     min-height: 100vh;
     overflow-y: auto;
-    padding-top: 5rem; 
+    color: #181818;
+    direction: rtl;
 }
 
 .container {
@@ -19,46 +20,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-}
-
-/* Navigation */
-.nav {
-    background: #fff;
-    border-bottom: 1px solid #e5e7eb;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    z-index: 1000;
-}
-
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.5rem 1.5rem;
-    color: #333;
-    font-size: 0.2rem;
-    font-weight: 500;
-    color: #2f80ed;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.3s;
-}
-
-.nav-item:hover {
-    background: rgba(47, 128, 237, 0.1);
-    transform: scale(1.05);
-}
-
-.nav-icon {
-    width: 1.5rem;
-    height: 1.5rem;
 }
 
 /* Notification Section */
@@ -84,6 +45,7 @@ body {
     justify-content: center;
     position: relative;
     transition: transform 0.25s;
+    cursor: pointer;
 }
 
 .bell-container:hover {
@@ -104,6 +66,69 @@ body {
     position: absolute;
     top: 0;
     left: 0.5rem;
+    display: none; /* Hidden by default, shown via JS */
+}
+
+.bell-dot.active {
+    display: block;
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: 3.5rem;
+    left: 1rem;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    padding: 0.5rem;
+}
+
+.notification-dropdown.active {
+    display: flex;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    transition: background 0.2s;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background: rgba(47, 128, 237, 0.1);
+}
+
+.notification-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #2f80ed;
+}
+
+.notification-text {
+    flex: 1;
+    color: #181818;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: right;
+}
+
+.notification-time {
+    color: #6c737f;
+    font-size: 0.75rem;
+    text-align: right;
 }
 
 .user-info {
@@ -258,7 +283,7 @@ body {
     flex: 1;
 }
 
-.task-text.done {
+.task-text.completed {
     text-decoration: line-through;
     opacity: 0.6;
 }
@@ -269,14 +294,14 @@ body {
     cursor: pointer;
 }
 
-.delete-task {
+.task-delete {
     color: #fe1028;
     font-size: 1.5rem;
     cursor: pointer;
     transition: color 0.2s;
 }
 
-.delete-task:hover {
+.task-delete:hover {
     color: #e00;
 }
 
@@ -380,7 +405,7 @@ body {
 .arrow-icon {
     width: 1rem;
     height: 1rem;
-    transform: rotate(180deg); /* Reverse arrow direction */
+   
 }
 
 /* Points Section */
@@ -554,6 +579,10 @@ body {
     .achievements-details {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
+
+    .notification-dropdown {
+        width: 250px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -574,6 +603,11 @@ body {
         gap: 0.5rem;
         justify-content: flex-end;
     }
+
+    .notification-dropdown {
+        width: 200px;
+        left: 0.5rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -585,21 +619,18 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .nav-item {
-        padding: 0.5rem;
-        font-size: 0.75rem;
-    }
-
-    .nav-icon {
-        width: 1.25rem;
-        height: 1.25rem;
-    }
-
     .greeting, .tasks-title, .journey-title, .points-title, .achievements-title {
         font-size: 0.875rem;
     }
 
     .calendar-icon, .compass-icon, .diamond-icon, .chart-icon, .medal-icon, .achievement-icon {
         font-size: 1.25rem;
+    }
+
+    .notification-dropdown {
+        width: 100%;
+        left: 0;
+        right: 0;
+        margin: 0 0.5rem;
     }
 }

@@ -25,6 +25,8 @@ use App\Http\Controllers\AchievementPointController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\certificationController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\LeaderBoardController;
 
 App::setLocale('en');
 Route::get('/lang/{lang}' , function ($lang) {
@@ -35,16 +37,21 @@ Route::get('/lang/{lang}' , function ($lang) {
     return redirect()->back();
 })->name("lang.switch");
 
+
 Route::get("/", function (Request $request) {
     if (Auth::user() != null) {
-        if (Auth::user()->role == "admin") {
+        $user = Auth::user(); 
+
+        if ($user->role == "admin") {
             return redirect('/admin/dashboard');
         } else {
-            return redirect('/completedAction');
+            return redirect()->route('completed-action', ['userId' => $user->id]);
         }
     }
+
     return view('welcome');
 })->name('welcome');
+
 
 Route::view("/home", "home")->middleware('auth')
     
@@ -157,13 +164,33 @@ Route::post('/verification-code', [VerificationCodeController::class, 'verifyCod
 Route::get('/new-password', [NewPasswordController::class, 'showNewPasswordForm'])->name('new-password');
 Route::post('/new-password', [NewPasswordController::class, 'resetPassword'])->name('new-password.submit');
 
-Route::get('/completedAction/{user}', [CompletedActionController::class, 'completedAction'])->name('completedAction')->middleware('auth');;
-Route::get('/Achievement', [AchievementController::class, 'Achievement'])->name('Achievement');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/completed-action/{userId}', [CompletedActionController::class, 'completedAction'])->name('completed-action');
+    Route::post('/tasks', [CompletedActionController::class, 'store']);
+    Route::patch('/tasks/{id}', [CompletedActionController::class, 'update']);
+    Route::delete('/tasks/{id}', [CompletedActionController::class, 'destroy']);
+});
+
+Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->middleware('auth')->name('notifications.markAsRead');
+
+// Route::get('/Achievement', [AchievementController::class, 'Achievement'])->name('Achievement');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/Achievement', [AchievementController::class, 'Achievement'])->name('achievement.index');
+   
+    
+});
+
+
 Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
 Route::get('/Plan', [PlanController::class, 'Plan'])->name('Plan');
 Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
 Route::get('/setting', [SettingController::class, 'Setting'])->name('setting');
 Route::get('/certification', [certificationController::class, 'certification'])->name('certification');
+
+Route::get('/leaderboard/{userId}', [LeaderBoardController::class, 'showLeaderBoard'])->name('leaderboard');
+
 Route::get('/certificate/download', [CertificationController::class, 'download'])->name('certificate.download');
 Route::get('/certificate/view', [CertificationController::class, 'view'])->name('certificate.view');
 
@@ -172,9 +199,15 @@ Route::get('/test-verification', function() {
     return $user->getKey(); // Should return the user's ID
 });
 
-// ✅ الاستبيان - بدون تسجيل دخول (مؤقتًا)
-Route::get('/intro', [IntroController::class, 'index'])->name('intro.index');
-Route::get('/intro/step/{step}', [IntroController::class, 'step'])->name('intro.step');
-Route::post('/intro/step/{step}', [IntroController::class, 'store'])->name('intro.store');
-Route::get('/intro/complete', [IntroController::class, 'complete'])->name('intro.complete');
 
+
+Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->group(function () {
+    // ✅ الاستبيان - بدون تسجيل دخول (مؤقتًا)
+    Route::get('/intro', [IntroController::class, 'index'])->name('intro.index');
+    Route::get('/intro/step/{step}', [IntroController::class, 'step'])->name('intro.step');
+    Route::post('/intro/step/{step}', [IntroController::class, 'store'])->name('intro.store');
+    Route::get('/intro/complete', [IntroController::class, 'complete'])->name('intro.complete');
+
+    // Student Dashboard
+    Route::view('/home','home')->name('home');
+});

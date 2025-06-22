@@ -13,8 +13,29 @@ class UserProgress extends Model
         'questions_completed', 'questions_total', 'lessons_milestone', 'questions_milestone',
         'streak_days'
     ];
+    protected $dates = ['plan_end_date'];
 
-    // إضافة العلاقة العكسية مع User
+ 
+public function updateLevel()
+{
+    if ($this->points >= 1000) {
+        $this->current_level = 'خبير';
+        $this->points_to_next_level = 0;  
+    } elseif ($this->points >= 500) {
+        $this->current_level = 'متقدم';
+        $this->points_to_next_level = 1000 - $this->points;
+    } elseif ($this->points >= 150) {
+        $this->current_level = 'متوسط';
+        $this->points_to_next_level = 500 - $this->points;
+    } else {
+        $this->current_level = 'مبتدئ';
+        $this->points_to_next_level = 150 - $this->points;
+    }
+
+    $this->save();
+}
+
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

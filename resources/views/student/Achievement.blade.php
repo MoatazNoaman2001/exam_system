@@ -7,7 +7,7 @@
 
     <div class="web-achievement-dashboard" dir="rtl">
         <div class="web-achievement-dashboard__header">
-            <h1 class="web-achievement-dashboard__title">إنجازي</h1>
+            <h1 class="web-achievement-dashboard__title">إنجازي - {{ $user->username }}</h1>
         </div>
         <div class="web-achievement-dashboard__content">
             <div class="web-achievement-dashboard__card points-card">
@@ -37,9 +37,9 @@
                     <h2 class="web-achievement-dashboard__subtitle">الخطة الزمنية</h2>
                 </div>
                 <div class="web-achievement-dashboard__card-body">
-                    <div class="web-achievement-dashboard__stat">
+                    <div class="web-achievement-dashboard__stat" id="daysLeftContainer">
                         <span class="web-achievement-dashboard__stat-label">الأيام المتبقية:</span>
-                        <span class="web-achievement-dashboard__stat-value">{{ $progress->days_left ?? 0 }} من {{ $progress->plan_duration ?? 90 }} يومًا</span>
+                        <span class="web-achievement-dashboard__stat-value" id="daysLeft">0</span> من {{ $progress->plan_duration ?? 30 }} يومًا
                     </div>
                     <div class="web-achievement-dashboard__stat">
                         <span class="web-achievement-dashboard__stat-label">تاريخ الانتهاء:</span>
@@ -112,25 +112,22 @@
                 </div>
             </div>
         </div>
-        <div class="web-achievement-dashboard__nav">
-            <a href="#" class="web-achievement-dashboard__nav-item">
-                <img src="{{ asset('images/vuesax-linear-user0.svg') }}" alt="User" class="web-achievement-dashboard__nav-icon">
-                <span>حسابي</span>
-            </a>
-            <a href="#" class="web-achievement-dashboard__nav-item active">
-                <img src="{{ asset('images/vuesax-bold-ranking1.svg') }}" alt="Achievements" class="web-achievement-dashboard__nav-icon">
-                <span>إنجازي</span>
-            </a>
-            <a href="#" class="web-achievement-dashboard__nav-item">
-                <img src="{{ asset('images/vuesax-linear-element-30.svg') }}" alt="Element" class="web-achievement-dashboard__nav-icon">
-                <span>عنصر</span>
-            </a>
-            <a href="#" class="web-achievement-dashboard__nav-item">
-                <img src="{{ asset('images/vuesax-linear-home-20.svg') }}" alt="Home" class="web-achievement-dashboard__nav-icon">
-                <span>الرئيسية</span>
-            </a>
-        </div>
-    </div>
+     
 
-    <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script>
+        function updateDaysLeft() {
+            const endDate = new Date("{{ $progress->plan_end_date }}");
+            const today = new Date();
+            const diffTime = endDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // الفرق بالأيام
+            const daysLeft = Math.max(0, diffDays); // لا تسمح بقيمة سلبية
+            document.getElementById('daysLeft').textContent = daysLeft;
+        }
+
+        // تحديث عند تحميل الصفحة
+        updateDaysLeft();
+
+        // تحديث كل يوم (يمكن تفعيل هذا لتحديث ديناميكي)
+        // setInterval(updateDaysLeft, 24 * 60 * 60 * 1000); // كل 24 ساعة
+    </script>
 @endsection

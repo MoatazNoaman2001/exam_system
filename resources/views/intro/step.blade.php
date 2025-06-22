@@ -30,7 +30,7 @@
         @endif
 
         {{-- الإجابات --}}
-        <form method="POST" action="{{ route('intro.store', $step) }}">
+        <form method="POST" action="{{ route('student.intro.store', $step) }}">
             @csrf
             <input type="hidden" name="user_id" value="{{ auth()->id() }}">
             <input type="hidden" name="question_id" value="{{ $question->id }}">

@@ -12,7 +12,7 @@ class IntroController extends Controller
     // أول صفحة بتحول على أول خطوة
     public function index()
     {
-        return redirect()->route('intro.step', 1);
+        return redirect()->route('student.intro.step', 1);
     }
 
     // عرض سؤال معين
@@ -24,7 +24,7 @@ class IntroController extends Controller
             ->first();
 
         if (!$question) {
-            return redirect()->route('intro.complete');
+            return redirect()->route('student.intro.complete');
         }
 
         return view('intro.step', compact('question', 'step'));
@@ -53,7 +53,7 @@ class IntroController extends Controller
 
     //     return redirect()->route('intro.step', $step + 1);
     // }
-      public function store(Request $request)
+    public function store(Request $request, $step)
     {
         // Validate request data
         $validator = Validator::make($request->all(), [
@@ -95,14 +95,13 @@ class IntroController extends Controller
         ])->exists();
 
         if ($exists) {
-            return response()->json([
-                'message' => 'You have already submitted this answer combination'
-            ], 409);
+            return redirect()->route('student.intro.step', $step + 1);
         }
 
-        // Create the answer
-        $answer = IntroAnswer::create($validated);
-        return redirect()->route('intro.step', $step + 1);
+        // Create the answer without expecting an ID return
+        IntroAnswer::create($validated);
+
+        return redirect()->route('student.intro.step', $step + 1);
     }
 
     // آخر صفحة (تم الانتهاء)

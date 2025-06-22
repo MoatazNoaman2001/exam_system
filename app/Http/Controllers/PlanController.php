@@ -59,7 +59,17 @@ class PlanController extends Controller
             $weeklyQuestions = ceil(300 / $weeks);
         }
 
-        return view('student.plan', compact('progress', 'weeklyLessons', 'weeklyQuestions', 'days_left'));
+        $total_days = 0;
+
+if ($progress->plan_duration == 0 && $progress->plan_end_date) {
+$start = Carbon::parse($progress->start_date ?? $progress->created_at);
+    $end = Carbon::parse($progress->plan_end_date);
+    $total_days = $start->diffInDays($end);
+} else {
+    $total_days = $progress->plan_duration;
+}
+
+return view('student.plan', compact('progress', 'weeklyLessons', 'weeklyQuestions', 'days_left', 'total_days'));
     }
 
 public function update(Request $request)
@@ -81,6 +91,7 @@ public function update(Request $request)
         $endDate = $startDate->copy()->addDays($planDuration);
 
         $progress->plan_end_date = $endDate;
+        
         $progress->save();
 
         // حساب الفرق
@@ -93,7 +104,8 @@ public function update(Request $request)
         if ($startDate->lte($endDate)) {
             $progress->plan_duration = 0;
             $progress->plan_end_date = $endDate;
-            $progress->save();
+             $progress->start_date = $startDate; 
+             $progress->save();
 
             // حساب الفرق
             $totalDays = $startDate->diffInDays($endDate);

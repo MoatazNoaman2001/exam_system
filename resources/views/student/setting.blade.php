@@ -10,19 +10,19 @@
 <div class="container-md py-4">
         <div class="profile-header text-center mb-4">
             <img src="{{ auth()->user()->image ?? 'https://via.placeholder.com/64' }}" alt="صورة المستخدم" class="rounded-circle" width="64" height="64">
-            <div class="name fs-5 fw-bold mt-2">{{ auth()->user()->name }}</div>
+<div class="name fs-5 fw-bold mt-2">{{ auth()->user()->username  ?? 'اسم المستخدم' }}</div>
             <div class="email text-secondary fs-6">{{ auth()->user()->email }}</div>
         </div>
 
         <div class="card custom-card mb-3">
-            <div class="custom-item">
+            <a href="{{ route('certification') }}" class="custom-item text-decoration-none text-dark">
                 <div class="d-flex align-items-center">
                     <span class="me-2">📄</span>
                     <span>شهاداتي</span>
                 </div>
                 <span>›</span>
-            </div>
-            <div class="custom-item">
+            </a>
+                        <div class="custom-item">
                 <div class="d-flex align-items-center">
                     <span class="me-2">🏅</span>
                     <span>قائمة المتصدرين</span>

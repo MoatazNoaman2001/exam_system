@@ -4,30 +4,29 @@
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/plan.css') }}">
-
-    <div class="container py-4">
+  <div class="container py-4">
         <div class="mobile-plan-setup-custom">
             <form action="{{ route('plan.update') }}" method="POST">
                 @csrf
                 <fieldset @if(!Auth::check()) disabled @endif>
 
-              @if(session('success'))
-    <div id="custom-success" class="custom-success fade-in">
-        {{ session('success') }}
-    </div>
-@endif
+                    @if(session('success'))
+                        <div id="custom-success" class="custom-success fade-in">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
                     @if(!Auth::check() && session('error'))
                         <div class="alert alert-warning">{{ session('error') }}</div>
                     @endif
 
                     <div class="mobile-plan-setup-custom__main-content">
-                        <div class="row justify-content-end align-items-center mb-3">
+                        <div class="row justify-content-start align-items-center mb-3">
                             <div class="col-auto">
-                                <h5 class="text-primary fw-bold mb-0">اختر مدة الخطة</h5>
+                                <img src="{{ asset('images/arrow-right.png') }}" alt="Arrow" class="arrow-icon">
                             </div>
                             <div class="col-auto">
-                                <img src="{{ asset('vuesax-linear-arrow-right1.svg') }}" alt="Arrow" class="arrow-icon">
+                                <h5 class="text-primary fw-bold mb-0">اختر مدة الخطة</h5>
                             </div>
                         </div>
 
@@ -62,17 +61,22 @@
                         </div>
 
                         {{-- التواريخ المخصصة --}}
-                        <div class="card custom-card surface p-3 mt-3" style="display: {{ isset($progress->plan_duration) && $progress->plan_duration == 0 ? 'block' : 'none' }}" id="custom-dates">
+                        <div class="card custom-card surface p-3 mt-3" style="display: {{ isset($progress->plan_duration) && $progress->plan_duration == 0 ? 'block' : 'none' }};" id="custom-dates">
                             <div class="d-flex flex-column flex-md-row gap-3">
-                                <div class="custom-date">
+                                <div class="custom-date" style="position: relative;">
                                     <span class="text-secondary">من</span>
-                                    <input type="date" name="start_date" value="{{ isset($progress->start_date) ? \Carbon\Carbon::parse($progress->start_date)->format('Y-m-d') : '' }}" id="start-date">
-                                    <img src="{{ asset('vuesax-linear-calendar0.svg') }}" alt="Calendar" class="calendar-icon">
+                                    <input type="date" name="start_date"
+                                        value="{{ isset($progress->start_date) ? \Carbon\Carbon::parse($progress->start_date)->format('Y-m-d') : '' }}"
+                                        id="start-date"
+                                        style="border: none; outline: none; padding: 8px 12px; border-radius: 8px; background-color: #f5f5f5; font-family: 'Tajawal', sans-serif;">
                                 </div>
-                                <div class="custom-date">
+
+                                <div class="custom-date" style="position: relative;">
                                     <span class="text-secondary">إلى</span>
-                                    <input type="date" name="end_date" value="{{ isset($progress->plan_end_date) ? \Carbon\Carbon::parse($progress->plan_end_date)->format('Y-m-d') : '' }}" id="end-date">
-                                    <img src="{{ asset('vuesax-linear-calendar1.svg') }}" alt="Calendar" class="calendar-icon">
+                                    <input type="date" name="end_date"
+                                        value="{{ isset($progress->plan_end_date) ? \Carbon\Carbon::parse($progress->plan_end_date)->format('Y-m-d') : '' }}"
+                                        id="end-date"
+                                        style="border: none; outline: none; padding: 8px 12px; border-radius: 8px; background-color: #f5f5f5; font-family: 'Tajawal', sans-serif;">
                                 </div>
                             </div>
                         </div>

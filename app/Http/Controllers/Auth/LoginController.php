@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\IntroAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -45,19 +46,41 @@ class LoginController extends Controller
         }
 
         // Check if email is verified
-        if (!$user->hasVerifiedEmail()) {
-            return redirect()->route('verification.notice')
-                ->with('message', 'Please verify your email address before logging in.');
-        }
+        // if (!$user->hasVerifiedEmail()) {
+        //     return redirect()->route('verification.notice')
+        //         ->with('message', 'Please verify your email address before logging in.');
+        // }
+
+
+        
 
         // Use Laravel's built-in authentication
- if (Auth::attempt($credentials, $request->filled('remember'))) {
-    $request->session()->regenerate();
+// <<<<<<< HEAD
+//  if (Auth::attempt($credentials, $request->filled('remember'))) {
+//     $request->session()->regenerate();
     
-    return $user->is_admin 
-        ? redirect('/admin/dashboard')
-        : redirect('/completedAction');
-}
+//     return $user->is_admin 
+//         ? redirect('/admin/dashboard')
+//         : redirect('/completedAction');
+// }
+// =======
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
+            $request->session()->regenerate();
+            
+            if( $user->is_admin){
+                return redirect()->intended('/admin/dashboard');
+            } else{
+
+                $isFirstTime = IntroAnswer::where('user_id' , $user->id)->count() > 0;
+                if (!$isFirstTime) {
+                    return redirect()->route('student.intro.step', 1);
+                }else{
+                    // return redirect()->route('/completedAction',$user->id);
+                    return redirect()->route('completed-action', ['user' => $user->id]);
+                }
+            }
+        }
+
 
         // If authentication fails
         return back()->withErrors([

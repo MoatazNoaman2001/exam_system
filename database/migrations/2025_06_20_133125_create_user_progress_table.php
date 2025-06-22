@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('user_progress', function (Blueprint $table) {
@@ -19,6 +16,7 @@ return new class extends Migration
             $table->integer('points_to_next_level')->default(100);
             $table->integer('days_left')->default(0);
             $table->integer('plan_duration')->default(90);
+            
             $table->date('plan_end_date')->nullable();
             $table->integer('progress')->default(0);
             $table->integer('domains_completed')->default(0);
@@ -36,9 +34,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('user_progress');

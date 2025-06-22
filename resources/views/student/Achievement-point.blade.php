@@ -4,7 +4,7 @@
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/Achievement-point.css') }}">
-    <div class="container py-4 text-start">
+    <div class="container py-4 text-center">
         <div class="mobile-achievement-points-guide">
             <div class="mobile-achievement-points-guide__main-content">
                 <div class="row justify-content-end align-items-center mb-4">
@@ -16,7 +16,7 @@
                         <img src="{{ asset('images/arrow-right.png') }}" alt="رجوع" class="arrow-icon">
                     </div>
                 </div>
-                <div class="justify-content-end">
+                <div class="justify-content-start">
                    <h3 class="primary fw-bold mb-5 text-primary ">🎯 كيف أكسب النقاط؟ 🎯</h3>
                 </div>
                 <div class="card custom-card surface p-3">
