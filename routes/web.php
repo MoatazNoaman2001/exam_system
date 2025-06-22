@@ -21,13 +21,16 @@ use App\Http\Controllers\VerificationCodeController;
 use App\Http\Controllers\NewPasswordController;
 
 App::setLocale('en');
-Route::get('/lang/{lang}' , function ($lang) {
-    if (in_array($lang, ['en', 'ar'])) {
-        App::setLocale($lang);
-        session(['applocale' => $lang]);
+Route::get('/lang/{locale}' , function ($lang) {
+    if (!in_array($lang, ['en', 'ar'])) {
+        abort(400);
     }
+
+    App::setLocale($lang);
+    Session::put('locale', $lang);
+
     return redirect()->back();
-})->name("lang.switch");
+})->name("locale.set");
 
 Route::get("/" , function (Request $request){ 
    if (Auth::user() != null){
