@@ -1,0 +1,81 @@
+@extends('layouts.app')
+
+@section('title', 'LeaderBoard')
+
+@section('content')
+    <link rel="stylesheet" href="{{ asset('css/LeaderBoard.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <div class="leaderboard">
+        <div class="leaderboard__inner-frame">
+            <!-- Page Title -->
+            <div class="leaderboard__page-title">
+                <div class="leaderboard__inner-frame2">
+                    <div class="leaderboard__top-frame">
+                        <div class="leaderboard__title">قائمة المتصدرين</div>
+                        <div class="leaderboard__arrow-right">
+                            <img class="leaderboard__vuesax-outline-arrow-right" src="{{ asset('images/vuesax-outline-arrow-right.svg') }}" alt="Arrow Right" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="leaderboard__tab-leaderboard">
+                <div class="leaderboard__tab">
+                    <div class="leaderboard__tab-text">دائماً</div>
+                </div>
+                <div class="leaderboard__tab leaderboard__tab--active">
+                    <div class="leaderboard__tab-text">هذا الأسبوع</div>
+                </div>
+            </div>
+
+            <!-- User Rank -->
+            <div class="leaderboard__user-rank">
+                <div class="leaderboard__user-rank-frame">
+                    <div class="leaderboard__user-rank-text">أنت أفضل من {{ $progress->top_users_percent ?? 'أعلى 10%' }} من الآخرين!</div>
+                    <div class="leaderboard__user-rank-number">#{{ $userRank }}</div>
+                </div>
+            </div>
+
+            <!-- Top Users -->
+            <div class="leaderboard__users-rank">
+                @foreach($topUsers as $index => $topUser)
+                    <div class="leaderboard__user-frame {{ $topUser->id == $user->id ? 'leaderboard__user-frame--current' : '' }}">
+                        <div class="leaderboard__medal">
+                            @if($index < 3)
+                                <img class="leaderboard__star" src="{{ asset('images/Medal' . $index . '.svg') }}" alt="Star" />
+                            @endif
+                        </div>
+                        <div class="leaderboard__user-info-frame">
+                            <div class="leaderboard__user-info-container">
+                                <div class="leaderboard__user-info">
+                                    <div class="leaderboard__greeting-container">
+                                        <div class="leaderboard__greeting-text">{{ $topUser->username }}</div>
+                                    </div>
+                                    <div class="leaderboard__question-text">{{ $topUser->points }} نقطة</div>
+                                </div>
+                                <img class="leaderboard__avatar" src="{{ $topUser->image ? asset('storage/avatars/' . $topUser->image) : asset('images/default-avatar.png') }}" alt="Avatar" />
+                            </div>
+                            <div class="leaderboard__rank-number">{{ $index + 1 }}</div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Toggle between tabs
+            const tabs = document.querySelectorAll('.leaderboard__tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('leaderboard__tab--active'));
+                    tab.classList.add('leaderboard__tab--active');
+                    // يمكن إضافة منطق لتحديث البيانات بناءً على التبويب (دائماً أو هذا الأسبوع)
+                });
+            });
+        });
+    </script>
+@endsection

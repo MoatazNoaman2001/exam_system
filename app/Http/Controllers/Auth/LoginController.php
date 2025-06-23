@@ -29,17 +29,25 @@ class LoginController extends Controller
 
         $credentials = $request->only('email', 'password');
 
+
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
             $user = Auth::user();
 
+
+
             if ($user->isAdmin) {
                 return redirect()->intended('/admin/dashboard');
             }
+$isFirstTime = !IntroAnswer::where('user_id', $user->id)->exists();
 
-            $hasAnsweredIntro = IntroAnswer::where('user_id', $user->id)->exists();
-            return redirect()->intended($hasAnsweredIntro ? '/student/home' : route('student.intro.step', 1));
+            if ($isFirstTime) {
+                return redirect()->route('student.intro.index');  // تأكد من اسم الراوت صح
+            }
+
+            return redirect()->route('completed-action', ['userId' => $user->id]);
         }
+
 
         return back()->withErrors([
             'email' => __('lang.invalid_credentials'),

@@ -14,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+
     use HasFactory, SoftDeletes, HasUuids, Notifiable;
 
     protected $primaryKey = 'id';
@@ -82,21 +83,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Notification::class);
     }
 
+
+
+  
+    
+    public function progress(){
+      
+        return $this->hasOne(UserProgress::class, 'user_id');
+    }
+
     public function hasVerifiedEmail()
     {
-        return $this->verified;
+        return $this->hasOne(UserProgress::class, 'user_id');
     }
 
-    public function markEmailAsVerified()
+    public function tasks()
     {
-        return $this->forceFill([
-            'verified' => true,
-            'email_verified_at' => $this->freshTimestamp(),
-        ])->save();
+        return $this->hasMany(Task::class, 'user_id');
     }
 
-    public function getEmailForVerification()
-    {
-        return $this->email;
-    }
+
 }

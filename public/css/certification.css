@@ -1,0 +1,49 @@
+body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #ffffff;
+        }
+        .custom-card {
+            border-radius: 0.75rem;
+            box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+        .certificate-img {
+            width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            aspect-ratio: 327/231;
+        }
+        .custom-button {
+            background: #ffffff;
+            border-radius: 0.625rem;
+            border: 1px solid #2f80ed;
+            padding: 0.625rem 1.5rem;
+            color: #2f80ed;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0.25rem 0.25rem 1.5625rem rgba(47, 128, 237, 0.15);
+            transition: background 0.3s, color 0.3s;
+        }
+        .custom-button:hover {
+            background: #2f80ed;
+            color: #ffffff;
+        }
+        .text-primary { color: #181818; }
+        .primary { color: #2f80ed; }
+        .share-modal .modal-content {
+            border: none;
+            border-radius: 0.75rem;
+        }
+        .share-modal .btn-share {
+            display: block;
+            width: 100%;
+            margin-bottom: 0.5rem;
+            background: #ffffff;
+            border: 1px solid #2f80ed;
+            color: #2f80ed;
+        }
+        .share-modal .btn-share:hover {
+            background: #2f80ed;
+            color: #ffffff;
+        }
+    

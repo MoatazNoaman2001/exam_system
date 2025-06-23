@@ -19,6 +19,14 @@ use App\Http\Controllers\ForgetController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\VerificationCodeController;
 use App\Http\Controllers\NewPasswordController;
+use App\Http\Controllers\CompletedActionController;
+use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\AchievementPointController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\certificationController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\LeaderBoardController;
 
 App::setLocale('en');
 Route::get('/lang/{locale}' , function ($lang) {
@@ -32,25 +40,30 @@ Route::get('/lang/{locale}' , function ($lang) {
     return redirect()->back();
 })->name("locale.set");
 
-Route::get("/" , function (Request $request){ 
-   if (Auth::user() != null){
-    if (Auth::user()->role == "admin"){
-        return redirect()->intended('/admin/dashboard');
-    }else{
-        return view("home");
+
+Route::get("/", function (Request $request) {
+    if (Auth::user() != null) {
+        $user = Auth::user(); 
+
+        if ($user->role == "admin") {
+            return redirect('/admin/dashboard');
+        } else {
+            return redirect()->route('completed-action', ['userId' => $user->id]);
+        }
     }
-   }
-   return view('welcome'); 
+
+    return view('welcome');
 })->name('welcome');
 
+
 Route::view("/home", "home")->middleware('auth')
-    ->middleware(['auth', 'verified'])
+    
     ->name('home');
 // Route::get('/admin', [DashboardController::class, 'index'])
 //     ->middleware(['auth', 'verified', 'admin'])
 //     ->name('admin.dashboard');
 // Admin Routes Group
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -144,10 +157,45 @@ Route::get('/logo', [LogoController::class, 'index'])->name('index');
 Route::get('/feature', [FeaturesController::class, 'features'])->name('feature');
 Route::get('/welcome', [WelcomeController::class, 'welcome'])->name('welcome');
 Route::get('/splash', [SplashController::class, 'splash'])->name('splash');
-Route::get('/forget-password', [ForgetController::class, 'forgetPassword'])->name('forget-password');
-Route::get('/verificationCode', [VerificationCodeController::class, 'verificationCode'])->name('verificationCode');
-Route::get('/newPassword', [NewPasswordController::class, 'NewPassword'])->name('NewPassword');
+// سير عمل إعادة تعيين كلمة المرور
+Route::get('/forget-password', [ForgetController::class, 'showForgetPasswordForm'])->name('forget-password');
+Route::post('/forget-password', [ForgetController::class, 'sendResetLinkEmail'])->name('forget-password.submit');
 
+Route::get('/verification-code', [VerificationCodeController::class, 'showVerificationCodeForm'])->name('verification-code')->middleware('auth');
+Route::post('/verification-code', [VerificationCodeController::class, 'verifyCode'])->name('verification-code.submit');
+
+Route::get('/new-password', [NewPasswordController::class, 'showNewPasswordForm'])->name('new-password');
+Route::post('/new-password', [NewPasswordController::class, 'resetPassword'])->name('new-password.submit');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/completed-action/{userId}', [CompletedActionController::class, 'completedAction'])->name('completed-action');
+    Route::post('/tasks', [CompletedActionController::class, 'store']);
+    Route::patch('/tasks/{id}', [CompletedActionController::class, 'update']);
+    Route::delete('/tasks/{id}', [CompletedActionController::class, 'destroy']);
+});
+
+Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->middleware('auth')->name('notifications.markAsRead');
+
+// Route::get('/Achievement', [AchievementController::class, 'Achievement'])->name('Achievement');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/Achievement', [AchievementController::class, 'Achievement'])->name('achievement.index');
+   
+    
+});
+
+
+Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
+Route::get('/Plan', [PlanController::class, 'Plan'])->name('Plan');
+Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
+Route::get('/setting', [SettingController::class, 'Setting'])->name('setting');
+Route::get('/certification', [certificationController::class, 'certification'])->name('certification');
+
+Route::get('/leaderboard/{userId}', [LeaderBoardController::class, 'showLeaderBoard'])->name('leaderboard');
+
+Route::get('/certificate/download', [CertificationController::class, 'download'])->name('certificate.download');
+Route::get('/certificate/view', [CertificationController::class, 'view'])->name('certificate.view');
 
 Route::get('/test-verification', function() {
     $user = App\Models\User::first();

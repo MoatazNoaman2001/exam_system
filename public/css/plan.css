@@ -1,0 +1,63 @@
+body { direction: rtl; font-family: 'Tajawal', sans-serif; background-color: #ffffff; }
+        .text-primary { color: #181818; }
+        .text-secondary { color: #6c737f; }
+        .text-placeholder { color: #9da4ae; }
+        .primary { color: #2f80ed; }
+        .surface { background-color: #f9fafb; }
+        .stroke { border-color: #e5e7eb !important; }
+        .custom-card { border-radius: 1rem; box-shadow: 0 0.25rem 1.5625rem rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb; }
+        .circle-option {
+            width: 6rem;
+            height: 6rem;
+            border-radius: 50%;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #ffffff;
+            margin: 0.5rem;
+        }
+        .circle-option.selected {
+            border-color: #2f80ed;
+            background: #f0f7ff;
+        }
+        .circle-option input[type="radio"] {
+            display: none;
+        }
+        .custom-date { background: #ffffff; border-radius: 0.75rem; border: 1px solid #e5e7eb; padding: 0.25rem 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .button-plan { background: #2f80ed; border-radius: 0.625rem; padding: 0.625rem 1.5rem; box-shadow: 0.25rem 0.25rem 1.5625rem 0rem rgba(47, 128, 237, 0.15); }
+        .dashed-card { border: 1px dashed #2f80ed; border-radius: 0.625rem; box-shadow: 0 0.125rem 1.5625rem rgba(0, 0, 0, 0.08); }
+        .arrow-icon, .calendar-icon { width: 1.5rem; height: 1.5rem; }
+        .custom-alert { position: fixed; top: 20%; left: 50%; transform: translateX(-50%); z-index: 1050; }
+
+             .custom-success {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1050;
+            font-family: 'Tajawal', sans-serif;
+            text-align: center;
+            font-weight: bold;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .fade-out {
+            animation: fadeOut 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
