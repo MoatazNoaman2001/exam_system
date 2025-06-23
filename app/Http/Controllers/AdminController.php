@@ -135,7 +135,7 @@ class AdminController extends Controller
             $user = User::create([
                 'username' => $validatedData['username'],
                 'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password']),
+                'password' => $validatedData['password'],
                 'role' => $validatedData['role'],
                 'phone' => $validatedData['phone'] ?? null,
                 'preferred_language' => $validatedData['preferred_language'] ?? 'en',
@@ -207,7 +207,8 @@ class AdminController extends Controller
             'username.regex' => 'Username may only contain letters, numbers and underscores.',
             'phone.regex' => 'Please enter a valid phone number.'
         ]);
-    
+
+        // dd($request->verified == "on");
         try {
             if ($request->hasFile('image')) {
                 if ($user->profile_image) {
@@ -217,15 +218,18 @@ class AdminController extends Controller
             }
     
             if (!empty($validatedData['password'])) {
-                $validatedData['password'] = Hash::make($validatedData['password']);
+                $validatedData['password'] = $validatedData['password'];
             } else {
                 unset($validatedData['password']);
             }
     
-            $validatedData['email_verified_at'] = $request->email_verified ? now() : null;
+            $validatedData['email_verified_at'] = $request->verified == "on" ? now() : null;
+            $validatedData['verified'] = $request->verified == "on";
             unset($validatedData['email_verified']);
-    
+
+            \Illuminate\Database\Eloquent\Model::unguard();
             $user->update($validatedData);
+            \Illuminate\Database\Eloquent\Model::reguard();
     
             return redirect()->route('admin.users')
                    ->with('success', 'User updated successfully.');
