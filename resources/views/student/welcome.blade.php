@@ -4,22 +4,17 @@
 
 @section('content')
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <div class="welcome-container">
-        <!-- Background Gradient -->
-        <div class="background-gradient"></div>
-        
         <!-- Skip Button -->
-        <a href="{{ route('splash') }}" class="skip-btn">
+        <a href="{{ route('splash') }}" class="skip-btn btn btn-link">
             <img src="/images/arrow-left.png" alt="{{ __('lang.skip') }}" class="arrow-icon" />
             <span>{{ __('lang.skip') }}</span>
         </a>
         
         <!-- Main Content -->
-        <div class="welcome-content">
-            <div class="logo-container">
-                <img src="/images/logo.png" alt="{{ config('app.name', 'PMP App') }}" class="app-logo" />
-            </div>
+        <div class="welcome-content text-center">
             <h1 class="welcome-title" data-aos="fade-up">
                 {{ __('lang.welcome_to') }}<br>
                 <span class="app-name">{{ config('app.name', 'PMP App') }}</span>
@@ -31,14 +26,9 @@
         </div>
         
         <!-- Next Button -->
-        <a href="{{ route('student.intro.index') }}" class="next-btn" data-aos="fade-up" data-aos-delay="400">
+        <a href="{{ route('student.intro.index') }}" class="next-btn btn btn-primary" data-aos="fade-up" data-aos-delay="400">
             {{ __('lang.next') }}
         </a>
-        
-        <!-- Decorative Graphic -->
-        <div class="decorative-graphic" data-aos="fade-left">
-            <img src="/images/Frame 9.png" alt="{{ __('lang.decorative_element') }}" />
-        </div>
     </div>
 
     <!-- AOS Animation Library -->
@@ -55,26 +45,17 @@
     <style>
         .welcome-container {
             position: relative;
-            width: 100vw;
             height: 100vh;
             overflow: hidden;
             font-family: 'Tajawal', sans-serif;
-            text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: #f5f7fa;
-        }
-
-        .background-gradient {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(47, 128, 237, 0.1) 0%, rgba(255, 255, 255, 0.8) 100%);
-            z-index: -1;
+            background: url('/images/welcome_in_board.png') no-repeat center center;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
         }
 
         /* Skip Button */
@@ -91,7 +72,6 @@
             text-decoration: none;
             z-index: 10;
             transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
             border-radius: 8px;
         }
 
@@ -112,7 +92,7 @@
 
         /* Logo */
         .logo-container {
-            margin-bottom: 2rem;
+            margin: 0;
         }
 
         .app-logo {
@@ -123,9 +103,9 @@
 
         /* Welcome Content */
         .welcome-content {
-            width: 90%;
-            max-width: 600px;
+            width: 100%;
             z-index: 1;
+            margin: 0;
         }
 
         .welcome-title {
@@ -133,7 +113,8 @@
             font-size: 2.8rem;
             line-height: 1.2;
             color: #1a1a1a;
-            margin-bottom: 1.5rem;
+            margin: 0 0 1.5rem;
+            text-align: center;
         }
 
         .app-name {
@@ -147,56 +128,30 @@
             font-size: 1.3rem;
             line-height: 1.6;
             color: #4a4a4a;
-            margin-bottom: 2rem;
+            margin: 0 0 2rem;
+            text-align: center;
         }
 
         /* Next Button */
         .next-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             width: 220px;
             height: 60px;
-            background: #2F80ED;
-            color: white;
-            border: none;
-            border-radius: 12px;
             font-family: 'Tajawal', sans-serif;
             font-weight: 700;
             font-size: 1.2rem;
-            text-decoration: none;
-            cursor: pointer;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-shadow: 0 4px 15px rgba(47, 128, 237, 0.3);
             transition: all 0.3s ease;
             z-index: 1;
+            margin: 0 auto;
         }
 
         .next-btn:hover {
-            background: #256fcf;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(47, 128, 237, 0.4);
-        }
-
-        /* Decorative Graphic */
-        .decorative-graphic {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 30%;
-            max-width: 400px;
-            z-index: 0;
-            opacity: 0.8;
-        }
-
-        [dir="rtl"] .decorative-graphic {
-            right: auto;
-            left: 0;
-            transform: scaleX(-1);
-        }
-
-        .decorative-graphic img {
-            width: 100%;
-            height: auto;
         }
 
         /* Responsive Design */
@@ -227,10 +182,6 @@
             .app-logo {
                 width: 100px;
             }
-
-            .decorative-graphic {
-                width: 40%;
-            }
         }
 
         @media (max-width: 480px) {
@@ -260,10 +211,6 @@
 
             .app-logo {
                 width: 80px;
-            }
-
-            .decorative-graphic {
-                width: 50%;
             }
         }
     </style>

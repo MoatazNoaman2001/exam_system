@@ -2,8 +2,9 @@
     <!-- Always remember that you are absolutely unique. Just like everyone else. - Margaret Mead -->
 </div>
 
-
+@extends('layouts.app')
+@section('content')
 
 <div class="alert alert-dialog bg-success">
     <h1 class="text">adlkfgj</h1>
-</div>
+</div>  

@@ -36,13 +36,18 @@ class LoginController extends Controller
 
 
 
-            if ($user->isAdmin) {
+            if ($user->role == "admin") {
                 return redirect()->intended('/admin/dashboard');
             }
-$isFirstTime = !IntroAnswer::where('user_id', $user->id)->exists();
+            $isFirstTime = !IntroAnswer::where('user_id', $user->id)->exists();
 
+            // dd($isFirstTime);
             if ($isFirstTime) {
-                return redirect()->route('student.intro.index');  // تأكد من اسم الراوت صح
+                $user->first_visit= false;
+                $user->save();
+                return redirect()->route('index');
+            }else{
+                return view('student.home', compact('user'));
             }
 
             return redirect()->route('completed-action', ['userId' => $user->id]);

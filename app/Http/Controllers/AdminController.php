@@ -691,7 +691,7 @@ class AdminController extends Controller
             'user_id' => 'nullable|exists:users,id',
             'send_to_all' => 'boolean',
         ]);
-
+  
         if ($request->send_to_all) {
             $users = User::all();
             foreach ($users as $user) {

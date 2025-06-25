@@ -2,31 +2,29 @@
 
 namespace App\Models;
 
+
 use App\Models\Exam;
 use App\Models\Plan;
 use App\Models\User;
 use App\Models\Slide;
+use App\Models\UserProgress;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class UserProgress extends Model
+class PlanSchedule extends Model
 {
     use HasFactory, SoftDeletes, HasUlids;
 
     protected $fillable = [
-        'user_id', 'plan_id', 'slide_id', 'exam_id', 'status', 'completed_at', 'score'
+        'plan_id', 'slide_id', 'exam_id', 'scheduled_date', 'status', 'completed_at'
     ];
 
     protected $casts = [
+        'scheduled_date' => 'date',
         'completed_at' => 'datetime',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
 
     public function plan()
     {

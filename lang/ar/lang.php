@@ -3,6 +3,7 @@
 return [
     "login"=>"دخول",
     "logout" => "تسجيل الخروج",
+    "register"=>  "تسجيل",
     'admin_panel' => 'لوحة الإدارة',
     'admin_dashboard' => 'لوحة تحكم الإدارة',
     'dashboard' => 'لوحة التحكم',

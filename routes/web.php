@@ -41,19 +41,7 @@ Route::get('/lang/{locale}' , function ($lang) {
 })->name("locale.set");
 
 
-Route::get("/", function (Request $request) {
-    if (Auth::user() != null) {
-        $user = Auth::user(); 
-
-        if ($user->role == "admin") {
-            return redirect('/admin/dashboard');
-        } else {
-            return redirect()->route('completed-action', ['userId' => $user->id]);
-        }
-    }
-
-    return view('welcome');
-})->name('welcome');
+Route::get("/", [WelcomeController::class , "root"])->name('welcome');
 
 
 Route::view("/home", "home")->middleware('auth')
@@ -168,12 +156,12 @@ Route::get('/new-password', [NewPasswordController::class, 'showNewPasswordForm'
 Route::post('/new-password', [NewPasswordController::class, 'resetPassword'])->name('new-password.submit');
 
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/completed-action/{userId}', [CompletedActionController::class, 'completedAction'])->name('completed-action');
-    Route::post('/tasks', [CompletedActionController::class, 'store']);
-    Route::patch('/tasks/{id}', [CompletedActionController::class, 'update']);
-    Route::delete('/tasks/{id}', [CompletedActionController::class, 'destroy']);
-});
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/completed-action/{userId}', [CompletedActionController::class, 'completedAction'])->name('completed-action');
+//     Route::post('/tasks', [CompletedActionController::class, 'store']);
+//     Route::patch('/tasks/{id}', [CompletedActionController::class, 'update']);
+//     Route::delete('/tasks/{id}', [CompletedActionController::class, 'destroy']);
+// });
 
 Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->middleware('auth')->name('notifications.markAsRead');
 
@@ -187,7 +175,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
-Route::get('/Plan', [PlanController::class, 'Plan'])->name('Plan');
+Route::get('/plan', [PlanController::class, 'Plan'])->name('Plan');
 Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
 Route::get('/setting', [SettingController::class, 'Setting'])->name('setting');
 Route::get('/certification', [certificationController::class, 'certification'])->name('certification');
@@ -199,7 +187,7 @@ Route::get('/certificate/view', [CertificationController::class, 'view'])->name(
 
 Route::get('/test-verification', function() {
     $user = App\Models\User::first();
-    return $user->getKey(); // Should return the user's ID
+    return $user->getKey();
 });
 
 

@@ -10,10 +10,10 @@ class Notification extends Model
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
-    protected $fillable = ['data', 'is_seen', 'user_id'];
+    protected $fillable = ['text',"subtext", 'is_seen', 'user_id'];
     protected $casts = [
         'is_seen' => 'boolean',
-        'data' => 'array', // لتحويل data إلى مصفوفة
+        'data' => 'array',
     ];
 
     protected static function boot()
