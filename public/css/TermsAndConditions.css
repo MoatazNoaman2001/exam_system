@@ -1,0 +1,52 @@
+body {
+            background-color: #ffffff;
+            font-family: 'Tajawal', sans-serif;
+        }
+        .terms-container {
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 4rem auto;
+            box-shadow: 0 0.25rem 1.5625rem rgba(47, 128, 237, 0.15);
+        }
+        .terms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .terms-title {
+            color: #181818;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .terms-subtitle {
+            color: #6c737f;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .terms-content {
+            color: #6c737f;
+            font-weight: 400;
+            font-size: 1rem;
+            text-align: right;
+            line-height: 1.6;
+        }
+        .download-btn {
+            background-color: #2f80ed;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 0.625rem;
+            padding: 0.5rem 1.5rem;
+            box-shadow: 0.25rem 0.25rem 1.5625rem rgba(47, 128, 237, 0.15);
+        }
+        .download-btn:hover {
+            background-color: #1e6bd2;
+        }
+        .user-info {
+            color: #181818;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }

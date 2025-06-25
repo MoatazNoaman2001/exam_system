@@ -84,6 +84,18 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+
+/*
+    |----------------------------------------------------------------------
+    | Available Locales
+    |----------------------------------------------------------------------
+    |
+    | Specify the locales your application supports. This helps Laravel
+    | manage translations and ensure only valid locales are used.
+    |
+    */
+    'available_locales' => ['en', 'ar'],
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

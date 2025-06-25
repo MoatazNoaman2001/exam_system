@@ -1,0 +1,41 @@
+.contact-us-wrapper {
+    border-radius: 1.5rem;
+    box-shadow: 0 0.25rem 1.5625rem rgba(47, 128, 237, 0.15);
+    transition: all 0.3s ease;
+}
+
+.contact-section {
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.contact-section:hover {
+    border-color: #2f80ed;
+    box-shadow: 0 0.125rem 0.5rem rgba(47, 128, 237, 0.2);
+}
+
+.btn-outline-primary {
+    background: #ffffff;
+}
+
+.btn-outline-primary:hover {
+    background: #2f80ed;
+    color: #ffffff !important;
+    border-color: #2f80ed;
+}
+
+@media (max-width: 768px) {
+    .contact-us-wrapper {
+        margin: 0 1rem;
+        padding: 2rem;
+    }
+    .contact-section {
+        padding: 1rem;
+    }
+    .btn {
+        font-size: 0.9rem;
+    }
+    h2 {
+        font-size: 1.1rem;
+    }
+}

@@ -9,3 +9,13 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+body[dir="rtl"] {
+  text-align: right;
+  direction: rtl;
+}
+
+body[dir="ltr"] {
+  text-align: left;
+  direction: ltr;
+}

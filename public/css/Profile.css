@@ -1,0 +1,93 @@
+body {
+        background-color: #f8f9fa !important;
+        direction: rtl;
+    }
+
+    .profile-card {
+        border-color: #e5e7eb !important;
+    }
+
+    .profile-title {
+        color: #181818;
+        font-family: 'Tajawal', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .top-text {
+        color: #6c737f;
+        font-family: 'Tajawal', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        border: 2px solid #e5e7eb;
+    }
+
+    .edit-icon {
+        position: absolute;
+        bottom: 0;
+        left: 0; /* Changed from right to left for RTL */
+        background: #ffffff;
+        border-radius: 0.25rem;
+        padding: 0.25rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control {
+        font-family: 'Tajawal', sans-serif;
+        font-size: 0.875rem;
+        color: #181818;
+        border-color: #e5e7eb;
+        text-align: right; /* Align text to right */
+    }
+
+    .input-group-text {
+        background-color: #ffffff;
+        border-color: #e5e7eb;
+    }
+
+    .save-button {
+        background-color: #2f80ed;
+        border-color: #2f80ed;
+        font-family: 'Tajawal', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        box-shadow: 0 4px 10px rgba(47, 128, 237, 0.15);
+        transition: background-color 0.3s ease;
+    }
+
+    .save-button:hover {
+        background-color: #1a73e8;
+    }
+
+    .modal-content {
+        direction: rtl;
+    }
+
+    .modal-footer {
+        justify-content: flex-start; /* Align buttons to the right in RTL */
+    }
+
+    @media (max-width: 576px) {
+        .profile-title {
+            font-size: 1.25rem;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+        }
+
+        .save-button {
+            width: 100%;
+        }
+    }

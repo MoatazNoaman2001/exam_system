@@ -102,5 +102,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Task::class, 'user_id');
     }
 
+    public function examAttempts()
+    {
+        return $this->hasMany(ExamAttempt::class);
+    }
 
 }

@@ -27,6 +27,13 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\certificationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\LeaderBoardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ChangPasswordController;
+use App\Http\Controllers\TermsAndConditionsController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\ContactUsController;
 
 App::setLocale('en');
 Route::get('/lang/{locale}' , function ($lang) {
@@ -196,6 +203,32 @@ Route::get('/leaderboard/{userId}', [LeaderBoardController::class, 'showLeaderBo
 
 Route::get('/certificate/download', [CertificationController::class, 'download'])->name('certificate.download');
 Route::get('/certificate/view', [CertificationController::class, 'view'])->name('certificate.view');
+
+
+
+Route::middleware(['auth'])->prefix('student')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('student.profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('student.profile.update');
+    Route::put('/profile/image', [ProfileController::class, 'updateImage'])->name('student.profile.update-image');
+});
+Route::delete('/user/delete', [ProfileController::class, 'destroy'])->name('user.delete')->middleware('auth');
+
+
+Route::delete('/delete-account', [AccountController::class, 'delete'])->name('delete-account');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/change-password', [ChangPasswordController::class, 'showChangePasswordForm'])->name('password.change');
+    Route::post('/update-password', [ChangPasswordController::class, 'updatePassword'])->name('password.update');
+});
+
+
+Route::get('/terms-and-conditions', [TermsAndConditionsController::class, 'showTermsAndConditions'])->name('terms.conditions')->middleware('auth');
+
+Route::get('/about', [AboutController::class, 'index'])->name('about')->middleware('auth');
+
+Route::get('/faq', [FaqController::class, 'index'])->name('faq');
+
+Route::get('/contact-us', [ContactUsController::class, 'index'])->name('contact.us')->middleware('auth');
 
 Route::get('/test-verification', function() {
     $user = App\Models\User::first();

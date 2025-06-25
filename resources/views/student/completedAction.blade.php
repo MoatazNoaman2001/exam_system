@@ -10,8 +10,7 @@
         <!-- Notification -->
         <div class="notification">
             <div class="user-info">
-                <img src="{{ $user->avatar ? asset('storage/avatars/' . $user->avatar) : asset('images/default-avatar.png') }}" alt="User Avatar" class="user-avatar">
-                <div class="user-info-text">
+<img src="{{ $user->image ? asset('storage/avatars/' . $user->image) : asset('images/default-avatar.png') }}" alt="User Avatar" class="user-avatar">                <div class="user-info-text">
                     <div class="greeting">مرحبًا، {{ $user->username  }} 👋</div>
                     <div class="question">جاهز تكمّل رحلتك نحو شهادة PMP اليوم؟</div>
                 </div>
