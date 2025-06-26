@@ -7,6 +7,9 @@
 
 class AchievementController extends Controller
 {
+    public function index(){
+        
+    }
        public function Achievement()
     {
 

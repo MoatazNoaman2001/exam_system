@@ -100,6 +100,10 @@ return [
     'filter' => 'Filter',
     'all' => 'All',
     'admin' => 'Admin',
+    'home' => 'Home',
+    'sections' => 'Sections',
+    "achievements" => "Achievements",
+    "my_account" => "My Account"
 ];
 
 

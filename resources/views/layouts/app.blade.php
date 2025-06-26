@@ -305,23 +305,39 @@
             </div>
         @endif
         @if (Auth::user()->role === 'student')
-        <nav class="bg-dark text-white vh-100" style="width: 250px;">
-            <div class="p-3 fs-4 fw-bold">Student Dashboard</div>
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('student.home') }}"><i class="fas fa-home me-2"></i>Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('student.sections') }}"><i class="fas fa-book me-2"></i>Sections</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('student.achievements') }}"><i class="fas fa-trophy me-2"></i>Achievements</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('student.account') }}"><i class="fas fa-user me-2"></i>My Account</a>
-                </li>
-            </ul>
-        </nav>
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-cog"></i> {{ __('lang.student_panel') }}</h3>
+                </div>
+                <div class="sidebar-menu">
+                    <a href="{{ route('student.home') }}" class="sidebar-link {{ request()->routeIs('student.home') ? 'active' : '' }}">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>{{ __('lang.home') }}</span>
+                    </a>
+                    <a href="{{ route('student.sections') }}" class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}">
+                        <i class="fas fa-book"></i>
+                        <span>{{ __('lang.sections') }}</span>
+                    </a>
+                    <a href="{{ route('student.achievements') }}" class="sidebar-link {{ request()->routeIs('student.achievements*') ? 'active' : '' }}">
+                        <i class="fas fa-trophy"></i>
+                        <span>{{ __('lang.achievements') }}</span>
+                    </a>
+                    <a href="{{ route('student.account') }}" class="sidebar-link {{ request()->routeIs('student.account*') ? 'active' : '' }}">
+                        <i class="fas fa-user"></i>
+                        <span>{{ __('lang.my_account') }}</span>
+                    </a>
+                    <div class="sidebar-footer">
+                        <a class="btn btn-outline-light w-100" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt me-2"></i> {{ __('lang.logout') }}
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         @endif
         @endauth
         <main class="main-content" id="mainContent">

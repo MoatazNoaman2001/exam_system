@@ -27,7 +27,7 @@ class WelcomeController extends Controller
                     $user->save();
                     return redirect()->route('index');
                 }else{
-                    return view('student.home', compact('user'));
+                    return redirect()->route('student.home');
                 }
             }
         }

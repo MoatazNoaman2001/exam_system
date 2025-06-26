@@ -101,6 +101,10 @@ return [
     'filter' => 'تصفية',
     'all' => 'الكل',
     'admin' => 'مدير',
+    'home' => 'الرئيسية',
+    'sections' => 'الاقسام',
+    "achievements" => "الانجازات",
+    "my_account" => "حسابي"
 ];
 
 
