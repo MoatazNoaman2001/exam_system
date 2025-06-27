@@ -10,10 +10,15 @@ class LocaleMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $locale = Session::get('locale', config('app.locale'));
-        \Log::info('Locale set to: ' . $locale); // تسجيل القيمة للتحقق
-        App::setLocale($locale);
+        $locale = $request->segment(2); // /lang/ar
 
-        return $next($request);
+        if (!in_array($locale, ['en', 'ar'])) {
+            abort(400);
+        }
+
+        App::setLocale($locale);
+        Session::put('locale', $locale); // خزّن اللغة في السيشن
+
+        return redirect()->back(); // رجّع المستخدم للمكان اللي كان فيه
     }
 }

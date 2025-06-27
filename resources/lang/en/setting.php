@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'setting' => 'Settings',
+    'certifications' => 'My Certifications',
+    'leaderboard' => 'Leaderboard',
+    'account' => 'Account',
+    'my_account' => 'My Account',
+    'security' => 'Security',
+    'delete_account' => 'Delete Account',
+    'app_settings' => 'App Settings',
+    'notifications' => 'Notifications',
+    'support' => 'Support',
+    'terms_and_policy' => 'Terms and Policy',
+    'about' => 'About',
+    'faq' => 'FAQ',
+    'contact_us' => 'Contact Us',
+    'logout' => 'Logout',
+    'confirm_logout' => 'Confirm Logout',
+    'logout_confirmation' => 'Are you sure you want to logout?',
+    'yes_logout' => 'Yes, logout',
+    'cancel' => 'Cancel',
+    'confirm_delete_account' => 'Confirm Account Deletion',
+    'delete_account_warning' => 'Are you sure you want to delete your account? All your data will be permanently deleted.',
+    'yes_delete_account' => 'Yes, delete the account',
+    'username' => 'Username',
+];

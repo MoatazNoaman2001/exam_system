@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'plan')
+@section('title', __('plan.title'))
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/plan.css') }}">
-  <div class="container py-4">
+    <div class="container py-4" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
         <div class="mobile-plan-setup-custom">
             <form action="{{ route('plan.update') }}" method="POST">
                 @csrf
@@ -23,48 +23,38 @@
                     <div class="mobile-plan-setup-custom__main-content">
                         <div class="row justify-content-start align-items-center mb-3">
                             <div class="col-auto">
-                                <img src="{{ asset('images/arrow-right.png') }}" alt="Arrow" class="arrow-icon">
+                                <img src="{{ asset('images/arrow-right.png') }}" alt="{{ __('plan.arrow_alt') }}" class="arrow-icon">
                             </div>
                             <div class="col-auto">
-                                <h5 class="text-primary fw-bold mb-0">اختر مدة الخطة</h5>
+                                <h5 class="text-primary fw-bold mb-0">{{ __('plan.choose_duration') }}</h5>
                             </div>
                         </div>
 
-                        {{-- خيارات المدة --}}
+                        {{-- Duration Options --}}
                         <div class="card custom-card surface p-3">
                             <div class="row g-3">
-                                <div class="col-12 col-md-6">
-                                    <label class="d-flex align-items-center gap-2">
-                                        <input type="radio" name="plan_duration" value="30" {{ (old('plan_duration', $progress->plan_duration ?? '') == 30) ? 'checked' : '' }}>
-                                        <span class="text-primary">شهر واحد</span>
-                                    </label>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <label class="d-flex align-items-center gap-2">
-                                        <input type="radio" name="plan_duration" value="60" {{ (old('plan_duration', $progress->plan_duration ?? '') == 60) ? 'checked' : '' }}>
-                                        <span class="text-primary">شهرين</span>
-                                    </label>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <label class="d-flex align-items-center gap-2">
-                                        <input type="radio" name="plan_duration" value="90" {{ (old('plan_duration', $progress->plan_duration ?? '') == 90) ? 'checked' : '' }}>
-                                        <span class="text-primary">3 شهور</span>
-                                    </label>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <label class="d-flex align-items-center gap-2">
-                                        <input type="radio" name="plan_duration" value="0" {{ (old('plan_duration', $progress->plan_duration ?? '') == 0 && $progress->plan_end_date) ? 'checked' : '' }}>
-                                        <span class="text-primary">مخصص</span>
-                                    </label>
-                                </div>
+                                @foreach ([
+                                    30 => 'duration_1_month',
+                                    60 => 'duration_2_months',
+                                    90 => 'duration_3_months',
+                                    0 => 'duration_custom',
+                                ] as $value => $translationKey)
+                                    <div class="col-12 col-md-6">
+                                        <label class="d-flex align-items-center gap-2">
+                                            <input type="radio" name="plan_duration" value="{{ $value }}" 
+                                                {{ (old('plan_duration', $progress->plan_duration ?? '') == $value) ? 'checked' : '' }}>
+                                            <span class="text-primary">{{ __('plan.' . $translationKey) }}</span>
+                                        </label>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
 
-                        {{-- التواريخ المخصصة --}}
+                        {{-- Custom Dates --}}
                         <div class="card custom-card surface p-3 mt-3" style="display: {{ isset($progress->plan_duration) && $progress->plan_duration == 0 ? 'block' : 'none' }};" id="custom-dates">
                             <div class="d-flex flex-column flex-md-row gap-3">
                                 <div class="custom-date" style="position: relative;">
-                                    <span class="text-secondary">من</span>
+                                    <span class="text-secondary">{{ __('plan.from') }}</span>
                                     <input type="date" name="start_date"
                                         value="{{ isset($progress->start_date) ? \Carbon\Carbon::parse($progress->start_date)->format('Y-m-d') : '' }}"
                                         id="start-date"
@@ -72,7 +62,7 @@
                                 </div>
 
                                 <div class="custom-date" style="position: relative;">
-                                    <span class="text-secondary">إلى</span>
+                                    <span class="text-secondary">{{ __('plan.to') }}</span>
                                     <input type="date" name="end_date"
                                         value="{{ isset($progress->plan_end_date) ? \Carbon\Carbon::parse($progress->plan_end_date)->format('Y-m-d') : '' }}"
                                         id="end-date"
@@ -81,16 +71,16 @@
                             </div>
                         </div>
 
-                        {{-- عرض عدد الدروس والأسئلة --}}
+                        {{-- Display Lessons and Questions --}}
                         <div class="card dashed-card p-3 mt-3">
-                            <p class="text-primary fw-medium mb-2">لإنهاء المحتوى خلال هذه المدة، تحتاج إلى دراسة:</p>
-                            <p class="text-primary mb-1" id="weekly-lessons">📘 {{ $weeklyLessons ?? 0 }} دروس أسبوعيًا</p>
-                            <p class="text-primary" id="weekly-questions">💡 حل {{ $weeklyQuestions ?? 0 }} سؤال تدريبي في الأسبوع</p>
+                            <p class="text-primary fw-medium mb-2">{{ __('plan.study_content_info') }}</p>
+                            <p class="text-primary mb-1" id="weekly-lessons">📘 {{ $weeklyLessons ?? 0 }} {{ __('plan.lessons_per_week') }}</p>
+                            <p class="text-primary" id="weekly-questions">💡 {{ __('plan.solve_questions') }} {{ $weeklyQuestions ?? 0 }} {{ __('plan.per_week') }}</p>
                         </div>
                     </div>
 
-                    {{-- زر الحفظ --}}
-                    <button type="submit" class="button-plan text-white text-center fw-bold w-100 mt-4">حفظ وتحديث الخطة</button>
+                    {{-- Save Button --}}
+                    <button type="submit" class="button-plan text-white text-center fw-bold w-100 mt-4">{{ __('plan.save_update') }}</button>
 
                 </fieldset>
             </form>
@@ -128,8 +118,8 @@
                 const lessons = Math.ceil(40 / weeks);
                 const questions = Math.ceil(300 / weeks);
 
-                weeklyLessons.textContent = `📘 ${lessons} دروس أسبوعيًا`;
-                weeklyQuestions.textContent = `💡 حل ${questions} سؤال تدريبي في الأسبوع`;
+                weeklyLessons.textContent = `📘 ${lessons} {{ __('plan.lessons_per_week') }}`;
+                weeklyQuestions.textContent = `💡 {{ __('plan.solve_questions') }} ${questions} {{ __('plan.per_week') }}`;
             }
 
             planOptions.forEach(option => option.addEventListener('change', calculatePlan));

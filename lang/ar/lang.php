@@ -100,7 +100,45 @@ return [
     'filter' => 'تصفية',
     'all' => 'الكل',
     'admin' => 'مدير',
+
+
+
+
+
+
+
+
+
+
+
+    'setting' => 'الإعدادات',
+    'certifications' => 'شهاداتي',
+    'leaderboard' => 'قائمة المتصدرين',
+    'account' => 'الحساب',
+    'my_account' => 'حسابي',
+    'security' => 'الأمان',
+    'delete_account' => 'حذف حسابي',
+    'app_settings' => 'إعدادات التطبيق',
+    'notifications' => 'الإشعارات',
+    'support' => 'الدعم',
+    'terms_and_policy' => 'شروط وسياسة الاستخدام',
+    'about' => 'عن الموقع',
+    'faq' => 'الأسئلة الشائعة',
+    'contact_us' => 'تواصل معنا',
+    'logout' => 'تسجيل الخروج',
+    'confirm_logout' => 'تأكيد تسجيل الخروج',
+    'logout_confirmation' => 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
+    'yes_logout' => 'نعم، سجل الخروج',
+    'cancel' => 'إلغاء',
+    'confirm_delete_account' => 'تأكيد حذف الحساب',
+    'delete_account_warning' => 'هل أنت متأكد أنك تريد حذف حسابك؟ سيتم حذف جميع بياناتك نهائيًا.',
+    'yes_delete_account' => 'نعم، احذف الحساب',
+    'username' => 'اسم المستخدم',
 ];
+
+
+
+
 
 
 ?>

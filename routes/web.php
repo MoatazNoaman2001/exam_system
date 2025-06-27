@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +36,6 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ContactUsController;
 
-App::setLocale('en');
 Route::get('/lang/{locale}' , function ($lang) {
     if (!in_array($lang, ['en', 'ar'])) {
         abort(400);
@@ -46,6 +46,42 @@ Route::get('/lang/{locale}' , function ($lang) {
 
     return redirect()->back();
 })->name("locale.set");
+
+
+Route::get('/set-locale/{locale}', function ($locale) {
+    session(['locale' => $locale]);
+    return "Locale set to $locale";
+});
+
+Route::get('/test-session', function () {
+    return [
+        'locale_in_session' => session('locale'),
+        'locale_from_app' => App::getLocale(),
+    ];
+});
+
+
+Route::get('/test-locale', function() {
+    return [
+        'current_locale' => app()->getLocale(),
+        'session_locale' => session('locale'),
+        'translation_test' => __('setting.account'),
+        'all_session_data' => session()->all(),
+        'config_locale' => config('app.locale')
+    ];
+});
+
+Route::get('/locale-test', function() {
+    return [
+        'App Locale' => app()->getLocale(),
+        'Session Locale' => session('locale'),
+        'Config Locale' => config('app.locale'),
+        'Translation Test' => __('setting.account'),
+        'Carbon Locale' => \Carbon\Carbon::now()->locale,
+        'Translator Locale' => app('translator')->getLocale()
+    ];
+});
+
 
 
 Route::get("/", function (Request $request) {
@@ -62,6 +98,10 @@ Route::get("/", function (Request $request) {
     return view('welcome');
 })->name('welcome');
 
+
+Route::get('/check-session', function () {
+    return Session::get('locale'); // لازم تطبع "ar"
+});
 
 Route::view("/home", "home")->middleware('auth')
     
