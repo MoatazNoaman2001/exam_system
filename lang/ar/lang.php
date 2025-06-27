@@ -1,8 +1,36 @@
 <?php 
 
 return [
+    "student_panel"=> "لوحة الطالب",
+    "home"=> "الرئيسية",
+    "sections"=> "الأقسام",
+    "achievements"=> "الإنجازات",
+    "my_account"=> "حسابي",
+    "logout"=> "تسجيل الخروج",
+    "login"=> "تسجيل الدخول",
+    "email_address"=> "عنوان البريد الإلكتروني",
+    "password"=> "كلمة المرور",
+    "remember_me"=> "تذكرني",
+    "forgot_password"=> "نسيت كلمة المرور؟",
+    "dont_have_account"=> "ليس لديك حساب؟",
+    "sign_up"=> "اشترك",
+    "welcome_back"=> "مرحبًا بعودتك",
+    "sign_in_to_continue"=> "سجل الدخول لمتابعة التحضير لامتحان PMP",
+    "plan_progress"=> "تقدم الخطة",
+    "progress"=> "التقدم",
+    "days_left"=> "الأيام المتبقية",
+    "todays_mission"=> "مهمة اليوم",
+    "add_mission"=> "إضافة مهمة",
+    "my_status"=> "حالتي",
+    "slides_completed"=> "الشرائح المكتملة",
+    "exams_completed"=> "الامتحانات المكتملة",
+    "your_email"=> "بريدك الإلكتروني",
+    "your_password"=> "كلمتك السرية",
+    "enter_your_email"=> "أدخل بريدك الإلكتروني",
+    "enter_your_password"=> "أدخل كلمة مرورك",
     "login"=>"دخول",
     "logout" => "تسجيل الخروج",
+    "register"=>  "تسجيل",
     'admin_panel' => 'لوحة الإدارة',
     'admin_dashboard' => 'لوحة تحكم الإدارة',
     'dashboard' => 'لوحة التحكم',
@@ -134,6 +162,10 @@ return [
     'delete_account_warning' => 'هل أنت متأكد أنك تريد حذف حسابك؟ سيتم حذف جميع بياناتك نهائيًا.',
     'yes_delete_account' => 'نعم، احذف الحساب',
     'username' => 'اسم المستخدم',
+    'home' => 'الرئيسية',
+    'sections' => 'الاقسام',
+    "achievements" => "الانجازات",
+    "my_account" => "حسابي"
 ];
 
 

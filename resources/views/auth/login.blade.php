@@ -8,8 +8,8 @@
                 <i class="fas fa-graduation-cap"></i>
                 <span>PMP Master</span>
             </div>
-            <h1>Welcome Back</h1>
-            <p>Sign in to continue your PMP exam preparation</p>
+            <h1>{{ __('lang.welcome_back') }}</h1>
+            <p>{{ __('lang.sign_in_to_continue') }}</p>
         </div>
 
         <div class="login-card">
@@ -28,13 +28,12 @@
                 @csrf
 
                 <div class="form-group">
-                    <label for="email">{{ __('Email Address') }}</label>
+                    <label for="email">{{ __('lang.email_address') }}</label>
                     <div class="input-with-icon">
                         <i class="fas fa-envelope"></i>
                         <input id="email" type="email" @error('email') is-invalid @enderror 
                                name="email" value="{{ old('email') }}" required autocomplete="email" 
-                               autofocus placeholder="Enter your email">
-                            
+                               autofocus placeholder="{{ __('lang.enter_your_email') }}">
                     </div>
                     @error('email')
                         <span class="error-message">
@@ -44,10 +43,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="password">{{ __('Password') }}</label>
+                    <label for="password">{{ __('lang.password') }}</label>
                     <div class="input-with-icon">
                         <i class="fas fa-lock"></i>
-                        <input id="password" type="password" class="@error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Enter your password">
+                        <input id="password" type="password" class="@error('password') is-invalid @enderror" 
+                               name="password" required autocomplete="current-password" 
+                               placeholder="{{ __('lang.enter_your_password') }}">
                         <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -62,21 +63,21 @@
                 <div class="form-options">
                     <div class="remember-me">
                         <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                        <label for="remember">{{ __('Remember Me') }}</label>
+                        <label for="remember">{{ __('lang.remember_me') }}</label>
                     </div>
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}" class="forgot-password">
-                            {{ __('Forgot Password?') }}
+                            {{ __('lang.forgot_password') }}
                         </a>
                     @endif
                 </div>
 
                 <button type="submit" class="login-button">
-                    {{ __('Login') }}
+                    {{ __('lang.login') }}
                 </button>
 
                 <div class="login-footer">
-                    <p>Don't have an account? <a href="{{ route('register') }}">Sign up</a></p>
+                    <p>{{ __('lang.dont_have_account') }} <a href="{{ route('register') }}">{{ __('lang.sign_up') }}</a></p>
                 </div>
             </form>
         </div>
@@ -99,11 +100,14 @@
         --success: #48bb78;
     }
 
+    body {
+        font-family: {{ app()->getLocale() === 'ar' ? "'Cairo', sans-serif" : "'Poppins', sans-serif" }};
+    }
+
     .login-container {
         display: flex;
         min-height: 100vh;
         background-color: #f9faff;
-        font-family: 'Poppins', sans-serif;
     }
 
     .login-wrapper {
@@ -134,7 +138,7 @@
     }
 
     .login-header .logo i {
-        margin-right: 10px;
+        margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}: 10px;
         color: var(--secondary);
     }
 
@@ -158,7 +162,7 @@
 
     .login-alert {
         background-color: #fff3f3;
-        border-left: 4px solid var(--secondary);
+        border-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }}: 4px solid var(--secondary);
         padding: 15px;
         margin-bottom: 25px;
         display: flex;
@@ -167,7 +171,7 @@
 
     .login-alert i {
         color: var(--secondary);
-        margin-right: 10px;
+        margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}: 10px;
         font-size: 20px;
     }
 
@@ -186,6 +190,7 @@
         margin-bottom: 8px;
         font-weight: 500;
         color: var(--dark);
+        text-align: {{ app()->getLocale() === 'ar' ? 'right' : 'left' }};
     }
 
     .input-with-icon {
@@ -195,34 +200,31 @@
         width: 100%;
     }
 
-    .input-with-icon i.fa-lock {
+    .input-with-icon i {
         position: absolute;
-        left: 15px;
+        {{ app()->getLocale() === 'ar' ? 'right' : 'left' }}: 15px;
         color: var(--gray);
-        z-index: 2; /* Ensure it stays above the input */
+        z-index: 2;
     }
 
     .input-with-icon input {
         width: 100%;
-        padding: 12px 45px 12px 45px; /* Equal padding on both sides for icons */
+        padding: 12px 45px;
         border: 1px solid var(--light-gray);
         border-radius: 8px;
         font-size: 15px;
         transition: all 0.3s;
+        text-align: {{ app()->getLocale() === 'ar' ? 'right' : 'left' }};
     }
 
     .input-with-icon .toggle-password {
         position: absolute;
-        right: 15px;
+        {{ app()->getLocale() === 'ar' ? 'left' : 'right' }}: 15px;
         background: none;
         border: none;
         cursor: pointer;
         color: var(--gray);
         z-index: 2;
-    }
-
-    .input-with-icon .toggle-password i {
-        margin: 0;
     }
 
     .input-with-icon input:focus {
@@ -231,27 +233,17 @@
         outline: none;
     }
 
-    .toggle-password {
-        position: absolute;
-        right: 15px;
-        background: none;
-        border: none;
-        color: var(--gray);
-        cursor: pointer;
-        padding: 0;
-    }
-    
-    
     .error-message {
         display: flex;
         align-items: center;
         color: var(--secondary);
         font-size: 13px;
         margin-top: 5px;
+        justify-content: {{ app()->getLocale() === 'ar' ? 'flex-end' : 'flex-start' }};
     }
 
     .error-message i {
-        margin-right: 5px;
+        margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}: 5px;
     }
 
     .form-options {
@@ -267,7 +259,7 @@
     }
 
     .remember-me input {
-        margin-right: 8px;
+        margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}: 8px;
         accent-color: var(--primary);
     }
 
@@ -358,7 +350,6 @@
         }
     }
 </style>
-
 <script>
     function togglePasswordVisibility() {
         const passwordInput = document.getElementById('password');

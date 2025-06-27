@@ -22,7 +22,7 @@
             --sidebar-hover-bg: #34495e;
             --navbar-height: 56px;
             --transition-speed: 0.3s;
-            --content-padding: 1.5rem;
+            --content-padding: 4rem;
         }
         body { overflow-x: hidden; }
         .container-fluid { padding-left: 0; padding-right: 0; }
@@ -97,6 +97,13 @@
             border-radius: 6px;
             transition: all 0.2s;
         }
+        @auth
+            @if (Auth::user()->role === 'admin')
+                .main-content{
+                    padding-top: var(--content-padding);
+                }
+            @endif
+        @endauth
         .sidebar-link:hover {
             background: var(--sidebar-hover-bg);
             color: white;
@@ -120,21 +127,16 @@
             padding: 15px;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
-        .main-content {
-            transition: all var(--transition-speed) ease;
-            min-height: calc(100vh - var(--navbar-height));
-            padding: var(--content-padding);
-            margin-top: var(--navbar-height);
-        }
         @auth
-            @if(Auth::user()->role === 'admin')
+            @if(Auth::user()->role != 'student')
                 [dir="ltr"] .main-content {
                     margin-left: var(--sidebar-width);
-                    padding-left: calc(var(--content-padding) + 10px);
                 }
                 [dir="rtl"] .main-content {
                     margin-right: var(--sidebar-width);
-                    padding-right: calc(var(--content-padding) + 10px);
+                }
+                .main-content{
+                    padding: calc(var(--content-padding) + 10px) 20px;
                 }
             @endif
         @endauth
@@ -171,7 +173,7 @@
             .main-content {
                 margin-left: 0 !important;
                 margin-right: 0 !important;
-                padding: var(--content-padding);
+                padding-top: var(--content-padding);
             }
             [dir="rtl"] .main-content { margin-right: 0 !important; }
             #navbarCollapse .d-flex.ms-auto {
@@ -249,8 +251,8 @@
         </nav>
         @auth
         @if (Auth::user()->role === 'admin')
-        <div class="overlay" id="overlay"></div>
-        <div class="sidebar" id="sidebar">
+            <div class="overlay" id="overlay"></div>
+            <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h3><i class="fas fa-cog"></i> {{__('lang.admin_panel')}}</h3>
             </div>
@@ -301,15 +303,46 @@
                     </form>
                 </div>
             </div>
-        </div>
+            </div>
+        @endif
+        @if (Auth::user()->role === 'student')
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-cog"></i> {{ __('lang.student_panel') }}</h3>
+                </div>
+                <div class="sidebar-menu">
+                    <a href="{{ route('student.home') }}" class="sidebar-link {{ request()->routeIs('student.home') ? 'active' : '' }}">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>{{ __('lang.home') }}</span>
+                    </a>
+                    <a href="{{ route('student.sections') }}" class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}">
+                        <i class="fas fa-book"></i>
+                        <span>{{ __('lang.sections') }}</span>
+                    </a>
+                    <a href="{{ route('student.achievements') }}" class="sidebar-link {{ request()->routeIs('student.achievements*') ? 'active' : '' }}">
+                        <i class="fas fa-trophy"></i>
+                        <span>{{ __('lang.achievements') }}</span>
+                    </a>
+                    <a href="{{ route('student.account') }}" class="sidebar-link {{ request()->routeIs('student.account*') ? 'active' : '' }}">
+                        <i class="fas fa-user"></i>
+                        <span>{{ __('lang.my_account') }}</span>
+                    </a>
+                    <div class="sidebar-footer">
+                        <a class="btn btn-outline-light w-100" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt me-2"></i> {{ __('lang.logout') }}
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         @endif
         @endauth
         <main class="main-content" id="mainContent">
-            <div class="container-fluid">
-                <div class="content-container">
-                    @yield('content')
-                </div>
-            </div>
+            @yield('content')
         </main>
     </div>
     <script>

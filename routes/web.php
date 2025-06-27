@@ -5,30 +5,33 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
 // use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LogoController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\IntroController;
+use App\Http\Controllers\ForgetController;
+use App\Http\Controllers\SplashController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\FeaturesController;
+use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\LeaderBoardController;
+use App\Http\Controllers\NewPasswordController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\certificationController;
+use App\Http\Controllers\CompletedActionController;
+use App\Http\Controllers\AchievementPointController;
+use App\Http\Controllers\VerificationCodeController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\FeaturesController;
-use App\Http\Controllers\WelcomeController;
-use App\Http\Controllers\SplashController;
-use App\Http\Controllers\ForgetController;
-use App\Http\Controllers\LogoController;
-use App\Http\Controllers\VerificationCodeController;
-use App\Http\Controllers\NewPasswordController;
-use App\Http\Controllers\CompletedActionController;
-use App\Http\Controllers\AchievementController;
-use App\Http\Controllers\AchievementPointController;
-use App\Http\Controllers\PlanController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\certificationController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\LeaderBoardController;
-use App\Http\Controllers\ProfileController;
+
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ChangPasswordController;
 use App\Http\Controllers\TermsAndConditionsController;
@@ -97,6 +100,7 @@ Route::get("/", function (Request $request) {
 
     return view('welcome');
 })->name('welcome');
+Route::get("/", [WelcomeController::class , "root"])->name('welcome');
 
 
 Route::get('/check-session', function () {
@@ -215,26 +219,26 @@ Route::get('/new-password', [NewPasswordController::class, 'showNewPasswordForm'
 Route::post('/new-password', [NewPasswordController::class, 'resetPassword'])->name('new-password.submit');
 
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/completed-action/{userId}', [CompletedActionController::class, 'completedAction'])->name('completed-action');
-    Route::post('/tasks', [CompletedActionController::class, 'store']);
-    Route::patch('/tasks/{id}', [CompletedActionController::class, 'update']);
-    Route::delete('/tasks/{id}', [CompletedActionController::class, 'destroy']);
-});
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/completed-action/{userId}', [CompletedActionController::class, 'completedAction'])->name('completed-action');
+//     Route::post('/tasks', [CompletedActionController::class, 'store']);
+//     Route::patch('/tasks/{id}', [CompletedActionController::class, 'update']);
+//     Route::delete('/tasks/{id}', [CompletedActionController::class, 'destroy']);
+// });
 
 Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->middleware('auth')->name('notifications.markAsRead');
 
 // Route::get('/Achievement', [AchievementController::class, 'Achievement'])->name('Achievement');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/Achievement', [AchievementController::class, 'Achievement'])->name('achievement.index');
+    Route::get('/Achievement', [AchievementController::class, 'index'])->name('achievement.index');
    
     
 });
 
 
 Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
-Route::get('/Plan', [PlanController::class, 'Plan'])->name('Plan');
+Route::get('/plan', [PlanController::class, 'Plan'])->name('Plan');
 Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
 Route::get('/setting', [SettingController::class, 'Setting'])->name('setting');
 Route::get('/certification', [certificationController::class, 'certification'])->name('certification');
@@ -272,18 +276,18 @@ Route::get('/contact-us', [ContactUsController::class, 'index'])->name('contact.
 
 Route::get('/test-verification', function() {
     $user = App\Models\User::first();
-    return $user->getKey(); // Should return the user's ID
+    return $user->getKey();
 });
 
 
 
 Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->group(function () {
-    // ✅ الاستبيان - بدون تسجيل دخول (مؤقتًا)
     Route::get('/intro', [IntroController::class, 'index'])->name('intro.index');
     Route::get('/intro/step/{step}', [IntroController::class, 'step'])->name('intro.step');
     Route::post('/intro/step/{step}', [IntroController::class, 'store'])->name('intro.store');
     Route::get('/intro/complete', [IntroController::class, 'complete'])->name('intro.complete');
-
-    // Student Dashboard
-    Route::view('/home','home')->name('home');
+    Route::get('/home',[HomeController::class , 'index'])->name('home');
+    Route::get('/sections', [SectionsController::class, 'index'])->name('sections');
+    Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('account');
 });

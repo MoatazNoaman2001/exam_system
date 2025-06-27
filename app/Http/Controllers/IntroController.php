@@ -23,6 +23,7 @@ class IntroController extends Controller
             ->skip($step - 1)
             ->first();
 
+        // dd($question);
         if (!$question) {
             return redirect()->route('student.intro.complete');
         }

@@ -1,41 +1,192 @@
-.contact-us-wrapper {
+/* ContactUs.css */
+:root {
+    --primary-color: #3b82f6; /* Blue 400 */
+    --primary-light: #60a5fa;
+    --primary-dark: #1e40af;
+    --whatsapp-color: #25D366;
+    --email-color: #EA4335;
+    --support-color: #6c757d;
+    --card-bg: #ffffff;
+    --text-dark: #1e293b;
+    --text-medium: #475569;
+    --text-light: #64748b;
+}
+
+.contact-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    font-family: 'Tajawal', sans-serif;
+}
+
+.contact-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+}
+
+.contact-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+}
+
+.contact-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-medium);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.header-ornament {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0) 70%);
+    z-index: -1;
+}
+
+.contact-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.contact-card {
+    background: var(--card-bg);
     border-radius: 1.5rem;
-    box-shadow: 0 0.25rem 1.5625rem rgba(47, 128, 237, 0.15);
+    padding: 2rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-top: 4px solid var(--primary-color);
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.email-card .card-icon { color: var(--email-color); }
+.whatsapp-card .card-icon { color: var(--whatsapp-color); }
+.support-card .card-icon { color: var(--support-color); }
+
+.card-content {
+    position: relative;
+    z-index: 2;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.card-detail {
+    font-size: 1rem;
+    color: var(--text-medium);
+    margin-bottom: 1.5rem;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
     transition: all 0.3s ease;
+    border: 2px solid;
 }
 
-.contact-section {
-    border: 1px solid #e5e7eb;
-    transition: all 0.3s ease;
+.action-btn i {
+    transition: transform 0.3s ease;
 }
 
-.contact-section:hover {
-    border-color: #2f80ed;
-    box-shadow: 0 0.125rem 0.5rem rgba(47, 128, 237, 0.2);
+.action-btn:hover i {
+    transform: translateX(-5px);
 }
 
-.btn-outline-primary {
-    background: #ffffff;
+.email-btn {
+    color: var(--email-color);
+    border-color: var(--email-color);
+    background: rgba(234, 67, 53, 0.1);
+}
+.email-btn:hover {
+    background: var(--email-color);
+    color: white;
 }
 
-.btn-outline-primary:hover {
-    background: #2f80ed;
-    color: #ffffff !important;
-    border-color: #2f80ed;
+.whatsapp-btn {
+    color: var(--whatsapp-color);
+    border-color: var(--whatsapp-color);
+    background: rgba(37, 211, 102, 0.1);
+}
+.whatsapp-btn:hover {
+    background: var(--whatsapp-color);
+    color: white;
 }
 
+.support-btn {
+    color: var(--support-color);
+    border-color: var(--support-color);
+    background: rgba(108, 117, 125, 0.1);
+}
+.support-btn:hover {
+    background: var(--support-color);
+    color: white;
+}
+
+.card-decoration {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0) 100%);
+    border-radius: 0 0 0 100%;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    .contact-us-wrapper {
-        margin: 0 1rem;
-        padding: 2rem;
+    .contact-cards {
+        grid-template-columns: 1fr;
     }
-    .contact-section {
-        padding: 1rem;
+    
+    .contact-title {
+        font-size: 1.8rem;
     }
-    .btn {
-        font-size: 0.9rem;
+    
+    .contact-subtitle {
+        font-size: 1rem;
     }
-    h2 {
-        font-size: 1.1rem;
+}
+
+@media (max-width: 480px) {
+    .contact-container {
+        padding: 0 1rem;
+    }
+    
+    .contact-card {
+        padding: 1.5rem;
+    }
+    
+    .card-title {
+        font-size: 1.2rem;
     }
 }

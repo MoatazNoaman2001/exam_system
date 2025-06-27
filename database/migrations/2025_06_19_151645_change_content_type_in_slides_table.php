@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('slides', function (Blueprint $table) {
+        Schema::table('slides', function (Blueprint $table) {   
             $table->text('content')->change();
         });
     }

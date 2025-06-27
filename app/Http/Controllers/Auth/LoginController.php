@@ -15,8 +15,30 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
+        if (Auth::user() != null) {
+            $request->session()->regenerate();
+            $user = Auth::user();
+
+
+
+            if ($user->role == "admin") {
+                return redirect()->intended('/admin/dashboard');
+            }
+            $isFirstTime = !IntroAnswer::where('user_id', $user->id)->exists();
+
+            // dd($isFirstTime);
+            if ($isFirstTime) {
+                $user->first_visit= false;
+                $user->save();
+                return redirect()->route('index');
+            }else{
+                return redirect()->route('student.home', compact('user'));
+            }
+
+            return redirect()->route('completed-action', ['userId' => $user->id]);
+        }
         return view('auth.login');
     }
 
@@ -36,13 +58,18 @@ class LoginController extends Controller
 
 
 
-            if ($user->isAdmin) {
+            if ($user->role == "admin") {
                 return redirect()->intended('/admin/dashboard');
             }
-$isFirstTime = !IntroAnswer::where('user_id', $user->id)->exists();
+            $isFirstTime = !IntroAnswer::where('user_id', $user->id)->exists();
 
+            // dd($isFirstTime);
             if ($isFirstTime) {
-                return redirect()->route('student.intro.index');  // تأكد من اسم الراوت صح
+                $user->first_visit= false;
+                $user->save();
+                return redirect()->route('index');
+            }else{
+                return view('student.home', compact('user'));
             }
 
             return redirect()->route('completed-action', ['userId' => $user->id]);
