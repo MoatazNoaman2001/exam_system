@@ -197,7 +197,6 @@ Route::get('/logo', [LogoController::class, 'index'])->name('index');
 Route::get('/feature', [FeaturesController::class, 'features'])->name('feature');
 Route::get('/welcome', [WelcomeController::class, 'welcome'])->name('welcome');
 Route::get('/splash', [SplashController::class, 'splash'])->name('splash');
-// سير عمل إعادة تعيين كلمة المرور
 Route::get('/forget-password', [ForgetController::class, 'showForgetPasswordForm'])->name('forget-password');
 Route::post('/forget-password', [ForgetController::class, 'sendResetLinkEmail'])->name('forget-password.submit');
 
