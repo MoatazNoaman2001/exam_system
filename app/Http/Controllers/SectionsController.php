@@ -9,6 +9,7 @@ use App\Models\Chapter;
 use App\Models\SlideAttempt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class SectionsController extends Controller
@@ -455,5 +456,35 @@ class SectionsController extends Controller
             ],
             'pdf_url' => $pdfUrl,
         ]);  
+    }
+    public function recordAttempt(Request $request)
+    {
+        $validated = $request->validate([
+            'slide_id' => 'required|uuid|exists:slides,id',
+        ]);
+
+        $userId = Auth::id();
+        if (!$userId) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+
+        $slideId = $validated['slide_id'];
+
+        try {
+            SlideAttempt::firstOrCreate(
+                [
+                    'slide_id' => $slideId,
+                    'user_id' => $userId,
+                    'start_date' => now(),
+                    'end_date' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+
+            return response()->json(['message' => 'Slide attempt recorded']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to record slide attempt: ' . $e->getMessage()], 500);
+        }
     }
 }

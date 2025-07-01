@@ -294,6 +294,7 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
     Route::get('/sections/chapters/{chapterId}/slides', [SectionsController::class , 'chapterShow'])->name('chapter.slides');
     Route::get('/sections/doamins/{domainId}/slides', [SectionsController::class , 'domainShow'])->name('domain.slides');
     Route::get('/sections/slides/{slideId}', [SectionsController::class, 'slideShow'])->name('sections.slides');
+    Route::post('/slide/attempt', [SectionsController::class, 'recordAttempt'])->name('slide.attempt');
     Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
     Route::get('/profile', [ProfileController::class, 'show'])->name('account');
 });

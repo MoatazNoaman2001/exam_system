@@ -381,13 +381,13 @@ class AdminController extends Controller
         try {
             $filePath = $request->file('content')->store('slides', 'public');
     
-            dd($validatedData);
             Slide::create([
                 'text' => $validatedData['text'],
                 'content' => $filePath,
                 'domain_id' => $validatedData['domain_id'], // could be null
                 'chapter_id' => empty($validatedData['chapter_id']) ? null : $validatedData['chapter_id'], // could be null
             ]);
+
         
             return redirect()
                 ->route('admin.slides')

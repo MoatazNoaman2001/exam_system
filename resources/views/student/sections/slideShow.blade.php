@@ -50,12 +50,7 @@
         margin: 0;
         overflow: hidden;
     }
-    body .main-content.sidebar-open {
-        margin: 0 0 !important;
-    } 
-    .sidebar{
-        display: none;
-    }
+
     .slide-container {
         padding: 0;
         width: 100%;
@@ -120,16 +115,17 @@
     }
 
     #pdf-viewer-container {
-        width: 100vw;
+        width: 100%;
         height: calc(100vh - 60px);
         margin-top: 60px;
         position: relative;
         background: var(--gray-50);
+        overflow: auto;
     }
 
     #pdf-canvas {
-        width: 100%;
-        height: 100%;
+        display: block;
+        margin: 0 auto;
     }
 
     #end-of-pdf-notification {
@@ -193,10 +189,10 @@
         <div class="slide-header">
             <h1 class="slide-title">{{ __('Slide') }}: {{ __($slide['title']) }}</h1>
             <div class="slide-actions">
-                <a href="{{ route('student.chapter.slides', $slide['chapter_id']) }}" class="action-btn back">
+                {{-- <a href="{{ route('student.chapter.slides', $slide['chapter_id']) }}" class="action-btn back">
                     <i class="fas fa-arrow-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }}"></i>
                     {{ __('Back to Slides') }}
-                </a>
+                </a> --}}
                 <a href="{{ $pdf_url }}" download class="action-btn download">
                     <i class="fas fa-download"></i>
                     {{ __('Download PDF') }}
@@ -242,20 +238,35 @@
             document.getElementById('pdf-viewer-container').innerHTML = '<div class="error-message">{{ __('Error Loading Slide') }}</div>';
         });
 
+        function recordSlideAttempt() {
+            $.ajax({
+                url: '{{ route("student.slide.attempt") }}',
+                method: 'POST',
+                data: {
+                    slide_id: '{{ $slide["id"] }}',
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    console.log('Slide attempt recorded:', response);
+                },
+                error: function(xhr) {
+                    console.error('Error recording slide attempt:', xhr.responseText);
+                }
+            });
+        }
+
         function renderPage(num) {
             if (!pdfDoc) return;
             pageRendering = true;
             pdfDoc.getPage(num).then(page => {
                 const viewport = page.getViewport({ scale: 1 });
-                const scale = Math.min(window.innerWidth / viewport.width, (window.innerHeight - 60) / viewport.height);
-                const scaledViewport = page.getViewport({ scale: scale });
 
-                canvas.height = scaledViewport.height;
-                canvas.width = scaledViewport.width;
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
 
                 const renderContext = {
                     canvasContext: ctx,
-                    viewport: scaledViewport
+                    viewport: viewport
                 };
                 page.render(renderContext).promise.then(() => {
                     pageRendering = false;
@@ -265,6 +276,7 @@
                     }
                     if (num === pdfDoc.numPages) {
                         endNotification.style.display = 'block';
+                        recordSlideAttempt();
                         setTimeout(() => {
                             endNotification.style.display = 'none';
                         }, 3000);
