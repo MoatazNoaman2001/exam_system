@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moataz Kayad Hamdy Noaman - Full-Stack Laravel Developer</title>
+    <style>
+        /* ATS-Optimized CSS Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Calibri', sans-serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #333;
+            background: #fff;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 1.5em;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 1em;
+        }
+
+        .name {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.3em;
+        }
+
+        .title {
+            font-size: 14pt;
+            color: #34495e;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1em;
+            font-size: 10pt;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+        }
+
+        .contact-item a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 1.5em;
+        }
+
+        .section-title {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 0.3em;
+            margin-bottom: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Professional Summary */
+        .summary {
+            text-align: justify;
+            line-height: 1.5;
+            margin-bottom: 1em;
+        }
+
+        /* Experience Entry */
+        .experience-entry {
+            margin-bottom: 1.2em;
+            page-break-inside: avoid;
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5em;
+        }
+
+        .job-title {
+            font-weight: bold;
+            font-size: 12pt;
+            color: #2c3e50;
+        }
+
+        .company {
+            font-weight: 600;
+            color: #34495e;
+            margin-top: 0.2em;
+        }
+
+        .date-location {
+            text-align: right;
+            font-size: 10pt;
+            color: #7f8c8d;
+            white-space: nowrap;
+        }
+
+        .job-description {
+            margin-left: 0;
+            margin-top: 0.5em;
+        }
+
+        /* Lists */
+        ul {
+            margin-left: 1.2em;
+            margin-bottom: 0.5em;
+        }
+
+        li {
+            margin-bottom: 0.3em;
+            line-height: 1.4;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1em;
+        }
+
+        .skill-category {
+            margin-bottom: 0.8em;
+        }
+
+        .skill-category-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.4em;
+            font-size: 11pt;
+        }
+
+        .skill-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .skill-list li {
+            margin-bottom: 0.2em;
+            padding-left: 0.8em;
+            position: relative;
+        }
+
+        .skill-list li:before {
+            content: "•";
+            color: #3498db;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Project Entry */
+        .project-entry {
+            margin-bottom: 1em;
+            border-left: 3px solid #3498db;
+            padding-left: 0.8em;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.3em;
+        }
+
+        .project-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .project-date {
+            font-size: 9pt;
+            color: #7f8c8d;
+        }
+
+        .project-description {
+            margin-bottom: 0.4em;
+            color: #34495e;
+        }
+
+        .tech-stack {
+            font-size: 10pt;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        /* Education Entry */
+        .education-entry {
+            margin-bottom: 1em;
+        }
+
+        .education-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.3em;
+        }
+
+        .degree {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .institution {
+            color: #34495e;
+            margin-top: 0.2em;
+        }
+
+        /* Certifications */
+        .certification-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .certification-list li {
+            margin-bottom: 0.4em;
+            padding-left: 1em;
+            position: relative;
+        }
+
+        .certification-list li:before {
+            content: "📜";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Print Optimization */
+        @media print {
+            body {
+                font-size: 10pt;
+                padding: 0.3in;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+            
+            .experience-entry,
+            .project-entry {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* ATS-Friendly Responsive Design */
+        @media (max-width: 768px) {
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5em;
+            }
+            
+            .experience-header,
+            .project-header,
+            .education-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .date-location {
+                text-align: left;
+                margin-top: 0.2em;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Keyword Optimization */
+        .keyword-emphasis {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Achievement Highlights */
+        .achievement {
+            background: #ecf0f1;
+            padding: 0.5em;
+            border-left: 3px solid #27ae60;
+            margin: 0.5em 0;
+        }
+
+        .metric {
+            font-weight: bold;
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <h1 class="name">Moataz Kayad Hamdy Noaman</h1>
+        <p class="title">Full-Stack Laravel Developer</p>
+        <div class="contact-info">
+            <div class="contact-item">
+                <span>📧</span>
+                <a href="mailto:Moataz.noaman12@gmail.com">Moataz.noaman12@gmail.com</a>
+            </div>
+            <div class="contact-item">
+                <span>📱</span>
+                <span>+20 109 851 8194</span>
+            </div>
+            <div class="contact-item">
+                <span>📍</span>
+                <span>Assiut, Egypt</span>
+            </div>
+            <div class="contact-item">
+                <span>💼</span>
+                <a href="https://linkedin.com/in/moataz-noaman-02196222a">LinkedIn Profile</a>
+            </div>
+            <div class="contact-item">
+                <span>💻</span>
+                <a href="https://github.com/MoatazNoaman2001">GitHub Portfolio</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Professional Summary -->
+    <section class="section">
+        <h2 class="section-title">Professional Summary</h2>
+        <div class="summary">
+            Experienced <span class="keyword-emphasis">Full-Stack Laravel Developer</span> with <span class="metric">4+ years</span> of expertise in building scalable web applications using <span class="keyword-emphasis">PHP 8, Laravel Framework, React.js, and TypeScript</span>. Proven track record in developing <span class="metric">15+ enterprise-level projects</span> including e-learning platforms, healthcare systems, and e-commerce solutions. Strong expertise in <span class="keyword-emphasis">RESTful API development, Eloquent ORM, database optimization, and cloud deployment</span>. Bachelor's degree in Computer Science with specialized training in DevOps practices and modern web development methodologies.
+        </div>
+    </section>
+
+    <!-- Core Technical Skills -->
+    <section class="section">
+        <h2 class="section-title">Core Technical Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-category">
+                <h3 class="skill-category-title">Backend Development</h3>
+                <ul class="skill-list">
+                    <li>PHP 8 & Object-Oriented Programming</li>
+                    <li>Laravel Framework (v11-12)</li>
+                    <li>Eloquent ORM & Database Management</li>
+                    <li>RESTful API Development</li>
+                    <li>Job Queues & Scheduled Tasks</li>
+                    <li>Laravel Security & Authentication</li>
+                    <li>Spring Boot & Java Development</li>
+                </ul>
+            </div>
+            <div class="skill-category">
+                <h3 class="skill-category-title">Frontend Development</h3>
+                <ul class="skill-list">
+                    <li>React.js & TypeScript</li>
+                    <li>Angular Framework</li>
+                    <li>Laravel Blade Templates</li>
+                    <li>Bootstrap & Tailwind CSS</li>
+                    <li>JavaScript ES6+</li>
+                    <li>Redux & State Management</li>
+                    <li>Responsive Web Design</li>
+                </ul>
+            </div>
+            <div class="skill-category">
+                <h3 class="skill-category-title">Database & Cloud</h3>
+                <ul class="skill-list">
+                    <li>MySQL & PostgreSQL</li>
+                    <li>MongoDB & Mongoose</li>
+                    <li>Database Performance Optimization</li>
+                    <li>AWS Cloud Services</li>
+                    <li>Docker Containerization</li>
+                    <li>CI/CD Pipelines</li>
+                    <li>Kubernetes</li>
+                </ul>
+            </div>
+            <div class="skill-category">
+                <h3 class="skill-category-title">Development Tools</h3>
+                <ul class="skill-list">
+                    <li>Git Version Control</li>
+                    <li>GitHub Actions</li>
+                    <li>OpenAPI/Swagger Documentation</li>
+                    <li>Laravel Forge & Envoyer</li>
+                    <li>Postman API Testing</li>
+                    <li>PhpStorm IDE</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Experience -->
+    <section class="section">
+        <h2 class="section-title">Professional Experience</h2>
+        
+        <div class="experience-entry">
+            <div class="experience-header">
+                <div>
+                    <div class="job-title">Teaching Assistant</div>
+                    <div class="company">Zewail University</div>
+                </div>
+                <div class="date-location">
+                    02/2024 – 06/2024<br>
+                    Cairo, Egypt
+                </div>
+            </div>
+            <div class="job-description">
+                <ul>
+                    <li>Assisted in teaching computer science fundamentals to <span class="metric">100+ students</span></li>
+                    <li>Mentored students in programming concepts and project development</li>
+                    <li>Conducted laboratory sessions on web development technologies</li>
+                    <li>Developed educational materials and coding exercises</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="experience-entry">
+            <div class="experience-header">
+                <div>
+                    <div class="job-title">DevOps Engineer Trainee</div>
+                    <div class="company">Digital Egypt Pioneer Program (DEPI)</div>
+                </div>
+                <div class="date-location">
+                    04/2024 – 10/2024<br>
+                    Online, Egypt
+                </div>
+            </div>
+            <div class="job-description">
+                <ul>
+                    <li>Completed comprehensive DevOps training program</li>
+                    <li>Gained expertise in containerization with Docker and Kubernetes</li>
+                    <li>Implemented CI/CD pipelines using GitHub Actions and Jenkins</li>
+                    <li>Learned cloud infrastructure management on AWS platform</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Projects -->
+    <section class="section">
+        <h2 class="section-title">Key Projects</h2>
+        
+        <div class="project-entry">
+            <div class="project-header">
+                <span class="project-title">PMP Certification Learning Platform</span>
+                <span class="project-date">06/2025</span>
+            </div>
+            <div class="project-description">
+                Developed a comprehensive exam practice website featuring PMP chapters and domains to help professionals prepare for PMP certification. Implemented user progress tracking, interactive quizzes, and detailed analytics.
+            </div>
+            <div class="achievement">
+                <span class="metric">Achievement:</span> Built scalable platform supporting 500+ concurrent users with 95% uptime
+            </div>
+            <div class="tech-stack">
+                <strong>Technologies:</strong> Laravel 12, Blade Templates, PostgreSQL, Bootstrap
+            </div>
+        </div>
+
+        <div class="project-entry">
+            <div class="project-header">
+                <span class="project-title">Healthcare Management System</span>
+                <span class="project-date">04/2025</span>
+            </div>
+            <div class="project-description">
+                Developed a comprehensive Django-based backend for healthcare application, providing APIs for patients, doctors, clinics, and appointment management with secure authentication.
+            </div>
+            <div class="achievement">
+                <span class="metric">Achievement:</span> Processed 10,000+ patient records with 99.9% data accuracy
+            </div>
+            <div class="tech-stack">
+                <strong>Technologies:</strong> Django, Python, PostgreSQL, REST Framework
+            </div>
+        </div>
+
+        <div class="project-entry">
+            <div class="project-header">
+                <span class="project-title">E-Learning Management System</span>
+                <span class="project-date">01/2025 – 06/2025</span>
+            </div>
+            <div class="project-description">
+                Full-stack e-learning platform with Angular frontend and Spring Boot backend. Features include course management, student enrollment, progress tracking, and assessment tools.
+            </div>
+            <div class="achievement">
+                <span class="metric">Achievement:</span> Managed 1,000+ students across 50+ courses with real-time progress tracking
+            </div>
+            <div class="tech-stack">
+                <strong>Technologies:</strong> Angular, Spring Boot V3, Java 17, MySQL
+            </div>
+        </div>
+
+        <div class="project-entry">
+            <div class="project-header">
+                <span class="project-title">E-Commerce API Platform</span>
+                <span class="project-date">05/2025</span>
+            </div>
+            <div class="project-description">
+                Built robust e-commerce API with advanced features including inventory management, payment processing, order tracking, and comprehensive admin dashboard.
+            </div>
+            <div class="achievement">
+                <span class="metric">Achievement:</span> Handled 5,000+ daily transactions with sub-200ms response times
+            </div>
+            <div class="tech-stack">
+                <strong>Technologies:</strong> Node.js, Express.js, MongoDB, Mongoose
+            </div>
+        </div>
+
+        <div class="project-entry">
+            <div class="project-header">
+                <span class="project-title">Chat Platform with WebSocket Integration</span>
+                <span class="project-date">06/2024 – 03/2025</span>
+            </div>
+            <div class="project-description">
+                Comprehensive chat platform with sophisticated user authorization flows, room capacity management, and special privileges for different user types using secure WebSocket connections.
+            </div>
+            <div class="achievement">
+                <span class="metric">Achievement:</span> Supported 1,000+ concurrent users with real-time messaging
+            </div>
+            <div class="tech-stack">
+                <strong>Technologies:</strong> Node.js, WebSocket, MongoDB, Real-time Communication
+            </div>
+        </div>
+    </section>
+
+    <!-- Education -->
+    <section class="section">
+        <h2 class="section-title">Education</h2>
+        
+        <div class="education-entry">
+            <div class="education-header">
+                <div>
+                    <div class="degree">Bachelor of Computer Science - Bioinformatics</div>
+                    <div class="institution">Computer Science and Information Technology, Assiut University</div>
+                </div>
+                <div class="date-location">
+                    09/2019 – 07/2023<br>
+                    Grade: Very Good
+                </div>
+            </div>
+            <div class="achievement">
+                <strong>Graduation Project:</strong> Vitalism Solution Android Application - Developed innovative app using real-time video analysis and advanced algorithms for non-invasive vital signs measurement
+            </div>
+        </div>
+
+        <div class="education-entry">
+            <div class="education-header">
+                <div>
+                    <div class="degree">Full-Stack Web Development Program</div>
+                    <div class="institution">Information Technology Institute (ITI)</div>
+                </div>
+                <div class="date-location">
+                    10/2024 – Present<br>
+                    9-Month Intensive Program
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications & Training -->
+    <section class="section">
+        <h2 class="section-title">Certifications & Training</h2>
+        <ul class="certification-list">
+            <li><strong>DevOps Engineer Certification</strong> - Digital Egypt Pioneer Program (DEPI) - 2024</li>
+            <li><strong>The Complete Android Kotlin Developer Course</strong> - Professional Development - 2024</li>
+            <li><strong>Laravel Framework Mastery</strong> - Advanced Web Development - 2024</li>
+            <li><strong>AWS Cloud Practitioner</strong> - Currently Pursuing - 2025</li>
+        </ul>
+    </section>
+
+    <!-- Additional Skills -->
+    <section class="section">
+        <h2 class="section-title">Additional Technical Proficiencies</h2>
+        <div class="skills-grid">
+            <div class="skill-category">
+                <h3 class="skill-category-title">Programming Languages</h3>
+                <ul class="skill-list">
+                    <li>Java (Concurrency, Streams, Functional Programming)</li>
+                    <li>Kotlin (Coroutines, Functional Programming)</li>
+                    <li>Python (TensorFlow, PyTorch, OpenCV)</li>
+                    <li>C++ (Native Development)</li>
+                    <li>Dart (Flutter Development)</li>
+                </ul>
+            </div>
+            <div class="skill-category">
+                <h3 class="skill-category-title">Soft Skills</h3>
+                <ul class="skill-list">
+                    <li>Team Leadership & Collaboration</li>
+                    <li>Problem-Solving & Critical Thinking</li>
+                    <li>Project Management</li>
+                    <li>Technical Documentation</li>
+                    <li>Client Communication</li>
+                    <li>Agile/Scrum Methodologies</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

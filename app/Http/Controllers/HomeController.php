@@ -26,7 +26,6 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         
-        // Fake data
         $notifications = 3;
         $progress = 65;
         $daysLeft = 12;
@@ -37,6 +36,7 @@ class HomeController extends Controller
         ];
         $slidesCompleted = 25;
         $examsCompleted = 4;
+
 
         return view('student.home', compact(
             'notifications',

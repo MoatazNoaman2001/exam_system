@@ -267,9 +267,10 @@ class AdminController extends Controller
     {
         $request->validate([
             'text' => 'required|string|max:255',
+            'description' => 'required|string|max:200',
         ]);
 
-        Domain::create($request->only(['text']));
+        Domain::create($request->only(['text', 'description']));
 
         return redirect()->route('admin.domains')->with('success', 'Domain created successfully.');
     }
@@ -283,9 +284,10 @@ class AdminController extends Controller
     {
         $request->validate([
             'text' => 'required|string|max:255',
+            'description' => 'required|string|max:200',
         ]);
 
-        $domain->update($request->only(['text']));
+        $domain->update($request->only(['text', 'description']));
 
         return redirect()->route('admin.domains')->with('success', 'Domain updated successfully.');
     }
@@ -361,36 +363,47 @@ class AdminController extends Controller
 
     public function storeSlide(Request $request)
     {
+        // dd($request->all());
+    
         $validatedData = $request->validate([
             'text' => 'required|string|max:255',
             'content' => 'required|file|mimes:pdf|max:5120',
             'domain_id' => 'nullable|exists:domains,id',
-            'chapter_id' => 'nullable|exists:chapters,id'
+            'chapter_id' => 'nullable|exists:chapters,id',
         ]);
     
-        // dd($validatedData);
+        if (empty($validatedData['domain_id']) && empty($validatedData['chapter_id'])) {
+            return back()
+                ->withInput()
+                ->with('error', 'Either Domain or Chapter must be selected.');
+        }
+    
         try {
             $filePath = $request->file('content')->store('slides', 'public');
-            
+    
+            dd($validatedData);
             Slide::create([
                 'text' => $validatedData['text'],
                 'content' => $filePath,
-                'domain_id' => null,
-                'chapter_id' => $validatedData['chapter_id']
+                'domain_id' => $validatedData['domain_id'], // could be null
+                'chapter_id' => empty($validatedData['chapter_id']) ? null : $validatedData['chapter_id'], // could be null
             ]);
-    
-            return redirect()->route('admin.slides')
-                   ->with('success', 'Slide created successfully.');
-    
+        
+            return redirect()
+                ->route('admin.slides')
+                ->with('success', 'Slide created successfully.');
+        
         } catch (\Exception $e) {
             if (isset($filePath)) {
                 Storage::disk('public')->delete($filePath);
             }
-    
-            return back()->withInput()
-                   ->with('error', 'Error creating slide: ' . $e->getMessage());
+        
+            return back()
+                ->withInput()
+                ->with('error', 'Error creating slide: ' . $e->getMessage());
         }
     }
+
 
     public function editSlide(Slide $slide)
     {

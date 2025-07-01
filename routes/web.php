@@ -39,6 +39,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ContactUsController;
 
+App::setLocale('en');
 Route::get('/lang/{locale}' , function ($lang) {
     if (!in_array($lang, ['en', 'ar'])) {
         abort(400);
@@ -288,6 +289,11 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
     Route::get('/intro/complete', [IntroController::class, 'complete'])->name('intro.complete');
     Route::get('/home',[HomeController::class , 'index'])->name('home');
     Route::get('/sections', [SectionsController::class, 'index'])->name('sections');
+    Route::get('/sections/chapters', [SectionsController::class, 'chapters'])->name('sections.chapters');
+    Route::get('/sections/domains', [SectionsController::class, 'domains'])->name('sections.domains');
+    Route::get('/sections/chapters/{chapterId}/slides', [SectionsController::class , 'chapterShow'])->name('chapter.slides');
+    Route::get('/sections/doamins/{domainId}/slides', [SectionsController::class , 'domainShow'])->name('domain.slides');
+    Route::get('/sections/slides/{slideId}', [SectionsController::class, 'slideShow'])->name('sections.slides');
     Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
-    Route::get('/profile', [ProfileController::class, 'index'])->name('account');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('account');
 });

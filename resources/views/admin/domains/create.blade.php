@@ -26,7 +26,16 @@
                     @enderror
                 </div>
                 <br/>
-                
+                <div class="form-group">
+                    <label for="description">Domain Description</label>
+                    <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3" style="resize: vertical; max-height: 100px;" required>{{ old('description') }}</textarea>
+                    @error('description')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <br/>
                 <button type="submit" class="btn btn-primary">Create Domain</button>
             </form>
         </div>
