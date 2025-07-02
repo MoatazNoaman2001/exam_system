@@ -69,16 +69,13 @@ class RegisterController extends Controller
         $user->sendEmailVerificationNotification();
     
 
-<<<<<<< HEAD
  if ($user->role === 'student') {
         return redirect()->route('completedAction');
 
 
-=======
         if ($user->role === 'student') {
             return redirect()->route('completedAction');
         }
->>>>>>> ee1dddee569e2d028810d311504922663a5bdabd
     }
 }
 

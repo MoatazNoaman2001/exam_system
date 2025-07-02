@@ -289,5 +289,4 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
     Route::get('/home',[HomeController::class , 'index'])->name('home');
     Route::get('/sections', [SectionsController::class, 'index'])->name('sections');
     Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
-    Route::get('/profile', [ProfileController::class, 'index'])->name('account');
 });

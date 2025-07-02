@@ -18,7 +18,7 @@
         @php
             $levels = ['مبتدئ', 'متوسط', 'محترف', 'خبير', 'أسطورة'];
             $currentIndex = array_search($progress->current_level, $levels);
-            $nextLevel = $levels[$currentIndex + 1] ?? null;
+            $nextLevel = isset($levels[$currentIndex + 1]) ? $levels[$currentIndex + 1] : null;
 
             $pointsMap = [
                 'مبتدئ' => 150,
@@ -28,7 +28,8 @@
                 'أسطورة' => null,
             ];
 
-            $pointsToNext = isset($pointsMap[$progress->current_level]) ? max(0, $pointsMap[$progress->current_level] - $totalPoints) : null;
+            $pointsToNext = isset($pointsMap[$progress->current_level]) ? max(0, $pointsMap[$progress->current_level] - $totalPoints) : 0;
+            $fillPercent = ($pointsToNext > 0) ? ($totalPoints / ($totalPoints + $pointsToNext)) * 100 : 100;
 
             $levelColors = [
                 'مبتدئ' => '#28a745',
@@ -39,7 +40,6 @@
             ];
 
             $color = $levelColors[$progress->current_level] ?? '#6c757d';
-            $fillPercent = ($pointsToNext && $pointsToNext > 0) ? ($totalPoints / ($totalPoints + $pointsToNext)) * 100 : 100;
         @endphp
 
         <div class="dashboard-card points-card">
@@ -62,7 +62,7 @@
                     @if ($progress->current_level === 'أسطورة')
                         🎉 تهانينا! لقد وصلت إلى أقصى مستوى! استمر في التألق!
                     @else
-                        {{ $nextLevel }} – بعد {{ $pointsToNext }} نقطة
+                        {{ $nextLevel ?? 'لا يوجد مستوى أعلى' }} – بعد {{ $pointsToNext }} نقطة
                     @endif
                 </span>
             </div>
@@ -74,7 +74,7 @@
                     <span class="current-level">{{ $progress->current_level }}</span>
                     <span class="next-level">
                         @if ($progress->current_level !== 'أسطورة')
-                            المستوى التالي: {{ $nextLevel }}
+                            المستوى التالي: {{ $nextLevel ?? 'لا يوجد' }}
                         @else
                             أنت الأسطورة 💪
                         @endif
@@ -85,31 +85,39 @@
         </div>
 
         <!-- كارت الخطة الزمنية -->
-        @if ($progress->exams_completed > 0)
-        <div class="dashboard-card plan-card">
-            <div class="card-header">
-                <span class="card-icon">⏳</span>
-                <h2 class="card-title">الخطة الزمنية</h2>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">الأيام المتبقية:</span>
-                <span class="stat-value" id="daysLeft">0</span> من {{ $progress->plan_duration ?? 30 }} يوم
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">تاريخ الانتهاء:</span>
-                <span class="stat-value">{{ $progress->plan_end_date ?? 'غير محدد' }}</span>
-            </div>
-            <div class="progress-container">
-                <div class="progress-track">
-                    <div class="progress-fill" style="width: {{ $progress->progress ?? 0 }}%"></div>
+        @if ($progress && isset($progress->plan_id))
+            <div class="dashboard-card plan-card">
+                <div class="card-header">
+                    <span class="card-icon">⏳</span>
+                    <h2 class="card-title">الخطة الزمنية</h2>
                 </div>
-                <div class="level-indicator">
-                    <span class="current-level">{{ $progress->progress ?? 0 }}%</span>
-                    <span class="next-level">نسبة الإنجاز</span>
+                <div class="stat-item">
+                    <span class="stat-label">الأيام المتبقية:</span>
+                    <span class="stat-value" id="daysLeft">{{ $progress->days_left ?? 0 }}</span> من {{ $progress->plan_duration ?? 30 }} يوم
                 </div>
+                <div class="stat-item">
+                    <span class="stat-label">تاريخ الانتهاء:</span>
+                    <span class="stat-value">{{ $progress->plan_end_date ?? 'غير محدد' }}</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: {{ $progress->progress ?? 0 }}%"></div>
+                    </div>
+                    <div class="level-indicator">
+                        <span class="current-level">{{ $progress->progress ?? 0 }}%</span>
+                        <span class="next-level">نسبة الإنجاز</span>
+                    </div>
+                </div>
+                <button class="action-btn">تعديل الخطة</button>
             </div>
-            <button class="action-btn">تعديل الخطة</button>
-        </div>
+        @else
+            <div class="dashboard-card plan-card">
+                <div class="card-header">
+                    <span class="card-icon">⏳</span>
+                    <h2 class="card-title">الخطة الزمنية</h2>
+                </div>
+                <p>لم تبدأ بعد في أي اختبارات. ابدأ الآن لتفعيل خطتك!</p>
+            </div>
         @endif
 
         <!-- كارت الإحصائيات -->
@@ -157,7 +165,7 @@
                     <span class="badge-icon">🥇</span>
                     <div class="badge-content">
                         <h3>المجالات</h3>
-                        <p>أكملت {{ $progress->domains_completed ?? 0 }} مجال</p>
+                        <p>أكملت {{ $completed_domains->count() }} مجال</p>
                     </div>
                 </div>
                 <div class="achievement-badge silver">
@@ -183,20 +191,26 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+
+       
+    
 
 <script>
     function updateDaysLeft() {
-        const endDate = new Date("{{ $progress->plan_end_date }}");
-        const today = new Date();
-        const diffTime = endDate - today;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        const daysLeft = Math.max(0, diffDays);
-        document.getElementById('daysLeft').textContent = daysLeft;
+        const endDate = "{{ $progress->plan_end_date ?? '' }}";
+        if (endDate) {
+            const end = new Date(endDate);
+            const today = new Date();
+            const diffTime = end - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const daysLeft = Math.max(0, diffDays);
+            document.getElementById('daysLeft').textContent = daysLeft;
+        } else {
+            document.getElementById('daysLeft').textContent = '0';
+        }
     }
 
-    @if ($progress->exams_completed > 0)
+    @if ($progress && isset($progress->plan_id))
         updateDaysLeft();
     @endif
 </script>
