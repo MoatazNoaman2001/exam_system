@@ -331,7 +331,7 @@
         @auth
             @if (Auth::user()->role === 'admin')
                 .main-content {
-                    padding-top: calc(var(--navbar-height) + 0.5rem);
+                    padding-top: calc(var(--navbar-height) + 2.0rem);
                 }
             @endif
         @endauth

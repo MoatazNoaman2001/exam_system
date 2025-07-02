@@ -197,7 +197,32 @@ return [
     "Tests"=> "Exams 📝",
     "Tests Description"=> "Comprehensive exams to simulate the real PMP exam experience",
     "Tests Label"=> "Exams",
-    "Coming Soon Message"=> "This section will be activated soon"
+    "Coming Soon Message"=> "This section will be activated soon",
+
+    "all_chapters" => "All Chapters",
+    "all_domains" => "All Domains",
+    "search_chapters" => "Search Chapters",
+    "search_domains" => "Search Domains",
+    "no_chapter_avilable" => "No chapters available",
+    "no_domain_avilable" => "No domains available",
+    "chapter_progress" => "Chapter Progress",
+    "domain_progress" => "Domain Progress",
+
+    "Overall Progress"=> "Overall Progress",
+    "Slides Completed"=> "{count} Slide Completed | {count} Slides Completed",
+    "Search Slides"=> "Search Slides",
+    "All"=> "All",
+    "Completed"=> "Completed",
+    "In Progress"=> "In Progress",
+    "Not Started"=> "Not Started",
+    "Locked"=> "Locked",
+    "Minutes"=> "{count} Minute | {count} Minutes",
+    "easy"=> "Easy",
+    "medium"=> "Medium",
+    "hard"=> "Hard",
+    "Start"=> "Start",
+    "Continue"=> "Continue",
+    "Review"=> "Review"
 ];
 
 

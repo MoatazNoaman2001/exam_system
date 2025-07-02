@@ -322,17 +322,17 @@
     <div class="container-fluid" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
         <div class="domains-container">
             <div class="domains-header">
-                <h1 class="domains-title">{{ __('lang.All Domains') }}</h1>
+                <h1 class="domains-title">{{ __('lang.all_domains') }}</h1>
             </div>
 
             <div class="search-box">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="{{ __('Search domains') }}" id="searchdomains">
+                <input type="text" class="search-input" placeholder="{{ __('lang.search_domains') }}" id="searchdomains">
             </div>
 
             @if ($domains->isEmpty())
                 <div class="text-center text-muted">
-                    {{ __('No domains Available') }}
+                    {{ __('lang.no_domain_available') }}
                 </div>
             @else
                 <!-- Desktop Grid View -->
@@ -350,8 +350,8 @@
                             <p class="domain-description">{{ __($domain['description']) }}</p>
                             <div class="domain-progress">
                                 <div class="progress-header">
-                                    <span class="progress-title">{{ __('domain Progress') }}</span>
-                                    <span class="progress-stats">{{ trans_choice('Slides Completed', $domain['completed_slides'], ['count' => $domain['completed_slides']]) }} / {{ $domain['total_slides'] }}</span>
+                                    <span class="progress-title">{{ __('lang.domain_progress') }}</span>
+                                    <span class="progress-stats">{{ trans_choice($domain['completed_slides'], ['count' => $domain['completed_slides']]) }} / {{ $domain['total_slides'] }}</span>
                                 </div>
                                 <div class="progress-bar-container">
                                     <div class="progress-bar-fill" style="width: {{ $domain['total_slides'] > 0 ? ($domain['completed_slides'] / $domain['total_slides'] * 100) : 0 }}%"></div>

@@ -301,10 +301,11 @@ class SectionsController extends Controller
             ];
         }
         return view('student.sections.slides', [
-            'title' => __('Chapter: Project Management Fundamentals'),
+            'title' => __('lang.chapter') . " ( " . $chapter->text . " )",
             'subtitle' => __('Learn the fundamentals and principles of successful project management'),
             'slides' => $slideData,
             'totalSlides' => $totalSlides,
+            'isDomain' => false,
             'completedSlides' => $completedSlides,
         ]);
     } 
@@ -313,6 +314,7 @@ class SectionsController extends Controller
     public function domainShow(Request $request){
         $user = auth()->user();
         $domainId = $request->domainId;
+    
 
         // Fetch the domain
         $domain = Domain::findOrFail($domainId);
@@ -434,11 +436,13 @@ class SectionsController extends Controller
                 'locked' => $locked,
             ];
         }
+        $isDomain = true;
         return view('student.sections.slides', [
-            'title' => __('Domain: Project Management Fundamentals'),
+            'title' => __('lang.domain') . " ( " . $domain->text . " )",
             'subtitle' => __('Learn the fundamentals and principles of successful project management'),
             'slides' => $slideData,
             'totalSlides' => $totalSlides,
+            'isDomain' => $isDomain,
             'completedSlides' => $completedSlides,
         ]);
     } 

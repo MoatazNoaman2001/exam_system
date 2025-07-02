@@ -322,17 +322,17 @@
     <div class="container-fluid" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
         <div class="chapters-container">
             <div class="chapters-header">
-                <h1 class="chapters-title">{{ __('All Chapters') }}</h1>
+                <h1 class="chapters-title">{{ __('lang.all_chapters') }}</h1>
             </div>
 
             <div class="search-box">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="{{ __('Search Chapters') }}" id="searchChapters">
+                <input type="text" class="search-input" placeholder="{{ __('lang.search_chapters') }}" id="searchChapters">
             </div>
 
             @if ($chapters->isEmpty())
                 <div class="text-center text-muted">
-                    {{ __('No Chapters Available') }}
+                    {{ __('lang.no_chapter_avilable') }}
                 </div>
             @else
                 <!-- Desktop Grid View -->
@@ -349,8 +349,8 @@
                             <h3 class="chapter-title">{{ __($chapter['name']) }}</h3>
                             <div class="chapter-progress">
                                 <div class="progress-header">
-                                    <span class="progress-title">{{ __('Chapter Progress') }}</span>
-                                    <span class="progress-stats">{{ trans_choice('Slides Completed', $chapter['completed_slides'], ['count' => $chapter['completed_slides']]) }} / {{ $chapter['total_slides'] }}</span>
+                                    <span class="progress-title">{{ __('lang.chapter_progress') }}</span>
+                                    <span class="progress-stats">{{ trans_choice($chapter['completed_slides'], ['count' => $chapter['completed_slides']]) }} / {{ $chapter['total_slides'] }}</span>
                                 </div>
                                 <div class="progress-bar-container">
                                     <div class="progress-bar-fill" style="width: {{ $chapter['total_slides'] > 0 ? ($chapter['completed_slides'] / $chapter['total_slides'] * 100) : 0 }}%"></div>

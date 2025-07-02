@@ -153,6 +153,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::put('/slides/{slide}', [AdminController::class, 'updateSlide'])->name('slides.update');
     Route::delete('/slides/{slide}', [AdminController::class, 'destroySlide'])->name('slides.destroy');
     
+    // Additional routes for the new functionality
+    Route::get('/slides/{slide}', [AdminController::class, 'showSlide'])->name('slides.show');
+    Route::get('/slides/{slide}/download', [AdminController::class, 'downloadSlidePdf'])->name('slides.download');
+    Route::get('/slides/{slide}/questions', [AdminController::class, 'getSlideQuestions'])->name('slides.questions');
+    
+    
     // Exams Management
     Route::get('/exams', [AdminController::class, 'exams'])->name('exams');
     Route::get('/exams/create', [AdminController::class, 'createExam'])->name('exams.create');

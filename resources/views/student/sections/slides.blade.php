@@ -589,12 +589,12 @@
             <div class="chapter-header">
                 <h1 class="chapter-title">{{ $title }}</h1>
                 <p class="chapter-subtitle">{{ $subtitle }}</p>
-                
+
                 <!-- Overall Progress -->
                 <div class="overall-progress">
                     <div class="progress-header">
-                        <span class="progress-title">{{ __('Overall Progress') }}</span>
-                        <span class="progress-stats">{{ trans_choice('Slides Completed', $completedSlides, ['count' => $completedSlides]) }} / {{ $totalSlides }}</span>
+                        <span class="progress-title">{{ __('lang.Overall Progress') }}</span>
+                        <span class="progress-stats">{{ trans_choice($completedSlides, ['count' => $completedSlides]) }} / {{ $totalSlides }}</span>
                     </div>
                     <div class="progress-bar-container">
                         <div class="progress-bar-fill" style="width: {{ $totalSlides > 0 ? ($completedSlides / $totalSlides * 100) : 0 }}%"></div>
@@ -606,14 +606,14 @@
             <div class="slides-controls">
                 <div class="search-box">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" placeholder="{{ __('Search Slides') }}" id="searchSlides">
+                    <input type="text" class="search-input" placeholder="{{ __('lang.Search Slides') }}" id="searchSlides">
                 </div>
-                
+
                 <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">{{ __('All') }}</button>
-                    <button class="filter-btn" data-filter="completed">{{ __('Completed') }}</button>
-                    <button class="filter-btn" data-filter="in-progress">{{ __('In Progress') }}</button>
-                    <button class="filter-btn" data-filter="not-started">{{ __('Not Started') }}</button>
+                    <button class="filter-btn active" data-filter="all">{{ __('lang.All') }}</button>
+                    <button class="filter-btn" data-filter="completed">{{ __('lang.Completed') }}</button>
+                    <button class="filter-btn" data-filter="in-progress">{{ __('lang.In Progress') }}</button>
+                    <button class="filter-btn" data-filter="not-started">{{ __('lang.Not Started') }}</button>
                 </div>
             </div>
 
@@ -632,18 +632,18 @@
                             </div>
                             <div class="slide-number">{{ $index + 1 }}</div>
                             @if ($slide['status'] === 'completed' || $slide['status'] === 'in-progress' || $slide['locked'])
-                                <div class="status-badge {{ $slide['status'] }}{{ $slide['locked'] ? ' locked' : '' }}">{{ $slide['locked'] ? __('Locked') : __($slide['status']) }}</div>
+                                <div class="status-badge {{ $slide['status'] }}{{ $slide['locked'] ? ' locked' : '' }}">{{ $slide['locked'] ? __('lang.Locked') : __($slide['status']) }}</div>
                             @endif
                         </div>
                         <div class="slide-content">
                             <h3 class="slide-title">{{ __($slide['title']) }}</h3>
                             <p class="slide-description">{{ __($slide['description']) }}</p>
-                            <div class="slide-meta">
-                                <div class="slide-duration">
-                                    <i class="fas fa-clock"></i>
-                                    <span>{{ trans_choice('Minutes', $slide['duration'], ['count' => $slide['duration']]) }}</span>
-                                </div>
-                                <div class="slide-difficulty {{ $slide['difficulty'] }}">{{ __($slide['difficulty']) }}</div>
+                            <div class="slide-duration" >
+                                    <div class="slide-meta" style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-clock"></i>
+                                        <span>{{ trans_choice( $slide['duration'], ['count' => $slide['duration']]) }} Minutes</span>
+                                    </div>
+                            <div class="slide-difficulty {{ $slide['difficulty'] }}">{{ __($slide['difficulty']) }}</div>
                             </div>
                             <div class="slide-progress">
                                 <div class="slide-progress-bar">
@@ -653,7 +653,7 @@
                             <div class="slide-actions">
                                 <button class="action-btn primary" {{ $slide['locked'] ? 'disabled' : '' }}>
                                     <i class="fas {{ $slide['locked'] ? 'fa-lock' : 'fa-play' }}"></i>
-                                    {{ $slide['locked'] ? __('Locked') : __($slide['action']) }}
+                                    {{ $slide['locked'] ? __('lang.Locked') : __($slide['action']) }}
                                 </button>
                                 <button class="action-btn secondary" {{ $slide['locked'] ? 'disabled' : '' }}>
                                     <i class="fas {{ $slide['secondary_icon'] }}"></i>
@@ -696,7 +696,7 @@
                             </div>
                         </div>
                         @if ($slide['status'] === 'completed' || $slide['status'] === 'in-progress' || $slide['locked'])
-                            <div class="status-badge {{ $slide['status'] }}{{ $slide['locked'] ? ' locked' : '' }}">{{ $slide['locked'] ? __('Locked') : __($slide['status']) }}</div>
+                            <div class="status-badge {{ $slide['status'] }}{{ $slide['locked'] ? ' locked' : '' }}">{{ $slide['locked'] ? __('lang.Locked') : __($slide['status']) }}</div>
                         @endif
                     </div>
                 @endforeach
