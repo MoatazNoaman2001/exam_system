@@ -14,10 +14,9 @@
             <h6 class="m-0 font-weight-bold text-primary">Edit Domain Details</h6>
         </div>
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.domains.update', $domain) }}">
+            <form method="POST" action="{{ route('admin.domains.update', $domain->id) }}">
                 @csrf
-                @method('PUT')
-                
+                @method("PUT")
                 <div class="form-group">
                     <label for="text">Domain Name</label>
                     <input type="text" class="form-control @error('text') is-invalid @enderror" id="text" name="text" value="{{ old('text', $domain->text) }}" required>
@@ -28,8 +27,17 @@
                     @enderror
                 </div>
                 <br/>
-                
-                <button type="submit" class="btn btn-primary">Update Domain</button>
+                <div class="form-group">
+                    <label for="description">Domain Description</label>
+                    <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3" style="resize: vertical; max-height: 100px;" required>{{ old('description', $domain->description) }}</textarea>
+                    @error('description')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <br/>
+                <button type="submit" class="btn btn-primary">Create Domain</button>
             </form>
         </div>
     </div>

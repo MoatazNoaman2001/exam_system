@@ -1,58 +1,58 @@
-body {
-      font-family: 'Tajawal', sans-serif;
-      direction: rtl;
-  }
-  .faq-container {
-      border-radius: 1.5rem;
-      box-shadow: 0 0.25rem 1.5625rem rgba(47, 128, 237, 0.15);
-      max-width: 800px;
-      margin: 0 auto;
-  }
-  .faq-title {
-      font-size: 1.75rem;
-      margin-bottom: 1.5rem;
-  }
-  .faq-input {
-      border-radius: 0.5rem 0 0 0.5rem;
-      border-color: #e5e7eb;
-  }
-  .input-group-text {
-      background-color: #fff;
-      border-radius: 0 0.5rem 0.5rem 0;
-      border-color: #e5e7eb;
-  }
-  .faq-question {
-      cursor: pointer;
-      transition: background-color 0.3s;
-  }
-  .faq-question:hover {
-      background-color: rgba(47, 128, 237, 0.2);
-  }
-  .bg-soft-primary {
-      background-color: rgba(47, 128, 237, 0.1);
-  }
-  .faq-text {
-      font-size: 1.125rem;
-  }
-  .faq-answer {
-      font-size: 1rem;
-      line-height: 1.6;
-  }
-  .faq-icon i {
-      font-size: 1.25rem;
-      color: #2f80ed;
-  }
-  @media (max-width: 768px) {
-      .faq-container {
-          padding: 1rem;
-      }
-      .faq-title {
-          font-size: 1.5rem;
-      }
-      .faq-text {
-          font-size: 1rem;
-      }
-      .input-group {
-          max-width: 100%;
-      }
-  }
+  .bg-blue-400 {
+        background-color: #4299e1;
+    }
+    .text-blue-400 {
+        color: #4299e1;
+    }
+    .border-blue-400 {
+        border-color: #4299e1 !important;
+    }
+    .btn-blue-400 {
+        background-color: #4299e1;
+        color: white;
+    }
+    .btn-blue-400:hover {
+        background-color: #3182ce;
+        color: white;
+    }
+    .bg-blue-50 {
+        background-color: #ebf8ff;
+    }
+    .shadow-sm {
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+    .accordion-button:not(.collapsed) {
+        background-color: #ebf8ff;
+        color: #4299e1;
+    }
+    .accordion-button:focus {
+        box-shadow: 0 0 0 0.25rem rgba(66, 153, 225, 0.25);
+    }
+
+    .bg-blue-400 {
+    background-color: #4299e1;
+}
+.text-blue-400 {
+    color: #4299e1;
+}
+.border-blue-400 {
+    border-color: #4299e1 !important;
+}
+.btn-blue-400 {
+    background-color: #4299e1;
+    color: white;
+}
+.btn-blue-400:hover {
+    background-color: #3182ce;
+    color: white;
+}
+.bg-blue-50 {
+    background-color: #ebf8ff;
+}
+.accordion-button:not(.collapsed) {
+    background-color: #ebf8ff;
+    color: #4299e1;
+}
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(66, 153, 225, 0.25);
+}

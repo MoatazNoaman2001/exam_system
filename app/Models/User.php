@@ -83,10 +83,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Notification::class);
     }
 
-
-
-  
-    
     public function progress(){
       
         return $this->hasOne(UserProgress::class, 'user_id');

@@ -34,7 +34,7 @@ class LoginController extends Controller
                 $user->save();
                 return redirect()->route('index');
             }else{
-                return redirect()->route('student.home', compact('user'));
+                return redirect()->route('student.sections');
             }
 
             return redirect()->route('completed-action', ['userId' => $user->id]);
@@ -69,9 +69,8 @@ class LoginController extends Controller
                 $user->save();
                 return redirect()->route('index');
             }else{
-                return view('student.home', compact('user'));
+                return redirect()->route('student.sections');
             }
-
             return redirect()->route('completed-action', ['userId' => $user->id]);
         }
 

@@ -12,7 +12,7 @@ class Domain extends Model
 {
     use HasFactory, SoftDeletes, HasUuids;
 
-    protected $fillable = ['text'];
+    protected $fillable = ['text', 'description'];
 
     public function slides()
     {

@@ -1,52 +1,61 @@
 body {
-            background-color: #ffffff;
-            font-family: 'Tajawal', sans-serif;
-        }
-        .terms-container {
-            border-radius: 1.5rem;
-            padding: 2rem;
-            max-width: 800px;
-            margin: 4rem auto;
-            box-shadow: 0 0.25rem 1.5625rem rgba(47, 128, 237, 0.15);
-        }
-        .terms-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        .terms-title {
-            color: #181818;
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-        .terms-subtitle {
-            color: #6c737f;
-            font-weight: 500;
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .terms-content {
-            color: #6c737f;
-            font-weight: 400;
-            font-size: 1rem;
-            text-align: right;
-            line-height: 1.6;
-        }
-        .download-btn {
-            background-color: #2f80ed;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1rem;
-            border-radius: 0.625rem;
-            padding: 0.5rem 1.5rem;
-            box-shadow: 0.25rem 0.25rem 1.5625rem rgba(47, 128, 237, 0.15);
-        }
-        .download-btn:hover {
-            background-color: #1e6bd2;
-        }
-        .user-info {
-            color: #181818;
-            font-weight: 500;
-            margin-bottom: 1rem;
-        }
+    background-color: #f9fafb; 
+}
+
+.terms-container {
+    border-radius: 1.5rem;
+    padding: 2.5rem; 
+    max-width: 850px;
+    margin: 3rem auto; 
+    box-shadow: 0 0.5rem 2rem rgba(47, 128, 237, 0.1);
+    background-color: #ffffff; 
+    border: 1px solid #e5e7eb; 
+}
+
+.terms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem; 
+    padding-bottom: 1rem; 
+    border-bottom: 1px solid #e5e7eb; 
+}
+
+.terms-title {
+    color: #111827; 
+}
+
+.terms-subtitle {
+    color: #4b5563;
+    margin-bottom: 2rem; 
+}
+
+.terms-content {
+    color: #374151; 
+    background-color: #f8fafc; 
+    padding: 1.5rem; 
+    border-radius: 0.75rem;
+}
+
+.download-btn {
+    background-color: #2563eb;
+    color: #ffffff;
+    border-radius: 0.75rem; 
+    padding: 0.75rem 2rem;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1); 
+    transition: all 0.2s; 
+}
+
+.download-btn:hover {
+    background-color: #1d4ed8; 
+    transform: translateY(-1px); 
+}
+
+.user-info {
+    color: #1f2937; 
+    margin-bottom: 1.5rem; 
+    padding: 1rem 1.25rem; 
+    background-color: #f3f4f6; 
+    border-radius: 0.5rem; 
+    border-left: 4px solid #2563eb; 
+}

@@ -39,6 +39,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ContactUsController;
 
+App::setLocale('ar');
 Route::get('/lang/{locale}' , function ($lang) {
     if (!in_array($lang, ['en', 'ar'])) {
         abort(400);
@@ -152,6 +153,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::put('/slides/{slide}', [AdminController::class, 'updateSlide'])->name('slides.update');
     Route::delete('/slides/{slide}', [AdminController::class, 'destroySlide'])->name('slides.destroy');
     
+    // Additional routes for the new functionality
+    Route::get('/slides/{slide}', [AdminController::class, 'showSlide'])->name('slides.show');
+    Route::get('/slides/{slide}/download', [AdminController::class, 'downloadSlidePdf'])->name('slides.download');
+    Route::get('/slides/{slide}/questions', [AdminController::class, 'getSlideQuestions'])->name('slides.questions');
+    
+    
     // Exams Management
     Route::get('/exams', [AdminController::class, 'exams'])->name('exams');
     Route::get('/exams/create', [AdminController::class, 'createExam'])->name('exams.create');
@@ -240,7 +247,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
 Route::get('/plan', [PlanController::class, 'Plan'])->name('Plan');
 Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
-Route::get('/setting', [SettingController::class, 'Setting'])->name('setting');
+Route::get('/setting', [SettingController::class, 'show'])->name('setting');
 Route::get('/certification', [certificationController::class, 'certification'])->name('certification');
 
 Route::get('/leaderboard/{userId}', [LeaderBoardController::class, 'showLeaderBoard'])->name('leaderboard');
@@ -272,6 +279,8 @@ Route::get('/about', [AboutController::class, 'index'])->name('about')->middlewa
 
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
+
+
 Route::get('/contact-us', [ContactUsController::class, 'index'])->name('contact.us')->middleware('auth');
 
 Route::get('/test-verification', function() {
@@ -288,5 +297,13 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
     Route::get('/intro/complete', [IntroController::class, 'complete'])->name('intro.complete');
     Route::get('/home',[HomeController::class , 'index'])->name('home');
     Route::get('/sections', [SectionsController::class, 'index'])->name('sections');
+    Route::get('/sections/chapters', [SectionsController::class, 'chapters'])->name('sections.chapters');
+    Route::get('/sections/domains', [SectionsController::class, 'domains'])->name('sections.domains');
+    Route::get('/sections/chapters/{chapterId}/slides', [SectionsController::class , 'chapterShow'])->name('chapter.slides');
+    Route::get('/sections/doamins/{domainId}/slides', [SectionsController::class , 'domainShow'])->name('domain.slides');
+    Route::get('/sections/slides/{slideId}', [SectionsController::class, 'slideShow'])->name('sections.slides');
+    Route::post('/slide/attempt', [SectionsController::class, 'recordAttempt'])->name('slide.attempt');
     Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
+    Route::get('/setting',[SettingController::class, 'show'])->name('setting');
+
 });

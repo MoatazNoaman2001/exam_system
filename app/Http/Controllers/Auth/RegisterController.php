@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Hash;
+use App\Models\IntroAnswer;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -24,8 +26,30 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
-    public function showRegistrationForm()
+    public function showRegistrationForm(Request $request)
     {
+        if (Auth::user() != null) {
+            $request->session()->regenerate();
+            $user = Auth::user();
+
+
+
+            if ($user->role == "admin") {
+                return redirect()->intended('/admin/dashboard');
+            }
+            $isFirstTime = !IntroAnswer::where('user_id', $user->id)->exists();
+
+            // dd($isFirstTime);
+            if ($isFirstTime) {
+                $user->first_visit= false;
+                $user->save();
+                return redirect()->route('index');
+            }else{
+                return redirect()->route('student.home');
+            }
+
+            return redirect()->route('completed-action', ['userId' => $user->id]);
+        }
         return view('auth.register');
     }
 
@@ -69,15 +93,10 @@ class RegisterController extends Controller
         $user->sendEmailVerificationNotification();
     
 
- if ($user->role === 'student') {
-        return redirect()->route('completedAction');
-
-
         if ($user->role === 'student') {
             return redirect()->route('completedAction');
         }
     }
-}
 
     protected function registered(Request $request, $user)
     {
