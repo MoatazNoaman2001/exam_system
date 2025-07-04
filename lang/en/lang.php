@@ -132,6 +132,7 @@ return [
     'account' => 'Account',
     'my_account' => 'My Account',
     'security' => 'Security',
+     'language'=>"Language",
     'delete_account' => 'Delete Account',
     'app_settings' => 'App Settings',
     'notifications' => 'Notifications',

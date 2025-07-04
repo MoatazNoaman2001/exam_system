@@ -19,7 +19,7 @@
 
         <!-- Profile Image -->
         <div class="text-center mb-4 position-relative">
-            <div class="profile-image mx-auto" style="background-image: url('{{ auth()->user()->image ? asset('storage/avatars/' . auth()->user()->image) : asset('images/default-avatar.png') }}');">
+            <div class="profile-image mx-auto" style="background-image: url('{{ auth()->user()->image ? asset('storage/avatars/' . auth()->user()->image) : asset('images/tl.webp') }}');">
                 <a href="#" class="edit-icon" data-bs-toggle="modal" data-bs-target="#editImageModal">
                     <img src="{{ asset('images/edit.png') }}" alt="Edit" style="width: 24px; height: 24px;">
                 </a>
@@ -119,20 +119,30 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Preview image before upload
-        const imageInput = document.getElementById('image');
-        if (imageInput) {
-            imageInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.querySelector('.profile-image').style.backgroundImage = `url(${e.target.result})`;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
+  const imageInput = document.getElementById('image');
+  if (imageInput) {
+    imageInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.querySelector('.profile-image').style.backgroundImage = `url(${e.target.result})`;
+        };
+        reader.readAsDataURL(file);
+      }
     });
+  }
+
+  const editImageModal = document.getElementById('editImageModal');
+  if (editImageModal) {
+    editImageModal.addEventListener('hide.bs.modal', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+      }, 200);
+    });
+  }
+});
+
+
 </script>
 @endsection

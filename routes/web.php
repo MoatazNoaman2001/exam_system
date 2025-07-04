@@ -239,10 +239,10 @@ Route::post('/notifications/mark-as-read', [NotificationController::class, 'mark
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/Achievement', [AchievementController::class, 'index'])->name('achievement.index');
-   
+   Route::post('/achievement', [AchievementController::class, 'index'])->name('achievement.index');
+
     
 });
-
 
 Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
 Route::get('/plan', [PlanController::class, 'Plan'])->name('Plan');
