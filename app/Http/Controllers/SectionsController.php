@@ -7,6 +7,7 @@ use App\Models\Slide;
 use App\Models\Domain;
 use App\Models\Chapter;
 use App\Models\SlideAttempt;
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -315,13 +316,11 @@ class SectionsController extends Controller
         $user = auth()->user();
         $domainId = $request->domainId;
     
-
         // Fetch the domain
         $domain = Domain::findOrFail($domainId);
 
         // Get slides for the domain
         $slides = Slide::where('domain_id', $domainId)->get();
-
 
         // Initialize slide data
         $slideData = [];
@@ -339,87 +338,60 @@ class SectionsController extends Controller
         $slideMetadata = [
             1 => [
                 'title' => 'Introduction to Project Management',
-                'description' => 'Comprehensive introduction to the concept and importance of project management in modern work',
-                'duration' => 15,
-                'difficulty' => 'Easy',
-                'icon' => 'fa-play-circle',
+                'description' => 'Learn the fundamentals of project management',
+                'duration' => '15 min',
+                'difficulty' => 'Beginner',
+                'icon' => 'fas fa-play-circle',
             ],
             2 => [
                 'title' => 'Project Lifecycle',
-                'description' => 'Understanding the different phases of a project lifecycle from start to finish',
-                'duration' => 25,
-                'difficulty' => 'Medium',
-                'icon' => 'fa-presentation',
+                'description' => 'Understanding project phases and lifecycle',
+                'duration' => '20 min',
+                'difficulty' => 'Intermediate',
+                'icon' => 'fas fa-chart-line',
             ],
             3 => [
-                'title' => 'Team Management',
-                'description' => 'How to build and lead an effective and cohesive project team',
-                'duration' => 30,
-                'difficulty' => 'Medium',
-                'icon' => 'fa-users',
-            ],
-            4 => [
-                'title' => 'Risk Management',
-                'description' => 'Identifying, assessing, and managing risks in projects',
-                'duration' => 35,
-                'difficulty' => 'Hard',
-                'icon' => 'fa-lock',
-            ],
-            5 => [
-                'title' => 'Planning and Scheduling',
-                'description' => 'Using planning tools to create effective schedules',
-                'duration' => 40,
-                'difficulty' => 'Medium',
-                'icon' => 'fa-chart-gantt',
-            ],
-            6 => [
-                'title' => 'Budget Management',
-                'description' => 'Planning, monitoring, and controlling the project budget',
-                'duration' => 28,
-                'difficulty' => 'Medium',
-                'icon' => 'fa-dollar-sign',
+                'title' => 'Stakeholder Management',
+                'description' => 'Managing project stakeholders effectively',
+                'duration' => '18 min',
+                'difficulty' => 'Advanced',
+                'icon' => 'fas fa-users',
             ],
         ];
-        // Process slides
-        foreach ($slides as $index => $slide) {
+
+        foreach ($slides as $slide) {
             $attempt = $attempts->get($slide->id);
-            $status = 'not-started';
+            $meta = $slideMetadata[$slide->id] ?? [
+                'title' => 'Slide ' . $slide->id,
+                'description' => 'Slide description',
+                'duration' => '15 min',
+                'difficulty' => 'Beginner',
+                'icon' => 'fas fa-play-circle',
+            ];
+
+            $status = 'not_started';
             $progress = 0;
-            $action = 'Start';
-            $secondary_action = 'Preview';
-            $secondary_icon = 'fa-info-circle';
+            $action = 'start';
+            $secondary_action = 'preview';
+            $secondary_icon = 'fas fa-eye';
             $locked = false;
 
             if ($attempt) {
                 if ($attempt->end_date) {
                     $status = 'completed';
                     $progress = 100;
-                    $action = 'Review';
-                    $secondary_action = 'Download';
-                    $secondary_icon = 'fa-download';
+                    $action = 'review';
+                    $secondary_action = 'retake';
+                    $secondary_icon = 'fas fa-redo';
                     $completedSlides++;
                 } else {
-                    $status = 'in-progress';
-                    $progress = 60;
-                    $action = 'Continue';
-                    $secondary_action = 'Save';
-                    $secondary_icon = 'fa-bookmark';
+                    $status = 'in_progress';
+                    $progress = 50;
+                    $action = 'continue';
+                    $secondary_action = 'reset';
+                    $secondary_icon = 'fas fa-undo';
                 }
-            } elseif ($index > $completedSlides) {
-                $locked = true;
-                $status = 'locked';
-                $action = 'Locked';
-                $secondary_action = 'Requirements';
-                $secondary_icon = 'fa-question-circle';
             }
-
-            $meta = $slideMetadata[$slide->id] ?? [
-                'title' => 'Slide ' . ($index + 1),
-                'description' => 'Description for slide ' . ($index + 1),
-                'duration' => 20,
-                'difficulty' => 'Medium',
-                'icon' => 'fa-file-alt',
-            ];
 
             $slideData[] = [
                 'id' => $slide->id,
@@ -436,16 +408,16 @@ class SectionsController extends Controller
                 'locked' => $locked,
             ];
         }
-        $isDomain = true;
+
         return view('student.sections.slides', [
             'title' => __('lang.domain') . " ( " . $domain->text . " )",
-            'subtitle' => __('Learn the fundamentals and principles of successful project management'),
+            'subtitle' => $domain->description ?? __('Learn the fundamentals and principles of successful project management'),
             'slides' => $slideData,
             'totalSlides' => $totalSlides,
-            'isDomain' => $isDomain,
+            'isDomain' => true,
             'completedSlides' => $completedSlides,
         ]);
-    } 
+    }
 
     public function slideShow($slideId){
         $user = auth()->user();
@@ -461,34 +433,186 @@ class SectionsController extends Controller
             'pdf_url' => $pdfUrl,
         ]);  
     }
+
     public function recordAttempt(Request $request)
     {
-        $validated = $request->validate([
-            'slide_id' => 'required|uuid|exists:slides,id',
+        $user = auth()->user();
+        $slideId = $request->slideId;
+        $action = $request->action; // start, complete, reset
+
+        $attempt = SlideAttempt::where('user_id', $user->id)
+            ->where('slide_id', $slideId)
+            ->first();
+
+        if (!$attempt) {
+            $attempt = new SlideAttempt();
+            $attempt->user_id = $user->id;
+            $attempt->slide_id = $slideId;
+        }
+
+        switch ($action) {
+            case 'start':
+                $attempt->start_date = now();
+                break;
+            case 'complete':
+                $attempt->end_date = now();
+                break;
+            case 'reset':
+                $attempt->start_date = null;
+                $attempt->end_date = null;
+                break;
+        }
+
+        $attempt->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Check if user has a plan and redirect to plan selection if needed
+     */
+    public function checkPlanAndRedirect()
+    {
+        $user = auth()->user();
+        
+        // Check if user has a plan
+        $hasPlan = $user->progress && $user->progress->plan_duration;
+        
+        if (!$hasPlan) {
+            return redirect()->route('student.plan.selection');
+        }
+        
+        // If user has a plan, redirect to exams list
+        return redirect()->route('student.exams.index');
+    }
+
+    /**
+     * Show plan selection page
+     */
+    public function showPlanSelection()
+    {
+        $user = auth()->user();
+        
+        // Check if user already has a plan
+        if ($user->progress && $user->progress->plan_duration) {
+            return redirect()->route('student.exams.index');
+        }
+        
+        return view('student.plan-selection');
+    }
+
+    /**
+     * Store the selected plan
+     */
+    public function storePlan(Request $request)
+    {
+        $user = auth()->user();
+        
+        $request->validate([
+            'plan_type' => 'required|in:experienced,beginner,custom',
+            'start_date' => 'required_if:plan_type,custom|date|after_or_equal:today',
+            'end_date' => 'required_if:plan_type,custom|date|after:start_date',
         ]);
 
-        $userId = Auth::id();
-        if (!$userId) {
-            return response()->json(['error' => 'User not authenticated'], 401);
+        // Get or create user progress
+        $progress = $user->progress ?? $user->progress()->create([
+            'points' => 0,
+            'current_level' => 'مبتدئ',
+            'points_to_next_level' => 100,
+            'days_left' => 0,
+            'plan_duration' => 0,
+            'plan_end_date' => null,
+            'progress' => 0,
+            'domains_completed' => 0,
+            'domains_total' => 0,
+            'lessons_completed' => 0,
+            'lessons_total' => 0,
+            'exams_completed' => 0,
+            'exams_total' => 0,
+            'questions_completed' => 0,
+            'questions_total' => 0,
+            'lessons_milestone' => 0,
+            'questions_milestone' => 0,
+            'streak_days' => 0,
+        ]);
+
+        $startDate = now();
+        $endDate = null;
+        $planDuration = 0;
+
+        switch ($request->plan_type) {
+            case 'experienced':
+                // 6-8 weeks for experienced learners
+                $planDuration = 49; // 7 weeks
+                $endDate = $startDate->copy()->addWeeks(7);
+                break;
+                
+            case 'beginner':
+                // 8-10 weeks for beginners
+                $planDuration = 63; // 9 weeks
+                $endDate = $startDate->copy()->addWeeks(9);
+                break;
+                
+            case 'custom':
+                $startDate = \Carbon\Carbon::parse($request->start_date);
+                $endDate = \Carbon\Carbon::parse($request->end_date);
+                $planDuration = $startDate->diffInDays($endDate);
+                break;
         }
 
-        $slideId = $validated['slide_id'];
+        // Update user progress with plan details
+        $progress->update([
+            'plan_duration' => $planDuration,
+            'plan_end_date' => $endDate,
+            'start_date' => $startDate,
+        ]);
 
-        try {
-            SlideAttempt::firstOrCreate(
-                [
-                    'slide_id' => $slideId,
-                    'user_id' => $userId,
-                    'start_date' => now(),
-                    'end_date' => now(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            );
+        // Create a plan record
+        $plan = Plan::create([
+            'user_id' => $user->id,
+            'plan_type' => $request->plan_type,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+        ]);
 
-            return response()->json(['message' => 'Slide attempt recorded']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to record slide attempt: ' . $e->getMessage()], 500);
+        return redirect()->route('student.exams.index')
+            ->with('success', __('plan_selection.plan_created_successfully'));
+    }
+
+    /**
+     * Display available exams
+     */
+    public function examsIndex()
+    {
+        $user = auth()->user();
+        
+        // Check if user has a plan
+        if (!$user->progress || !$user->progress->plan_duration) {
+            return redirect()->route('student.plan.selection');
         }
+        
+        $exams = Exam::with('examQuestions')->get()->map(function ($exam) {
+            $exam->questions_count = $exam->examQuestions->count();
+            return $exam;
+        });
+        
+        return view('student.exams.index', compact('exams'));
+    }
+
+    /**
+     * Take an exam
+     */
+    public function takeExam(Exam $exam)
+    {
+        $user = auth()->user();
+        
+        // Check if user has a plan
+        if (!$user->progress || !$user->progress->plan_duration) {
+            return redirect()->route('student.plan.selection');
+        }
+        
+        // For now, just redirect back with a message
+        return redirect()->route('student.exams.index')
+            ->with('info', __('lang.exam_feature_coming_soon'));
     }
 }

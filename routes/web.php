@@ -87,20 +87,6 @@ Route::get('/locale-test', function() {
 });
 
 
-
-Route::get("/", function (Request $request) {
-    if (Auth::user() != null) {
-        $user = Auth::user(); 
-
-        if ($user->role == "admin") {
-            return redirect('/admin/dashboard');
-        } else {
-            return redirect()->route('completed-action', ['userId' => $user->id]);
-        }
-    }
-
-    return view('welcome');
-})->name('welcome');
 Route::get("/", [WelcomeController::class , "root"])->name('welcome');
 
 
@@ -303,6 +289,14 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
     Route::get('/sections/doamins/{domainId}/slides', [SectionsController::class , 'domainShow'])->name('domain.slides');
     Route::get('/sections/slides/{slideId}', [SectionsController::class, 'slideShow'])->name('sections.slides');
     Route::post('/slide/attempt', [SectionsController::class, 'recordAttempt'])->name('slide.attempt');
+    
+    // Plan Selection Routes
+    Route::get('/plan/selection', [SectionsController::class, 'showPlanSelection'])->name('plan.selection');
+    Route::post('/plan/store', [SectionsController::class, 'storePlan'])->name('plan.store');
+    Route::get('/exams/check-plan', [SectionsController::class, 'checkPlanAndRedirect'])->name('exams.check-plan');
+    Route::get('/exams', [SectionsController::class, 'examsIndex'])->name('exams.index');
+    Route::get('/exams/{exam}/take', [SectionsController::class, 'takeExam'])->name('exams.take');
+    
     Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
     Route::get('/setting',[SettingController::class, 'show'])->name('setting');
 

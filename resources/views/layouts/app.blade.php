@@ -209,6 +209,12 @@
             transform: translateX(3px);
         }
         
+        @if(app()->getLocale() == 'ar')
+        .sidebar-link:hover {
+            transform: translateX(-3px);
+        }
+        @endif
+        
         .sidebar-link.active {
             background: var(--sidebar-active-bg);
             color: white;
@@ -228,6 +234,13 @@
             transition: all 0.3s ease;
         }
         
+        @if(app()->getLocale() == 'ar')
+        .sidebar-link i {
+            margin-right: 0;
+            margin-left: 0.75rem;
+        }
+        @endif
+        
         .sidebar-link:hover i {
             transform: scale(1.05);
         }
@@ -246,6 +259,14 @@
             display: none;
         }
         
+        @if(app()->getLocale() == 'ar')
+        .sidebar.collapsed .sidebar-title,
+        .sidebar.collapsed .sidebar-subtitle,
+        .sidebar.collapsed .link-text {
+            transform: translateX(-20px);
+        }
+        @endif
+        
         .sidebar.collapsed .sidebar-link {
             justify-content: center;
             padding: 0.75rem;
@@ -255,14 +276,20 @@
             margin-right: 0;
         }
         
+        @if(app()->getLocale() == 'ar')
+        .sidebar.collapsed .sidebar-link i {
+            margin-left: 0;
+        }
+        @endif
+        
         /* Toggle Button */
         .sidebar-toggle {
             position: absolute;
             top: 1rem;
             right: -14px;
             transform: translateY(0);
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             background: white;
             border: 2px solid var(--primary-blue);
             border-radius: 50%;
@@ -272,24 +299,185 @@
             cursor: pointer;
             transition: all 0.3s ease;
             color: var(--primary-blue);
-            font-size: 0.7rem;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            font-size: 0.8rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1002;
         }
+        
+        @if(app()->getLocale() == 'ar')
+        .sidebar-toggle {
+            right: auto;
+            left: -14px;
+        }
+        @endif
         
         .sidebar-toggle:hover {
             background: var(--primary-blue);
             color: white;
             transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
         
-        /* Student Sidebar Specific Styles */
+        /* Student sidebar toggle specific styles */
+        .student-sidebar .sidebar-toggle {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #667eea;
+        }
+        
+        .student-sidebar .sidebar-toggle:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        /* Student Sidebar Specific Styles - Breadcrumbs Style */
         .student-sidebar {
-            background: var(--sidebar-bg-alt);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: var(--sidebar-width-collapsed) !important;
+            transition: width var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 0 15px 15px 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        @if(app()->getLocale() == 'ar')
+        .student-sidebar {
+            border-radius: 15px 0 0 15px;
+        }
+        @endif
+        
+        .student-sidebar.expanded {
+            width: var(--sidebar-width) !important;
         }
         
         .student-sidebar .sidebar-logo {
             background: rgba(255, 255, 255, 0.25);
             color: white;
+        }
+        
+        /* Student sidebar collapsed state */
+        .student-sidebar .sidebar-title,
+        .student-sidebar .sidebar-subtitle,
+        .student-sidebar .link-text {
+            opacity: 0;
+            transform: translateX(20px);
+            display: none;
+            transition: all var(--transition-speed) ease;
+        }
+        
+        @if(app()->getLocale() == 'ar')
+        .student-sidebar .sidebar-title,
+        .student-sidebar .sidebar-subtitle,
+        .student-sidebar .link-text {
+            transform: translateX(-20px);
+        }
+        @endif
+        
+        .student-sidebar.expanded .sidebar-title,
+        .student-sidebar.expanded .sidebar-subtitle,
+        .student-sidebar.expanded .link-text {
+            opacity: 1;
+            transform: translateX(0);
+            display: block;
+        }
+        
+        .student-sidebar .sidebar-link {
+            justify-content: center;
+            padding: 0.75rem;
+            transition: all var(--transition-speed) ease;
+            border-radius: 8px;
+            margin: 0.25rem 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .student-sidebar .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .student-sidebar .sidebar-link.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .student-sidebar.expanded .sidebar-link {
+            justify-content: flex-start;
+            padding: 0.75rem 1rem;
+        }
+        
+        @if(app()->getLocale() == 'ar')
+        .student-sidebar.expanded .sidebar-link {
+            justify-content: flex-end;
+        }
+        @endif
+        
+        .student-sidebar .sidebar-link i {
+            margin: 0;
+            transition: all var(--transition-speed) ease;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .student-sidebar.expanded .sidebar-link i {
+            margin-right: 0.75rem;
+        }
+        
+        @if(app()->getLocale() == 'ar')
+        .student-sidebar.expanded .sidebar-link i {
+            margin-right: 0;
+            margin-left: 0.75rem;
+        }
+        @endif
+        
+        /* Breadcrumb-style spacing */
+        .student-sidebar .sidebar-menu {
+            padding: 0.5rem;
+        }
+        
+        .student-sidebar .sidebar-header {
+            padding: 1rem 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Student sidebar hover tooltip */
+        .student-sidebar .sidebar-link {
+            position: relative;
+        }
+        
+        .student-sidebar .sidebar-link::after {
+            content: attr(data-title);
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1001;
+            margin-left: 10px;
+        }
+        
+        @if(app()->getLocale() == 'ar')
+        .student-sidebar .sidebar-link::after {
+            left: auto;
+            right: 100%;
+            margin-left: 0;
+            margin-right: 10px;
+        }
+        @endif
+        
+        .student-sidebar .sidebar-link:hover::after {
+            opacity: 1;
+            visibility: visible;
         }
         
         /* Sidebar Footer */
@@ -348,17 +536,19 @@
             @endif
             
             @if(Auth::user()->role === 'student')
-                [dir="ltr"] .main-content.sidebar-open {
+                [dir="ltr"] .main-content {
+                    margin-left: var(--sidebar-width-collapsed);
+                    transition: margin-left var(--transition-speed) ease;
+                }
+                [dir="rtl"] .main-content {
+                    margin-right: var(--sidebar-width-collapsed);
+                    transition: margin-right var(--transition-speed) ease;
+                }
+                [dir="ltr"] .main-content.sidebar-expanded {
                     margin-left: var(--sidebar-width);
                 }
-                [dir="rtl"] .main-content.sidebar-open {
+                [dir="rtl"] .main-content.sidebar-expanded {
                     margin-right: var(--sidebar-width);
-                }
-                [dir="ltr"] .main-content.sidebar-collapsed {
-                    margin-left: var(--sidebar-width-collapsed);
-                }
-                [dir="rtl"] .main-content.sidebar-collapsed {
-                    margin-right: var(--sidebar-width-collapsed);
                 }
             @endif
         @endauth
@@ -420,6 +610,12 @@
                 transform: translateX(-100%) !important;
             }
             
+            @if(app()->getLocale() == 'ar')
+                .sidebar {
+                    transform: translateX(100%) !important;
+                }
+            @endif
+            
             .sidebar.show {
                 transform: translateX(0) !important;
             }
@@ -428,6 +624,7 @@
                 margin-left: 0 !important;
                 margin-right: 0 !important;
                 padding-top: var(--navbar-height);
+                padding-bottom: 80px; /* Space for bottom navigation */
             }
             
             [dir="rtl"] .main-content { 
@@ -438,6 +635,11 @@
                 margin: 0.75rem;
                 padding: 1rem;
                 border-radius: 8px;
+            }
+            
+            /* Mobile card padding for student pages */
+            .main-content {
+                padding: 6px !important;
             }
             
             #navbarCollapse .d-flex.ms-auto {
@@ -459,12 +661,89 @@
                 display: none;
             }
             
+            /* Mobile bottom navigation for student sidebar */
             .student-sidebar {
-                transform: translateX(-100%) !important;
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                top: auto !important;
+                width: 100% !important;
+                height: 70px !important;
+                min-height: auto !important;
+                transform: none !important;
+                border-radius: 15px 15px 0 0 !important;
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1) !important;
+                z-index: 1000 !important;
+                overflow: hidden !important;
             }
             
-            .student-sidebar.show {
-                transform: translateX(0) !important;
+            .student-sidebar .sidebar-header {
+                display: none !important;
+            }
+            
+            .student-sidebar .sidebar-menu {
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-around !important;
+                align-items: center !important;
+                padding: 0.5rem !important;
+                height: 100% !important;
+                margin: 0 !important;
+            }
+            
+            .student-sidebar .sidebar-link {
+                flex: 1 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 0.5rem !important;
+                margin: 0 0.25rem !important;
+                border-radius: 12px !important;
+                background: rgba(255, 255, 255, 0.1) !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                text-decoration: none !important;
+                transition: all 0.3s ease !important;
+                min-height: 50px !important;
+            }
+            
+            .student-sidebar .sidebar-link:hover {
+                background: rgba(255, 255, 255, 0.2) !important;
+                transform: translateY(-2px) !important;
+            }
+            
+            .student-sidebar .sidebar-link.active {
+                background: rgba(255, 255, 255, 0.3) !important;
+                border-color: rgba(255, 255, 255, 0.5) !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+            }
+            
+            .student-sidebar .sidebar-link i {
+                font-size: 1.2rem !important;
+                margin: 0 !important;
+                margin-bottom: 0.25rem !important;
+                width: auto !important;
+            }
+            
+            .student-sidebar .link-text {
+                font-size: 0.7rem !important;
+                opacity: 1 !important;
+                transform: none !important;
+                display: block !important;
+                text-align: center !important;
+                line-height: 1 !important;
+                white-space: nowrap !important;
+            }
+            
+            /* Hide tooltips on mobile */
+            .student-sidebar .sidebar-link::after {
+                display: none !important;
+            }
+            
+            /* Hide toggle button on mobile */
+            .student-sidebar .sidebar-toggle {
+                display: none !important;
             }
         }
         
@@ -510,9 +789,28 @@
             }
         }
         
+        @if(app()->getLocale() == 'ar')
+        @keyframes slideInRTL {
+            from {
+                opacity: 0;
+                transform: translateX(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @endif
+        
         .sidebar-link {
             animation: slideIn 0.3s ease-out;
         }
+        
+        @if(app()->getLocale() == 'ar')
+        .sidebar-link {
+            animation: slideInRTL 0.3s ease-out;
+        }
+        @endif
         
         .sidebar-link:nth-child(1) { animation-delay: 0.1s; }
         .sidebar-link:nth-child(2) { animation-delay: 0.2s; }
@@ -537,6 +835,94 @@
         
         .sidebar::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Mobile sidebar positioning for RTL */
+        @if(app()->getLocale() == 'ar')
+            .sidebar {
+                transform: translateX(100%) !important;
+            }
+            .student-sidebar {
+                transform: translateX(100%) !important;
+            }
+        @endif
+
+        /* Toggle button positioning for RTL */
+        @if(app()->getLocale() == 'ar')
+        .sidebar-toggle {
+            right: auto;
+            left: -14px;
+        }
+        @endif
+
+        /* Hover effects for RTL */
+        @if(app()->getLocale() == 'ar')
+        .sidebar-link:hover {
+            transform: translateX(-3px);
+        }
+        @endif
+
+        /* Icon margins for RTL */
+        @if(app()->getLocale() == 'ar')
+        .sidebar-link i {
+            margin-right: 0;
+            margin-left: 0.75rem;
+        }
+        @endif
+
+        @media (max-width: 991.98px) {
+            .student-sidebar {
+                display: none !important;
+            }
+            .mobile-bottom-nav {
+                position: fixed;
+                left: 50%;
+                bottom: 24px;
+                transform: translateX(-50%);
+                z-index: 2000;
+                display: flex;
+                gap: 1.2rem;
+                background: rgba(255,255,255,0.15);
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border-radius: 2rem;
+                padding: 0.5rem 1.2rem;
+                border: 1.5px solid rgba(255,255,255,0.18);
+                min-width: 240px;
+                max-width: 90vw;
+            }
+            .mobile-bottom-nav .mobile-nav-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                outline: none;
+                border: none;
+                background: none;
+                padding: 0;
+            }
+            .mobile-bottom-nav .icon-bg {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #fff;
+                font-size: 1.35rem;
+                box-shadow: 0 2px 8px rgba(100,100,200,0.10);
+                transition: background 0.2s, box-shadow 0.2s;
+            }
+            .mobile-bottom-nav .mobile-nav-icon.active .icon-bg,
+            .mobile-bottom-nav .mobile-nav-icon:active .icon-bg {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                box-shadow: 0 4px 16px rgba(76,175,254,0.18);
+            }
+            .mobile-bottom-nav .icon-bg i {
+                font-size: 1.35rem;
+            }
         }
     </style>
 </head>
@@ -667,6 +1053,10 @@
         @if (Auth::user()->role === 'student')
             <div class="overlay" id="studentOverlay"></div>
             <div class="sidebar student-sidebar" id="studentSidebar">
+                <!-- Toggle Button -->
+                <button class="sidebar-toggle" id="studentSidebarToggleBtn" title="Toggle Sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
 
                 <div class="sidebar-header">
                     <div class="sidebar-logo">
@@ -677,11 +1067,11 @@
                 </div>
                 
                 <div class="sidebar-menu">
-                    <a href="{{ route('student.sections') }}" class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}">
+                    <a href="{{ route('student.sections') }}" class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}" data-title="{{ __('lang.sections') }}">
                         <i class="fas fa-book"></i>
                         <span class="link-text">{{ __('lang.sections') }}</span>
                     </a>
-                    <a href="{{ route('student.achievements') }}" class="sidebar-link {{ request()->routeIs('student.achievements*') ? 'active' : '' }}">
+                    <a href="{{ route('student.achievements') }}" class="sidebar-link {{ request()->routeIs('student.achievements*') ? 'active' : '' }}" data-title="{{ __('lang.achievements') }}">
                         <i class="fas fa-trophy"></i>
                         <span class="link-text">{{ __('lang.achievements') }}</span>
                     </a>
@@ -689,7 +1079,7 @@
                         <i class="fas fa-user-cog"></i>
                         <span class="link-text">{{ __('lang.my_account') }}</span>
                     </a>
-                    <a href="{{ route('logout') }}" class="sidebar-link" onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
+                    <a href="{{ route('logout') }}" class="sidebar-link" data-title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
                         <i class="fas fa-sign-out-alt"></i>
                         <span class="link-text">{{ __('lang.logout') }}</span>
                     </a>
@@ -698,6 +1088,24 @@
                     </form>
                 </div>
             </div>
+            <!-- Floating Mobile Bottom Nav -->
+            <nav class="mobile-bottom-nav d-lg-none d-md-block">
+                <a href="{{ route('student.sections') }}" class="mobile-nav-icon {{ request()->routeIs('student.sections*') ? 'active' : '' }}" title="{{ __('lang.sections') }}">
+                    <span class="icon-bg"><i class="fas fa-book"></i></span>
+                </a>
+                <a href="{{ route('student.achievements') }}" class="mobile-nav-icon {{ request()->routeIs('student.achievements*') ? 'active' : '' }}" title="{{ __('lang.achievements') }}">
+                    <span class="icon-bg"><i class="fas fa-trophy"></i></span>
+                </a>
+                <a href="{{ route('student.account') }}" class="mobile-nav-icon {{ request()->routeIs('student.account*') ? 'active' : '' }}" title="{{ __('lang.my_account') }}">
+                    <span class="icon-bg"><i class="fas fa-user-cog"></i></span>
+                </a>
+                <a href="{{ route('logout') }}" class="mobile-nav-icon" title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student-mobile').submit();">
+                    <span class="icon-bg"><i class="fas fa-sign-out-alt"></i></span>
+                </a>
+                <form id="logout-form-student-mobile" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            </nav>
         @endif
         @endauth
         
@@ -752,54 +1160,49 @@
 
             // Student sidebar functionality
             if (isStudent && studentSidebar && studentOverlay) {
-                let sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                let sidebarExpanded = localStorage.getItem('studentSidebarExpanded') === 'true';
+                const studentSidebarToggleBtn = document.getElementById('studentSidebarToggleBtn');
                 
-                function updateToggleIcon(collapsed) {
-                    const icon = sidebarToggleBtn?.querySelector('i');
+                function updateToggleIcon(expanded) {
+                    const icon = studentSidebarToggleBtn?.querySelector('i');
                     if (icon) {
-                        icon.className = isRTL 
-                            ? (collapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left')
-                            : (collapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left');
+                        icon.className = expanded ? 'fas fa-times' : 'fas fa-bars';
                     }
                 }
 
                 function toggleStudentSidebar() {
                     if (window.innerWidth < 992) {
-                        studentSidebar.classList.toggle('show');
-                        studentOverlay.classList.toggle('show');
-                        studentSidebar.classList.remove('collapsed');
-                        mainContent.classList.remove('sidebar-open', 'sidebar-collapsed');
+                        // On mobile, keep bottom navigation visible
+                        // No need to hide/show
                     } else {
-                        sidebarCollapsed = !sidebarCollapsed;
-                        studentSidebar.classList.toggle('collapsed', sidebarCollapsed);
-                        mainContent.classList.toggle('sidebar-collapsed', sidebarCollapsed);
-                        mainContent.classList.toggle('sidebar-open', !sidebarCollapsed);
-                        updateToggleIcon(sidebarCollapsed);
-                        localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
+                        sidebarExpanded = !sidebarExpanded;
+                        studentSidebar.classList.toggle('expanded', sidebarExpanded);
+                        mainContent.classList.toggle('sidebar-expanded', sidebarExpanded);
+                        updateToggleIcon(sidebarExpanded);
+                        localStorage.setItem('studentSidebarExpanded', sidebarExpanded);
                     }
                 }
 
                 // Initialize sidebar state
                 if (window.innerWidth >= 992) {
                     studentSidebar.classList.add('show');
-                    if (sidebarCollapsed) {
-                        studentSidebar.classList.add('collapsed');
-                        mainContent.classList.add('sidebar-collapsed');
-                    } else {
-                        mainContent.classList.add('sidebar-open');
+                    if (sidebarExpanded) {
+                        studentSidebar.classList.add('expanded');
+                        mainContent.classList.add('sidebar-expanded');
                     }
-                    updateToggleIcon(sidebarCollapsed);
+                    updateToggleIcon(sidebarExpanded);
                 } else {
-                    studentSidebar.classList.remove('show', 'collapsed');
-                    mainContent.classList.remove('sidebar-open', 'sidebar-collapsed');
+                    // On mobile, bottom navigation is always visible
+                    studentSidebar.classList.remove('expanded');
+                    mainContent.classList.remove('sidebar-expanded');
                 }
 
                 if (studentSidebarToggle) {
                     studentSidebarToggle.addEventListener('click', toggleStudentSidebar);
                 }
 
-                if (sidebarToggleBtn) {
-                    sidebarToggleBtn.addEventListener('click', toggleStudentSidebar);
+                if (studentSidebarToggleBtn) {
+                    studentSidebarToggleBtn.addEventListener('click', toggleStudentSidebar);
                 }
 
                 if (studentOverlay) {
@@ -815,20 +1218,19 @@
                 window.addEventListener('resize', function() {
                     if (window.innerWidth >= 992) {
                         studentSidebar.classList.add('show');
-                        if (sidebarCollapsed) {
-                            studentSidebar.classList.add('collapsed');
-                            mainContent.classList.add('sidebar-collapsed');
-                            mainContent.classList.remove('sidebar-open');
+                        if (sidebarExpanded) {
+                            studentSidebar.classList.add('expanded');
+                            mainContent.classList.add('sidebar-expanded');
                         } else {
-                            studentSidebar.classList.remove('collapsed');
-                            mainContent.classList.add('sidebar-open');
-                            mainContent.classList.remove('sidebar-collapsed');
+                            studentSidebar.classList.remove('expanded');
+                            mainContent.classList.remove('sidebar-expanded');
                         }
-                        updateToggleIcon(sidebarCollapsed);
+                        updateToggleIcon(sidebarExpanded);
                         studentOverlay.classList.remove('show');
                     } else {
-                        studentSidebar.classList.remove('show', 'collapsed');
-                        mainContent.classList.remove('sidebar-open', 'sidebar-collapsed');
+                        // On mobile, bottom navigation is always visible
+                        studentSidebar.classList.remove('expanded');
+                        mainContent.classList.remove('sidebar-expanded');
                         studentOverlay.classList.remove('show');
                     }
                 });
@@ -847,8 +1249,8 @@
                         this.style.opacity = '0.7';
                         
                         if (window.innerWidth < 992) {
-                            studentSidebar.classList.remove('show');
-                            studentOverlay.classList.remove('show');
+                            // On mobile, keep bottom navigation visible
+                            // No need to hide/show
                         }
                         
                         document.querySelectorAll('.student-sidebar .sidebar-link').forEach(item => {
@@ -895,7 +1297,7 @@
                 function updateTooltips() {
                     document.querySelectorAll('.student-sidebar .sidebar-link').forEach(link => {
                         const text = link.querySelector('.link-text')?.textContent;
-                        if (text && studentSidebar.classList.contains('collapsed')) {
+                        if (text && !studentSidebar.classList.contains('expanded')) {
                             link.setAttribute('title', text);
                         } else {
                             link.removeAttribute('title');

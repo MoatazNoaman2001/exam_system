@@ -50,6 +50,9 @@
         margin: 0;
         overflow: hidden;
     }
+    .container-fluid {
+        padding: 12px 0;
+    }
 
     .slide-container {
         padding: 0;
