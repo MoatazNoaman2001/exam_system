@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("CREATE TYPE plan_type AS ENUM ('1_month', '2_months', '3_months', 'custom')");
+        DB::statement("CREATE TYPE plan_type AS ENUM ('6_weeks', '10_weeks')");
 
         Schema::create('plans', function (Blueprint $table) {
             $table->ulid('id')->primary();

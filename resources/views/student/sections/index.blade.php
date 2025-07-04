@@ -350,7 +350,7 @@
                 <div class="education-card education-card--tests" 
                      role="button" 
                      tabindex="0" 
-                     data-href="#"
+                     data-href="{{ route('student.exams.check-plan') }}"
                      onclick="navigateToSection(this)">
                     
                     <div class="card-header-content">
