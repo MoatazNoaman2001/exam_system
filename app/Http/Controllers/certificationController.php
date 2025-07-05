@@ -16,12 +16,10 @@ class CertificationController extends Controller
         $user = Auth::user();
         $progress = new \stdClass();
 
-        // عدد الكلي للـ chapters, domains, exams
         $progress->chapters_total = Chapter::count();
         $progress->domains_total = Domain::count();
         $progress->exams_total = Exam::count();
 
-        // عدد الـ chapters, domains, exams اللي اكتملوا
         $progress->chapters_completed = UserProgress::where('user_id', $user->id)
             ->whereNotNull('completed_at')
             ->whereIn('slide_id', function ($query) {
@@ -45,7 +43,6 @@ class CertificationController extends Controller
     public function downloadCertificate()
     {
         $user = Auth::user();
-        // التأكد من إكمال كل الشروط قبل السماح بالتحميل
         $chapters_total = Chapter::count();
         $domains_total = Domain::count();
         $exams_total = Exam::count();
@@ -70,8 +67,6 @@ class CertificationController extends Controller
         if ($chapters_completed == $chapters_total && 
             $domains_completed == $domains_total && 
             $exams_completed == $exams_total) {
-            // هنا كود تحميل الشهادة (مثلاً باستخدام مكتبة مثل DomPDF)
-            // لسه محتاج تطبيق لتحميل الشهادة كـ PDF
             return response()->download(public_path('images/canva-blue-and-gold-simple-certificate-zxaa-6-y-b-ua-u-10.png'), 'certificate.png');
         }
 
@@ -81,7 +76,6 @@ class CertificationController extends Controller
     public function viewCertificate()
 {
     $user = Auth::user();
-    // التأكد من إكمال الشروط
     $chapters_total = Chapter::count();
     $domains_total = Domain::count();
     $exams_total = Exam::count();
