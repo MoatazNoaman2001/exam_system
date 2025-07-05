@@ -1096,7 +1096,7 @@
                 <a href="{{ route('student.achievements') }}" class="mobile-nav-icon {{ request()->routeIs('student.achievements*') ? 'active' : '' }}" title="{{ __('lang.achievements') }}">
                     <span class="icon-bg"><i class="fas fa-trophy"></i></span>
                 </a>
-                <a href="{{ route('student.account') }}" class="mobile-nav-icon {{ request()->routeIs('student.account*') ? 'active' : '' }}" title="{{ __('lang.my_account') }}">
+                <a href="{{ route('student.setting') }}" class="mobile-nav-icon {{ request()->routeIs('student.account*') ? 'active' : '' }}" title="{{ __('lang.my_account') }}">
                     <span class="icon-bg"><i class="fas fa-user-cog"></i></span>
                 </a>
                 <a href="{{ route('logout') }}" class="mobile-nav-icon" title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student-mobile').submit();">

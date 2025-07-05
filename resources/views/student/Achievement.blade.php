@@ -1,11 +1,10 @@
-
 @php
 use Carbon\Carbon;
 @endphp
 
 @extends('layouts.app')
 
-@section('title', 'إنجازاتي')
+@section('title', __('lang.my_achievements'))
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/Achievement.css') }}">
@@ -13,21 +12,21 @@ use Carbon\Carbon;
 <div class="achievement-dashboard">
     <div class="dashboard-header">
         <div class="header-content">
-            <h1 class="dashboard-title">{{ __('إنجازي') }} - <span class="username">{{ $user->username }}</span></h1>
+            <h1 class="dashboard-title">{{ __('lang.my_achievement') }} - <span class="username">{{ $user->username }}</span></h1>
         </div>
         <div class="header-ornament"></div>
     </div>
 
     <div class="dashboard-grid">
-        <!-- كارت النقاط -->
+        <!-- Points Card -->
         @php
-            $fillPercent = ($pointsToNext > 0 && $nextLevel) ? (($totalPoints / ($totalPoints + $pointsToNext)) * 100) : ($currentLevel === 'أسطورة' ? 100 : 0);
+            $fillPercent = ($pointsToNext > 0 && $nextLevel) ? (($totalPoints / ($totalPoints + $pointsToNext)) * 100) : ($currentLevel === 'Legend' ? 100 : 0);
             $levelColors = [
-                'مبتدئ' => '#28a745',
-                'متوسط' => '#ffc107',
-                'محترف' => '#fd7e14',
-                'خبير | محترف' => '#dc3545',
-                'أسطورة' => '#6f42c1',
+                'Beginner' => '#28a745',
+                'Intermediate' => '#ffc107',
+                'Professional' => '#fd7e14',
+                'Expert | Professional' => '#dc3545',
+                'Legend' => '#6f42c1',
             ];
             $color = $levelColors[$currentLevel] ?? '#6c757d';
         @endphp
@@ -36,23 +35,23 @@ use Carbon\Carbon;
             <div class="card-decoration"></div>
             <div class="card-header">
                 <span class="card-icon">🎯</span>
-                <h2 class="card-title">{{ __('نقاطك') }}</h2>
+                <h2 class="card-title">{{ __('lang.your_points') }}</h2>
             </div>
             <div class="stat-item">
-                <span class="stat-label">{{ __('النقاط') }}:</span>
-                <span class="stat-value">{{ $totalPoints }} {{ __('نقطة') }}</span>
+                <span class="stat-label">{{ __('lang.points') }}:</span>
+                <span class="stat-value">{{ $totalPoints }} {{ __('lang.point') }}</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">{{ __('المرحلة الحالية') }}:</span>
+                <span class="stat-label">{{ __('lang.current_level') }}:</span>
                 <span class="stat-value">{{ $currentLevel }}</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">{{ __('المرحلة التالية') }}:</span>
+                <span class="stat-label">{{ __('lang.next_level') }}:</span>
                 <span class="stat-value">
-                    @if ($currentLevel === 'أسطورة')
-                        🎉 {{ __('تهانينا! لقد وصلت إلى أقصى مستوى! استمر في التألق!') }}
+                    @if ($currentLevel === 'Legend')
+                        🎉 {{ __('lang.congrats_max_level') }}
                     @else
-                        {{ $nextLevel ?? __('لا يوجد مستوى أعلى') }} – {{ __('بعد') }} {{ $pointsToNext }} {{ __('نقطة') }}
+                        {{ $nextLevel ?? __('lang.no_higher_level') }} – {{ __('lang.after') }} {{ $pointsToNext }} {{ __('lang.point') }}
                     @endif
                 </span>
             </div>
@@ -63,18 +62,18 @@ use Carbon\Carbon;
                 <div class="level-indicator">
                     <span class="current-level">{{ $currentLevel }}</span>
                     <span class="next-level">
-                        @if ($currentLevel !== 'أسطورة')
-                            {{ __('المستوى التالي') }}: {{ $nextLevel ?? __('لا يوجد') }}
+                        @if ($currentLevel !== 'Legend')
+                            {{ __('lang.next_level') }}: {{ $nextLevel ?? __('lang.none') }}
                         @else
-                            {{ __('أنت الأسطورة 💪') }}
+                            {{ __('lang.you_are_legend') }}
                         @endif
                     </span>
                 </div>
             </div>
-            <button class="action-btn">{{ __('طرق الحصول على النقاط') }}</button>
+            <button class="action-btn">{{ __('lang.ways_to_earn_points') }}</button>
         </div>
 
-        <!-- كارت الخطة الزمنية -->
+        <!-- Time Plan Card -->
         @if ($planDuration > 0 && $planEndDate)
             @php
                 $circleColor = ($progressPercent <= 33.33) ? '#28a745' : ($progressPercent <= 66.67 ? '#ffc107' : '#dc3545');
@@ -84,15 +83,15 @@ use Carbon\Carbon;
             <div class="dashboard-card plan-card">
                 <div class="card-header">
                     <span class="card-icon">⏳</span>
-                    <h2 class="card-title">{{ __('الخطة الزمنية') }}</h2>
+                    <h2 class="card-title">{{ __('lang.time_plan') }}</h2>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">{{ __('الأيام المتبقية') }}:</span>
-                    <span class="stat-value" id="daysLeft">{{ $daysLeft }}</span> {{ __('من') }} {{ $planDuration }} {{ __('يوم') }}
+                    <span class="stat-label">{{ __('lang.days_left') }}:</span>
+                    <span class="stat-value" id="daysLeft">{{ $daysLeft }}</span> {{ __('lang.of') }} {{ $planDuration }} {{ __('lang.day') }}
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">{{ __('تاريخ الانتهاء') }}:</span>
-                    <span class="stat-value">{{ $planEndDate ? Carbon::parse($planEndDate)->format('Y-m-d') : __('غير محدد') }}</span>
+                    <span class="stat-label">{{ __('lang.end_date') }}:</span>
+                    <span class="stat-value">{{ $planEndDate ? Carbon::parse($planEndDate)->format('Y-m-d') : __('lang.not_defined') }}</span>
                 </div>
                 <div class="circle-progress-container">
                     <svg width="100" height="100" class="circle-progress">
@@ -101,12 +100,12 @@ use Carbon\Carbon;
                     </svg>
                     <div class="circle-progress-text">{{ $daysLeft }}</div>
                 </div>
-                <button class="action-btn" onclick="showPlanForm()">{{ __('تعديل الخطة') }}</button>
+                <button class="action-btn" onclick="showPlanForm()">{{ __('lang.edit_plan') }}</button>
                 <div class="plan-form" id="planForm" style="display: none;">
                     <form method="POST" action="{{ route('achievement.index') }}">
                         @csrf
-                        <input type="number" name="plan_duration" min="1" placeholder="{{ __('عدد الأيام') }}" required>
-                        <button type="submit">{{ __('تأكيد الخطة') }}</button>
+                        <input type="number" name="plan_duration" min="1" placeholder="{{ __('number_of_days') }}" required>
+                        <button type="submit">{{ __('lang.confirm_plan') }}</button>
                     </form>
                 </div>
             </div>
@@ -114,15 +113,15 @@ use Carbon\Carbon;
             <div class="dashboard-card plan-card">
                 <div class="card-header">
                     <span class="card-icon">⏳</span>
-                    <h2 class="card-title">{{ __('الخطة الزمنية') }}</h2>
+                    <h2 class="card-title">{{ __('lang.time_plan') }}</h2>
                 </div>
-                <p>{{ __('تهانينا! لقد أكملت جميع الفصول والمجالات. يمكنك الآن اختيار الخطة الزمنية للامتحانات.') }}</p>
-                <button class="action-btn" onclick="showPlanForm()">{{ __('اختيار الخطة الزمنية') }}</button>
+                <p>{{ __('lang.congrats_all_completed') }}</p>
+                <button class="action-btn" onclick="showPlanForm()">{{ __('lang.choose_time_plan') }}</button>
                 <div class="plan-form" id="planForm" style="display: none;">
                     <form method="POST" action="{{ route('achievement.index') }}">
                         @csrf
-                        <input type="number" name="plan_duration" min="1" placeholder="{{ __('عدد الأيام') }}" required>
-                        <button type="submit">{{ __('تأكيد الخطة') }}</button>
+                        <input type="number" name="plan_duration" min="1" placeholder="{{ __('lang.number_of_days') }}" required>
+                        <button type="submit">{{ __('lang.confirm_plan') }}</button>
                     </form>
                 </div>
             </div>
@@ -130,79 +129,79 @@ use Carbon\Carbon;
             <div class="dashboard-card plan-card">
                 <div class="card-header">
                     <span class="card-icon">⏳</span>
-                    <h2 class="card-title">{{ __('الخطة الزمنية') }}</h2>
+                    <h2 class="card-title">{{ __('lang.time_plan') }}</h2>
                 </div>
-                <p>{{ __('لم تبدأ بعد في أي اختبارات. أكمل جميع الفصول والمجالات لتفعيل خطتك!') }}</p>
+                <p>{{ __('lang.not_started_tests') }}</p>
             </div>
         @endif
 
-        <!-- كارت الإحصائيات -->
+        <!-- Stats Card -->
         <div class="dashboard-card stats-card">
             <div class="card-header">
                 <span class="card-icon">📊</span>
-                <h2 class="card-title">{{ __('إحصائيات التقدم') }}</h2>
+                <h2 class="card-title">{{ __('lang.progress_statistics') }}</h2>
             </div>
             <div class="stats-grid">
                 <div class="stat-circle">
                     <div class="circle-progress">
                         <div class="stat-number">{{ $completedDomains }}</div>
                     </div>
-                    <div class="stat-name">{{ __('المجالات') }}</div>
+                    <div class="stat-name">{{ __('lang.domains') }}</div>
                 </div>
                 <div class="stat-circle">
                     <div class="circle-progress">
                         <div class="stat-number">{{ $completedChapters }}</div>
                     </div>
-                    <div class="stat-name">{{ __('الفصول') }}</div>
+                    <div class="stat-name">{{ __('lang.chapters') }}</div>
                 </div>
                 <div class="stat-circle">
                     <div class="circle-progress">
                         <div class="stat-number">{{ $completedExams }}</div>
                     </div>
-                    <div class="stat-name">{{ __('الامتحانات') }}</div>
+                    <div class="stat-name">{{ __('lang.exams') }}</div>
                 </div>
                 <div class="stat-circle">
                     <div class="circle-progress">
                         <div class="stat-number">{{ $completedQuestions }}</div>
                     </div>
-                    <div class="stat-name">{{ __('الأسئلة') }}</div>
+                    <div class="stat-name">{{ __('lang.questions') }}</div>
                 </div>
             </div>
         </div>
 
-        <!-- كارت الإنجازات -->
+        <!-- Achievements Card -->
         <div class="dashboard-card achievements-card">
             <div class="card-header">
                 <span class="card-icon">🏆</span>
-                <h2 class="card-title">{{ __('إنجازاتي') }}</h2>
+                <h2 class="card-title">{{ __('lang.my_achievements') }}</h2>
             </div>
             <div class="achievements-container">
                 <div class="achievement-badge gold">
                     <span class="badge-icon">🥇</span>
                     <div class="badge-content">
-                        <h3>{{ __('المجالات') }}</h3>
-                        <p>{{ __('أكملت') }} {{ $completedDomains }} {{ __('مجال') }}</p>
+                        <h3>{{ __('lang.domains') }}</h3>
+                        <p>{{ __('lang.completed') }} {{ $completedDomains }} {{ __('lang.domain') }}</p>
                     </div>
                 </div>
                 <div class="achievement-badge silver">
                     <span class="badge-icon">📘</span>
                     <div class="badge-content">
-                        <h3>{{ __('الفصول') }}</h3>
-                        <p>{{ __('أنهيت') }} {{ $completedChapters }} {{ __('فصل') }}</p>
+                        <h3>{{ __('lang.chapters') }}</h3>
+                        <p>{{ __('lang.finished') }} {{ $completedChapters }} {{ __('lang.chapter') }}</p>
                     </div>
                 </div>
                 <div class="achievement-badge bronze">
                     <span class="badge-icon">💡</span>
                     <div class="badge-content">
-                        <h3>{{ __('الأسئلة') }}</h3>
-                        <p>{{ __('أجبت على') }} {{ $completedQuestions }} {{ __('سؤال') }}</p>
+                        <h3>{{ __('lang.questions') }}</h3>
+                        <p>{{ __('lang.answered') }} {{ $completedQuestions }} {{ __('lang.question') }}</p>
                     </div>
                 </div>
                 <div class="achievement-badge streak">
                     <span class="badge-icon">🔥</span>
                     <div class="badge-content">
-                        <h3>{{ __('الاستمرارية') }}</h3>
-                        <p>{{ $streakDays }} {{ __('يوم دراسة متتالي') }}</p>
+                        <h3>{{ __('lang.continuity') }}</h3>
+                        <p>{{ $streakDays }} {{ __('lang.consecutive_study_days') }}</p>
                     </div>
                 </div>
             </div>
@@ -221,7 +220,6 @@ use Carbon\Carbon;
                 const daysLeft = Math.max(0, diffDays);
                 document.getElementById('daysLeft').textContent = daysLeft;
 
-                // تحديث الدائرة
                 const circumference = 2 * Math.PI * 45;
                 const offset = circumference * (1 - (daysLeft / planDuration));
                 const circle = document.querySelector('.circle-progress-fill');
@@ -229,11 +227,11 @@ use Carbon\Carbon;
                     circle.setAttribute('stroke-dashoffset', offset);
                     const progressPercent = (planDuration - daysLeft) / planDuration * 100;
                     if (progressPercent <= 33.33) {
-                        circle.style.stroke = '#28a745'; // أخضر
+                        circle.style.stroke = '#28a745';
                     } else if (progressPercent <= 66.67) {
-                        circle.style.stroke = '#ffc107'; // أصفر
+                        circle.style.stroke = '#ffc107';
                     } else {
-                        circle.style.stroke = '#dc3545'; // أحمر
+                        circle.style.stroke = '#dc3545';
                     }
                 }
             } else {
@@ -250,7 +248,7 @@ use Carbon\Carbon;
 
         @if ($planDuration > 0 && $planEndDate)
             updateDaysLeft();
-            setInterval(updateDaysLeft, 24 * 60 * 60 * 1000); // تحديث يومي
+            setInterval(updateDaysLeft, 24 * 60 * 60 * 1000);
         @endif
     </script>
 </div>

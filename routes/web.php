@@ -39,6 +39,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ContactUsController;
 
+
 App::setLocale('ar');
 Route::get('/lang/{locale}' , function ($lang) {
     if (!in_array($lang, ['en', 'ar'])) {

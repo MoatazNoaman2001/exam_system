@@ -4,59 +4,111 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-class certificationController extends Controller
+use App\Models\UserProgress;
+use App\Models\Chapter;
+use App\Models\Domain;
+use App\Models\Exam;
+
+class CertificationController extends Controller
 {
-    
-       public function certification()
+    public function certification()
     {
+        $user = Auth::user();
+        $progress = new \stdClass();
 
+        // عدد الكلي للـ chapters, domains, exams
+        $progress->chapters_total = Chapter::count();
+        $progress->domains_total = Domain::count();
+        $progress->exams_total = Exam::count();
+
+        // عدد الـ chapters, domains, exams اللي اكتملوا
+        $progress->chapters_completed = UserProgress::where('user_id', $user->id)
+            ->whereNotNull('completed_at')
+            ->whereIn('slide_id', function ($query) {
+                $query->select('id')->from('slides')->whereNotNull('chapter_id');
+            })->distinct('slide_id')->count();
+
+        $progress->domains_completed = UserProgress::where('user_id', $user->id)
+            ->whereNotNull('completed_at')
+            ->whereIn('slide_id', function ($query) {
+                $query->select('id')->from('slides')->whereNotNull('domain_id');
+            })->distinct('slide_id')->count();
+
+        $progress->exams_completed = UserProgress::where('user_id', $user->id)
+            ->whereNotNull('completed_at')
+            ->whereNotNull('exam_id')
+            ->distinct('exam_id')->count();
+
+        return view('student.certification', compact('progress'));
+    }
+
+    public function downloadCertificate()
+    {
+        $user = Auth::user();
+        // التأكد من إكمال كل الشروط قبل السماح بالتحميل
+        $chapters_total = Chapter::count();
+        $domains_total = Domain::count();
+        $exams_total = Exam::count();
+
+        $chapters_completed = UserProgress::where('user_id', $user->id)
+            ->whereNotNull('completed_at')
+            ->whereIn('slide_id', function ($query) {
+                $query->select('id')->from('slides')->whereNotNull('chapter_id');
+            })->distinct('slide_id')->count();
+
+        $domains_completed = UserProgress::where('user_id', $user->id)
+            ->whereNotNull('completed_at')
+            ->whereIn('slide_id', function ($query) {
+                $query->select('id')->from('slides')->whereNotNull('domain_id');
+            })->distinct('slide_id')->count();
+
+        $exams_completed = UserProgress::where('user_id', $user->id)
+            ->whereNotNull('completed_at')
+            ->whereNotNull('exam_id')
+            ->distinct('exam_id')->count();
+
+        if ($chapters_completed == $chapters_total && 
+            $domains_completed == $domains_total && 
+            $exams_completed == $exams_total) {
+            // هنا كود تحميل الشهادة (مثلاً باستخدام مكتبة مثل DomPDF)
+            // لسه محتاج تطبيق لتحميل الشهادة كـ PDF
+            return response()->download(public_path('images/canva-blue-and-gold-simple-certificate-zxaa-6-y-b-ua-u-10.png'), 'certificate.png');
+        }
+
+        return redirect()->back()->with('error', 'يجب إكمال جميع الدروس والاختبارات لتحميل الشهادة!');
+    }
+
+    public function viewCertificate()
+{
     $user = Auth::user();
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'يجب تسجيل الدخول أولاً');
-        }
-        $progress = $user->progress ?? $user->progress()->create([
-            'points' => 0,
-            'current_level' => 'مبتدئ',
-            'progress' => 0,
-            'domains_completed' => 0,
-            'domains_total' => 0,
-            'lessons_completed' => 0,
-            'lessons_total' => 0,
-            'exams_completed' => 0,
-            'exams_total' => 0,
-            'questions_completed' => 0,
-            'questions_total' => 0,
-            'streak_days' => 0,
-        ]);
+    // التأكد من إكمال الشروط
+    $chapters_total = Chapter::count();
+    $domains_total = Domain::count();
+    $exams_total = Exam::count();
 
-        return view('student.certification', compact('user', 'progress'));
+    $chapters_completed = UserProgress::where('user_id', $user->id)
+        ->whereNotNull('completed_at')
+        ->whereIn('slide_id', function ($query) {
+            $query->select('id')->from('slides')->whereNotNull('chapter_id');
+        })->distinct('slide_id')->count();
+
+    $domains_completed = UserProgress::where('user_id', $user->id)
+        ->whereNotNull('completed_at')
+        ->whereIn('slide_id', function ($query) {
+            $query->select('id')->from('slides')->whereNotNull('domain_id');
+        })->distinct('slide_id')->count();
+
+    $exams_completed = UserProgress::where('user_id', $user->id)
+        ->whereNotNull('completed_at')
+        ->whereNotNull('exam_id')
+        ->distinct('exam_id')->count();
+
+    if ($chapters_completed == $chapters_total && 
+        $domains_completed == $domains_total && 
+        $exams_completed == $exams_total) {
+        return view('student.certificate-view', ['user' => $user]);
     }
 
-    public function download()
-    {
-        $user = Auth::user();
-        $progress = $user->progress;
-
-        if ($progress->lessons_completed == $progress->lessons_total &&
-            $progress->exams_completed == $progress->exams_total &&
-            $progress->questions_completed == $progress->questions_total) {
-            // Logic to generate PDF (e.g., using Laravel DomPDF)
-            $certificatePath = public_path('images/canva-blue-and-gold-simple-certificate-zxaa-6-y-b-ua-u-10.png');
-            return response()->download($certificatePath, 'certificate_' . $user->name . '.png');
-        }
-
-        return redirect()->back()->with('error', 'يجب إكمال جميع الإنجازات أولاً!');
-    }
-
-    public function view()
-    {
-        $user = Auth::user();
-        $progress = $user->progress;
-        if ($progress->lessons_completed == $progress->lessons_total &&
-            $progress->exams_completed == $progress->exams_total &&
-            $progress->questions_completed == $progress->questions_total) {
-            return view('certificate', compact('user', 'progress'));
-        }
-        return redirect()->route('home')->with('error', 'يجب إكمال جميع الإنجازات أولاً!');
-    }
+    return redirect()->route('certificate')->with('error', 'الشهادة غير متاحة حتى تكمل جميع الشروط!');
+}
 }
