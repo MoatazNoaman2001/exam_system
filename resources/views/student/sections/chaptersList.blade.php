@@ -55,15 +55,10 @@
             font-family: 'Tajawal', 'Cairo', sans-serif;
             background-color: var(--gray-50);
         }
-
         .chapters-container {
-            background: white;
-            border-radius: var(--radius-2xl);
-            box-shadow: var(--shadow-lg);
-            padding: var(--space-xl);
-            margin: var(--space-lg) auto;
-            max-width: 1200px;
+            padding: var(--space-md);
         }
+
 
         .chapters-header {
             text-align: center;
@@ -254,10 +249,6 @@
                 display: flex;
             }
 
-            .chapter-card {
-                padding: var(--space-md);
-            }
-
             .chapter-icon {
                 width: 50px;
                 height: 50px;
@@ -277,8 +268,6 @@
             }
 
             .chapters-container {
-                margin: var(--space-sm);
-                padding: var(--space-lg);
                 border-radius: var(--radius-xl);
             }
 
