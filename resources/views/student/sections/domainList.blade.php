@@ -57,12 +57,7 @@
         }
 
         .domains-container {
-            background: white;
-            border-radius: var(--radius-2xl);
-            box-shadow: var(--shadow-lg);
-            padding: var(--space-xl);
-            margin: var(--space-lg) auto;
-            max-width: 1200px;
+            padding: var(--space-md);
         }
 
         .domains-header {
@@ -277,8 +272,6 @@
             }
 
             .domains-container {
-                margin: var(--space-sm);
-                padding: var(--space-lg);
                 border-radius: var(--radius-xl);
             }
 

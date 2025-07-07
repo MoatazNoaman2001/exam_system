@@ -31,5 +31,18 @@ class ExamQuestions extends Model
     {
         return $this->hasMany(ExamQuestionAnswer::class, 'exam_question_id');
     }
+    public function correctAnswers()
+    {
+        return $this->answers()->where('is_correct', true);
+    }
 
+    public function userAnswers()
+    {
+        return $this->hasMany(UserExamAnswer::class);
+    }
+
+    public function getQuestionTextAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->attributes['question-ar'] : $this->question;
+    }
 }

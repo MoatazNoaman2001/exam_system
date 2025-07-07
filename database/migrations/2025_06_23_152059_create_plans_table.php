@@ -16,8 +16,8 @@ return new class extends Migration
 
         Schema::create('plans', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUuid('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('plan_type')->default('1_month');
+            $table->foreignUuid('user_id')->unique()->references('id')->on('users')->onDelete('cascade');
+            $table->string('plan_type')->default('6_weeks');
             $table->date('start_date');
             $table->date('end_date');
             $table->date('custom_date')->nullable();

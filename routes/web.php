@@ -1,23 +1,28 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FaqController;
 use Illuminate\Support\Facades\Request;
-use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Session;
 // use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExamController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\IntroController;
 use App\Http\Controllers\ForgetController;
 use App\Http\Controllers\SplashController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\FeaturesController;
 use App\Http\Controllers\SectionsController;
+use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\LeaderBoardController;
@@ -25,19 +30,15 @@ use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\certificationController;
+use App\Http\Controllers\ChangPasswordController;
+
 use App\Http\Controllers\CompletedActionController;
 use App\Http\Controllers\AchievementPointController;
 use App\Http\Controllers\VerificationCodeController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
-
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\ChangPasswordController;
 use App\Http\Controllers\TermsAndConditionsController;
-use App\Http\Controllers\AboutController;
-use App\Http\Controllers\FaqController;
-use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 App::setLocale('en');
 Route::get('/lang/{locale}' , function ($lang) {
@@ -291,10 +292,39 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
     // Plan Selection Routes
     Route::get('/plan/selection', [SectionsController::class, 'showPlanSelection'])->name('plan.selection');
     Route::post('/plan/store', [SectionsController::class, 'storePlan'])->name('plan.store');
-    Route::get('/exams/check-plan', [SectionsController::class, 'checkPlanAndRedirect'])->name('exams.check-plan');
-    Route::get('/exams', [SectionsController::class, 'examsIndex'])->name('exams.index');
-    Route::get('/exams/{exam}/take', [SectionsController::class, 'takeExam'])->name('exams.take');
-    
     Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
     Route::get('/profile', [ProfileController::class, 'show'])->name('account');
+
+    Route::prefix('exams')->name('exams.')->group(function () {
+        
+        // Main exam routes
+        // Route::get('/', [ExamController::class, 'index'])->name('index');
+        // Route::get('/{id}', [ExamController::class, 'show'])->name('show');
+        Route::post('/{id}/start', [ExamController::class, 'startExam'])->name('start');
+        Route::get('/check-plan', [SectionsController::class, 'checkPlanAndRedirect'])->name('check-plan');
+        Route::get('/', [SectionsController::class, 'examsIndex'])->name('index');
+        Route::get('/{exam}/details', [SectionsController::class, 'takeExam'])->name('details');
+        
+        // Session management routes
+        Route::get('/{sessionId}/take', [ExamController::class, 'take'])->name('take');
+        Route::post('/{sessionId}/answer', [ExamController::class, 'submitAnswer'])->name('submit-answer');
+        Route::post('/{sessionId}/navigate', [ExamController::class, 'navigate'])->name('navigate');
+        Route::post('/{sessionId}/pause', [ExamController::class, 'pause'])->name('pause');
+        Route::post('/{sessionId}/resume', [ExamController::class, 'resume'])->name('resume');
+        Route::post('/{sessionId}/complete', [ExamController::class, 'complete'])->name('complete');
+        
+        // Results and reporting routes
+        Route::get('/{sessionId}/result', [ExamController::class, 'result'])->name('result');
+        Route::get('/{sessionId}/detailed-report', [ExamController::class, 'detailedReport'])->name('detailed-report');
+        Route::get('/{sessionId}/review', [ExamController::class, 'reviewSession'])->name('review');
+        
+        // AJAX/API routes for real-time updates
+        Route::get('/{sessionId}/progress', [ExamController::class, 'getProgress'])->name('progress');
+        Route::post('/{sessionId}/update-activity', [ExamController::class, 'updateActivityTime'])->name('update-activity');
+        Route::get('/{sessionId}/question', [ExamController::class, 'apiGetQuestion'])->name('api-get-question');
+        
+        // Session history and management
+        Route::get('/history/all', [ExamController::class, 'sessionHistory'])->name('history');
+        Route::delete('/{sessionId}/delete', [ExamController::class, 'deleteSession'])->name('delete-session');
+    });
 });

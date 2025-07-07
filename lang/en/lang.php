@@ -198,6 +198,34 @@ return [
     "Tests Description"=> "Comprehensive exams to simulate the real PMP exam experience",
     "Tests Label"=> "Exams",
     "Coming Soon Message"=> "This section will be activated soon",
+    "language" => "Language",
+    "back_to_exams" => "Back to Exams",
+    "exam_statistics" => "Exam Statistics",
+    "total_questions" => "Total Questions",
+    "attempts_made" => "Attempts Made",
+    "best_score" => "Best Score",
+    "exam_instructions" => "Exam Instructions",
+    "read_questions_carefully" => "Read each question carefully before answering",
+    "manage_time_wisely" => "Manage your time wisely - you cannot pause the exam",
+    "review_answers_before_submit" => "Review your answers before submitting",
+    "no_going_back_after_submit" => "You cannot go back after submitting an answer",
+    "ensure_stable_internet" => "Ensure you have a stable internet connection",
+    "previous_attempts" => "Previous Attempts",
+    "duration" => "Duration",
+    "status" => "Status",
+    "incomplete" => "Incomplete",
+    "in_progress" => "In Progress",
+    "ready_to_start" => "Ready to Start",
+    "exam_duration" => "Exam Duration",
+    "passing_score" => "Passing Score",
+    "start_exam" => "Start Exam",
+    "preview_exam" => "Preview Exam",
+    "exam_start_warning" => "Once you start the exam, you cannot pause or go back. Make sure you're ready!",
+    "confirm_start_exam" => "Are you sure you want to start this exam? You cannot pause once started.",
+    "exam_preview" => "Exam Preview",
+    "question" => "Question",
+    "close" => "Close",
+    "preview_showing_first_3_questions" => "Preview showing first 3 questions only",
 
     "all_chapters" => "All Chapters",
     "all_domains" => "All Domains",
@@ -261,6 +289,319 @@ return [
         'min_duration_error' => 'Plan must be at least 1 week long',
         'max_duration_error' => 'Plan cannot exceed 12 weeks',
         'plan_created_successfully' => 'Your study plan has been created successfully!',
+    'loading' => 'Loading',
+    'please_wait' => 'Please wait',
+    'processing' => 'Processing',
+    'save' => 'Save',
+    'cancel' => 'Cancel',
+    'close' => 'Close',
+    'back' => 'Back',
+    'next' => 'Next',
+    'previous' => 'Previous',
+    'continue' => 'Continue',
+    'resume' => 'Resume',
+    'start' => 'Start',
+    'finish' => 'Finish',
+    'submit' => 'Submit',
+    'delete' => 'Delete',
+    'edit' => 'Edit',
+    'view' => 'View',
+    'search' => 'Search',
+    'filter' => 'Filter',
+    'reset' => 'Reset',
+    'refresh' => 'Refresh',
+
+    // Navigation
+    'home' => 'Home',
+    'dashboard' => 'Dashboard',
+    'profile' => 'Profile',
+    'settings' => 'Settings',
+    'logout' => 'Logout',
+
+    // Exam System
+    'Tests' => 'Tests',
+    'exams' => 'Exams',
+    'exam' => 'Exam',
+    'exam_details' => 'Exam Details',
+    'exam_results' => 'Exam Results',
+    'exam_statistics' => 'Exam Statistics',
+    'exam_instructions' => 'Exam Instructions',
+    'exam_preview' => 'Exam Preview',
+    'exam_history' => 'Exam History',
+    'exam_reports' => 'Exam Reports',
+
+    // Exam Actions
+    'start_exam' => 'Start Exam',
+    'take_exam' => 'Take Exam',
+    'continue_exam' => 'Continue Exam',
+    'resume_exam' => 'Resume Exam',
+    'pause_exam' => 'Pause Exam',
+    'submit_exam' => 'Submit Exam',
+    'complete_exam' => 'Complete Exam',
+    'retake_exam' => 'Retake Exam',
+    'review_exam' => 'Review Exam',
+    'view_details' => 'View Details',
+    'view_results' => 'View Results',
+    'detailed_report' => 'Detailed Report',
+    'review_answers' => 'Review Answers',
+
+    // Exam Status
+    'available' => 'Available',
+    'in_progress' => 'In Progress',
+    'paused' => 'Paused',
+    'completed' => 'Completed',
+    'expired' => 'Expired',
+    'incomplete' => 'Incomplete',
+    'active_session' => 'Active Session',
+    'active_session_found' => 'Active session found',
+
+    // Questions
+    'question' => 'Question',
+    'questions' => 'Questions',
+    'total_questions' => 'Total Questions',
+    'current_question' => 'Current Question',
+    'question_overview' => 'Question Overview',
+    'questions_available' => 'Questions Available',
+    'answered' => 'Answered',
+    'not_answered' => 'Not Answered',
+    'unanswered_questions' => 'Unanswered Questions',
+    'correct_answers' => 'Correct Answers',
+    'incorrect_answers' => 'Incorrect Answers',
+    'your_answer' => 'Your Answer',
+    'correct_answer' => 'Correct Answer',
+
+    // Question Types
+    'single_choice' => 'Single Choice',
+    'multiple_choice' => 'Multiple Choice',
+    'true_false' => 'True/False',
+    'matching' => 'Matching',
+    'mixed' => 'Mixed',
+
+    // Time
+    'time' => 'Time',
+    'duration' => 'Duration',
+    'minutes' => 'Minutes',
+    'min' => 'min',
+    'seconds' => 'Seconds',
+    'hours' => 'Hours',
+    'time_spent' => 'Time Spent',
+    'time_remaining' => 'Time Remaining',
+    'total_duration' => 'Total Duration',
+    'exam_duration' => 'Exam Duration',
+    'per_question' => 'Per Question',
+    'min_per_question' => 'Min per Question',
+    'min_per_q' => 'Min/Q',
+    'average_time_per_question' => 'Average Time per Question',
+    'time_spent_on_question' => 'Time spent on this question',
+    'avg_time' => 'Avg Time',
+
+    // Scoring
+    'score' => 'Score',
+    'final_score' => 'Final Score',
+    'best_score' => 'Best Score',
+    'avg_score' => 'Avg Score',
+    'passing_score' => 'Passing Score',
+    'accuracy' => 'Accuracy',
+    'accuracy_percentage' => 'Accuracy Percentage',
+    'scored' => 'Scored',
+    'in_exam' => 'in exam',
+
+    // Performance
+    'excellent_performance' => 'Excellent Performance',
+    'good_performance' => 'Good Performance',
+    'needs_improvement' => 'Needs Improvement',
+    'failed' => 'Failed',
+
+    // Difficulty
+    'difficulty' => 'Difficulty',
+    'difficulty_easy' => 'Easy',
+    'difficulty_medium' => 'Medium',
+    'difficulty_hard' => 'Hard',
+
+    // Attempts
+    'attempt' => 'Attempt',
+    'attempts' => 'Attempts',
+    'attempts_made' => 'Attempts Made',
+    'previous_attempts' => 'Previous Attempts',
+
+    // Navigation
+    'back_to_exams' => 'Back to Exams',
+    'back_to_sections' => 'Back to Sections',
+
+    // Status Messages
+    'no_exams_available' => 'No Exams Available',
+    'no_exams_description' => 'There are currently no exams available for you to take.',
+    'no_description_available' => 'No description available',
+    'no_questions_available' => 'No questions available',
+
+    // Exam Flow
+    'ready_to_start' => 'Ready to Start',
+    'started' => 'Started',
+    'completed_on' => 'Completed on',
+    'date' => 'Date',
+    'status' => 'Status',
+    'actions' => 'Actions',
+    'progress' => 'Progress',
+
+    // Instructions
+    'important_instructions' => 'Important Instructions',
+    'exam_duration_180_minutes' => 'Exam duration is 180 minutes (3 hours)',
+    'can_pause_and_resume' => 'You can pause and resume the exam anytime',
+    'auto_save_answers' => 'Your answers are automatically saved',
+    'navigate_between_questions' => 'You can navigate between questions freely',
+    'ensure_stable_internet' => 'Ensure you have a stable internet connection',
+    'exam_auto_submit_time_up' => 'Exam will auto-submit when time is up',
+    'read_questions_carefully' => 'Read all questions carefully before answering',
+    'manage_time_wisely' => 'Manage your time wisely during the exam',
+    'review_answers_before_submit' => 'Review your answers before final submission',
+    'no_going_back_after_submit' => 'You cannot go back once exam is submitted',
+    'match_items_instruction' => 'Match the items by dragging or selecting pairs',
+
+    // Confirmations
+    'confirm_start_exam' => 'Are you sure you want to start this exam?',
+    'confirm_start_exam_message' => 'Once started, the timer will begin. Make sure you have a stable internet connection and enough time to complete the exam.',
+    'submit_exam_confirmation' => 'Are you sure you want to submit the exam? You cannot change your answers after submission.',
+    'submit_exam_final_confirmation' => 'This is your final submission. Are you absolutely sure you want to submit the exam?',
+    'pause_exam_confirmation' => 'Are you sure you want to pause the exam? Your progress will be saved.',
+    'confirm_delete_session' => 'Are you sure you want to delete this exam session? This action cannot be undone.',
+
+    // Alerts and Messages
+    'exam_started_successfully' => 'Exam started successfully',
+    'exam_resumed_successfully' => 'Exam resumed successfully',
+    'exam_paused_successfully' => 'Exam paused successfully',
+    'exam_completed_successfully' => 'Exam completed successfully',
+    'exam_submitted_successfully' => 'Exam submitted successfully',
+    'answer_saved_successfully' => 'Answer saved successfully',
+    'answer_selected' => 'Answer selected',
+    'please_select_answer' => 'Please select an answer before proceeding',
+    'session_deleted_successfully' => 'Session deleted successfully',
+
+    // Errors
+    'error_starting_exam' => 'Error starting exam. Please try again.',
+    'error_saving_answer' => 'Error saving answer. Please try again.',
+    'error_completing_exam' => 'Error completing exam. Please try again.',
+    'error_pausing_exam' => 'Error pausing exam. Please try again.',
+    'error_resuming_exam' => 'Error resuming exam. Please try again.',
+    'error_submitting_exam' => 'Error submitting exam. Please try again.',
+    'error_loading_results' => 'Error loading results. Please try again.',
+    'error_loading_review' => 'Error loading review. Please try again.',
+    'error_loading_history' => 'Error loading history. Please try again.',
+    'error_generating_report' => 'Error generating report. Please try again.',
+    'error_deleting_session' => 'Error deleting session. Please try again.',
+    'navigation_error' => 'Navigation error. Please try again.',
+    'invalid_question_navigation' => 'Invalid question navigation',
+    'cannot_start_exam' => 'Cannot start exam at this time',
+    'exam_not_completed' => 'Exam is not completed yet',
+    'session_not_completed' => 'Session is not completed yet',
+    'session_not_active' => 'Session is not active',
+
+    // Time Warnings
+    'exam_time_expired' => 'Exam time has expired. Your exam will be automatically submitted.',
+    'exam_time_warning' => 'Warning: Only 5 minutes remaining!',
+    'exam_leave_warning' => 'Are you sure you want to leave? Your progress will be saved but the timer will continue.',
+    'active_session_resumed' => 'Your active session has been resumed',
+
+    // Results and Reports
+    'detailed_results' => 'Detailed Results',
+    'overall_statistics' => 'Overall Statistics',
+    'recommendations' => 'Recommendations',
+    'question_type_analysis' => 'Question Type Analysis',
+    'description' => 'Description',
+    'results_copied_to_clipboard' => 'Results copied to clipboard',
+
+    // Quick Stats
+    'quick_stats' => 'Quick Stats',
+
+    // Session Info
+    'you_can_continue_where_left_off' => 'You can continue where you left off',
+    'exam_start_info' => 'Timer will start immediately when you begin the exam. Make sure you\'re ready!',
+
+    // Preview
+    'preview_showing_sample_questions' => 'This preview shows sample questions from the exam.',
+    'preview_showing_first_3_questions' => 'Showing first 3 questions as preview',
+
+    // Additional UI Elements
+    'question_types' => 'Question Types',
+    'save_answer' => 'Save Answer',
+    'starting_exam' => 'Starting Exam',
+
+    // Form Labels
+    'email' => 'Email',
+    'password' => 'Password',
+    'name' => 'Name',
+    'phone' => 'Phone',
+    'address' => 'Address',
+
+    // Common Actions
+    'create' => 'Create',
+    'update' => 'Update',
+    'show' => 'Show',
+    'hide' => 'Hide',
+    'enable' => 'Enable',
+    'disable' => 'Disable',
+    'activate' => 'Activate',
+    'deactivate' => 'Deactivate',
+
+    // File Operations
+    'upload' => 'Upload',
+    'download' => 'Download',
+    'import' => 'Import',
+    'export' => 'Export',
+    'print' => 'Print',
+
+    // Date and Time
+    'today' => 'Today',
+    'yesterday' => 'Yesterday',
+    'tomorrow' => 'Tomorrow',
+    'this_week' => 'This Week',
+    'last_week' => 'Last Week',
+    'this_month' => 'This Month',
+    'last_month' => 'Last Month',
+    'this_year' => 'This Year',
+    'last_year' => 'Last Year',
+
+    // Notifications
+    'success' => 'Success',
+    'error' => 'Error',
+    'warning' => 'Warning',
+    'info' => 'Information',
+    'notification' => 'Notification',
+    'alert' => 'Alert',
+
+    // Permissions
+    'permission_denied' => 'Permission denied',
+    'access_denied' => 'Access denied',
+    'unauthorized' => 'Unauthorized',
+    'forbidden' => 'Forbidden',
+
+    // Validation
+    'required' => 'This field is required',
+    'invalid' => 'Invalid input',
+    'too_short' => 'Too short',
+    'too_long' => 'Too long',
+    'invalid_email' => 'Invalid email address',
+    'invalid_phone' => 'Invalid phone number',
+
+    // Pagination
+    'first' => 'First',
+    'last' => 'Last',
+    'prev' => 'Previous',
+    'more' => 'More',
+    'page' => 'Page',
+    'of' => 'of',
+    'showing' => 'Showing',
+    'to' => 'to',
+    'results' => 'results',
+
+    // Search and Filter
+    'search_placeholder' => 'Search...',
+    'no_results_found' => 'No results found',
+    'clear_search' => 'Clear search',
+    'advanced_search' => 'Advanced search',
+    'sort_by' => 'Sort by',
+    'filter_by' => 'Filter by',
+    'apply_filter' => 'Apply filter',
+    'clear_filter' => 'Clear filter',
     
 ];
 

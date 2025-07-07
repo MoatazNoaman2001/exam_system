@@ -211,6 +211,34 @@ return [
     "Tests Description"=> "اختبارات موسعة لمحاولة بحيرة امتحان PMP الحقيقية",
     "Tests Label"=> "اختبارات",
     "Coming Soon Message"=> "قريباً سيتم تفعيل هذا القسم",
+    "language" => "اللغة",
+    "back_to_exams" => "العودة إلى الامتحانات",
+    "exam_statistics" => "إحصائيات الامتحان",
+    "total_questions" => "إجمالي الأسئلة",
+    "attempts_made" => "المحاولات المنجزة",
+    "best_score" => "أفضل نتيجة",
+    "exam_instructions" => "تعليمات الامتحان",
+    "read_questions_carefully" => "اقرأ كل سؤال بعناية قبل الإجابة",
+    "manage_time_wisely" => "أدر وقتك بحكمة - لا يمكنك إيقاف الامتحان مؤقتاً",
+    "review_answers_before_submit" => "راجع إجاباتك قبل التقديم",
+    "no_going_back_after_submit" => "لا يمكنك العودة بعد تقديم إجابة",
+    "ensure_stable_internet" => "تأكد من وجود اتصال إنترنت مستقر",
+    "previous_attempts" => "المحاولات السابقة",
+    "duration" => "المدة",
+    "status" => "الحالة",
+    "incomplete" => "غير مكتمل",
+    "in_progress" => "قيد التقدم",
+    "ready_to_start" => "جاهز للبدء",
+    "exam_duration" => "مدة الامتحان",
+    "passing_score" => "النتيجة المطلوبة للنجاح",
+    "start_exam" => "ابدأ الامتحان",
+    "preview_exam" => "معاينة الامتحان",
+    "exam_start_warning" => "بمجرد بدء الامتحان، لا يمكنك إيقافه مؤقتاً أو العودة. تأكد من أنك جاهز!",
+    "confirm_start_exam" => "هل أنت متأكد من أنك تريد بدء هذا الامتحان؟ لا يمكنك إيقافه مؤقتاً بمجرد البدء.",
+    "exam_preview" => "معاينة الامتحان",
+    "question" => "سؤال",
+    "close" => "إغلاق",
+    "preview_showing_first_3_questions" => "المعاينة تعرض أول 3 أسئلة فقط",
 
     "all_chapters" => "جميع الفصول",
     "all_domains" => "جميع المجالات",
@@ -274,6 +302,388 @@ return [
         'min_duration_error' => 'يجب أن تكون الخطة أسبوع واحد على الأقل',
         'max_duration_error' => 'لا يمكن أن تتجاوز الخطة 12 أسبوع',
         'plan_created_successfully' => 'تم إنشاء خطتك الدراسية بنجاح!',
+        'loading' => 'جاري التحميل',
+        'please_wait' => 'يرجى الانتظار',
+        'processing' => 'جاري المعالجة',
+        'save' => 'حفظ',
+        'cancel' => 'إلغاء',
+        'close' => 'إغلاق',
+        'back' => 'رجوع',
+        'next' => 'التالي',
+        'previous' => 'السابق',
+        'continue' => 'متابعة',
+        'resume' => 'استئناف',
+        'start' => 'بدء',
+        'finish' => 'إنهاء',
+        'submit' => 'إرسال',
+        'delete' => 'حذف',
+        'edit' => 'تعديل',
+        'view' => 'عرض',
+        'search' => 'بحث',
+        'filter' => 'تصفية',
+        'reset' => 'إعادة تعيين',
+        'refresh' => 'تحديث',
+    
+        // Navigation - التنقل
+        'home' => 'الرئيسية',
+        'dashboard' => 'لوحة التحكم',
+        'profile' => 'الملف الشخصي',
+        'settings' => 'الإعدادات',
+        'logout' => 'تسجيل الخروج',
+    
+        // Exam System - نظام الامتحانات
+        'Tests' => 'الاختبارات',
+        'exams' => 'الامتحانات',
+        'exam' => 'امتحان',
+        'exam_details' => 'تفاصيل الامتحان',
+        'exam_results' => 'نتائج الامتحان',
+        'exam_statistics' => 'إحصائيات الامتحان',
+        'exam_instructions' => 'تعليمات الامتحان',
+        'exam_preview' => 'معاينة الامتحان',
+        'exam_history' => 'تاريخ الامتحانات',
+        'exam_reports' => 'تقارير الامتحانات',
+    
+        // Exam Actions - إجراءات الامتحان
+        'start_exam' => 'بدء الامتحان',
+        'take_exam' => 'أداء الامتحان',
+        'continue_exam' => 'متابعة الامتحان',
+        'resume_exam' => 'استئناف الامتحان',
+        'pause_exam' => 'إيقاف الامتحان مؤقتاً',
+        'submit_exam' => 'تسليم الامتحان',
+        'complete_exam' => 'إتمام الامتحان',
+        'retake_exam' => 'إعادة الامتحان',
+        'review_exam' => 'مراجعة الامتحان',
+        'view_details' => 'عرض التفاصيل',
+        'view_results' => 'عرض النتائج',
+        'detailed_report' => 'تقرير مفصل',
+        'review_answers' => 'مراجعة الإجابات',
+    
+        // Exam Status - حالة الامتحان
+        'available' => 'متاح',
+        'in_progress' => 'قيد التنفيذ',
+        'paused' => 'متوقف مؤقتاً',
+        'completed' => 'مكتمل',
+        'expired' => 'منتهي الصلاحية',
+        'incomplete' => 'غير مكتمل',
+        'active_session' => 'جلسة نشطة',
+        'active_session_found' => 'تم العثور على جلسة نشطة',
+    
+        // Questions - الأسئلة
+        'question' => 'سؤال',
+        'questions' => 'أسئلة',
+        'total_questions' => 'إجمالي الأسئلة',
+        'current_question' => 'السؤال الحالي',
+        'question_overview' => 'نظرة عامة على الأسئلة',
+        'questions_available' => 'الأسئلة المتاحة',
+        'answered' => 'تم الإجابة عليه',
+        'not_answered' => 'لم يتم الإجابة عليه',
+        'unanswered_questions' => 'الأسئلة غير المجابة',
+        'correct_answers' => 'الإجابات الصحيحة',
+        'incorrect_answers' => 'الإجابات الخاطئة',
+        'your_answer' => 'إجابتك',
+        'correct_answer' => 'الإجابة الصحيحة',
+    
+        // Question Types - أنواع الأسئلة
+        'single_choice' => 'اختيار واحد',
+        'multiple_choice' => 'اختيار متعدد',
+        'true_false' => 'صح/خطأ',
+        'matching' => 'مطابقة',
+        'mixed' => 'مختلط',
+    
+        // Time - الوقت
+        'time' => 'الوقت',
+        'duration' => 'المدة',
+        'minutes' => 'دقائق',
+        'min' => 'د',
+        'seconds' => 'ثواني',
+        'hours' => 'ساعات',
+        'time_spent' => 'الوقت المستغرق',
+        'time_remaining' => 'الوقت المتبقي',
+        'total_duration' => 'المدة الإجمالية',
+        'exam_duration' => 'مدة الامتحان',
+        'per_question' => 'لكل سؤال',
+        'min_per_question' => 'دقيقة لكل سؤال',
+        'min_per_q' => 'د/س',
+        'average_time_per_question' => 'متوسط الوقت لكل سؤال',
+        'time_spent_on_question' => 'الوقت المستغرق في هذا السؤال',
+        'avg_time' => 'متوسط الوقت',
+    
+        // Scoring - النتائج
+        'score' => 'النتيجة',
+        'final_score' => 'النتيجة النهائية',
+        'best_score' => 'أفضل نتيجة',
+        'avg_score' => 'متوسط النتيجة',
+        'passing_score' => 'درجة النجاح',
+        'accuracy' => 'الدقة',
+        'accuracy_percentage' => 'نسبة الدقة',
+        'scored' => 'حصل على',
+        'in_exam' => 'في الامتحان',
+    
+        // Performance - الأداء
+        'excellent_performance' => 'أداء ممتاز',
+        'good_performance' => 'أداء جيد',
+        'needs_improvement' => 'يحتاج إلى تحسين',
+        'failed' => 'راسب',
+    
+        // Difficulty - الصعوبة
+        'difficulty' => 'الصعوبة',
+        'difficulty_easy' => 'سهل',
+        'difficulty_medium' => 'متوسط',
+        'difficulty_hard' => 'صعب',
+    
+        // Attempts - المحاولات
+        'attempt' => 'محاولة',
+        'attempts' => 'محاولات',
+        'attempts_made' => 'المحاولات المنجزة',
+        'previous_attempts' => 'المحاولات السابقة',
+    
+        // Navigation - التنقل
+        'back_to_exams' => 'العودة إلى الامتحانات',
+        'back_to_sections' => 'العودة إلى الأقسام',
+    
+        // Status Messages - رسائل الحالة
+        'no_exams_available' => 'لا توجد امتحانات متاحة',
+        'no_exams_description' => 'لا توجد امتحانات متاحة لك حالياً.',
+        'no_description_available' => 'لا يوجد وصف متاح',
+        'no_questions_available' => 'لا توجد أسئلة متاحة',
+    
+        // Exam Flow - سير الامتحان
+        'ready_to_start' => 'جاهز للبدء',
+        'started' => 'بدأ',
+        'completed_on' => 'اكتمل في',
+        'date' => 'التاريخ',
+        'status' => 'الحالة',
+        'actions' => 'الإجراءات',
+        'progress' => 'التقدم',
+    
+        // Instructions - التعليمات
+        'important_instructions' => 'تعليمات مهمة',
+        'exam_duration_180_minutes' => 'مدة الامتحان 180 دقيقة (3 ساعات)',
+        'can_pause_and_resume' => 'يمكنك إيقاف الامتحان واستئنافه في أي وقت',
+        'auto_save_answers' => 'يتم حفظ إجاباتك تلقائياً',
+        'navigate_between_questions' => 'يمكنك التنقل بين الأسئلة بحرية',
+        'ensure_stable_internet' => 'تأكد من وجود اتصال إنترنت مستقر',
+        'exam_auto_submit_time_up' => 'سيتم تسليم الامتحان تلقائياً عند انتهاء الوقت',
+        'read_questions_carefully' => 'اقرأ جميع الأسئلة بعناية قبل الإجابة',
+        'manage_time_wisely' => 'أدر وقتك بحكمة أثناء الامتحان',
+        'review_answers_before_submit' => 'راجع إجاباتك قبل التسليم النهائي',
+        'no_going_back_after_submit' => 'لا يمكنك العودة بعد تسليم الامتحان',
+        'match_items_instruction' => 'طابق العناصر بالسحب أو تحديد الأزواج',
+    
+        // Confirmations - التأكيدات
+        'confirm_start_exam' => 'هل أنت متأكد من أنك تريد بدء هذا الامتحان؟',
+        'confirm_start_exam_message' => 'بمجرد البدء، سيبدأ المؤقت. تأكد من وجود اتصال إنترنت مستقر ووقت كافٍ لإكمال الامتحان.',
+        'submit_exam_confirmation' => 'هل أنت متأكد من أنك تريد تسليم الامتحان؟ لن تتمكن من تغيير إجاباتك بعد التسليم.',
+        'submit_exam_final_confirmation' => 'هذا تسليمك النهائي. هل أنت متأكد تماماً من أنك تريد تسليم الامتحان؟',
+        'pause_exam_confirmation' => 'هل أنت متأكد من أنك تريد إيقاف الامتحان مؤقتاً؟ سيتم حفظ تقدمك.',
+        'confirm_delete_session' => 'هل أنت متأكد من أنك تريد حذف جلسة الامتحان هذه؟ لا يمكن التراجع عن هذا الإجراء.',
+    
+        // Alerts and Messages - التنبيهات والرسائل
+        'exam_started_successfully' => 'تم بدء الامتحان بنجاح',
+        'exam_resumed_successfully' => 'تم استئناف الامتحان بنجاح',
+        'exam_paused_successfully' => 'تم إيقاف الامتحان مؤقتاً بنجاح',
+        'exam_completed_successfully' => 'تم إتمام الامتحان بنجاح',
+        'exam_submitted_successfully' => 'تم تسليم الامتحان بنجاح',
+        'answer_saved_successfully' => 'تم حفظ الإجابة بنجاح',
+        'answer_selected' => 'تم تحديد الإجابة',
+        'please_select_answer' => 'يرجى تحديد إجابة قبل المتابعة',
+        'session_deleted_successfully' => 'تم حذف الجلسة بنجاح',
+    
+        // Errors - الأخطاء
+        'error_starting_exam' => 'خطأ في بدء الامتحان. يرجى المحاولة مرة أخرى.',
+        'error_saving_answer' => 'خطأ في حفظ الإجابة. يرجى المحاولة مرة أخرى.',
+        'error_completing_exam' => 'خطأ في إتمام الامتحان. يرجى المحاولة مرة أخرى.',
+        'error_pausing_exam' => 'خطأ في إيقاف الامتحان. يرجى المحاولة مرة أخرى.',
+        'error_resuming_exam' => 'خطأ في استئناف الامتحان. يرجى المحاولة مرة أخرى.',
+        'error_submitting_exam' => 'خطأ في تسليم الامتحان. يرجى المحاولة مرة أخرى.',
+        'error_loading_results' => 'خطأ في تحميل النتائج. يرجى المحاولة مرة أخرى.',
+        'error_loading_review' => 'خطأ في تحميل المراجعة. يرجى المحاولة مرة أخرى.',
+        'error_loading_history' => 'خطأ في تحميل التاريخ. يرجى المحاولة مرة أخرى.',
+        'error_generating_report' => 'خطأ في إنشاء التقرير. يرجى المحاولة مرة أخرى.',
+        'error_deleting_session' => 'خطأ في حذف الجلسة. يرجى المحاولة مرة أخرى.',
+        'navigation_error' => 'خطأ في التنقل. يرجى المحاولة مرة أخرى.',
+        'invalid_question_navigation' => 'تنقل سؤال غير صالح',
+        'cannot_start_exam' => 'لا يمكن بدء الامتحان في هذا الوقت',
+        'exam_not_completed' => 'الامتحان غير مكتمل بعد',
+        'session_not_completed' => 'الجلسة غير مكتملة بعد',
+        'session_not_active' => 'الجلسة غير نشطة',
+    
+        // Time Warnings - تحذيرات الوقت
+        'exam_time_expired' => 'انتهى وقت الامتحان. سيتم تسليم امتحانك تلقائياً.',
+        'exam_time_warning' => 'تحذير: 5 دقائق فقط متبقية!',
+        'exam_leave_warning' => 'هل أنت متأكد من أنك تريد المغادرة؟ سيتم حفظ تقدمك لكن المؤقت سيستمر.',
+        'active_session_resumed' => 'تم استئناف جلستك النشطة',
+    
+        // Results and Reports - النتائج والتقارير
+        'detailed_results' => 'النتائج المفصلة',
+        'overall_statistics' => 'الإحصائيات العامة',
+        'recommendations' => 'التوصيات',
+        'question_type_analysis' => 'تحليل نوع الأسئلة',
+        'description' => 'الوصف',
+        'results_copied_to_clipboard' => 'تم نسخ النتائج إلى الحافظة',
+    
+        // Quick Stats - الإحصائيات السريعة
+        'quick_stats' => 'إحصائيات سريعة',
+    
+        // Session Info - معلومات الجلسة
+        'you_can_continue_where_left_off' => 'يمكنك المتابعة من حيث توقفت',
+        'exam_start_info' => 'سيبدأ المؤقت فوراً عند بدء الامتحان. تأكد من أنك مستعد!',
+    
+        // Preview - المعاينة
+        'preview_showing_sample_questions' => 'تُظهر هذه المعاينة أسئلة نموذجية من الامتحان.',
+        'preview_showing_first_3_questions' => 'عرض أول 3 أسئلة كمعاينة',
+    
+        // Additional UI Elements - عناصر واجهة إضافية
+        'question_types' => 'أنواع الأسئلة',
+        'save_answer' => 'حفظ الإجابة',
+        'starting_exam' => 'بدء الامتحان',
+    
+        // Form Labels - تسميات النماذج
+        'email' => 'البريد الإلكتروني',
+        'password' => 'كلمة المرور',
+        'name' => 'الاسم',
+        'phone' => 'الهاتف',
+        'address' => 'العنوان',
+    
+        // Common Actions - الإجراءات الشائعة
+        'create' => 'إنشاء',
+        'update' => 'تحديث',
+        'show' => 'عرض',
+        'hide' => 'إخفاء',
+        'enable' => 'تفعيل',
+        'disable' => 'تعطيل',
+        'activate' => 'تنشيط',
+        'deactivate' => 'إلغاء التنشيط',
+    
+        // File Operations - عمليات الملفات
+        'upload' => 'رفع',
+        'download' => 'تحميل',
+        'import' => 'استيراد',
+        'export' => 'تصدير',
+        'print' => 'طباعة',
+    
+        // Date and Time - التاريخ والوقت
+        'today' => 'اليوم',
+        'yesterday' => 'أمس',
+        'tomorrow' => 'غداً',
+        'this_week' => 'هذا الأسبوع',
+        'last_week' => 'الأسبوع الماضي',
+        'this_month' => 'هذا الشهر',
+        'last_month' => 'الشهر الماضي',
+        'this_year' => 'هذا العام',
+        'last_year' => 'العام الماضي',
+    
+        // Notifications - الإشعارات
+        'success' => 'نجح',
+        'error' => 'خطأ',
+        'warning' => 'تحذير',
+        'info' => 'معلومات',
+        'notification' => 'إشعار',
+        'alert' => 'تنبيه',
+    
+        // Permissions - الصلاحيات
+        'permission_denied' => 'تم رفض الإذن',
+        'access_denied' => 'تم رفض الوصول',
+        'unauthorized' => 'غير مخول',
+        'forbidden' => 'محظور',
+    
+        // Validation - التحقق
+        'required' => 'هذا الحقل مطلوب',
+        'invalid' => 'إدخال غير صالح',
+        'too_short' => 'قصير جداً',
+        'too_long' => 'طويل جداً',
+        'invalid_email' => 'عنوان بريد إلكتروني غير صالح',
+        'invalid_phone' => 'رقم هاتف غير صالح',
+    
+        // Pagination - ترقيم الصفحات
+        'first' => 'الأول',
+        'last' => 'الأخير',
+        'prev' => 'السابق',
+        'more' => 'المزيد',
+        'page' => 'صفحة',
+        'of' => 'من',
+        'showing' => 'عرض',
+        'to' => 'إلى',
+        'results' => 'نتائج',
+    
+        // Search and Filter - البحث والتصفية
+        'search_placeholder' => 'بحث...',
+        'no_results_found' => 'لم يتم العثور على نتائج',
+        'clear_search' => 'مسح البحث',
+        'advanced_search' => 'بحث متقدم',
+        'sort_by' => 'ترتيب حسب',
+        'filter_by' => 'تصفية حسب',
+        'apply_filter' => 'تطبيق التصفية',
+        'clear_filter' => 'مسح التصفية',
+    
+        // Additional Exam Terms - مصطلحات امتحان إضافية
+        'exam_feature_coming_soon' => 'ميزة الامتحان قادمة قريباً',
+        'exam_settings' => 'إعدادات الامتحان',
+        'exam_timer' => 'مؤقت الامتحان',
+        'exam_navigation' => 'تنقل الامتحان',
+        'exam_submission' => 'تسليم الامتحان',
+        'exam_review' => 'مراجعة الامتحان',
+        'exam_score' => 'نتيجة الامتحان',
+        'exam_grade' => 'درجة الامتحان',
+        'exam_feedback' => 'تقييم الامتحان',
+        'exam_certificate' => 'شهادة الامتحان',
+    
+        // PMP Specific Terms - مصطلحات PMP محددة
+        'pmp_exam' => 'امتحان PMP',
+        'project_management' => 'إدارة المشاريع',
+        'pmp_certification' => 'شهادة PMP',
+        'pmbok_guide' => 'دليل PMBOK',
+        'knowledge_areas' => 'مجالات المعرفة',
+        'process_groups' => 'مجموعات العمليات',
+        'professional_development' => 'التطوير المهني',
+    
+        // Additional Status Terms - مصطلحات حالة إضافية
+        'draft' => 'مسودة',
+        'published' => 'منشور',
+        'archived' => 'مؤرشف',
+        'pending' => 'معلق',
+        'approved' => 'موافق عليه',
+        'rejected' => 'مرفوض',
+        'under_review' => 'تحت المراجعة',
+    
+        // Time Management - إدارة الوقت
+        'time_management' => 'إدارة الوقت',
+        'time_limit' => 'حد زمني',
+        'countdown' => 'العد التنازلي',
+        'overtime' => 'وقت إضافي',
+        'time_extension' => 'تمديد الوقت',
+        'pause_timer' => 'إيقاف المؤقت',
+        'resume_timer' => 'استئناف المؤقت',
+    
+        // Question Navigation - تنقل الأسئلة
+        'first_question' => 'السؤال الأول',
+        'last_question' => 'السؤال الأخير',
+        'jump_to_question' => 'الانتقال إلى السؤال',
+        'bookmark_question' => 'إشارة مرجعية للسؤال',
+        'flag_question' => 'وضع علامة على السؤال',
+        'unflag_question' => 'إزالة العلامة من السؤال',
+    
+        // Answer Options - خيارات الإجابة
+        'select_answer' => 'اختر الإجابة',
+        'multiple_answers' => 'إجابات متعددة',
+        'single_answer' => 'إجابة واحدة',
+        'optional_answer' => 'إجابة اختيارية',
+        'required_answer' => 'إجابة مطلوبة',
+    
+        // Exam Completion - إكمال الامتحان
+        'exam_summary' => 'ملخص الامتحان',
+        'final_review' => 'المراجعة النهائية',
+        'submit_final' => 'التسليم النهائي',
+        'exam_completed' => 'تم إكمال الامتحان',
+        'awaiting_results' => 'في انتظار النتائج',
+    
+        // Error Recovery - استرداد الأخطاء
+        'connection_lost' => 'فقد الاتصال',
+        'reconnecting' => 'جاري إعادة الاتصال',
+        'auto_save_failed' => 'فشل الحفظ التلقائي',
+        'manual_save_required' => 'مطلوب حفظ يدوي',
+        'sync_failed' => 'فشل التزامن',
+        'retry_sync' => 'إعادة محاولة التزامن',
     
 ];
 
