@@ -35,7 +35,7 @@ body {
     font-family: 'Tajawal', sans-serif;
     background-color: var(--background);
     color: var(--text-dark);
-    direction: rtl;
+   
 }
 
 /* Dashboard Container */
@@ -434,6 +434,69 @@ body {
 .detail-value.good { color: var(--progress-yellow); }
 .detail-value.fair { color: var(--progress-orange); }
 .detail-value.poor { color: var(--progress-red); }
+    .plan-card .circle-progress-container {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        margin: 20px auto;
+    }
+    .plan-card .circle-progress {
+        transform: rotate(-90deg);
+    }
+    .plan-card .circle-progress-bg {
+        fill: none;
+        stroke: #e0e0e0;
+        stroke-width: 10;
+    }
+    .plan-card .circle-progress-fill {
+        fill: none;
+        stroke: #28a745; /* اللون الافتراضي (أخضر) */
+        stroke-width: 10;
+        stroke-linecap: round;
+        transition: stroke 0.3s ease;
+    }
+    .plan-card .circle-progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+    .plan-card .action-btn {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .plan-card .action-btn:hover {
+        background-color: #0056b3;
+    }
+    .plan-form {
+        margin-top: 10px;
+    }
+    .plan-form input {
+        padding: 8px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .plan-form button {
+        background-color: #28a745;
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .plan-form button:hover {
+        background-color: #218838;
+    }
+
 
 /* Animation for Progress Changes */
 @keyframes pulse {

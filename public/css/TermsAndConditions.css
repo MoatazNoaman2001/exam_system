@@ -1,52 +1,130 @@
+/* TermsAndConditions.css */
 body {
-            background-color: #ffffff;
-            font-family: 'Tajawal', sans-serif;
-        }
-        .terms-container {
-            border-radius: 1.5rem;
-            padding: 2rem;
-            max-width: 800px;
-            margin: 4rem auto;
-            box-shadow: 0 0.25rem 1.5625rem rgba(47, 128, 237, 0.15);
-        }
-        .terms-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        .terms-title {
-            color: #181818;
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-        .terms-subtitle {
-            color: #6c737f;
-            font-weight: 500;
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .terms-content {
-            color: #6c737f;
-            font-weight: 400;
-            font-size: 1rem;
-            text-align: right;
-            line-height: 1.6;
-        }
-        .download-btn {
-            background-color: #2f80ed;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1rem;
-            border-radius: 0.625rem;
-            padding: 0.5rem 1.5rem;
-            box-shadow: 0.25rem 0.25rem 1.5625rem rgba(47, 128, 237, 0.15);
-        }
-        .download-btn:hover {
-            background-color: #1e6bd2;
-        }
-        .user-info {
-            color: #181818;
-            font-weight: 500;
-            margin-bottom: 1rem;
-        }
+    background-color: #f8f9fa;
+    font-family: 'Tajawal', sans-serif;
+}
+
+.terms-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.terms-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 1000px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+}
+
+.terms-header {
+    background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+    color: white;
+    padding: 25px;
+    text-align: center;
+    position: relative;
+}
+
+.header-decoration {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: white;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 70%, 0 100%);
+}
+
+.terms-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.user-info-card {
+    background: #f8f9fa;
+    padding: 15px 25px;
+    margin: 25px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-right: 4px solid #4299e1;
+}
+
+.user-info-card i {
+    font-size: 20px;
+    color: #4299e1;
+}
+
+.terms-subtitle {
+    color: #495057;
+    text-align: center;
+    font-size: 18px;
+    margin: 0 25px 25px;
+    font-weight: 500;
+}
+
+.terms-content-card {
+    background: #f8f9fa;
+    margin: 0 25px;
+    border-radius: 10px;
+    padding: 25px;
+    border: 1px solid #e9ecef;
+}
+
+.terms-content {
+    color: #495057;
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+.download-btn-container {
+    padding: 25px;
+    text-align: center;
+}
+
+.download-btn {
+    background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+}
+
+.download-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+}
+
+.download-btn i {
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .terms-card {
+        margin: 15px;
+    }
+    
+    .terms-header {
+        padding: 20px;
+    }
+    
+    .terms-content-card,
+    .user-info-card {
+        margin: 15px;
+    }
+}

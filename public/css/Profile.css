@@ -1,93 +1,219 @@
+
+
+
+    /* Profile.css */
 body {
-        background-color: #f8f9fa !important;
-        direction: rtl;
-    }
+    background-color: #f8f9fa;
+    font-family: 'Tajawal', sans-serif;
+    direction: rtl;
+}
 
+.container.my-5 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.modal-backdrop {
+    display: none !important;
+}
+.profile-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 800px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+    padding: 30px;
+}
+
+.profile-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2b6cb0;
+    margin-bottom: 30px;
+    position: relative;
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+.profile-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%);
+    border-radius: 2px;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    margin: 0 auto 30px;
+    border: 5px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.edit-icon {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: #4299e1;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(66, 153, 225, 0.3);
+    transition: all 0.3s ease;
+}
+
+.edit-icon:hover {
+    transform: scale(1.1);
+    background: #2b6cb0;
+}
+
+.edit-icon img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
+}
+
+.top-text {
+    color: #495057;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+}
+
+.input-group > .form-control {
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+}
+
+.save-button {
+    background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%);
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+}
+
+.save-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+    color: white;
+    border-bottom: none;
+    padding: 20px;
+}
+
+.modal-title {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: none;
+    padding: 15px 25px;
+    background: #f8f9fa;
+}
+
+.btn-secondary {
+    background: #e9ecef;
+    color: #495057;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
     .profile-card {
-        border-color: #e5e7eb !important;
+        padding: 20px;
     }
-
-    .profile-title {
-        color: #181818;
-        font-family: 'Tajawal', sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-    }
-
-    .top-text {
-        color: #6c737f;
-        font-family: 'Tajawal', sans-serif;
-        font-size: 0.875rem;
-        font-weight: 400;
-        margin-bottom: 0.5rem;
-    }
-
+    
     .profile-image {
         width: 120px;
         height: 120px;
-        border-radius: 50%;
-        background-size: cover;
-        background-position: center;
-        position: relative;
-        border: 2px solid #e5e7eb;
     }
-
-    .edit-icon {
-        position: absolute;
-        bottom: 0;
-        left: 0; /* Changed from right to left for RTL */
-        background: #ffffff;
-        border-radius: 0.25rem;
-        padding: 0.25rem;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    
+    .profile-title {
+        font-size: 24px;
     }
+}
 
+@media (max-width: 576px) {
+    .container.my-5 {
+        padding: 15px;
+    }
+    
+    .profile-card {
+        padding: 15px;
+    }
+    
+    .profile-title {
+        font-size: 20px;
+    }
+    
     .form-control {
-        font-family: 'Tajawal', sans-serif;
-        font-size: 0.875rem;
-        color: #181818;
-        border-color: #e5e7eb;
-        text-align: right; /* Align text to right */
+        padding: 10px 12px;
     }
-
-    .input-group-text {
-        background-color: #ffffff;
-        border-color: #e5e7eb;
-    }
-
-    .save-button {
-        background-color: #2f80ed;
-        border-color: #2f80ed;
-        font-family: 'Tajawal', sans-serif;
-        font-size: 1rem;
-        font-weight: 700;
-        box-shadow: 0 4px 10px rgba(47, 128, 237, 0.15);
-        transition: background-color 0.3s ease;
-    }
-
-    .save-button:hover {
-        background-color: #1a73e8;
-    }
-
-    .modal-content {
-        direction: rtl;
-    }
-
-    .modal-footer {
-        justify-content: flex-start; /* Align buttons to the right in RTL */
-    }
-
-    @media (max-width: 576px) {
-        .profile-title {
-            font-size: 1.25rem;
-        }
-
-        .profile-image {
-            width: 100px;
-            height: 100px;
-        }
-
-        .save-button {
-            width: 100%;
-        }
-    }
+}

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
+
     public function delete(Request $request)
     {
         $user = Auth::user();

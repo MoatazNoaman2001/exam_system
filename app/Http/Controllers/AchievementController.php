@@ -2,138 +2,196 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Exam;
+use App\Models\QuizAttempt;
+use App\Models\TestAttempt;
+use App\Models\ExamAttempt;
+use App\Models\Plan;
+use App\Models\Domain;
+use App\Models\Achievement;
+use App\Models\Slide;
+use App\Models\Chapter;
+use App\Models\SlideAttempt;
+use App\Models\UserProgress;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use App\Models\UserProgress;
-use App\Models\Slide;
-use App\Models\Exam;
-use App\Models\Achievement;
-use App\Models\TestAttempt;
-use App\Models\QuizAttempt;
-use App\Models\Domain;
+use Illuminate\Http\Request;
 
 class AchievementController extends Controller
 {
-   public function index()
+   public function index(Request $request)
 {
     $user = Auth::user();
-    if (!$user) {
-        abort(403, 'يجب تسجيل الدخول أولاً.');
+
+    // Fetch user progress
+    $progress = UserProgress::where('user_id', $user->id)->first();
+
+    // Initialize plan duration variables
+    $planDuration = session('plan_duration', 0);
+    $planEndDate = session('plan_end_date');
+    $daysLeft = $planEndDate ? max(0, Carbon::today()->diffInDays(Carbon::parse($planEndDate), false)) : 0;
+    $progressPercent = ($planDuration > 0) ? (($planDuration - $daysLeft) / $planDuration) * 100 : 0;
+
+    // Handle plan duration submission
+    if ($request->has('plan_duration') && $request->filled('plan_duration')) {
+        $planDuration = (int)$request->input('plan_duration');
+        if ($planDuration > 0) {
+            $planEndDate = Carbon::today()->addDays($planDuration);
+            session([
+                'plan_duration' => $planDuration,
+                'plan_end_date' => $planEndDate,
+            ]);
+            $daysLeft = $planDuration;
+            $progressPercent = 0;
+        }
     }
 
-    $progress = $user->progress()->firstOrCreate([
-        'user_id' => $user->id,
-    ], [
-        'plan_id' => (string) Str::ulid(),
-        'days_left' => 30,
-        'progress' => 0,
-        'points' => 0,
-        'current_level' => 'مبتدئ',
-        'points_to_next_level' => 150,
-        'plan_duration' => 30,
-        'plan_end_date' => Carbon::now()->addDays(30)->toDateString(),
-        'domains_completed' => 0,
-        'domains_total' => Domain::count(),
-        'lessons_completed' => 0,
-        'lessons_total' => Slide::count(),
-        'exams_completed' => 0,
-        'exams_total' => Exam::count(),
-        'questions_completed' => 0,
-        'questions_total' => 200,
-        'lessons_milestone' => 0,
-        'questions_milestone' => 0,
-        'streak_days' => 0,
-    ]);
+    // Calculate points based on activities
+    // 1. Completing a slide = 50 points
+    $completedLessons = SlideAttempt::where('user_id', $user->id)
+                                   ->whereNotNull('end_date')
+                                   ->count();
+    $lessonPoints = $completedLessons * 50;
 
-    // تحديث الإنجازات والإحصائيات
-    $progress->lessons_completed = UserProgress::where('user_id', $user->id)->whereNotNull('slide_id')->where('status', 'completed')->count();
-    $progress->exams_completed = UserProgress::where('user_id', $user->id)->whereNotNull('exam_id')->where('status', 'completed')->count();
-    $progress->questions_completed = TestAttempt::where('user_id', $user->id)->count() + QuizAttempt::where('user_id', $user->id)->count();
+    // 2. Completing an exam = 100 points
+    $completedExams = ExamAttempt::where('user_id', $user->id)
+                                 ->whereNotNull('ended_at')
+                                 ->count();
+    $examPoints = $completedExams * 100;
 
-    // المجالات المكتملة
-    $domains = Domain::with('slides')->get();
-    $progress->domains_completed = $domains->filter(function ($domain) use ($user) {
-        $slides = $domain->slides;
-        $completed = UserProgress::where('user_id', $user->id)->whereIn('slide_id', $slides->pluck('id'))->where('status', 'completed')->count();
-        return $completed == $slides->count();
-    })->count();
+    // 3. Solving 20 questions = 75 points
+    $totalQuestions = QuizAttempt::where('user_id', $user->id)->sum('score') +
+                      TestAttempt::where('user_id', $user->id)->sum('score');
+    $questionPoints = floor($totalQuestions / 20) * 75;
 
-    // حساب النقاط
-    $totalPoints = 0;
-    $totalPoints += $progress->lessons_completed * 50;
-    $totalPoints += $progress->exams_completed * 100;
-    $totalPoints += floor($progress->questions_completed / 20) * 75;
-    $totalPoints += Achievement::where('user_id', $user->id)->count() * 30;
+    // 4. Achieving a milestone = 30 points
+    $completedAchievements = Achievement::where('user_id', $user->id)->count();
+    $achievementPoints = $completedAchievements * 30;
 
-    // أيام الاستمرارية
-    $activityDates = UserProgress::where('user_id', $user->id)
-        ->where('status', 'completed')
-        ->pluck('completed_at')
-        ->map(fn($date) => Carbon::parse($date)->startOfDay())
-        ->unique()
-        ->sort()
-        ->values();
+    // 5. Daily learning streak (3 days) = 20 points
+    $activityDates = SlideAttempt::where('user_id', $user->id)
+                                ->whereNotNull('end_date')
+                                ->select('end_date')
+                                ->get()
+                                ->merge(
+                                    ExamAttempt::where('user_id', $user->id)
+                                               ->whereNotNull('ended_at')
+                                               ->select('ended_at as end_date')
+                                               ->get()
+                                )
+                                ->merge(
+                                    QuizAttempt::where('user_id', $user->id)
+                                               ->whereNotNull('created_at')
+                                               ->select('created_at as end_date')
+                                               ->get()
+                                )
+                                ->merge(
+                                    TestAttempt::where('user_id', $user->id)
+                                               ->whereNotNull('created_at')
+                                               ->select('created_at as end_date')
+                                               ->get()
+                                )
+                                ->map(function ($activity) {
+                                    return Carbon::parse($activity->end_date)->startOfDay();
+                                })
+                                ->unique()
+                                ->sort()
+                                ->values();
 
     $streakDays = 0;
-    if ($activityDates->isNotEmpty()) {
-        $currentStreak = 1;
-        $today = Carbon::today();
-        $yesterday = Carbon::yesterday();
-        $lastDate = $activityDates->last();
+    $currentStreak = 0;
+    $prevDate = null;
 
-        if ($lastDate->equalTo($today) || $lastDate->equalTo($yesterday)) {
-            for ($i = $activityDates->count() - 2; $i >= 0; $i--) {
-                $curr = $activityDates[$i];
-                $next = $activityDates[$i + 1];
-                if ($curr->diffInDays($next) == 1) {
-                    $currentStreak++;
-                } else {
-                    break;
-                }
-            }
-            $streakDays = $currentStreak;
+    foreach ($activityDates as $date) {
+        if ($prevDate && $date->diffInDays($prevDate) == 1) {
+            $currentStreak++;
+        } else {
+            $currentStreak = 1; // Reset if streak breaks
         }
+        $prevDate = $date;
+        $streakDays = max($streakDays, $currentStreak);
     }
+    $streakPoints = floor($streakDays / 3) * 20;
 
-    $totalPoints += floor($streakDays / 3) * 20;
+    // Total points
+    $totalPoints = $lessonPoints + $examPoints + $questionPoints + $achievementPoints + $streakPoints;
 
-    // ✅ المستويات
-    $levels = [
-        ['name' => 'مبتدئ', 'min_points' => 0],
-        ['name' => 'متوسط', 'min_points' => 150],
-        ['name' => 'محترف', 'min_points' => 300],
-        ['name' => 'خبير', 'min_points' => 500],
-        ['name' => 'أسطورة', 'min_points' => 800],
+    // Determine level based on points
+    $levels = ['Beginner', 'Intermediate', 'Advanced', 'Expert', 'Legend'];
+    $pointsMap = [
+        'Beginner' => 0,
+        'Intermediate' => 150,
+        'Advanced' => 300,
+        'Expert' => 500,
+        'Legend' => 800,
     ];
 
-    $currentLevel = 'مبتدئ';
+    $currentLevel = 'Beginner';
     $nextLevel = null;
-    $pointsToNext = null;
+    $pointsToNext = 0;
 
-    foreach ($levels as $index => $level) {
-        if ($totalPoints >= $level['min_points']) {
-            $currentLevel = $level['name'];
-            if (isset($levels[$index + 1])) {
-                $nextLevel = $levels[$index + 1]['name'];
-                $pointsToNext = $levels[$index + 1]['min_points'] - $totalPoints;
-            }
+    foreach ($pointsMap as $level => $threshold) {
+        if ($totalPoints >= $threshold) {
+            $currentLevel = $level;
+        } else {
+            $nextLevel = $level;
+            $pointsToNext = $threshold - $totalPoints;
+            break;
         }
     }
 
-    $progress->points = $totalPoints;
-    $progress->streak_days = $streakDays;
-    $progress->current_level = $currentLevel;
-    $progress->points_to_next_level = $pointsToNext ?? 0;
+    // Fetch completed domains and chapters
+    $allDomains = Domain::count();
+    $completedDomains = Domain::whereHas('slides', function ($query) use ($user) {
+        $query->whereHas('slideAttempts', function ($q) use ($user) {
+            $q->where('user_id', $user->id)->whereNotNull('end_date');
+        });
+    })->get()->filter(function ($domain) use ($user) {
+        $totalSlides = $domain->slides()->count();
+        $completedSlides = $domain->slides()->whereHas('slideAttempts', function ($q) use ($user) {
+            $q->where('user_id', $user->id)->whereNotNull('end_date');
+        })->count();
+        return $totalSlides > 0 && $totalSlides === $completedSlides;
+    })->count();
 
-    // باقي الحسابات
-    $progress->days_left = max(0, Carbon::parse($progress->plan_end_date)->diffInDays(Carbon::now(), false));
-    $totalTasks = $progress->lessons_total + $progress->exams_total;
-    $completedTasks = $progress->lessons_completed + $progress->exams_completed;
-    $progress->progress = $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100) : 0;
-    $progress->save();
+    $allChapters = Chapter::count();
+    $completedChapters = Chapter::whereHas('slides', function ($query) use ($user) {
+        $query->whereHas('slideAttempts', function ($q) use ($user) {
+            $q->where('user_id', $user->id)->whereNotNull('end_date');
+        });
+    })->get()->filter(function ($chapter) use ($user) {
+        $totalSlides = $chapter->slides()->count();
+        $completedSlides = $chapter->slides()->whereHas('slideAttempts', function ($q) use ($user) {
+            $q->where('user_id', $user->id)->whereNotNull('end_date');
+        })->count();
+        return $totalSlides > 0 && $totalSlides === $completedSlides;
+    })->count();
 
-    return view('student.Achievement', compact('user', 'progress', 'totalPoints', 'streakDays', 'nextLevel', 'pointsToNext'));
+    // Check if all content is completed
+    $allContentCompleted = ($allDomains > 0 && $allChapters > 0 && $completedDomains === $allDomains && $completedChapters === $allChapters);
+    
+    $completedQuestions = QuizAttempt::where('user_id', $user->id)->sum('score') +
+                          TestAttempt::where('user_id', $user->id)->sum('score');
+
+    // Pass data to the view
+    return view('student.Achievement', compact(
+        'user',
+        'progress',
+        'totalPoints',
+        'completedDomains',
+        'completedChapters',
+        'completedExams',
+        'completedQuestions',
+        'streakDays',
+        'currentLevel',
+        'nextLevel',
+        'pointsToNext',
+        'allContentCompleted',
+        'planDuration',
+        'planEndDate',
+        'daysLeft',
+        'progressPercent'
+    ));
 }
 }
