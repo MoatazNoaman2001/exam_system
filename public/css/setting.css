@@ -276,7 +276,10 @@ input:checked + .slider:before {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* التكيف مع الشاشات الصغيرة */
+
+.modal-backdrop {
+    display: none !important;
+}
 @media (max-width: 576px) {
     .settings-container {
         padding: 1.5rem 1rem;

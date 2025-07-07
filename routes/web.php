@@ -87,7 +87,6 @@ Route::get('/locale-test', function() {
     ];
 });
 
-
 Route::get("/", [WelcomeController::class , "root"])->name('welcome');
 
 

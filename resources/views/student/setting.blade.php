@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="{{ asset('css/setting.css') }}">
 
 <div class="settings-container">
-    <!-- قسم معلومات المستخدم -->
     <div class="profile-section text-center mb-5">
         <div class="avatar-container">
             <img src="{{ $user->image ? asset('storage/avatars/' . $user->image) : asset('images/default-avatar.png') }}" 
@@ -20,7 +19,6 @@
         <p class="user-email text-muted">{{ auth()->user()->email }}</p>
     </div>
 
-    <!-- كارت الإنجازات -->
     <div class="settings-card achievement-card mb-4">
         <div class="card-header">
             <i class="fas fa-trophy card-icon"></i>
@@ -44,7 +42,6 @@
         </div>
     </div>
 
-    <!-- كارت إعدادات الحساب -->
     <div class="settings-card account-card mb-4">
         <div class="card-header">
             <i class="fas fa-user-cog card-icon"></i>
@@ -65,17 +62,18 @@
                 </div>
                 <i class="fas fa-chevron-left item-arrow"></i>
             </a>
-            <div class="settings-item delete-item" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <a href="{{ route('delete-account') }}" class="settings-item delete-item" data-bs-toggle="modal" data-bs-target="#deleteModal">
                 <div class="item-content">
                     <i class="fas fa-trash-alt item-icon"></i>
                     <span>{{ __('lang.delete_account') }}</span>
                 </div>
                 <i class="fas fa-chevron-left item-arrow"></i>
-            </div>
+                </a>
+           
+
         </div>
     </div>
 
-    <!-- كارت إعدادات التطبيق -->
     <div class="settings-card app-card mb-4">
         <div class="card-header">
             <i class="fas fa-cog card-icon"></i>
@@ -109,7 +107,6 @@
         </div>
     </div>
 
-    <!-- كارت الدعم -->
     <div class="settings-card support-card mb-4">
         <div class="card-header">
             <i class="fas fa-headset card-icon"></i>
@@ -147,12 +144,52 @@
         </div>
     </div>
 
-    <!-- زر تسجيل الخروج -->
     <button class="logout-btn" data-bs-toggle="modal" data-bs-target="#logoutModal">
         <i class="fas fa-sign-out-alt"></i>
         {{ __('lang.logout') }}
     </button>
 
-    <!-- المودالات -->
+<!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="logoutModalLabel">{{ __('lang.confirm_logout') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('lang.close') }}"></button>
+                </div>
+                <div class="modal-body text-center py-3">
+                    <p>{{ __('lang.logout_confirmation') }}</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('lang.cancel') }}</button>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">{{ __('lang.yes_logout') }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+ <!-- Delete Account Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="deleteModalLabel">{{ __('lang.confirm_delete_account') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('lang.close') }}"></button>
+                </div>
+                <div class="modal-body text-center py-3">
+                    <p>{{ __('lang.delete_account_warning') }}</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('lang.cancel') }}</button>
+                    <button type="submit" form="deleteAccountForm" class="btn btn-danger">{{ __('lang.yes_delete_account') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
