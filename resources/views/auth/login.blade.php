@@ -18,7 +18,7 @@
                         </div>
 
                         <!-- Login Card -->
-                        <div class="col-lg-5 p-5 d-flex flex-column justify-content-center">
+                        <div class="col-lg-4 p-5 d-flex flex-column justify-content-center">
                             @if ($errors->any())
                             <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
                                 <i class="fas fa-exclamation-circle {{ app()->getLocale() === 'ar' ? 'ms-2' : 'me-2' }}"></i>
@@ -86,7 +86,7 @@
                         </div>
 
                         <!-- Login Image -->
-                        <div class="col-lg-3 d-none d-lg-block position-relative">
+                        <div class="col-lg-4 d-none d-lg-block position-relative">
                             <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="PMP Exam Preparation" class="w-100 h-100 object-fit-cover">
                             <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"></div>
                         </div>

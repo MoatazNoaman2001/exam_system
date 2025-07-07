@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exam;
+use App\Models\Plan;
 use App\Models\Slide;
 use App\Models\Domain;
 use App\Models\Chapter;
+use App\Models\ExamAttempt;
 use App\Models\SlideAttempt;
-use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -53,7 +54,7 @@ class SectionsController extends Controller
 
         // Fetch exams data
         $totalExams = Exam::count();
-        $achievedExams = Exam::whereHas('examAttempts', function ($query) use ($user) {
+        $achievedExams = Exam::whereHas('attempts', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })->count();
 
@@ -429,6 +430,7 @@ class SectionsController extends Controller
                 'id' => $slide->id,
                 'title' => $slide->text,
                 'chapter_id' => $slide->chapter_id,
+                'domain_id' => $slide->domain_id,
             ],
             'pdf_url' => $pdfUrl,
         ]);  
@@ -492,9 +494,8 @@ class SectionsController extends Controller
     public function showPlanSelection()
     {
         $user = auth()->user();
-        
         // Check if user already has a plan
-        if ($user->progress && $user->progress->plan_duration) {
+        if (Plan::where('user_id' , $user->id)->exists()) {
             return redirect()->route('student.exams.index');
         }
         
@@ -509,13 +510,53 @@ class SectionsController extends Controller
         $user = auth()->user();
         
         $request->validate([
-            'plan_type' => 'required|in:experienced,beginner,custom',
+            'plan_type' => 'required|in:6_weeks,10_weeks,custom',
             'start_date' => 'required_if:plan_type,custom|date|after_or_equal:today',
             'end_date' => 'required_if:plan_type,custom|date|after:start_date',
         ]);
 
+        
+
+        $startDate = now();
+        $endDate = null;
+        $planDuration = 0;
+
+        switch ($request->plan_type) {
+            case '10_weeks':
+                // 8-10 weeks for experienced learners
+                $planDuration = 63; // 9 weeks
+                $endDate = $startDate->copy()->addWeeks(9);
+                break;
+                
+            case '6_weeks':
+                // 6-8 weeks for beginners
+                $planDuration = 49; // 7 weeks
+                $endDate = $startDate->copy()->addWeeks(7);
+                break;
+                
+            case 'custom':
+                $startDate = \Carbon\Carbon::parse($request->start_date);
+                $endDate = \Carbon\Carbon::parse($request->end_date);
+                $planDuration = $startDate->diffInDays($endDate);
+                break;
+        }
+
+        if (Plan::where('user_id' , $user->id)->exists()){
+            return redirect()->route('student.plan.selection')
+                ->with('error', __('plan_selection.plan_already_exists'));
+        }
+
+        // Create a plan record
+        $plan = Plan::create([
+            'user_id' => $user->id,
+            'plan_type' => $request->plan_type,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+        ]);
+
         // Get or create user progress
         $progress = $user->progress ?? $user->progress()->create([
+            'plan_id' => $plan->id,
             'points' => 0,
             'current_level' => 'مبتدئ',
             'points_to_next_level' => 100,
@@ -536,43 +577,11 @@ class SectionsController extends Controller
             'streak_days' => 0,
         ]);
 
-        $startDate = now();
-        $endDate = null;
-        $planDuration = 0;
-
-        switch ($request->plan_type) {
-            case 'experienced':
-                // 6-8 weeks for experienced learners
-                $planDuration = 49; // 7 weeks
-                $endDate = $startDate->copy()->addWeeks(7);
-                break;
-                
-            case 'beginner':
-                // 8-10 weeks for beginners
-                $planDuration = 63; // 9 weeks
-                $endDate = $startDate->copy()->addWeeks(9);
-                break;
-                
-            case 'custom':
-                $startDate = \Carbon\Carbon::parse($request->start_date);
-                $endDate = \Carbon\Carbon::parse($request->end_date);
-                $planDuration = $startDate->diffInDays($endDate);
-                break;
-        }
-
-        // Update user progress with plan details
-        $progress->update([
+         // Update user progress with plan details
+         $progress->update([
             'plan_duration' => $planDuration,
             'plan_end_date' => $endDate,
             'start_date' => $startDate,
-        ]);
-
-        // Create a plan record
-        $plan = Plan::create([
-            'user_id' => $user->id,
-            'plan_type' => $request->plan_type,
-            'start_date' => $startDate,
-            'end_date' => $endDate,
         ]);
 
         return redirect()->route('student.exams.index')
@@ -587,7 +596,7 @@ class SectionsController extends Controller
         $user = auth()->user();
         
         // Check if user has a plan
-        if (!$user->progress || !$user->progress->plan_duration) {
+        if (!Plan::where('user_id' , $user->id)->exists()) {
             return redirect()->route('student.plan.selection');
         }
         
@@ -600,19 +609,41 @@ class SectionsController extends Controller
     }
 
     /**
-     * Take an exam
+     * Show exam details
      */
     public function takeExam(Exam $exam)
     {
         $user = auth()->user();
         
         // Check if user has a plan
-        if (!$user->progress || !$user->progress->plan_duration) {
+        if (!Plan::where('user_id', $user->id)->exists()) {
             return redirect()->route('student.plan.selection');
         }
         
-        // For now, just redirect back with a message
-        return redirect()->route('student.exams.index')
-            ->with('info', __('lang.exam_feature_coming_soon'));
+        // Load exam with questions and answers
+        $exam->load(['examQuestions' => function($query) {
+            $query->with('answers');
+        }]);
+        
+        // Get user's previous attempts for this exam
+        $previousAttempts = ExamAttempt::where('user_id', $user->id)
+            ->where('exam_id', $exam->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        // Calculate exam statistics
+        $totalQuestions = $exam->examQuestions->count();
+        $totalDuration = $exam->time ?? ($totalQuestions * 2); // 2 minutes per question default
+        $userAttempts = $previousAttempts->count();
+        $bestScore = $previousAttempts->max('score') ?? 0;
+        
+        return view('student.exams.details', compact(
+            'exam', 
+            'totalQuestions', 
+            'totalDuration', 
+            'userAttempts', 
+            'bestScore',
+            'previousAttempts'
+        ));
     }
 }

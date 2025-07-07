@@ -22,6 +22,12 @@ class Exam extends Model
         'is_completed',
     ];
 
+    protected $casts = [
+        'is_completed' => 'boolean',
+        'time' => 'integer',
+        'number_of_questions' => 'integer'
+    ];
+
     public function questions()
     {
         return $this->hasMany(ExamQuestions::class);
@@ -32,8 +38,36 @@ class Exam extends Model
         return $this->hasMany(ExamQuestions::class);
     }
 
-    public function examAttempts()
+    public function attempts()
     {
         return $this->hasMany(ExamAttempt::class);
+    }
+    public function sessions()
+    {
+        return $this->hasMany(ExamSession::class);
+    }
+
+    public function userSessions($userId)
+    {
+        return $this->sessions()->where('user_id', $userId);
+    }
+
+    public function getActiveSession($userId)
+    {
+        return $this->sessions()
+            ->where('user_id', $userId)
+            ->whereIn('status', ['in_progress', 'paused'])
+            ->first();
+    }
+
+
+    public function getTitleAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->attributes['text-ar'] : $this->text;
+    }
+
+    public function getDescriptionLocalizedAttribute()
+    {
+        return app()->getLocale() === 'ar' ? $this->attributes['description-ar'] : $this->description;
     }
 }

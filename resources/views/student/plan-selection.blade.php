@@ -47,9 +47,9 @@
                     @csrf
                     
                     <div class="row g-4">
-                        <!-- Experienced Learners Plan -->
+                        <!-- 10 Weeks Plan (Experienced) -->
                         <div class="col-md-6">
-                            <div class="plan-option-card" data-plan="experienced">
+                            <div class="plan-option-card" data-plan="10_weeks">
                                 <div class="plan-option-header">
                                     <div class="plan-option-icon">
                                         <i class="fas fa-rocket"></i>
@@ -61,7 +61,7 @@
                                 <div class="plan-option-details">
                                     <div class="plan-duration">
                                         <i class="fas fa-calendar"></i>
-                                        <span>{{ __('lang.6_8_weeks') }}</span>
+                                        <span>{{ __('lang.8_10_weeks') }}</span>
                                     </div>
                                     <div class="plan-features">
                                         <div class="feature-item">
@@ -80,17 +80,17 @@
                                 </div>
                                 
                                 <div class="plan-option-footer">
-                                    <input type="radio" name="plan_type" value="experienced" id="experienced" class="plan-radio">
-                                    <label for="experienced" class="plan-radio-label">
+                                    <input type="radio" name="plan_type" value="10_weeks" id="10_weeks" class="plan-radio">
+                                    <label for="10_weeks" class="plan-radio-label">
                                         {{ __('lang.select_plan') }}
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Beginners Plan -->
+                        <!-- 6 Weeks Plan (Beginner) -->
                         <div class="col-md-6">
-                            <div class="plan-option-card" data-plan="beginner">
+                            <div class="plan-option-card" data-plan="6_weeks">
                                 <div class="plan-option-header">
                                     <div class="plan-option-icon">
                                         <i class="fas fa-seedling"></i>
@@ -102,7 +102,7 @@
                                 <div class="plan-option-details">
                                     <div class="plan-duration">
                                         <i class="fas fa-calendar"></i>
-                                        <span>{{ __('lang.8_10_weeks') }}</span>
+                                        <span>{{ __('lang.6_8_weeks') }}</span>
                                     </div>
                                     <div class="plan-features">
                                         <div class="feature-item">
@@ -121,8 +121,8 @@
                                 </div>
                                 
                                 <div class="plan-option-footer">
-                                    <input type="radio" name="plan_type" value="beginner" id="beginner" class="plan-radio">
-                                    <label for="beginner" class="plan-radio-label">
+                                    <input type="radio" name="plan_type" value="6_weeks" id="6_weeks" class="plan-radio">
+                                    <label for="6_weeks" class="plan-radio-label">
                                         {{ __('lang.select_plan') }}
                                     </label>
                                 </div>

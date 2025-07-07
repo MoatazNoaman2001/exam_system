@@ -33,7 +33,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tests', function (Blueprint $table) {
-            $table->string('question')->after('id');
+            $table->string('question')->nullable()->after('id');
             $table->dropIndex(['slide_id', 'created_at']);
         });
 

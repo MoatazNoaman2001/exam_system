@@ -192,10 +192,11 @@
         <div class="slide-header">
             <h1 class="slide-title">{{ __('Slide') }}: {{ __($slide['title']) }}</h1>
             <div class="slide-actions">
-                {{-- <a href="{{ route('student.chapter.slides', $slide['chapter_id']) }}" class="action-btn back">
+                {{-- {{dd($slide)}} --}}
+                <a href="{{ $slide['chapter_id'] !== null ? route('student.chapter.slides', $slide['chapter_id']) : route('student.domain.slides', $slide['domain_id']) }}" class="action-btn back">
                     <i class="fas fa-arrow-{{ app()->getLocale() === 'ar' ? 'right' : 'left' }}"></i>
                     {{ __('Back to Slides') }}
-                </a> --}}
+                </a>
                 <a href="{{ $pdf_url }}" download class="action-btn download">
                     <i class="fas fa-download"></i>
                     {{ __('Download PDF') }}

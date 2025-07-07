@@ -37,13 +37,7 @@
             background-color: var(--edu-gray-50);
         }
 
-        .education-container {
-            background: white;
-            border-radius: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            padding: 2.5rem;
-            max-width: 1200px;
-        }
+
 
         .education-header {
             text-align: center;
@@ -219,7 +213,6 @@
         @media (max-width: 768px) {
             .education-container {
                 margin: 1rem;
-                padding: 1.5rem;
                 border-radius: 1rem;
             }
 
