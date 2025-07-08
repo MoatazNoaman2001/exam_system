@@ -106,7 +106,6 @@ class ExamController extends Controller
 
     public function submitAnswer(Request $request, $sessionId)
     {
-        dd($request->all());
         $validator = Validator::make($request->all(), [
             'question_id' => 'required|exists:exam_questions,id',
             'selected_answers' => 'required|array',
@@ -121,34 +120,27 @@ class ExamController extends Controller
             ], 422);
         }
 
-        try {
-            $result = $this->examService->submitAnswer(
-                $sessionId,
-                $request->question_id,
-                $request->selected_answers,
-                $request->time_spent
-            );
+        $result = $this->examService->submitAnswer(
+            $sessionId,
+            $request->question_id,
+            $request->selected_answers,
+            $request->time_spent
+        );
 
-            if ($result['status'] === 'expired') {
-                return response()->json([
-                    'success' => false,
-                    'message' => __('lang.exam_time_expired'),
-                    'redirect' => route('student.exams.result', $sessionId)
-                ]);
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => __('lang.answer_submitted_successfully'),
-                'session' => $result['session']
-            ]);
-
-        } catch (\Exception $e) {
+        if ($result['status'] === 'expired') {
             return response()->json([
                 'success' => false,
-                'message' => __('lang.error_submitting_answer')
-            ], 500);
+                'message' => __('lang.exam_time_expired'),
+                'redirect' => route('student.exams.result', $sessionId)
+            ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => __('lang.answer_submitted_successfully'),
+            'session' => $result['session']
+        ]);
+
     }
 
     public function navigate(Request $request, $sessionId)
@@ -265,9 +257,73 @@ class ExamController extends Controller
                 ->with('error', __('lang.exam_not_completed'));
         }
 
-        $results = $this->examService->getDetailedResults($sessionId);
+        $serviceResults = $this->examService->getDetailedResults($sessionId);
 
-        return view('student.exams.result', compact('session', 'results'));
+        // Restructure the data to match the Blade template expectations
+        $results = [
+            'results' => $serviceResults['results'], // The question-by-question results
+            'statistics' => $serviceResults['statistics'] // The overall statistics
+        ];
+
+        // Optional: Generate recommendations based on performance
+        $recommendations = $this->generateRecommendations($serviceResults['statistics']);
+
+        return view('student.exams.result', compact('session', 'results', 'recommendations'));
+    }
+
+    private function generateRecommendations($statistics)
+    {
+        $recommendations = [];
+        $score = floatval($statistics['final_score']);
+        $accuracy = $statistics['accuracy_percentage'];
+        $avgTime = $statistics['average_time_per_question'];
+    
+        // Performance-based recommendations
+        if ($score >= 85) {
+            $recommendations[] = [
+                'type' => 'success',
+                'title' => __('lang.excellent_work'),
+                'message' => __('lang.excellent_performance_message')
+            ];
+        } elseif ($score >= 70) {
+            $recommendations[] = [
+                'type' => 'success',
+                'title' => __('lang.good_job'),
+                'message' => __('lang.good_performance_message')
+            ];
+        } elseif ($score >= 60) {
+            $recommendations[] = [
+                'type' => 'warning',
+                'title' => __('lang.room_for_improvement'),
+                'message' => __('lang.improvement_needed_message')
+            ];
+        } else {
+            $recommendations[] = [
+                'type' => 'danger',
+                'title' => __('lang.needs_more_study'),
+                'message' => __('lang.failed_performance_message')
+            ];
+        }
+    
+        // Time-based recommendations
+        if ($avgTime > 120) { // More than 2 minutes per question
+            $recommendations[] = [
+                'type' => 'info',
+                'title' => __('lang.time_management'),
+                'message' => __('lang.time_management_message')
+            ];
+        }
+    
+        // Accuracy-based recommendations
+        if ($statistics['unanswered_questions'] > 0) {
+            $recommendations[] = [
+                'type' => 'warning',
+                'title' => __('lang.complete_all_questions'),
+                'message' => __('lang.unanswered_questions_message')
+            ];
+        }
+    
+        return $recommendations;
     }
 
     public function detailedReport($sessionId)

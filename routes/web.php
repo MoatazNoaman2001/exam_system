@@ -15,6 +15,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\IntroController;
 use App\Http\Controllers\ForgetController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\SplashController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ProfileController;
@@ -30,8 +31,8 @@ use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\certificationController;
-use App\Http\Controllers\ChangPasswordController;
 
+use App\Http\Controllers\ChangPasswordController;
 use App\Http\Controllers\CompletedActionController;
 use App\Http\Controllers\AchievementPointController;
 use App\Http\Controllers\VerificationCodeController;
@@ -42,16 +43,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 
 
 App::setLocale('ar');
-Route::get('/lang/{locale}' , function ($lang) {
-    if (!in_array($lang, ['en', 'ar'])) {
-        abort(400);
-    }
+Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
 
-    App::setLocale($lang);
-    Session::put('locale', $lang);
-
-    return redirect()->back();
-})->name("locale.set");
 
 
 Route::get('/set-locale/{locale}', function ($locale) {
