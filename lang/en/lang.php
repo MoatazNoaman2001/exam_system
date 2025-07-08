@@ -602,6 +602,74 @@ return [
     'filter_by' => 'Filter by',
     'apply_filter' => 'Apply filter',
     'clear_filter' => 'Clear filter',
+
+    'exam_results' => 'Exam Results',
+    'final_score' => 'Final Score',
+    'failed' => 'Failed',
+    'excellent_performance' => 'Excellent Performance',
+    'good_performance' => 'Good Performance', 
+    'needs_improvement' => 'Needs Improvement',
+    'completed_on' => 'Completed on',
+    'total_questions' => 'Total Questions',
+    'correct_answers' => 'Correct Answers',
+    'incorrect_answers' => 'Incorrect Answers',
+    'unanswered_questions' => 'Unanswered Questions',
+    'time_spent' => 'Time Spent',
+    'accuracy' => 'Accuracy',
+    'recommendations' => 'Recommendations',
+    'detailed_results' => 'Detailed Results',
+    'question' => 'Question',
+    'correct' => 'Correct',
+    'incorrect' => 'Incorrect',
+    'not_answered' => 'Not Answered',
+    'answers' => 'Answers',
+    'correct_answer' => 'Correct Answer',
+    'your_answer' => 'Your Answer',
+    'time_spent_on_question' => 'Time spent on this question',
+    'back_to_exams' => 'Back to Exams',
+    'detailed_report' => 'Detailed Report',
+    'review_answers' => 'Review Answers',
+    'retake_exam' => 'Retake Exam',
+    'scored' => 'Scored',
+    'in_exam' => 'in exam',
+    'results_copied_to_clipboard' => 'Results copied to clipboard',
+
+    // Recommendation Messages
+    'excellent_work' => 'Excellent Work!',
+    'excellent_performance_message' => 'Outstanding performance! You have demonstrated excellent mastery of the subject matter. Keep up the great work and continue to challenge yourself with advanced topics.',
+
+    'good_job' => 'Good Job!',
+    'good_performance_message' => 'Well done! You have shown good understanding of the material. Consider reviewing the topics you missed to achieve even better results next time.',
+
+    'room_for_improvement' => 'Room for Improvement',
+    'improvement_needed_message' => 'You\'re on the right track, but there\'s room for improvement. Focus on studying the areas where you struggled and consider seeking additional help or resources.',
+
+    'needs_more_study' => 'Needs More Study',
+    'failed_performance_message' => 'This exam indicates that more preparation is needed. Consider reviewing the entire syllabus, seeking help from instructors, and practicing with additional materials before retaking.',
+
+    'time_management' => 'Time Management',
+    'time_management_message' => 'You spent more time than average on questions. Practice time management techniques and consider doing timed practice sessions to improve your speed while maintaining accuracy.',
+
+    'complete_all_questions' => 'Complete All Questions',
+    'unanswered_questions_message' => 'You left some questions unanswered. Even if you\'re unsure, it\'s better to make an educated guess than to leave questions blank, as there might be partial credit.',
+
+    'speed_improvement' => 'Speed Improvement Needed',
+    'speed_improvement_message' => 'Consider working on your reading speed and question comprehension to manage time better during exams.',
+
+    'accuracy_focus' => 'Focus on Accuracy',
+    'accuracy_focus_message' => 'While you completed the exam quickly, focus on accuracy. Take time to read questions carefully and double-check your answers.',
+
+    'consistent_performance' => 'Consistent Performance',
+    'consistent_performance_message' => 'You showed consistent performance across different question types. This indicates good overall preparation.',
+
+    'review_incorrect' => 'Review Incorrect Answers',
+    'review_incorrect_message' => 'Pay special attention to the questions you got wrong. Understanding your mistakes is key to improvement.',
+
+    'practice_more' => 'Practice More',
+    'practice_more_message' => 'Regular practice with similar questions will help improve your performance and confidence.',
+
+    'seek_help' => 'Seek Additional Help',
+    'seek_help_message' => 'Consider reaching out to instructors, tutors, or study groups for additional support in challenging areas.',
     
 ];
 

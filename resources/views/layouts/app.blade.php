@@ -1114,6 +1114,227 @@
                 self_align: left;
             }
         }
+
+        .language-switcher-link {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 0.5rem 0;
+            min-width: 120px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @if(app()->getLocale() == 'ar')
+        .language-dropdown {
+            left: auto;
+            right: 100%;
+            transform: translateX(10px);
+        }
+        @endif
+
+        /* Show dropdown when active */
+        .language-switcher-link.active .language-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        @if(app()->getLocale() == 'ar')
+        .language-switcher-link.active .language-dropdown {
+            transform: translateX(0);
+        }
+        @endif
+
+        .language-dropdown .dropdown-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .language-dropdown .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .language-dropdown .dropdown-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .language-dropdown .dropdown-item.active {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Collapsed state for language switcher */
+        .student-sidebar.collapsed .language-dropdown {
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%) translateX(-10px);
+        }
+
+        @if(app()->getLocale() == 'ar')
+        .student-sidebar.collapsed .language-dropdown {
+            left: auto;
+            right: 100%;
+            transform: translateY(-50%) translateX(10px);
+        }
+        @endif
+
+        .student-sidebar.collapsed .language-switcher-link.active .language-dropdown {
+            transform: translateY(-50%) translateX(0);
+        }
+
+        @if(app()->getLocale() == 'ar')
+        .student-sidebar.collapsed .language-switcher-link.active .language-dropdown {
+            transform: translateY(-50%) translateX(0);
+        }
+        @endif
+
+        /* Arrow indicator for language menu */
+        .language-switcher-link::before {
+            content: '';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 4px solid currentColor;
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+
+        @if(app()->getLocale() == 'ar')
+        .language-switcher-link::before {
+            right: auto;
+            left: 1rem;
+        }
+        @endif
+
+        .language-switcher-link.active::before {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        /* Hide arrow when collapsed */
+        .student-sidebar:not(.expanded) .language-switcher-link::before {
+            display: none;
+        }
+
+        /* Mobile language dropdown adjustments */
+        @media (max-width: 991.98px) {
+            .language-dropdown {
+                position: fixed;
+                left: 50% !important;
+                right: auto !important;
+                top: auto !important;
+                bottom: 100px;
+                transform: translateX(-50%) translateY(10px) !important;
+                min-width: 140px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+                border-radius: 12px;
+            }
+
+            .language-switcher-link.active .language-dropdown {
+                transform: translateX(-50%) translateY(0) !important;
+            }
+
+            .language-dropdown .dropdown-item {
+                padding: 1rem;
+                text-align: center;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+    .mobile-language-dropdown {
+        position: fixed;
+        left: 50% !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: 80px;
+        transform: translateX(-50%) translateY(10px) !important;
+        min-width: 160px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        padding: 0.5rem 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 2001;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .mobile-language-dropdown.show,
+    .language-switcher-mobile.active .mobile-language-dropdown {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateX(-50%) translateY(0) !important;
+    }
+    
+    .mobile-dropdown-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        color: #333;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        font-size: 1rem;
+        text-align: center;
+        justify-content: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .mobile-dropdown-item:last-child {
+        border-bottom: none;
+    }
+    
+    .mobile-dropdown-item:hover {
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+    }
+    
+    .mobile-dropdown-item.active {
+        background: #667eea;
+        color: white;
+        font-weight: 600;
+    }
+    
+    .mobile-dropdown-item i {
+        margin-right: 0.5rem;
+        width: 16px;
+        text-align: center;
+    }
+    
+    /* Ensure mobile bottom nav icons work properly */
+    .mobile-bottom-nav .language-switcher-mobile {
+        position: relative;
+        cursor: pointer;
+    }
+}
     </style>
 </head>
 <body>
@@ -1288,74 +1509,73 @@
                     <h3 class="sidebar-title">{{__('lang.student_panel')}}</h3>
                     <p class="sidebar-subtitle">مرحباً {{ Auth::user()->username }}</p>
                 </div>
-                
                 <div class="sidebar-menu">
-                    <a href="{{ route('student.sections') }}" class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}" data-title="{{ __('lang.sections') }}">
-                        <i class="fas fa-book"></i>
-                        <span class="link-text">{{ __('lang.sections') }}</span>
-                    </a>
-                    <a href="{{ route('student.achievements') }}" class="sidebar-link {{ request()->routeIs('student.achievements*') ? 'active' : '' }}" data-title="{{ __('lang.achievements') }}">
-                        <i class="fas fa-trophy"></i>
-                        <span class="link-text">{{ __('lang.achievements') }}</span>
-                    </a>
-                    <a href="{{ route('student.account') }}" class="sidebar-link {{ request()->routeIs('student.account*') ? 'active' : '' }}" data-title="{{ __('lang.my_account') }}">
-                        <i class="fas fa-user-cog"></i>
-                        <span class="link-text">{{ __('lang.my_account') }}</span>
-                    </a>
-                    
-                    <!-- Language Switcher -->
-                    <div class="sidebar-link language-switcher-link" data-title="{{ __('lang.language') }}">
-                        <i class="fas fa-language"></i>
-                        <span class="link-text">{{ __('lang.language') }}</span>
-                        <div class="language-dropdown">
-                            <a href="{{ route('locale.set', 'ar') }}" class="dropdown-item {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
-                                العربية
-                            </a>
-                            <a href="{{ route('locale.set', 'en') }}" class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
-                                English
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <a href="{{ route('logout') }}" class="sidebar-link" data-title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span class="link-text">{{ __('lang.logout') }}</span>
-                    </a>
-                    <form id="logout-form-student" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </div>
-            </div>
-            <!-- Floating Mobile Bottom Nav -->
-            <nav class="mobile-bottom-nav d-lg-none d-md-block">
-                <a href="{{ route('student.sections') }}" class="mobile-nav-icon {{ request()->routeIs('student.sections*') ? 'active' : '' }}" title="{{ __('lang.sections') }}">
-                    <span class="icon-bg"><i class="fas fa-book"></i></span>
+                <a href="{{ route('student.sections') }}" class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}" data-title="{{ __('lang.sections') }}">
+                    <i class="fas fa-book"></i>
+                    <span class="link-text">{{ __('lang.sections') }}</span>
                 </a>
-                <a href="{{ route('student.achievements') }}" class="mobile-nav-icon {{ request()->routeIs('student.achievements*') ? 'active' : '' }}" title="{{ __('lang.achievements') }}">
-                    <span class="icon-bg"><i class="fas fa-trophy"></i></span>
+                <a href="{{ route('student.achievements') }}" class="sidebar-link {{ request()->routeIs('student.achievements*') ? 'active' : '' }}" data-title="{{ __('lang.achievements') }}">
+                    <i class="fas fa-trophy"></i>
+                    <span class="link-text">{{ __('lang.achievements') }}</span>
                 </a>
-                <a href="{{ route('student.account') }}" class="mobile-nav-icon {{ request()->routeIs('student.account*') ? 'active' : '' }}" title="{{ __('lang.my_account') }}">
-                    <span class="icon-bg"><i class="fas fa-user-cog"></i></span>
+                <a href="{{ route('student.account') }}" class="sidebar-link {{ request()->routeIs('student.account*') ? 'active' : '' }}" data-title="{{ __('lang.my_account') }}">
+                    <i class="fas fa-user-cog"></i>
+                    <span class="link-text">{{ __('lang.my_account') }}</span>
                 </a>
-                <!-- Mobile Language Switcher -->
-                <div class="mobile-nav-icon language-switcher-mobile" title="{{ __('lang.language') }}">
-                    <span class="icon-bg"><i class="fas fa-language"></i></span>
-                    <div class="mobile-language-dropdown">
-                        <a href="{{ route('locale.set', 'ar') }}" class="mobile-dropdown-item {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
+
+                <!-- Language Switcher: always visible, no dropdown -->
+                <div class="sidebar-link" data-title="{{ __('lang.language') }}">
+                    <i class="fas fa-language"></i>
+                    <span class="link-text">{{ __('lang.language') }}</span>
+                    <div class="d-flex flex-column gap-1 mt-2">
+                        <a href="{{ route('locale.set', 'ar') }}" class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-light' }}" style="width: 100px;">
                             العربية
                         </a>
-                        <a href="{{ route('locale.set', 'en') }}" class="mobile-dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                        <a href="{{ route('locale.set', 'en') }}" class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-primary' : 'btn-outline-light' }}" style="width: 100px;">
                             English
                         </a>
                     </div>
                 </div>
-                <a href="{{ route('logout') }}" class="mobile-nav-icon" title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student-mobile').submit();">
-                    <span class="icon-bg"><i class="fas fa-sign-out-alt"></i></span>
+
+                <a href="{{ route('logout') }}" class="sidebar-link" data-title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="link-text">{{ __('lang.logout') }}</span>
                 </a>
-                <form id="logout-form-student-mobile" action="{{ route('logout') }}" method="POST" class="d-none">
+                <form id="logout-form-student" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf
                 </form>
-            </nav>
+            </div>
+            </div>
+            <!-- Floating Mobile Bottom Nav -->
+            <nav class="mobile-bottom-nav d-lg-none d-md-block">
+    <a href="{{ route('student.sections') }}" class="mobile-nav-icon {{ request()->routeIs('student.sections*') ? 'active' : '' }}" title="{{ __('lang.sections') }}">
+        <span class="icon-bg"><i class="fas fa-book"></i></span>
+    </a>
+    <a href="{{ route('student.achievements') }}" class="mobile-nav-icon {{ request()->routeIs('student.achievements*') ? 'active' : '' }}" title="{{ __('lang.achievements') }}">
+        <span class="icon-bg"><i class="fas fa-trophy"></i></span>
+    </a>
+    <a href="{{ route('student.account') }}" class="mobile-nav-icon {{ request()->routeIs('student.account*') ? 'active' : '' }}" title="{{ __('lang.my_account') }}">
+        <span class="icon-bg"><i class="fas fa-user-cog"></i></span>
+    </a>
+    <!-- Mobile Language Switcher: always visible, no toggle -->
+    <div class="mobile-nav-icon" title="{{ __('lang.language') }}">
+        <span class="icon-bg"><i class="fas fa-language"></i></span>
+        <div class="d-flex flex-column gap-1 mt-2" style="display: none;position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 2;">
+            <a href="{{ route('locale.set', 'ar') }}" class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-primary' }}" style="width: 100px;">
+                العربية
+            </a>
+            <a href="{{ route('locale.set', 'en') }}" class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-primary' : 'btn-outline-primary' }}" style="width: 100px;">
+                English
+            </a>
+        </div>
+    </div>
+    <a href="{{ route('logout') }}" class="mobile-nav-icon" title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student-mobile').submit();">
+        <span class="icon-bg"><i class="fas fa-sign-out-alt"></i></span>
+    </a>
+    <form id="logout-form-student-mobile" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
+</nav>
         @endif
         @endauth
         
@@ -1530,7 +1750,6 @@
             }
 
             addPageTransition();
-
             // Keyboard shortcuts
             document.addEventListener('keydown', function(e) {
                 if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
@@ -1622,6 +1841,9 @@
                     window.location.reload();
                 });
             }
+
+
+            
         });
     </script>
 </body>
