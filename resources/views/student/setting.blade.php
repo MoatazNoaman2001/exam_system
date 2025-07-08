@@ -1,174 +1,158 @@
-
-
 @extends('layouts.app')
 
-@section('title', __('setting.setting'))
+@section('title', __('lang.setting'))
 
 @section('content')
-
 <link rel="stylesheet" href="{{ asset('css/setting.css') }}">
 
-<div class="container-md py-4">
-    <div class="profile-header text-center mb-4">
-        <img src="{{ $user->image ? asset('storage/avatars/' . $user->image) : asset('images/default-avatar.png') }}" alt="User Avatar" class="user-avatar">
-        <div class="user-info-text">
-            <div class="name fs-5 fw-bold mt-2">{{ auth()->user()->username ?? __('setting.username') }}</div>
-            <div class="email text-secondary fs-6">{{ auth()->user()->email }}</div>
+<div class="settings-container">
+    <!-- قسم معلومات المستخدم -->
+    <div class="profile-section text-center mb-5">
+        <div class="avatar-container">
+            <img src="{{ $user->image ? asset('storage/avatars/' . $user->image) : asset('images/default-avatar.png') }}" 
+                 alt="User Avatar" 
+                 class="user-avatar">
+            <button class="avatar-edit-btn" data-bs-toggle="modal" data-bs-target="#avatarModal">
+                <i class="fas fa-camera"></i>
+            </button>
         </div>
+        <h2 class="user-name mt-3">{{ auth()->user()->username ?? __('lang.username') }}</h2>
+        <p class="user-email text-muted">{{ auth()->user()->email }}</p>
+    </div>
 
-        <!-- الشهادات والمتصدرين -->
-        <div class="card custom-card mb-3">
-            <a href="{{ route('certification') }}" class="custom-item text-decoration-none text-dark">
-                <span>‹</span>
-                <div class="d-flex align-items-center">
-                    <span>{{ __('setting.certifications') }}</span>
-                    <span class="me-2">📄</span>
+    <!-- كارت الإنجازات -->
+    <div class="settings-card achievement-card mb-4">
+        <div class="card-header">
+            <i class="fas fa-trophy card-icon"></i>
+            <h3 class="card-title">{{ __('lang.achievements') }}</h3>
+        </div>
+        <div class="card-body">
+            <a href="{{ route('certification') }}" class="settings-item">
+                <div class="item-content">
+                    <i class="fas fa-file-certificate item-icon"></i>
+                    <span>{{ __('lang.certifications') }}</span>
                 </div>
+                <i class="fas fa-chevron-left item-arrow"></i>
             </a>
-
-            <a href="{{ route('leaderboard', ['userId' => auth()->id()]) }}" class="custom-item text-decoration-none text-dark">
-                <span>‹</span>
-                <div class="d-flex align-items-center">
-                    <span>{{ __('setting.leaderboard') }}</span>
-                    <span class="me-2">🏅</span>
+            <a href="{{ route('leaderboard', ['userId' => auth()->id()]) }}" class="settings-item">
+                <div class="item-content">
+                    <i class="fas fa-medal item-icon"></i>
+                    <span>{{ __('lang.leaderboard') }}</span>
                 </div>
+                <i class="fas fa-chevron-left item-arrow"></i>
             </a>
         </div>
+    </div>
 
-        <!-- إعدادات الحساب -->
-        <h5 class="text-secondary mb-2">{{ __('setting.account') }}</h5>
-        <div class="card custom-card mb-3">
-            <a href="{{ route('student.profile.show') }}" class="custom-item text-decoration-none text-dark">
-                <span>‹</span>
-                <div class="d-flex align-items-center">
-                    <span>{{ __('setting.my_account') }}</span>
-                    <span class="me-2">👤</span>
+    <!-- كارت إعدادات الحساب -->
+    <div class="settings-card account-card mb-4">
+        <div class="card-header">
+            <i class="fas fa-user-cog card-icon"></i>
+            <h3 class="card-title">{{ __('lang.account') }}</h3>
+        </div>
+        <div class="card-body">
+            <a href="{{ route('student.profile.show') }}" class="settings-item">
+                <div class="item-content">
+                    <i class="fas fa-user-edit item-icon"></i>
+                    <span>{{ __('lang.my_account') }}</span>
                 </div>
+                <i class="fas fa-chevron-left item-arrow"></i>
             </a>
-
-            <a href="{{ route('student.profile.show') }}" class="custom-item text-decoration-none text-dark">
-                <span>‹</span>
-                <div class="d-flex align-items-center">
-                    <span>{{ __('setting.security') }}</span>
-                    <span class="me-2">🛡️</span>
+            <a href="{{ route('student.profile.show') }}" class="settings-item">
+                <div class="item-content">
+                    <i class="fas fa-shield-alt item-icon"></i>
+                    <span>{{ __('lang.security') }}</span>
                 </div>
+                <i class="fas fa-chevron-left item-arrow"></i>
             </a>
-
-            <div class="custom-item">
-                <span>‹</span>
-                <div class="d-flex align-items-center">
-                    <form action="{{ route('user.delete') }}" method="POST" id="deleteAccountForm" style="margin: 0; padding: 0;">
-                        @csrf
-                        @method('DELETE')
-                        <a href="#" class="text-danger delete-link" data-bs-toggle="modal" data-bs-target="#deleteModal">{{ __('setting.delete_account') }}</a>
-                    </form>
-                    <span class="me-2">🗑️</span>
+            <div class="settings-item delete-item" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <div class="item-content">
+                    <i class="fas fa-trash-alt item-icon"></i>
+                    <span>{{ __('lang.delete_account') }}</span>
                 </div>
+                <i class="fas fa-chevron-left item-arrow"></i>
             </div>
         </div>
+    </div>
 
-        <!-- إعدادات التطبيق -->
-        <h5 class="text-secondary mb-2">{{ __('setting.app_settings') }}</h5>
-        <div class="card custom-card mb-3">
-            <div class="d-flex justify-content-between align-items-center py-3 px-4 border-bottom">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="notifications" checked>
-                </div>
-                <div class="d-flex align-items-center">
-                    <span>{{ __('setting.notifications') }}</span>
-                    <span class="me-2">🔔</span>
-                </div>
-            <div class="language-switcher d-flex justify-content-center gap-3 py-3 px-4">
-    <a href="{{ route('locale.set', 'ar') }}" class="btn btn-outline-primary {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
-        العربية
-    </a>
-    <a href="{{ route('locale.set', 'en') }}" class="btn btn-outline-primary {{ app()->getLocale() == 'en' ? 'active' : '' }}">
-        English
-    </a>
-</div>
+    <!-- كارت إعدادات التطبيق -->
+    <div class="settings-card app-card mb-4">
+        <div class="card-header">
+            <i class="fas fa-cog card-icon"></i>
+            <h3 class="card-title">{{ __('lang.app_settings') }}</h3>
         </div>
-
-        <!-- الدعم -->
-        <h5 class="text-secondary mb-2">{{ __('setting.support') }}</h5>
-        <div class="card custom-card mb-3">
-            <a href="{{ route('terms.conditions') }}" class="custom-item text-decoration-none text-dark">
-                <span>‹</span>
-                <div class="d-flex align-items-center">
-                    <span>{{ __('setting.terms_and_policy') }}</span>
-                    <span class="me-2">📄</span>
+        <div class="card-body">
+            <div class="settings-item toggle-item">
+                <div class="item-content">
+                    <i class="fas fa-bell item-icon"></i>
+                    <span>{{ __('lang.notifications') }}</span>
                 </div>
-            </a>
-
-            <a href="{{ route('about') }}" class="custom-item text-decoration-none text-dark">
-                <span>‹</span>
-                <div class="d-flex align-items-center">
-                    <span>{{ __('setting.about') }}</span>
-                    <span class="me-2">❗</span>
-                </div>
-            </a>
-
-            <a href="{{ route('faq') }}" class="custom-item text-decoration-none text-dark">
-                <span>‹</span>
-                <div class="d-flex align-items-center">
-                    <span>{{ __('setting.faq') }}</span>
-                    <span class="me-2">❓</span>
-                </div>
-            </a>
-
-            <a href="{{ route('contact.us') }}" class="custom-item text-decoration-none text-dark">
-                <span>‹</span>
-                <div class="d-flex align-items-center">
-                    <span>{{ __('setting.contact_us') }}</span>
-                    <span class="me-2">📞</span>
-                </div>
-            </a>
-        </div>
-
-        <!-- تسجيل الخروج -->
-        <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#logoutModal">
-            {{ __('setting.logout') }}
-        </button>
-
-        <!-- مودال تأكيد تسجيل الخروج -->
-        <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content rounded-4">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="logoutModalLabel">{{ __('setting.confirm_logout') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('setting.close') }}"></button>
-                    </div>
-                    <div class="modal-body text-center">
-                        {{ __('setting.logout_confirmation') }}
-                    </div>
-                    <div class="modal-footer justify-content-center">
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-danger px-4">{{ __('setting.yes_logout') }}</button>
-                        </form>
-                        <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">{{ __('setting.cancel') }}</button>
-                    </div>
-                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider round"></span>
+                </label>
             </div>
-        </div>
-
-        <!-- مودال تأكيد حذف الحساب -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content rounded-4">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">{{ __('setting.confirm_delete_account') }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('setting.close') }}"></button>
-                    </div>
-                    <div class="modal-body text-center">
-                        {{ __('setting.delete_account_warning') }}
-                    </div>
-                    <div class="modal-footer justify-content-center">
-                        <button type="submit" form="deleteAccountForm" class="btn btn-danger px-4">{{ __('setting.yes_delete_account') }}</button>
-                        <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">{{ __('setting.cancel') }}</button>
-                    </div>
+            <div class="settings-item language-item">
+                <div class="item-content">
+                    <i class="fas fa-globe item-icon"></i>
+                    <span>{{ __('lang.language') }}</span>
+                </div>
+                <div class="language-buttons">
+                    <a href="{{ route('locale.set', 'ar') }}" class="btn-lang {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
+                        العربية
+                    </a>
+                    <a href="{{ route('locale.set', 'en') }}" class="btn-lang {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                        English
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- كارت الدعم -->
+    <div class="settings-card support-card mb-4">
+        <div class="card-header">
+            <i class="fas fa-headset card-icon"></i>
+            <h3 class="card-title">{{ __('lang.support') }}</h3>
+        </div>
+        <div class="card-body">
+            <a href="{{ route('terms.conditions') }}" class="settings-item">
+                <div class="item-content">
+                    <i class="fas fa-file-contract item-icon"></i>
+                    <span>{{ __('lang.terms_and_policy') }}</span>
+                </div>
+                <i class="fas fa-chevron-left item-arrow"></i>
+            </a>
+            <a href="{{ route('about') }}" class="settings-item">
+                <div class="item-content">
+                    <i class="fas fa-info-circle item-icon"></i>
+                    <span>{{ __('lang.about') }}</span>
+                </div>
+                <i class="fas fa-chevron-left item-arrow"></i>
+            </a>
+            <a href="{{ route('faq') }}" class="settings-item">
+                <div class="item-content">
+                    <i class="fas fa-question-circle item-icon"></i>
+                    <span>{{ __('lang.faq') }}</span>
+                </div>
+                <i class="fas fa-chevron-left item-arrow"></i>
+            </a>
+            <a href="{{ route('contact.us') }}" class="settings-item">
+                <div class="item-content">
+                    <i class="fas fa-envelope item-icon"></i>
+                    <span>{{ __('lang.contact_us') }}</span>
+                </div>
+                <i class="fas fa-chevron-left item-arrow"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- زر تسجيل الخروج -->
+    <button class="logout-btn" data-bs-toggle="modal" data-bs-target="#logoutModal">
+        <i class="fas fa-sign-out-alt"></i>
+        {{ __('lang.logout') }}
+    </button>
+
+    <!-- المودالات -->
 </div>
 @endsection

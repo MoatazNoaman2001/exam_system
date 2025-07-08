@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
@@ -1510,17 +1510,56 @@
                     <p class="sidebar-subtitle">مرحباً {{ Auth::user()->username }}</p>
                 </div>
                 <div class="sidebar-menu">
-                <a href="{{ route('student.sections') }}" class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}" data-title="{{ __('lang.sections') }}">
-                    <i class="fas fa-book"></i>
-                    <span class="link-text">{{ __('lang.sections') }}</span>
+
+                    <a href="{{ route('student.sections') }}" class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}" data-title="{{ __('lang.sections') }}">
+                        <i class="fas fa-book"></i>
+                        <span class="link-text">{{ __('lang.sections') }}</span>
+                    </a>
+                    <a href="{{ route('student.achievements') }}" class="sidebar-link {{ request()->routeIs('student.achievements*') ? 'active' : '' }}" data-title="{{ __('lang.achievements') }}">
+                        <i class="fas fa-trophy"></i>
+                        <span class="link-text">{{ __('lang.achievements') }}</span>
+                    </a>
+                    <a href="{{ route('student.setting') }}" class="sidebar-link {{ request()->routeIs('student.account*') ? 'active' : '' }}">
+                        <i class="fas fa-user-cog"></i>
+                        <span class="link-text">{{ __('lang.my_account') }}</span>
+                    </a>
+                    
+                    <!-- Language Switcher -->
+                    <div class="sidebar-link language-switcher-link" data-title="{{ __('lang.language') }}">
+                        <i class="fas fa-language"></i>
+                        <span class="link-text">{{ __('lang.language') }}</span>
+                        <div class="language-dropdown">
+                            <a href="{{ route('locale.set', 'ar') }}" class="dropdown-item {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
+                                العربية
+                            </a>
+                            <a href="{{ route('locale.set', 'en') }}" class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                                English
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="{{ route('logout') }}" class="sidebar-link" data-title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="link-text">{{ __('lang.logout') }}</span>
+                    </a>
+                    <form id="logout-form-student" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </div>
+            </div>
+            <!-- Floating Mobile Bottom Nav -->
+            <nav class="mobile-bottom-nav d-lg-none d-md-block">
+                <a href="{{ route('student.sections') }}" class="mobile-nav-icon {{ request()->routeIs('student.sections*') ? 'active' : '' }}" title="{{ __('lang.sections') }}">
+                    <span class="icon-bg"><i class="fas fa-book"></i></span>
+
                 </a>
                 <a href="{{ route('student.achievements') }}" class="sidebar-link {{ request()->routeIs('student.achievements*') ? 'active' : '' }}" data-title="{{ __('lang.achievements') }}">
                     <i class="fas fa-trophy"></i>
                     <span class="link-text">{{ __('lang.achievements') }}</span>
                 </a>
-                <a href="{{ route('student.account') }}" class="sidebar-link {{ request()->routeIs('student.account*') ? 'active' : '' }}" data-title="{{ __('lang.my_account') }}">
-                    <i class="fas fa-user-cog"></i>
-                    <span class="link-text">{{ __('lang.my_account') }}</span>
+                <a href="{{ route('student.setting') }}" class="mobile-nav-icon {{ request()->routeIs('student.account*') ? 'active' : '' }}" title="{{ __('lang.my_account') }}">
+                    <span class="icon-bg"><i class="fas fa-user-cog"></i></span>
+
                 </a>
 
                 <!-- Language Switcher: always visible, no dropdown -->

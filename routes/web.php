@@ -41,7 +41,10 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
+
+App::setLocale('ar');
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
+
 
 
 Route::get('/set-locale/{locale}', function ($locale) {
@@ -217,15 +220,15 @@ Route::post('/notifications/mark-as-read', [NotificationController::class, 'mark
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/Achievement', [AchievementController::class, 'index'])->name('achievement.index');
-   
+   Route::post('/achievement', [AchievementController::class, 'index'])->name('achievement.index');
+
     
 });
-
 
 Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
 Route::get('/plan', [PlanController::class, 'Plan'])->name('Plan');
 Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
-Route::get('/setting', [SettingController::class, 'Setting'])->name('setting');
+Route::get('/setting', [SettingController::class, 'show'])->name('setting');
 Route::get('/certification', [certificationController::class, 'certification'])->name('certification');
 
 Route::get('/leaderboard/{userId}', [LeaderBoardController::class, 'showLeaderBoard'])->name('leaderboard');
@@ -257,6 +260,8 @@ Route::get('/about', [AboutController::class, 'index'])->name('about')->middlewa
 
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
+
+
 Route::get('/contact-us', [ContactUsController::class, 'index'])->name('contact.us')->middleware('auth');
 
 Route::get('/test-verification', function() {
@@ -279,11 +284,14 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
     Route::get('/sections/doamins/{domainId}/slides', [SectionsController::class , 'domainShow'])->name('domain.slides');
     Route::get('/sections/slides/{slideId}', [SectionsController::class, 'slideShow'])->name('sections.slides');
     Route::post('/slide/attempt', [SectionsController::class, 'recordAttempt'])->name('slide.attempt');
+  
+    Route::get('/setting',[SettingController::class, 'show'])->name('setting');
     
     // Plan Selection Routes
     Route::get('/plan/selection', [SectionsController::class, 'showPlanSelection'])->name('plan.selection');
     Route::post('/plan/store', [SectionsController::class, 'storePlan'])->name('plan.store');
     Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
+
     Route::get('/profile', [ProfileController::class, 'show'])->name('account');
 
     Route::prefix('exams')->name('exams.')->group(function () {
