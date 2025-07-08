@@ -12,7 +12,7 @@
 
  <script>
         setTimeout(function () {
-            window.location.href = "{{ route('feature') }}"; // هنا الصفحة اللي هيروح لها بعد ثانية
+            window.location.href = "{{ route('feature') }}";
         }, 1000);
     </script>
 @endsection

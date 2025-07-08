@@ -298,7 +298,7 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
     Route::post('/plan/store', [SectionsController::class, 'storePlan'])->name('plan.store');
     Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
 
-    Route::get('/profile', [ProfileController::class, 'show'])->name('account');
+    // Route::get('/profile', [ProfileController::class, 'show'])->name('account');
 
     Route::prefix('exams')->name('exams.')->group(function () {
         
