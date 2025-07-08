@@ -29,11 +29,11 @@ class Kernel extends HttpKernel
    'web' => [
         \App\Http\Middleware\EncryptCookies::class,
         \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        \Illuminate\Session\Middleware\StartSession::class, // يجب أن يأتي أولاً
+        \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         \App\Http\Middleware\VerifyCsrfToken::class,
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        \App\Http\Middleware\SetLocaleFromSession::class, 
+        \App\Http\Middleware\SetLocale::class,
 ],
 
 

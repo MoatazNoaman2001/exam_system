@@ -7,6 +7,7 @@ use App\Models\ExamSession;
 use App\Models\ExamQuestion;
 use App\Models\ExamQuestions;
 use App\Models\UserExamAnswer;
+use App\Models\UserExamAnswers;
 use Illuminate\Support\Facades\DB;
 
 class ExamService
@@ -42,7 +43,7 @@ class ExamService
     {
         return DB::transaction(function () use ($sessionId, $questionId, $selectedAnswers, $timeSpent) {
             $session = ExamSession::findOrFail($sessionId);
-            $question = ExamQuestion::findOrFail($questionId);
+            $question = ExamQuestions::findOrFail($questionId);
 
             // Update session activity
             $session->updateActivity();
@@ -61,13 +62,13 @@ class ExamService
             $isCorrect = $this->isAnswerCorrect($question->type, $selectedAnswers, $correctAnswerIds);
 
             // Save or update user answer
-            UserExamAnswer::updateOrCreate(
+            UserExamAnswers::updateOrCreate(
                 [
                     'exam_session_id' => $sessionId,
                     'exam_question_id' => $questionId
                 ],
                 [
-                    'selected_answers' => $selectedAnswers,
+                    'selected_answers' => json_encode($selectedAnswers),
                     'is_correct' => $isCorrect,
                     'time_spent' => $timeSpent
                 ]

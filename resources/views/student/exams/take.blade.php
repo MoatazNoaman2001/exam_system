@@ -637,11 +637,12 @@
                                     {{ App::getLocale() === 'ar' ? $answer['answer-ar'] : $answer->answer }}
                                 </div>
                             </div>
+
                             <input type="{{ $currentQuestion->type === 'multiple_choice' ? 'checkbox' : 'radio' }}" 
                                    name="answers[]" 
                                    value="{{ $answer->id }}" 
                                    class="d-none answer-input"
-                                   {{ in_array($answer->id, $userAnswer->selected_answers ?? []) ? 'checked' : '' }}>
+                                   {{ in_array($answer->id, json_decode($userAnswer->selected_answers) ?? []) ? 'checked' : '' }}>
                         </div>
                     @endforeach
                 @endif
@@ -861,17 +862,19 @@
 
         async saveCurrentAnswer() {
             const formData = new FormData(document.getElementById('answerForm'));
-            const answers = [];
+            const selected_answers = [];
             
             document.querySelectorAll('.answer-input:checked').forEach(input => {
-                answers.push(parseInt(input.value));
+                selected_answers.push(parseInt(input.value));
             });
 
-            if (answers.length === 0) {
+            if (selected_answers.length === 0) {
                 this.showAlert('{{ __("lang.please_select_answer") }}', 'warning', 3000);
                 return false;
             }
 
+            console.log(`selected_answers: ${JSON.stringify(selected_answers)}`);
+            
             this.showLoading();
 
             return new Promise((resolve, reject) => {
@@ -882,16 +885,18 @@
 
                 xhr.onload = () => {
                     if (xhr.status >= 200 && xhr.status < 300) {
+                    
                         try {
                             const result = JSON.parse(xhr.responseText);
-                            
-                            if (result.status === 'expired') {
+                            console.log(result);
+                        
+                            if (!result.success) {
                                 this.showAlert('{{ __("lang.exam_time_expired") }}', 'danger', 5000);
                                 setTimeout(() => {
                                     window.location.href = routes.result;
                                 }, 2000);
                                 resolve(false);
-                            } else if (result.status === 'success') {
+                            } else if (result.success) {
                                 // Update UI to show question as answered
                                 const navBtn = document.querySelector(`[data-question-index="${this.currentQuestionIndex}"]`);
                                 if (navBtn) {
@@ -899,8 +904,8 @@
                                 }
                                 
                                 // Update progress
-                                document.getElementById('answeredCount').textContent = result.answered_count;
-                                document.getElementById('progressFill').style.width = result.progress_percentage + '%';
+                                document.getElementById('answeredCount').textContent = (result.answered_questions?? []).length;
+                                document.getElementById('progressFill').style.width = ((result.answered_questions?? []).length / this.totalQuestions) * 100 + '%';
                                 
                                 this.showAlert('{{ __("lang.answer_saved_successfully") }}', 'success', 2000);
                                 resolve(true);
@@ -927,7 +932,7 @@
 
                 xhr.send(JSON.stringify({
                     question_id: document.querySelector('[name="question_id"]').value,
-                    answers: answers,
+                    selected_answers: selected_answers,
                     time_spent: Math.floor(this.questionTimeSpent / 1000)
                 }));
             }).finally(() => {

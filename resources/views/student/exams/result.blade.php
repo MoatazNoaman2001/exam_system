@@ -428,9 +428,9 @@
 <div class="results-container" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
     <!-- Result Header -->
     <div class="result-header">
-        <div class="score-circle" style="--score-angle: {{ ($statistics['final_score'] / 100) * 360 }}deg;">
+        <div class="score-circle" style="--score-angle: {{ ($results['statistics']['final_score'] / 100) * 360 }}deg;">
             <div class="score-inner">
-                <div class="score-value">{{ number_format($statistics['final_score'], 1) }}%</div>
+                <div class="score-value">{{ number_format($results['statistics']['final_score'], 1) }}%</div>
                 <div class="score-label">{{ __('lang.final_score') }}</div>
             </div>
         </div>
@@ -438,13 +438,13 @@
         @php
             $scoreStatus = 'failed';
             $statusText = __('lang.failed');
-            if ($statistics['final_score'] >= 85) {
+            if ($results['statistics']['final_score'] >= 85) {
                 $scoreStatus = 'excellent';
                 $statusText = __('lang.excellent_performance');
-            } elseif ($statistics['final_score'] >= 70) {
+            } elseif ($results['statistics']['final_score'] >= 70) {
                 $scoreStatus = 'good';
                 $statusText = __('lang.good_performance');
-            } elseif ($statistics['final_score'] >= 60) {
+            } elseif ($results['statistics']['final_score'] >= 60) {
                 $scoreStatus = 'needs-improvement';
                 $statusText = __('lang.needs_improvement');
             }
@@ -465,7 +465,7 @@
             <div class="stat-icon icon-total">
                 <i class="fas fa-list-ol"></i>
             </div>
-            <div class="stat-value">{{ $statistics['total_questions'] }}</div>
+            <div class="stat-value">{{ $results['statistics']['total_questions'] }}</div>
             <div class="stat-label">{{ __('lang.total_questions') }}</div>
         </div>
 
@@ -473,7 +473,7 @@
             <div class="stat-icon icon-correct">
                 <i class="fas fa-check"></i>
             </div>
-            <div class="stat-value">{{ $statistics['correct_answers'] }}</div>
+            <div class="stat-value">{{ $results['statistics']['correct_answers'] }}</div>
             <div class="stat-label">{{ __('lang.correct_answers') }}</div>
         </div>
 
@@ -481,7 +481,7 @@
             <div class="stat-icon icon-incorrect">
                 <i class="fas fa-times"></i>
             </div>
-            <div class="stat-value">{{ $statistics['incorrect_answers'] }}</div>
+            <div class="stat-value">{{ $results['statistics']['incorrect_answers'] }}</div>
             <div class="stat-label">{{ __('lang.incorrect_answers') }}</div>
         </div>
 
@@ -489,7 +489,7 @@
             <div class="stat-icon icon-unanswered">
                 <i class="fas fa-question"></i>
             </div>
-            <div class="stat-value">{{ $statistics['unanswered_questions'] }}</div>
+            <div class="stat-value">{{ $results['statistics']['unanswered_questions'] }}</div>
             <div class="stat-label">{{ __('lang.unanswered_questions') }}</div>
         </div>
 
@@ -497,7 +497,7 @@
             <div class="stat-icon icon-time">
                 <i class="fas fa-clock"></i>
             </div>
-            <div class="stat-value">{{ gmdate('H:i:s', $statistics['total_time_spent']) }}</div>
+            <div class="stat-value">{{ gmdate('H:i:s', $results['statistics']['total_time_spent']) }}</div>
             <div class="stat-label">{{ __('lang.time_spent') }}</div>
         </div>
 
@@ -505,7 +505,7 @@
             <div class="stat-icon icon-accuracy">
                 <i class="fas fa-percentage"></i>
             </div>
-            <div class="stat-value">{{ number_format($statistics['accuracy_percentage'], 1) }}%</div>
+            <div class="stat-value">{{ number_format($results['statistics']['accuracy_percentage'], 1) }}%</div>
             <div class="stat-label">{{ __('lang.accuracy') }}</div>
         </div>
     </div>
@@ -538,7 +538,7 @@
         </h3>
 
         <div id="questionResults">
-            @foreach($results as $index => $result)
+            @foreach($results['results'] as $index => $result)
             <div class="question-summary">
                 <div class="question-header" onclick="toggleQuestionDetails({{ $index }})">
                     <div class="question-title">
@@ -643,8 +643,8 @@
             {{ __('lang.review_answers') }}
         </a>
 
-        @if($statistics['final_score'] < 70)
-        <a href="{{ route('student.exams.show', $session->exam->id) }}" class="btn-action btn-success">
+        @if($results['statistics']['final_score'] < 70)
+        <a href="{{ route('student.exams.index', $session->exam->id) }}" class="btn-action btn-success">
             <i class="fas fa-redo"></i>
             {{ __('lang.retake_exam') }}
         </a>
@@ -701,7 +701,7 @@ function printResults() {
 function shareResults() {
     const shareData = {
         title: '{{ __("lang.exam_results") }} - {{ $session->exam->title }}',
-        text: `{{ __("lang.scored") }} {{ number_format($statistics['final_score'], 1) }}% {{ __("lang.in_exam") }}`,
+        text: `{{ __("lang.scored") }} {{ number_format($results['statistics']['final_score'], 1) }}% {{ __("lang.in_exam") }}`,
         url: window.location.href
     };
 
@@ -742,7 +742,7 @@ window.addEventListener('load', function() {
     
     setTimeout(() => {
         scoreCircle.style.transition = 'background 2s ease-in-out';
-        scoreCircle.style.background = `conic-gradient(var(--pmp-success) 0deg, var(--pmp-success) {{ ($statistics['final_score'] / 100) * 360 }}deg, var(--pmp-gray-200) {{ ($statistics['final_score'] / 100) * 360 }}deg)`;
+        scoreCircle.style.background = `conic-gradient(var(--pmp-success) 0deg, var(--pmp-success) {{ ($results['statistics']['final_score'] / 100) * 360 }}deg, var(--pmp-gray-200) {{ ($results['statistics']['final_score'] / 100) * 360 }}deg)`;
     }, 500);
 
     // Animate stat cards
