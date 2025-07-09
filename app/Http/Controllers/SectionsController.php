@@ -439,12 +439,16 @@ class SectionsController extends Controller
     public function recordAttempt(Request $request)
     {
         $user = auth()->user();
-        $slideId = $request->slideId;
+        $slideId = $request->slide_id;
         $action = $request->action; // start, complete, reset
 
+        print('action: ' . $action);
+        print('slideId: ' . $slideId);
         $attempt = SlideAttempt::where('user_id', $user->id)
             ->where('slide_id', $slideId)
             ->first();
+
+        print_r('$attempt: ' . $attempt);
 
         if (!$attempt) {
             $attempt = new SlideAttempt();
@@ -464,6 +468,10 @@ class SectionsController extends Controller
                 $attempt->end_date = null;
                 break;
         }
+
+
+        print_r('$attempt->user_id: ' . $attempt->user_id);
+        print_r('$attempt->slide_id: ' . $attempt->slide_id);
 
         $attempt->save();
 
