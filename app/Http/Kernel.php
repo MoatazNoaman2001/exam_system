@@ -34,6 +34,8 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\VerifyCsrfToken::class,
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \App\Http\Middleware\SetLocale::class,
+
+
 ],
 
 
@@ -60,15 +62,17 @@ class Kernel extends HttpKernel
 
         // هنا ضفت ميدل وير خاصة بيكي
         'admin' => \App\Http\Middleware\IsAdmin::class,
-        'locale' => \App\Http\Middleware\LocaleMiddleware::class,
-       
-
+        // 'locale' => \App\Http\Middleware\LocaleMiddleware::class,
+'setlocale' => \App\Http\Middleware\SetLocale::class,
     ];
     protected $middlewarePriority = [
+
     \Illuminate\Session\Middleware\StartSession::class,
+    \App\Http\Middleware\SetLocale::class, // ← لازم يجي بعد StartSession مباشرة
     \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-    \App\Http\Middleware\SetLocaleFromSession::class, // تأكد من وجوده هنا
     \Illuminate\Routing\Middleware\ThrottleRequests::class,
     \Illuminate\Auth\Middleware\Authorize::class,
+
+
 ];
 }

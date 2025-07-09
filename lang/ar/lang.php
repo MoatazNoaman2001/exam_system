@@ -749,7 +749,7 @@ return [
   "email_body"=> "مرحبًا، أنا :name، أود مناقشة...",
   "whatsapp"=> "الواتساب",
   "start_chat"=> "محادثة مباشرة",
-  "whatsapp_msg"=> "مرحبًا، أنا :name من :email، أود مناقشة..."
+  "whatsapp_msg"=> "مرحبًا، أنا :name من :email، أود مناقشة...",
 
     'exam_results' => 'نتائج الامتحان',
     'final_score' => 'النتيجة النهائية',

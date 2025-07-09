@@ -63,7 +63,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
     .score-value {
@@ -120,7 +120,7 @@
         border-radius: 1rem;
         padding: 2rem;
         text-align: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         border: 1px solid var(--pmp-gray-200);
     }
 
@@ -148,18 +148,35 @@
         font-weight: 500;
     }
 
-    .icon-total { background: var(--pmp-primary); }
-    .icon-correct { background: var(--pmp-success); }
-    .icon-incorrect { background: var(--pmp-danger); }
-    .icon-unanswered { background: var(--pmp-warning); }
-    .icon-time { background: var(--pmp-info); }
-    .icon-accuracy { background: var(--pmp-primary); }
+    .icon-total {
+        background: var(--pmp-primary);
+    }
+
+    .icon-correct {
+        background: var(--pmp-success);
+    }
+
+    .icon-incorrect {
+        background: var(--pmp-danger);
+    }
+
+    .icon-unanswered {
+        background: var(--pmp-warning);
+    }
+
+    .icon-time {
+        background: var(--pmp-info);
+    }
+
+    .icon-accuracy {
+        background: var(--pmp-primary);
+    }
 
     .detailed-results {
         background: white;
         border-radius: 1rem;
         padding: 2rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         margin-bottom: 2rem;
     }
 
@@ -358,7 +375,7 @@
         background: white;
         border-radius: 1rem;
         padding: 2rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         margin-bottom: 2rem;
     }
 
@@ -436,18 +453,18 @@
         </div>
 
         @php
-            $scoreStatus = 'failed';
-            $statusText = __('lang.failed');
-            if ($results['statistics']['final_score'] >= 85) {
-                $scoreStatus = 'excellent';
-                $statusText = __('lang.excellent_performance');
-            } elseif ($results['statistics']['final_score'] >= 70) {
-                $scoreStatus = 'good';
-                $statusText = __('lang.good_performance');
-            } elseif ($results['statistics']['final_score'] >= 60) {
-                $scoreStatus = 'needs-improvement';
-                $statusText = __('lang.needs_improvement');
-            }
+        $scoreStatus = 'failed';
+        $statusText = __('lang.failed');
+        if ($results['statistics']['final_score'] >= 85) {
+        $scoreStatus = 'excellent';
+        $statusText = __('lang.excellent_performance');
+        } elseif ($results['statistics']['final_score'] >= 70) {
+        $scoreStatus = 'good';
+        $statusText = __('lang.good_performance');
+        } elseif ($results['statistics']['final_score'] >= 60) {
+        $scoreStatus = 'needs-improvement';
+        $statusText = __('lang.needs_improvement');
+        }
         @endphp
 
         <div class="result-status status-{{ $scoreStatus }}">
@@ -517,7 +534,7 @@
             <i class="fas fa-lightbulb me-2"></i>
             {{ __('lang.recommendations') }}
         </h3>
-        
+
         @foreach($recommendations as $recommendation)
         <div class="recommendation-item recommendation-{{ $recommendation['type'] }}">
             <h5>
@@ -544,24 +561,24 @@
                     <div class="question-title">
                         {{ __('lang.question') }} {{ $result['question_number'] }}
                         @if($result['question']->type)
-                            <small class="text-muted">({{ ucfirst(str_replace('_', ' ', $result['question']->type)) }})</small>
+                        <small class="text-muted">({{ ucfirst(str_replace('_', ' ', $result['question']->type)) }})</small>
                         @endif
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         @if($result['answered'])
-                            @if($result['is_correct'])
-                                <span class="question-status status-correct">
-                                    <i class="fas fa-check me-1"></i>{{ __('lang.correct') }}
-                                </span>
-                            @else
-                                <span class="question-status status-incorrect">
-                                    <i class="fas fa-times me-1"></i>{{ __('lang.incorrect') }}
-                                </span>
-                            @endif
+                        @if($result['is_correct'])
+                        <span class="question-status status-correct">
+                            <i class="fas fa-check me-1"></i>{{ __('lang.correct') }}
+                        </span>
                         @else
-                            <span class="question-status status-not-answered">
-                                <i class="fas fa-question me-1"></i>{{ __('lang.not_answered') }}
-                            </span>
+                        <span class="question-status status-incorrect">
+                            <i class="fas fa-times me-1"></i>{{ __('lang.incorrect') }}
+                        </span>
+                        @endif
+                        @else
+                        <span class="question-status status-not-answered">
+                            <i class="fas fa-question me-1"></i>{{ __('lang.not_answered') }}
+                        </span>
                         @endif
                         <i class="fas fa-chevron-down toggle-icon"></i>
                     </div>
@@ -575,50 +592,55 @@
 
                     <div class="answers-list">
                         <strong>{{ __('lang.answers') }}:</strong>
-                        @foreach($result['question']->answers as $answer)
-                            @php
-                                $isCorrect = in_array($answer->id, $result['correct_answers']);
-                                $isSelected = $result['user_answer'] && in_array($answer->id, $result['user_answer']->selected_answers);
-                                $answerClass = '';
-                                $iconClass = '';
-                                
-                                if ($isCorrect) {
-                                    $answerClass = 'answer-correct';
-                                    $iconClass = 'icon-check';
-                                } elseif ($isSelected && !$isCorrect) {
-                                    $answerClass = 'answer-wrong';
-                                    $iconClass = 'icon-cross';
-                                } elseif ($isSelected) {
-                                    $answerClass = 'answer-selected';
-                                    $iconClass = 'icon-selected';
-                                }
-                            @endphp
-                            
-                            <div class="answer-item {{ $answerClass }}">
-                                @if($iconClass)
-                                    <div class="answer-icon {{ $iconClass }}">
-                                        <i class="fas fa-{{ $isCorrect ? 'check' : ($isSelected ? 'user' : 'times') }}"></i>
-                                    </div>
-                                @endif
-                                <div class="flex-grow-1">
-                                    {{ $answer->answer_text }}
-                                    @if($isCorrect)
-                                        <small class="text-success d-block">{{ __('lang.correct_answer') }}</small>
-                                    @elseif($isSelected && !$isCorrect)
-                                        <small class="text-danger d-block">{{ __('lang.your_answer') }}</small>
-                                    @elseif($isSelected)
-                                        <small class="text-primary d-block">{{ __('lang.your_answer') }}</small>
-                                    @endif
-                                </div>
+                    @foreach($result['question']->answers as $answer)
+                        @php
+                            $isCorrect = in_array($answer->id, $result['correct_answers']);
+
+                            $selectedAnswers = [];
+                            if ($result['user_answer'] && is_string($result['user_answer']->selected_answers)) {
+                            $selectedAnswers = json_decode($result['user_answer']->selected_answers, true) ?? [];
+                            }
+
+                            $isSelected = in_array($answer->id, $selectedAnswers);
+
+                            $answerClass = '';
+                            $iconClass = '';
+                            if ($isCorrect) {
+                            $answerClass = 'answer-correct';
+                            $iconClass = 'icon-check';
+                            } elseif ($isSelected && !$isCorrect) {
+                            $answerClass = 'answer-wrong';
+                            $iconClass = 'icon-cross';
+                            }
+                        @endphp
+
+
+
+                        <div class="answer-item {{ $answerClass }}">
+                            @if($iconClass)
+                            <div class="answer-icon {{ $iconClass }}">
+                                <i class="fas fa-{{ $isCorrect ? 'check' : ($isSelected ? 'user' : 'times') }}"></i>
                             </div>
+                            @endif
+                            <div class="flex-grow-1">
+                                {{ $answer->answer_text }}
+                                @if($isCorrect)
+                                <small class="text-success d-block">{{ __('lang.correct_answer') }}</small>
+                                @elseif($isSelected && !$isCorrect)
+                                <small class="text-danger d-block">{{ __('lang.your_answer') }}</small>
+                                @elseif($isSelected)
+                                <small class="text-primary d-block">{{ __('lang.your_answer') }}</small>
+                                @endif
+                            </div>
+                        </div>
                         @endforeach
                     </div>
 
                     @if($result['answered'])
-                        <div class="time-spent">
-                            <i class="fas fa-clock me-1"></i>
-                            {{ __('lang.time_spent_on_question') }}: {{ gmdate('i:s', $result['time_spent']) }}
-                        </div>
+                    <div class="time-spent">
+                        <i class="fas fa-clock me-1"></i>
+                        {{ __('lang.time_spent_on_question') }}: {{ gmdate('i:s', $result['time_spent']) }}
+                    </div>
                     @endif
                 </div>
             </div>
@@ -644,138 +666,141 @@
         </a>
 
         @if($results['statistics']['final_score'] < 70)
-        <a href="{{ route('student.exams.index', $session->exam->id) }}" class="btn-action btn-success">
+            <a href="{{ route('student.exams.index', $session->exam->id) }}" class="btn-action btn-success">
             <i class="fas fa-redo"></i>
             {{ __('lang.retake_exam') }}
-        </a>
-        @endif
+            </a>
+            @endif
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-function toggleQuestionDetails(index) {
-    const details = document.getElementById(`details-${index}`);
-    const icon = details.parentElement.querySelector('.toggle-icon');
-    
-    if (details.classList.contains('show')) {
-        details.classList.remove('show');
-        icon.classList.remove('fa-chevron-up');
-        icon.classList.add('fa-chevron-down');
-    } else {
-        details.classList.add('show');
-        icon.classList.remove('fa-chevron-down');
-        icon.classList.add('fa-chevron-up');
-    }
-}
+    function toggleQuestionDetails(index) {
+        const details = document.getElementById(`details-${index}`);
+        const icon = details.parentElement.querySelector('.toggle-icon');
 
-// Auto-expand first few incorrect answers
-document.addEventListener('DOMContentLoaded', function() {
-    const incorrectQuestions = document.querySelectorAll('.status-incorrect, .status-not-answered');
-    
-    // Expand first 3 incorrect/unanswered questions
-    for (let i = 0; i < Math.min(3, incorrectQuestions.length); i++) {
-        const questionHeader = incorrectQuestions[i].closest('.question-header');
-        const index = Array.from(document.querySelectorAll('.question-header')).indexOf(questionHeader);
-        if (index !== -1) {
-            toggleQuestionDetails(index);
+        if (details.classList.contains('show')) {
+            details.classList.remove('show');
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        } else {
+            details.classList.add('show');
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
         }
     }
-});
 
-// Add smooth scroll to question details
-document.querySelectorAll('.question-header').forEach(header => {
-    header.addEventListener('click', function() {
-        setTimeout(() => {
-            this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 300);
+    // Auto-expand first few incorrect answers
+    document.addEventListener('DOMContentLoaded', function() {
+        const incorrectQuestions = document.querySelectorAll('.status-incorrect, .status-not-answered');
+
+        // Expand first 3 incorrect/unanswered questions
+        for (let i = 0; i < Math.min(3, incorrectQuestions.length); i++) {
+            const questionHeader = incorrectQuestions[i].closest('.question-header');
+            const index = Array.from(document.querySelectorAll('.question-header')).indexOf(questionHeader);
+            if (index !== -1) {
+                toggleQuestionDetails(index);
+            }
+        }
     });
-});
 
-// Print functionality
-function printResults() {
-    window.print();
-}
+    // Add smooth scroll to question details
+    document.querySelectorAll('.question-header').forEach(header => {
+        header.addEventListener('click', function() {
+            setTimeout(() => {
+                this.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
+                });
+            }, 300);
+        });
+    });
 
-// Share results functionality
-function shareResults() {
-    const shareData = {
-        title: '{{ __("lang.exam_results") }} - {{ $session->exam->title }}',
-        text: `{{ __("lang.scored") }} {{ number_format($results['statistics']['final_score'], 1) }}% {{ __("lang.in_exam") }}`,
-        url: window.location.href
-    };
-
-    if (navigator.share) {
-        navigator.share(shareData);
-    } else {
-        // Fallback - copy to clipboard
-        navigator.clipboard.writeText(`${shareData.title}\n${shareData.text}\n${shareData.url}`);
-        alert('{{ __("lang.results_copied_to_clipboard") }}');
+    // Print functionality
+    function printResults() {
+        window.print();
     }
-}
 
-// Add keyboard shortcuts
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey || e.metaKey) {
-        switch(e.key) {
-            case 'p':
-                e.preventDefault();
-                printResults();
-                break;
-            case 'r':
-                e.preventDefault();
-                window.location.href = '{{ route("student.exams.review", $session->id) }}';
-                break;
-            case 'b':
-                e.preventDefault();
-                window.location.href = '{{ route("student.exams.index") }}';
-                break;
+    // Share results functionality
+    function shareResults() {
+        const shareData = {
+            title: '{{ __("lang.exam_results") }} - {{ $session->exam->title }}',
+            text: `{{ __("lang.scored") }} {{ number_format($results['statistics']['final_score'], 1) }}% {{ __("lang.in_exam") }}`,
+            url: window.location.href
+        };
+
+        if (navigator.share) {
+            navigator.share(shareData);
+        } else {
+            // Fallback - copy to clipboard
+            navigator.clipboard.writeText(`${shareData.title}\n${shareData.text}\n${shareData.url}`);
+            alert('{{ __("lang.results_copied_to_clipboard") }}');
         }
     }
-});
 
-// Add animation effects
-window.addEventListener('load', function() {
-    // Animate score circle
-    const scoreCircle = document.querySelector('.score-circle');
-    scoreCircle.style.background = 'conic-gradient(var(--pmp-success) 0deg, var(--pmp-success) 0deg, var(--pmp-gray-200) 0deg)';
-    
-    setTimeout(() => {
-        scoreCircle.style.transition = 'background 2s ease-in-out';
-        scoreCircle.style.background = `conic-gradient(var(--pmp-success) 0deg, var(--pmp-success) {{ ($results['statistics']['final_score'] / 100) * 360 }}deg, var(--pmp-gray-200) {{ ($results['statistics']['final_score'] / 100) * 360 }}deg)`;
-    }, 500);
-
-    // Animate stat cards
-    const statCards = document.querySelectorAll('.stat-card');
-    statCards.forEach((card, index) => {
-        setTimeout(() => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'all 0.5s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 200 * index);
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            switch (e.key) {
+                case 'p':
+                    e.preventDefault();
+                    printResults();
+                    break;
+                case 'r':
+                    e.preventDefault();
+                    window.location.href = '{{ route("student.exams.review", $session->id) }}';
+                    break;
+                case 'b':
+                    e.preventDefault();
+                    window.location.href = '{{ route("student.exams.index") }}';
+                    break;
+            }
+        }
     });
-});
+
+    // Add animation effects
+    window.addEventListener('load', function() {
+        // Animate score circle
+        const scoreCircle = document.querySelector('.score-circle');
+        scoreCircle.style.background = 'conic-gradient(var(--pmp-success) 0deg, var(--pmp-success) 0deg, var(--pmp-gray-200) 0deg)';
+
+        setTimeout(() => {
+            scoreCircle.style.transition = 'background 2s ease-in-out';
+            scoreCircle.style.background = `conic-gradient(var(--pmp-success) 0deg, var(--pmp-success) {{ ($results['statistics']['final_score'] / 100) * 360 }}deg, var(--pmp-gray-200) {{ ($results['statistics']['final_score'] / 100) * 360 }}deg)`;
+        }, 500);
+
+        // Animate stat cards
+        const statCards = document.querySelectorAll('.stat-card');
+        statCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 200 * index);
+        });
+    });
 </script>
 
 <style media="print">
     .action-buttons {
         display: none !important;
     }
-    
+
     .question-details {
         display: block !important;
     }
-    
+
     .toggle-icon {
         display: none !important;
     }
-    
+
     .question-header {
         cursor: default !important;
     }
-    
+
     .question-header:hover {
         background: var(--pmp-gray-50) !important;
     }

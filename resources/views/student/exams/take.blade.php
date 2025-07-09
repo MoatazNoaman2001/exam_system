@@ -642,7 +642,7 @@
                                    name="answers[]" 
                                    value="{{ $answer->id }}" 
                                    class="d-none answer-input"
-                                   {{ in_array($answer->id, json_decode($userAnswer->selected_answers) ?? []) ? 'checked' : '' }}>
+                                {{ isset($userAnswer) && $userAnswer->selected_answers && in_array($answer->id, json_decode($userAnswer->selected_answers)) ? 'checked' : '' }}
                         </div>
                     @endforeach
                 @endif
