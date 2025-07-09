@@ -42,7 +42,7 @@ use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
 
-App::setLocale('ar');
+App::setLocale('en');
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
 
 

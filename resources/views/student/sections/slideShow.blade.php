@@ -204,6 +204,7 @@
             </div>
         </div>
 
+
         @if ($pdf_url)
             <div id="pdf-viewer-container">
                 <canvas id="pdf-canvas"></canvas>
@@ -248,7 +249,8 @@
                 method: 'POST',
                 data: {
                     slide_id: '{{ $slide["id"] }}',
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    action: 'complete'
                 },
                 success: function(response) {
                     console.log('Slide attempt recorded:', response);
