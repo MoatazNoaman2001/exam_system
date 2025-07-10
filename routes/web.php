@@ -287,6 +287,7 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
   
     Route::get('/setting',[SettingController::class, 'show'])->name('setting');
     
+    Route::view('/notifications', 'student.notifications.show')->name('notifications.show');
     // Plan Selection Routes
     Route::get('/plan/selection', [SectionsController::class, 'showPlanSelection'])->name('plan.selection');
     Route::post('/plan/store', [SectionsController::class, 'storePlan'])->name('plan.store');
