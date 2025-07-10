@@ -42,7 +42,7 @@ use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
 
-App::setLocale('en');
+App::setLocale('ar');
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
 
 
@@ -80,6 +80,9 @@ Route::get('/locale-test', function() {
         'Translator Locale' => app('translator')->getLocale()
     ];
 });
+
+
+
 
 Route::get("/", [WelcomeController::class , "root"])->name('welcome');
 
@@ -245,7 +248,7 @@ Route::middleware(['auth'])->prefix('student')->group(function () {
 Route::delete('/user/delete', [ProfileController::class, 'destroy'])->name('user.delete')->middleware('auth');
 
 
-Route::delete('/delete-account', [AccountController::class, 'delete'])->name('delete-account');
+Route::delete('/account/delete', [SettingController::class, 'deleteAccount'])->name('delete-account');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/change-password', [ChangPasswordController::class, 'showChangePasswordForm'])->name('password.change');

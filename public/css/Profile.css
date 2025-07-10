@@ -5,7 +5,7 @@
 body {
     background-color: #f8f9fa;
     font-family: 'Tajawal', sans-serif;
-    direction: rtl;
+ 
 }
 
 .container.my-5 {
@@ -33,7 +33,7 @@ body {
 .profile-title {
     font-size: 28px;
     font-weight: 700;
-    color: #2b6cb0;
+    color: #000000;
     margin-bottom: 30px;
     position: relative;
     padding-bottom: 15px;
@@ -47,7 +47,6 @@ body {
     right: 0;
     width: 100px;
     height: 4px;
-    background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%);
     border-radius: 2px;
 }
 

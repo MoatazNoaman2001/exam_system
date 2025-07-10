@@ -742,7 +742,25 @@ return [
   "email_body"=> "Hello, I’m :name, I’d like to discuss...",
   "whatsapp"=> "WhatsApp",
   "start_chat"=> "Start Chat",
-  "whatsapp_msg"=> "Hello, I’m :name from :email, I’d like to discuss..."
+  "whatsapp_msg"=> "Hello, I’m :name from :email, I’d like to discuss...",
+
+
+  //LeaderBoard
+  'leaderboard' => 'Leaderboard',
+    'all_time' => 'All Time',
+    'you_are_better_than' => 'You are better than :percent of others!',
+    'arrow_right' => 'Arrow Right',
+    'avatar' => 'Avatar',
+    'medal' => 'Medal',
+
+
+    //Profile
+        'profile' => 'Profile',
+    'edit' => 'Edit',
+    'user' => 'User',
+    'change_profile_image' => 'Change Profile Image',
+    'select_new_image' => 'Select new image',
+
 ];
 
 

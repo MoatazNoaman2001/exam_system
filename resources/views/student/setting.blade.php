@@ -144,6 +144,10 @@
         </div>
     </div>
 
+
+
+
+
     <button class="logout-btn" data-bs-toggle="modal" data-bs-target="#logoutModal">
         <i class="fas fa-sign-out-alt"></i>
         {{ __('lang.logout') }}
@@ -186,7 +190,11 @@
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('lang.cancel') }}</button>
-                    <button type="submit" form="deleteAccountForm" class="btn btn-danger">{{ __('lang.yes_delete_account') }}</button>
+<form id="deleteAccountForm" action="{{ route('delete-account') }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger">{{ __('lang.yes_delete_account') }}</button>
+</form>
                 </div>
             </div>
         </div>
