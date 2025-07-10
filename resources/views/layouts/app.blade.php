@@ -1537,6 +1537,11 @@
                             </a>
                         </div>
                     </div>
+                    <a href="{{ route('student.notifications.show') }}" class="sidebar-link {{ request()->routeIs('student.notifications*') ? 'active' : '' }}">
+                        <i class="fas fa-user-cog"></i>
+                        <span class="link-text">{{ __('lang.notifications') }}</span>
+                    </a>
+                    
                     
                     <a href="{{ route('logout') }}" class="sidebar-link" data-title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
                         <i class="fas fa-sign-out-alt"></i>
