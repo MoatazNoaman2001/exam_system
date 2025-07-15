@@ -21,6 +21,8 @@
     },
     "dependencies": {
         "chart.js": "^4.4.9",
+        "laravel-echo": "^1.19.0",
+        "pusher-js": "^8.4.0",
         "vue": "^3.5.16"
     }
 }

@@ -16,6 +16,7 @@ class ExamController extends Controller
 
     public function __construct(ExamService $examService)
     {
+        $this->middleware('auth');
         $this->examService = $examService;
     }
 
@@ -231,7 +232,7 @@ class ExamController extends Controller
     {
         try {
             $session = $this->examService->completeExam($sessionId);
-
+            
             return response()->json([
                 'success' => true,
                 'message' => __('lang.exam_completed_successfully'),

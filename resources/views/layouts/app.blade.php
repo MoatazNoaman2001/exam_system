@@ -46,6 +46,9 @@
             --gray-900: #111827;
         }
 
+
+        
+
         body { 
             overflow-x: hidden;
             font-family: 'Tajawal', 'Cairo', sans-serif;
@@ -1335,6 +1338,60 @@
         cursor: pointer;
     }
 }
+
+/* Notification Badge */
+.notification-badge {
+    position: absolute;
+    top: 0px;
+    right: 1px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+    transition: all 0.3s ease;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.notification-badge.show {
+    visibility: visible !important;
+    opacity: 1;
+}
+
+@if(app()->getLocale() == 'ar')
+.notification-badge {
+    right: auto;
+    left: -2px;
+}
+@endif
+
+/* Mobile Notification Badge */
+.mobile-bottom-nav .notification-badge {
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    font-size: 0.8rem;
+}
+
+@if(app()->getLocale() == 'ar')
+.mobile-bottom-nav .notification-badge {
+    right: auto;
+    left: -8px;
+}
+@endif
+
+
+
+
+
     </style>
 </head>
 <body>
@@ -1537,11 +1594,15 @@
                             </a>
                         </div>
                     </div>
-                    <a href="{{ route('student.notifications.show') }}" class="sidebar-link {{ request()->routeIs('student.notifications*') ? 'active' : '' }}">
-                        <i class="fas fa-user-cog"></i>
-                        <span class="link-text">{{ __('lang.notifications') }}</span>
-                    </a>
+               
                     
+
+<a href="{{ route('student.notifications.show') }}" class="sidebar-link {{ request()->routeIs('student.notifications*') ? 'active' : '' }}" data-title="{{ __('lang.notifications') }}">
+    <i class="fas fa-bell"></i>
+    <span class="notification-badge" id="sidebarNotificationBadge">0</span>
+    <span class="link-text">{{ __('lang.notifications') }}</span>
+</a>
+
                     
                     <a href="{{ route('logout') }}" class="sidebar-link" data-title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
                         <i class="fas fa-sign-out-alt"></i>
@@ -1613,6 +1674,14 @@
             </a>
         </div>
     </div>
+
+<a href="{{ route('student.notifications.show') }}" class="mobile-nav-icon {{ request()->routeIs('student.notifications*') ? 'active' : '' }}" title="{{ __('lang.notifications') }}">
+    <span class="icon-bg">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge" id="mobileNotificationBadge">0</span>
+    </span>
+</a>
+
     <a href="{{ route('logout') }}" class="mobile-nav-icon" title="{{ __('lang.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-student-mobile').submit();">
         <span class="icon-bg"><i class="fas fa-sign-out-alt"></i></span>
     </a>
@@ -1887,6 +1956,80 @@
             }
 
 
+// Notification handling for student sidebar
+if (isStudent) {
+    console.log('isStudent:', isStudent);
+    console.log('Notification handling initialized');
+    
+    function updateNotificationBadge() {
+        console.log('Fetching unread notifications...');
+        fetch('{{ route('notification.unread-count') }}', {
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Unread count:', data.unread_count);
+            const count = data.unread_count || 0;
+            const sidebarBadge = document.getElementById('sidebarNotificationBadge');
+            const mobileBadge = document.getElementById('mobileNotificationBadge');
+            console.log('Sidebar badge:', sidebarBadge, 'Mobile badge:', mobileBadge);
+            if (sidebarBadge && mobileBadge) {
+                sidebarBadge.textContent = count;
+                mobileBadge.textContent = count;
+                if (count > 0) {
+                    sidebarBadge.classList.add('show');
+                    mobileBadge.classList.add('show');
+                    console.log('Badge updated: show class added');
+                } else {
+                    sidebarBadge.classList.remove('show');
+                    mobileBadge.classList.remove('show');
+                    console.log('Badge updated: show class removed');
+                }
+            } else {
+                console.error('Badge elements not found');
+            }
+        })
+        .catch(error => console.error('Error fetching notification count:', error));
+    }
+
+    // Initial fetch and periodic update
+    updateNotificationBadge();
+    setInterval(updateNotificationBadge, 5000); // Update every 5 seconds
+
+    // Mark notifications as read on click
+    const notificationLinks = document.querySelectorAll('.student-sidebar .sidebar-link[href="' + '{{ route('student.notifications.show') }}' + '"], .mobile-bottom-nav .mobile-nav-icon[href="' + '{{ route('student.notifications.show') }}' + '"]');
+    notificationLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            console.log('Marking notifications as read...');
+            fetch('{{ route('notification.markAsRead') }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                console.log('Mark as read response:', response.status);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Notifications marked as read');
+                if (data.success) {
+                    updateNotificationBadge();
+                }
+            })
+            .catch(error => console.error('Error marking notifications as read:', error));
+        });
+    });
+}
             
         });
     </script>

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+use App\Events\NotificationSent;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 class Notification extends Model
 {
     protected $table = 'notifications';
@@ -13,7 +14,6 @@ class Notification extends Model
     protected $fillable = ['text',"subtext", 'is_seen', 'user_id'];
     protected $casts = [
         'is_seen' => 'boolean',
-        'data' => 'array',
     ];
 
     protected static function boot()
@@ -24,6 +24,10 @@ class Notification extends Model
             if (!$model->id) {
                 $model->id = \Illuminate\Support\Str::uuid()->toString();
             }
+        });
+
+    static::created(function ($model) {
+            event(new NotificationSent($model));
         });
     }
 

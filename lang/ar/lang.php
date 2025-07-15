@@ -837,6 +837,17 @@ return [
     'edit' => 'تعديل',
     'change_profile_image' => 'تغيير الصورة الشخصية',
     'select_new_image' => 'اختر صورة جديدة',
+
+
+    //Notification
+
+    'notifications' => 'الإشعارات',
+    'no_notifications' => 'لا توجد إشعارات متاحة',
+    'sections' => 'الأقسام',
+    'achievements' => 'الإنجازات',
+    'my_account' => 'حسابي',
+    'language' => 'اللغة',
+    'logout' => 'تسجيل الخروج',
     
 ];
 

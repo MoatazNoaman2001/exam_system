@@ -24,7 +24,7 @@ class UserNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'data' => ['text' => $this->message], // التأكد من تعبئة data كـ JSON
+            'data' => ['text' => $this->message], 
         ];
     }
 }

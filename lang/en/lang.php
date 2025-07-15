@@ -761,6 +761,16 @@ return [
     'change_profile_image' => 'Change Profile Image',
     'select_new_image' => 'Select new image',
 
+
+
+    //Notification
+    'notifications' => 'Notifications',
+    'no_notifications' => 'No notifications available',
+    'sections' => 'Sections',
+    'achievements' => 'Achievements',
+    'my_account' => 'My Account',
+    'language' => 'Language',
+    'logout' => 'Logout',
 ];
 
 

@@ -3,16 +3,18 @@
   namespace App\Providers;
 
   use Illuminate\Cache\RateLimiting\Limit;
-  use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-  use Illuminate\Http\Request;
+use Illuminate\Support\ServiceProvider;  
+use Illuminate\Http\Request;
   use Illuminate\Support\Facades\RateLimiter;
   use Illuminate\Support\Facades\Route;
   use Illuminate\Support\Facades\Auth;
   use Carbon\Carbon;
+use App\Channels\CustomDatabaseChannel;
+use Illuminate\Notifications\ChannelManager;
   use Illuminate\Support\Facades\App;
   use Illuminate\Support\Facades\Session;
 
-  class RouteServiceProvider extends ServiceProvider
+  class AppServiceProvider extends ServiceProvider
   {
       /**
        * The path to the "home" route for your application.
@@ -28,6 +30,10 @@
        */
      public function boot(): void
 {
+
+     $this->app->make(ChannelManager::class)->extend('custom_database', function ($app) {
+            return new CustomDatabaseChannel();
+        });
     // 1. ضبط اللغة قبل أي عمليات أخرى
     $this->setApplicationLocale();
 
@@ -35,16 +41,9 @@
     $this->configureRateLimiting();
 
     // 3. تحميل الروتات
-    $this->routes(function () {
-        Route::middleware('api')
-            ->prefix('api')
-            ->group(base_path('routes/api.php'));
+    
+    
 
-        Route::middleware('web')
-            ->group(base_path('routes/web.php'));
-
-        Auth::routes(['verify' => true]);
-    });
 }
 
 protected function setApplicationLocale(): void

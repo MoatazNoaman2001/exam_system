@@ -6,17 +6,16 @@ use App\Models\Exam;
 use App\Models\QuizAttempt;
 use App\Models\TestAttempt;
 use App\Models\ExamAttempt;
-use App\Models\Plan;
 use App\Models\Domain;
 use App\Models\Achievement;
-use App\Models\Slide;
 use App\Models\Chapter;
 use App\Models\SlideAttempt;
 use App\Models\UserProgress;
+use App\Notifications\UserAchievementNotification;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class AchievementController extends Controller
 {
@@ -27,7 +26,7 @@ class AchievementController extends Controller
         // Fetch user progress
         $progress = UserProgress::where('user_id', $user->id)->first();
 
-        // Initialize plan duration variables
+        // Plan duration variables
         $planDuration = session('plan_duration', 0);
         $planEndDate = session('plan_end_date');
         $daysLeft = $planEndDate ? max(0, Carbon::today()->diffInDays(Carbon::parse($planEndDate), false)) : 0;
@@ -45,34 +44,29 @@ class AchievementController extends Controller
                 $daysLeft = $planDuration;
                 $progressPercent = 0;
 
-                // Redirect to setting after saving
-                return redirect()->route('setting')->with('success', 'تم حفظ الخطة الزمنية بنجاح!');
+                return redirect()->route('setting')->with('success', 'مبروك! لقد حددت خطتك الزمنية بنجاح! 🎯 لنبدأ الرحلة نحو التميز!');
             }
         }
 
-        // Calculate points based on activities
-        // 1. Completing a slide = 50 points
+        // حساب النقاط
         $completedLessons = SlideAttempt::where('user_id', $user->id)
                                        ->whereNotNull('end_date')
                                        ->count();
         $lessonPoints = $completedLessons * 50;
 
-        // 2. Completing an exam = 100 points
         $completedExams = ExamAttempt::where('user_id', $user->id)
                                      ->whereNotNull('ended_at')
                                      ->count();
         $examPoints = $completedExams * 100;
 
-        // 3. Solving 20 questions = 75 points
         $totalQuestions = QuizAttempt::where('user_id', $user->id)->sum('score') +
                           TestAttempt::where('user_id', $user->id)->sum('score');
         $questionPoints = floor($totalQuestions / 20) * 75;
 
-        // 4. Achieving a milestone = 30 points
         $completedAchievements = Achievement::where('user_id', $user->id)->count();
         $achievementPoints = $completedAchievements * 30;
 
-        // 5. Daily learning streak (3 days) = 20 points
+        // حساب streak ونقاطه
         $activityDates = SlideAttempt::where('user_id', $user->id)
                                     ->whereNotNull('end_date')
                                     ->pluck('end_date')
@@ -91,9 +85,7 @@ class AchievementController extends Controller
                                                    ->whereNotNull('created_at')
                                                    ->pluck('created_at')
                                     )
-                                    ->map(function ($date) {
-                                        return Carbon::parse($date)->startOfDay();
-                                    })
+                                    ->map(fn($date) => Carbon::parse($date)->startOfDay())
                                     ->unique()
                                     ->sort()
                                     ->values();
@@ -103,7 +95,6 @@ class AchievementController extends Controller
         $currentStreak = 0;
         $hasRecentActivity = false;
 
-        // Check if there's activity today or yesterday
         foreach ($activityDates as $date) {
             if ($date->equalTo($today) || $date->equalTo($today->subDay())) {
                 $hasRecentActivity = true;
@@ -111,7 +102,6 @@ class AchievementController extends Controller
             }
         }
 
-        // Only calculate streak if there's recent activity
         if ($hasRecentActivity) {
             for ($i = $activityDates->count() - 1; $i >= 0; $i--) {
                 $currentDate = $activityDates[$i];
@@ -122,33 +112,133 @@ class AchievementController extends Controller
                     $currentStreak++;
                     $today = $today->subDay();
                 } else {
-                    break; // Streak breaks if there's a gap
+                    break;
                 }
             }
         }
         $streakDays = $currentStreak;
         $streakPoints = floor($streakDays / 3) * 20;
 
-        // Total points
         $totalPoints = $lessonPoints + $examPoints + $questionPoints + $achievementPoints + $streakPoints;
 
-        // Update UserProgress
+        $latestExamAttempt = ExamAttempt::where('user_id', $user->id)
+                                        ->whereNotNull('ended_at')
+                                        ->latest('ended_at')
+                                        ->first();
+
+        if ($latestExamAttempt && $latestExamAttempt->score) {
+            $totalScore = $latestExamAttempt->exam->total_score ?? 100;
+            $scorePercentage = ($latestExamAttempt->score / $totalScore) * 100;
+
+            $existingNotification = \DB::table('notifications')
+                                       ->where('user_id', $user->id)
+                                       ->where('text', 'like', '%امتحان%')
+                                       ->where('created_at', '>=', $latestExamAttempt->ended_at)
+                                       ->exists();
+
+            if (!$existingNotification) {
+                if ($scorePercentage < 60) {
+                    $user->notify(new UserAchievementNotification(
+                        'exam_score_low',
+                        'لا تقلق! هذه مجرد بداية رحلتك الرائعة! 🌟',
+                        'الامتحان القادم سيكون أفضل بكثير! استمر في التعلم والمحاولة!'
+                    ));
+                } elseif ($scorePercentage < 70) {
+                    $user->notify(new UserAchievementNotification(
+                        'exam_score_mid',
+                        'أنت على الطريق الصحيح! 🚀',
+                        'بالمزيد من الجهد ستصل إلى القمة! نحن نؤمن بك!'
+                    ));
+                } elseif ($scorePercentage < 85) {
+                    $user->notify(new UserAchievementNotification(
+                        'exam_score_high',
+                        'أحسنت! أنت قريب جداً من التميز! ✨',
+                        'استمر في التقدم، النجاح الكبير ينتظرك!'
+                    ));
+                }
+            }
+        }
+
+        // تحقق من إكمال المجالات
+        $allDomains = Domain::count();
+        $completedDomains = Domain::whereHas('slides', fn($query) => 
+            $query->whereHas('slideAttempts', fn($q) => 
+                $q->where('user_id', $user->id)->whereNotNull('end_date')
+            )
+        )->get()->filter(function ($domain) use ($user) {
+            $totalSlides = $domain->slides()->count();
+            $completedSlides = $domain->slides()->whereHas('slideAttempts', fn($q) => 
+                $q->where('user_id', $user->id)->whereNotNull('end_date')
+            )->count();
+            return $totalSlides > 0 && $totalSlides === $completedSlides;
+        })->count();
+
+        if ($completedDomains > ($progress->domains_completed ?? 0)) {
+            $user->notify(new UserAchievementNotification(
+                'domain_completed',
+                'إنجاز رائع! لقد أتقنت مجالاً كاملاً! 🏆',
+                'كل خطوة تقربك من تحقيق أحلامك الكبيرة!'
+            ));
+        }
+
+        // تحقق من إكمال الفصول
+        $allChapters = Chapter::count();
+        $completedChapters = Chapter::whereHas('slides', fn($query) => 
+            $query->whereHas('slideAttempts', fn($q) => 
+                $q->where('user_id', $user->id)->whereNotNull('end_date')
+            )
+        )->get()->filter(function ($chapter) use ($user) {
+            $totalSlides = $chapter->slides()->count();
+            $completedSlides = $chapter->slides()->whereHas('slideAttempts', fn($q) => 
+                $q->where('user_id', $user->id)->whereNotNull('end_date')
+            )->count();
+            return $totalSlides > 0 && $totalSlides === $completedSlides;
+        })->count();
+
+        if ($completedChapters > ($progress->lessons_completed ?? 0)) {
+            $user->notify(new UserAchievementNotification(
+                'chapter_completed',
+                'تهانينا الحارة! فصل جديد أضفته إلى سجل إنجازاتك! 🎉',
+                'العلم نور، وكل فصل تكمله يضيء طريقك أكثر!'
+            ));
+        }
+
+        // تحقق من إنجازات الأسئلة
+        $completedQuestions = QuizAttempt::where('user_id', $user->id)->sum('score') +
+                             TestAttempt::where('user_id', $user->id)->sum('score');
+        $questionMilestone = floor($completedQuestions / 100) * 100;
+
+        if ($completedQuestions >= $questionMilestone && $questionMilestone > ($progress->questions_completed ?? 0)) {
+            $user->notify(new UserAchievementNotification(
+                'question_milestone',
+                "مذهل! لقد تجاوزت {$questionMilestone} سؤال! 🤯",
+                'كل سؤال تحله يبني عقلًا أقوى! استمر في التحدي!'
+            ));
+        }
+
+        // تحديث بيانات التقدم
         if ($progress) {
             $progress->points = $totalPoints;
             $progress->streak_days = $streakDays;
+            $progress->domains_completed = $completedDomains;
+            $progress->domains_total = $allDomains;
+            $progress->lessons_completed = $completedChapters;
+            $progress->lessons_total = $allChapters;
+            $progress->exams_completed = $completedExams;
+            $progress->questions_completed = $completedQuestions;
             $progress->save();
         }
 
-        // Determine level based on points
+        // حساب المستوى الحالي
         $pointsMap = [
-            'Beginner' => 0,
-            'Intermediate' => 150,
-            'Advanced' => 300,
-            'Expert' => 500,
-            'Legend' => 800,
+            'مبتدئ' => 0,
+            'متوسط' => 150,
+            'متقدم' => 300,
+            'خبير' => 500,
+            'أسطورة' => 800,
         ];
 
-        $currentLevel = 'Beginner';
+        $currentLevel = 'مبتدئ';
         $nextLevel = null;
         $pointsToNext = 0;
 
@@ -167,51 +257,10 @@ class AchievementController extends Controller
             $progress->save();
         }
 
-        // Fetch completed domains and chapters
-        $allDomains = Domain::count();
-        $completedDomains = Domain::whereHas('slides', function ($query) use ($user) {
-            $query->whereHas('slideAttempts', function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('end_date');
-            });
-        })->get()->filter(function ($domain) use ($user) {
-            $totalSlides = $domain->slides()->count();
-            $completedSlides = $domain->slides()->whereHas('slideAttempts', function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('end_date');
-            })->count();
-            return $totalSlides > 0 && $totalSlides === $completedSlides;
-        })->count();
-
-        $allChapters = Chapter::count();
-        $completedChapters = Chapter::whereHas('slides', function ($query) use ($user) {
-            $query->whereHas('slideAttempts', function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('end_date');
-            });
-        })->get()->filter(function ($chapter) use ($user) {
-            $totalSlides = $chapter->slides()->count();
-            $completedSlides = $chapter->slides()->whereHas('slideAttempts', function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('end_date');
-            })->count();
-            return $totalSlides > 0 && $totalSlides === $completedSlides;
-        })->count();
-
-        // Check if all content is completed
+        // تحقق إذا تم إكمال كل المحتوى
         $allContentCompleted = ($allDomains > 0 && $allChapters > 0 && $completedDomains === $allDomains && $completedChapters === $allChapters);
-        
-        $completedQuestions = QuizAttempt::where('user_id', $user->id)->sum('score') +
-                             TestAttempt::where('user_id', $user->id)->sum('score');
 
-        // Update UserProgress with domains and chapters
-        if ($progress) {
-            $progress->domains_completed = $completedDomains;
-            $progress->domains_total = $allDomains;
-            $progress->lessons_completed = $completedChapters;
-            $progress->lessons_total = $allChapters;
-            $progress->exams_completed = $completedExams;
-            $progress->questions_completed = $completedQuestions;
-            $progress->save();
-        }
-
-        // Pass data to the view
+        // عرض البيانات على الصفحة
         return view('student.Achievement', compact(
             'user',
             'progress',

@@ -31,7 +31,6 @@ use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\certificationController;
-
 use App\Http\Controllers\ChangPasswordController;
 use App\Http\Controllers\CompletedActionController;
 use App\Http\Controllers\AchievementPointController;
@@ -40,9 +39,9 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Models\Notification;
 
-
-App::setLocale('ar');
+App::setLocale('en');
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
 
 
@@ -216,7 +215,10 @@ Route::post('/new-password', [NewPasswordController::class, 'resetPassword'])->n
 //     Route::delete('/tasks/{id}', [CompletedActionController::class, 'destroy']);
 // });
 
-Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->middleware('auth')->name('notifications.markAsRead');
+
+
+
+// Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->middleware('auth')->name('notifications.markAsRead');
 
 // Route::get('/Achievement', [AchievementController::class, 'Achievement'])->name('Achievement');
 
@@ -227,6 +229,14 @@ Route::middleware(['auth'])->group(function () {
     
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notification.unread-count');
+    Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notification.markAsRead');
+});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/student/notifications', [NotificationController::class, 'index'])->name('student.notifications.show');
+});
 Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
 Route::get('/plan', [PlanController::class, 'Plan'])->name('Plan');
 Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
@@ -289,7 +299,7 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
   
     Route::get('/setting',[SettingController::class, 'show'])->name('setting');
     
-    Route::view('/notifications', 'student.notifications.show')->name('notifications.show');
+    // Route::view('/notifications', 'student.notifications.show')->name('notifications.show');
     // Plan Selection Routes
     Route::get('/plan/selection', [SectionsController::class, 'showPlanSelection'])->name('plan.selection');
     Route::post('/plan/store', [SectionsController::class, 'storePlan'])->name('plan.store');
