@@ -285,6 +285,7 @@
         }
         @endif
         
+        @if(app()->getLocale() == 'en')
         /* Toggle Button */
         .sidebar-toggle {
             position: fixed;
@@ -306,11 +307,28 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             z-index: 1002;
         }
+        @endif
         
         @if(app()->getLocale() == 'ar')
         .sidebar-toggle {
-            right: auto;
-            left: -14px;
+            position: fixed;
+            top: 4.3rem;
+            right: 260px;
+            transform: translateY(4px);
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: 2px solid var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--primary-blue);
+            font-size: 0.8rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1002;
         }
         @endif
         
@@ -984,13 +1002,6 @@
             }
         @endif
 
-        /* Toggle button positioning for RTL */
-        @if(app()->getLocale() == 'ar')
-        .sidebar-toggle {
-            right: auto;
-            left: -14px;
-        }
-        @endif
 
         /* Hover effects for RTL */
         @if(app()->getLocale() == 'ar')

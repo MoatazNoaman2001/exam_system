@@ -41,7 +41,7 @@ use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Models\Notification;
 
-App::setLocale('en');
+App::setLocale('ar');
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
 
 
