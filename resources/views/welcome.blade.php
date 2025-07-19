@@ -6,6 +6,10 @@
     <title>PMP Master - Your Complete PMP Exam Preparation System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/root-welcome.css') }}">
 </head>
 <body>
@@ -40,8 +44,8 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>Master the PMP Exam with Confidence</h1>
-                    <p>Our comprehensive platform combines expert lectures, realistic practice exams, and personalized progress tracking to help you pass the PMP exam on your first attempt.</p>
+                    <h1 class="text-primary">Master the PMP Exam with Confidence</h1>
+                    <p class="text-primary">Our comprehensive platform combines expert lectures, realistic practice exams, and personalized progress tracking to help you pass the PMP exam on your first attempt.</p>
                 
                     <form action="{{route('login')}}" method="GET">
                         @csrf
@@ -331,10 +335,10 @@
                 <div class="footer-column">
                     <h3>Company</h3>
                     <ul class="footer-links">
-                        <li><a href="#">About Us</a></li>
+                        <li><a href="{{route('about')}}">About Us</a></li>
                         <li><a href="#">Our Instructors</a></li>
                         <li><a href="#">Success Stories</a></li>
-                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="{{route('contact')}}">Contact Us</a></li>
                         <li><a href="#">Careers</a></li>
                     </ul>
                 </div>

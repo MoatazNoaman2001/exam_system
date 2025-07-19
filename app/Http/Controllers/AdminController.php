@@ -18,11 +18,13 @@ use App\Imports\ExamsImport;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\ExamQuestions;
+use App\Models\ExamQuestionAnswer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\UpdateExamRequest;
 
 class AdminController extends Controller
 {
@@ -751,43 +753,37 @@ class AdminController extends Controller
             'questions' => 'required|array|min:1',
             'questions.*.text_en' => 'required|string',
             'questions.*.text_ar' => 'required|string',
-            'questions.*.type' => 'required|string|in:single_choice,multiple_choice', // example types
+            'questions.*.type' => 'required|string|in:single_choice,multiple_choice',
             'questions.*.points' => 'required|integer|min:1',
-            'questions.*.options' => 'required|array|min:1',
+            'questions.*.options' => 'required|array|min:2',
             'questions.*.options.*.text_en' => 'required|string',
             'questions.*.options.*.text_ar' => 'required|string',
-            // For single_choice questions, ensure exactly one correct answer
-            'questions.*.options.*.is_correct' => [
-                'sometimes',
-                'boolean',
-                function ($attribute, $value, $fail) use ($request) {
-                    if ($request->input(str_replace('.is_correct', '.type', $attribute)) === 'single_choice') {
-                        $correctCount = collect($request->input(str_replace('.options.*.is_correct', '.options', $attribute)))
-                            ->filter(fn ($opt) => $opt['is_correct'] ?? false)
-                            ->count();
-                        if ($correctCount !== 1) {
-                            $fail('Single choice questions must have exactly one correct answer.');
-                        }
-                    }
-                }
-            ]
+            'questions.*.options.*.is_correct' => 'required|boolean',
         ]);
 
+        // Custom validation for single choice questions
+        foreach ($request->questions as $index => $questionData) {
+            if ($questionData['type'] === 'single_choice') {
+                $correctCount = collect($questionData['options'])->filter(fn($opt) => $opt['is_correct'] ?? false)->count();
+                if ($correctCount !== 1) {
+                    return back()->withErrors(["questions.{$index}.options" => 'Single choice questions must have exactly one correct answer.'])->withInput();
+                }
+            }
+        }
         
         DB::transaction(function () use ($request) {
             // Create exam with proper field mapping
             $exam = Exam::create([
                 'text' => $request->title_en,
-                'text-ar' => $request->title_ar, // Changed from text_ar to title_ar
+                'text-ar' => $request->title_ar,
                 'description' => $request->description_en,
                 'description-ar' => $request->description_ar,
                 'number_of_questions' => count($request->questions),
                 'time' => $request->duration,
                 'is_completed' => $request->is_completed ?? false,
             ]);
+            
             foreach ($request->questions as $questionData) {
-
-                // dd($questionData);
                 $question = ExamQuestions::create([
                     'question' => $questionData['text_en'],
                     'question-ar' => $questionData['text_ar'],
@@ -797,7 +793,7 @@ class AdminController extends Controller
                     'exam_id' => $exam->id,
                 ]);
         
-                foreach ($questionData['options'] as $optionData) { // Changed from answers to options
+                foreach ($questionData['options'] as $optionData) {
                     $question->answers()->create([
                         'answer' => $optionData['text_en'],
                         'answer-ar' => $optionData['text_ar'],
@@ -819,10 +815,10 @@ class AdminController extends Controller
         
         return view('admin.exams.edit', compact('exam'));
     }
-    
     public function updateExam(Request $request, Exam $exam)
     {
-
+        // dd($request->all());
+        // $validated = $request->validated();
         $validated = $request->validate([
             'title_en' => 'required|string|max:255',
             'title_ar' => 'required|string|max:255',
@@ -837,11 +833,22 @@ class AdminController extends Controller
             'questions.*.answers' => 'required|array|min:1',
             'questions.*.answers.*.answer' => 'required|string',
             'questions.*.answers.*.answer-ar' => 'required|string',
+            'questions.*.answers' => [
+                   'required',
+                   'array',
+                   'min:1',
+                   function ($attribute, $value, $fail) {
+                       $hasCorrectAnswer = collect($value)->contains('is_correct', true);
+                       if (!$hasCorrectAnswer) {
+                           $fail("At least one answer must be marked as correct for question: " . str_replace('questions.', '', $attribute));
+                       }
+                   }
+            ],
             'questions.*.answers.*.is_correct' => 'boolean'
         ]);
     
-
         DB::transaction(function () use ($request, $exam) {
+            // Update exam basic information
             $exam->update([
                 'text' => $request->title_en,
                 'text-ar' => $request->title_ar,
@@ -851,10 +858,12 @@ class AdminController extends Controller
                 'number_of_questions' => count($request->questions),
             ]);
     
+            // Track existing questions for deletion
             $existingQuestionIds = $exam->questions->pluck('id')->toArray();
             $updatedQuestionIds = [];
     
             foreach ($request->questions as $questionData) {
+                // Create or update question
                 $question = $exam->questions()->updateOrCreate(
                     ['id' => $questionData['id'] ?? null],
                     [
@@ -867,31 +876,126 @@ class AdminController extends Controller
     
                 $updatedQuestionIds[] = $question->id;
     
-                // Get existing answer IDs for this question
-                $existingAnswerIds = $question->answers->pluck('id')->toArray();
-                $updatedAnswerIds = [];
-    
-                foreach ($questionData['answers'] as $optionData) {
-                    $answer = $question->answers()->updateOrCreate(
-                        ['id' => $optionData['id'] ?? null],
-                        [
-                            'answer' => $optionData['answer'],
-                            'answer-ar' => $optionData['answer-ar'],
-                            'is_correct' => $optionData['is_correct'] ?? false,
-                        ]
-                    );
-    
-                    $updatedAnswerIds[] = $answer->id;
-                }
-    
-                $question->answers()->whereNotIn('id', $updatedAnswerIds)->delete();
+                // Handle answers using your table structure
+                $this->updateQuestionAnswers($question, $questionData['answers']);
             }
     
+            // Delete removed questions (cascade will handle answers)
             $exam->questions()->whereNotIn('id', $updatedQuestionIds)->delete();
         });
     
-        return redirect()->route('admin.exams')->with('success', 'Exam updated successfully.');
+        return redirect()
+            ->route('admin.exams')
+            ->with('success', 'Exam updated successfully.');
     }
+    
+    private function updateQuestionAnswers($question, $answersData)
+    {
+        // Get existing answer IDs for this question
+        $existingAnswerIds = $question->answers->pluck('id')->toArray();
+        $updatedAnswerIds = [];
+    
+        foreach ($answersData as $answerData) {
+            // Create or update answer in question_exam_answer table
+            $answer = ExamQuestionAnswer::updateOrCreate(
+                ['id' => $answerData['id'] ?? null],
+                [
+                    'exam_question_id' => $question->id,
+                    'answer' => $answerData['answer'],
+                    'answer-ar' => $answerData['answer-ar'],
+                    'is_correct' => $answerData['is_correct'] ?? false,
+                ]
+            );
+    
+            $updatedAnswerIds[] = $answer->id;
+        }
+    
+        // Delete removed answers
+        ExamQuestionAnswer::where('exam_question_id', $question->id)
+            ->whereNotIn('id', $updatedAnswerIds)
+            ->delete();
+    }
+    
+    // public function updateExam(Request $request, Exam $exam)
+    // {
+    //     $validated = $request->validate([
+    //         'title_en' => 'required|string|max:255',
+    //         'title_ar' => 'required|string|max:255',
+    //         'description_en' => 'nullable|string',
+    //         'description_ar' => 'nullable|string',
+    //         'duration' => 'required|integer|min:1',
+    //         'questions' => 'required|array|min:1',
+    //         'questions.*.question' => 'required|string',
+    //         'questions.*.question-ar' => 'required|string',
+    //         'questions.*.type' => 'required|string|in:single_choice,multiple_choice',
+    //         'questions.*.marks' => 'required|integer|min:1',
+    //         'questions.*.answers' => 'required|array|min:2',
+    //         'questions.*.answers.*.is_correct' => 'required|boolean',
+    //         'questions.*.answers.*.answer' => 'required|string',
+    //         'questions.*.answers.*.answer-ar' => 'required|string',
+    //     ]);
+
+    //     // Custom validation for single choice questions
+    //     foreach ($request->questions as $index => $questionData) {
+    //         if ($questionData['type'] === 'single_choice') {
+    //             $correctCount = collect($questionData['answers'])->filter(fn($opt) => $opt['is_correct'] ?? false)->count();
+    //             if ($correctCount !== 1) {
+    //                 return back()->withErrors(["questions.{$index}.answers" => 'Single choice questions must have exactly one correct answer.'])->withInput();
+    //             }
+    //         }
+    //     }
+
+    //     DB::transaction(function () use ($request, $exam) {
+    //         $exam->update([
+    //             'text' => $request->title_en,
+    //             'text-ar' => $request->title_ar,
+    //             'description' => $request->description_en,
+    //             'description-ar' => $request->description_ar,
+    //             'time' => $request->duration,
+    //             'number_of_questions' => count($request->questions),
+    //         ]);
+    
+    //         $existingQuestionIds = $exam->questions->pluck('id')->toArray();
+    //         $updatedQuestionIds = [];
+    
+    //         foreach ($request->questions as $questionData) {
+    //             $question = $exam->questions()->updateOrCreate(
+    //                 ['id' => $questionData['id'] ?? null],
+    //                 [
+    //                     'question' => $questionData['question'],
+    //                     'question-ar' => $questionData['question-ar'],
+    //                     'type' => $questionData['type'],
+    //                     'marks' => $questionData['marks'],
+    //                 ]
+    //             );
+    
+    //             $updatedQuestionIds[] = $question->id;
+    
+    //             // Get existing answer IDs for this question
+    //             $existingAnswerIds = $question->answers->pluck('id')->toArray();
+    //             $updatedAnswerIds = [];
+    
+    //             foreach ($questionData['answers'] as $optionData) {
+    //                 $answer = $question->answers()->updateOrCreate(
+    //                     ['id' => $optionData['id'] ?? null],
+    //                     [
+    //                         'answer' => $optionData['answer'],
+    //                         'answer-ar' => $optionData['answer-ar'],
+    //                         'is_correct' => $optionData['is_correct'] ?? false,
+    //                     ]
+    //                 );
+    
+    //                 $updatedAnswerIds[] = $answer->id;
+    //             }
+    
+    //             $question->answers()->whereNotIn('id', $updatedAnswerIds)->delete();
+    //         }
+    
+    //         $exam->questions()->whereNotIn('id', $updatedQuestionIds)->delete();
+    //     });
+    
+    //     return redirect()->route('admin.exams')->with('success', 'Exam updated successfully.');
+    // }
 
     public function import(Request $request)
     {

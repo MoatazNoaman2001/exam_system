@@ -1,10 +1,13 @@
 <?php
 
+use Illuminate\Http\Request;
+use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\IsStudent;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Request;
-use Illuminate\Auth\AuthenticationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,13 +18,17 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Register middleware aliases
         $middleware->alias([
-            'admin' => \App\Http\Middleware\IsAdmin::class,
+            'admin' => IsAdmin::class,
+            'student' => IsStudent::class,
+            'locale' => SetLocale::class,
         ]);
+
         
         // Global middleware
         $middleware->use([
             \Illuminate\Http\Middleware\TrustProxies::class,
             \Illuminate\Http\Middleware\HandleCors::class,
+            SetLocale::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

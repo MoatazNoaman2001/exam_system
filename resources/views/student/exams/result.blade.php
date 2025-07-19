@@ -625,11 +625,11 @@
                             <div class="flex-grow-1">
                                 {{ $answer->answer_text }}
                                 @if($isCorrect)
-                                <small class="text-success d-block">{{ __('lang.correct_answer') }}</small>
+                                <small class="text-success d-block">{{ __('lang.correct_answer') . ' : ' . $answer->answer }} </small>
                                 @elseif($isSelected && !$isCorrect)
-                                <small class="text-danger d-block">{{ __('lang.your_answer') }}</small>
+                                <small class="text-danger d-block">{{ __('lang.your_answer') . ' : ' . $answer->answer }}</small>
                                 @elseif($isSelected)
-                                <small class="text-primary d-block">{{ __('lang.your_answer') }}</small>
+                                <small class="text-primary d-block">{{ __('lang.your_answer') . ' : ' . $answer->answer }}</small>
                                 @endif
                             </div>
                         </div>
@@ -653,16 +653,6 @@
         <a href="{{ route('student.exams.index') }}" class="btn-action btn-secondary">
             <i class="fas fa-arrow-left"></i>
             {{ __('lang.back_to_exams') }}
-        </a>
-
-        <a href="{{ route('student.exams.detailed-report', $session->id) }}" class="btn-action btn-info">
-            <i class="fas fa-chart-bar"></i>
-            {{ __('lang.detailed_report') }}
-        </a>
-
-        <a href="{{ route('student.exams.review', $session->id) }}" class="btn-action btn-primary">
-            <i class="fas fa-eye"></i>
-            {{ __('lang.review_answers') }}
         </a>
 
         @if($results['statistics']['final_score'] < 70)

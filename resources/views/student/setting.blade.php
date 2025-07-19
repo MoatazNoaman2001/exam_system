@@ -134,7 +134,7 @@
                 </div>
                 <i class="fas fa-chevron-left item-arrow"></i>
             </a>
-            <a href="{{ route('contact.us') }}" class="settings-item">
+            <a href="{{ route('student.contact.us') }}" class="settings-item">
                 <div class="item-content">
                     <i class="fas fa-envelope item-icon"></i>
                     <span>{{ __('lang.contact_us') }}</span>

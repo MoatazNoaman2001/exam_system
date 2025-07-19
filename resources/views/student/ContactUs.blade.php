@@ -13,7 +13,7 @@
 <div class="contact-container my-5" dir="{{ $dir }}">
     <div class="contact-header">
         <h1 class="contact-title">{{ __('lang.contact_us') }}</h1>
-        <p class="contact-subtitle">{{ __('lang.contact_subtitle') }}</p>
+        <p class="contact-subtitle">{{ __('lang.contact_subtitle') ?? 'نحن هنا لمساعدتك في أي وقت. تواصل معنا عبر البريد الإلكتروني أو الواتساب.' }}</p>
         <div class="header-ornament"></div>
     </div>
 
@@ -26,7 +26,7 @@
             <div class="card-content">
                 <h3 class="card-title">{{ __('lang.email') }}</h3>
                 <p class="card-detail">admin@example.com</p>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=admin@example.com&su={{ urlencode(__('lang.email_subject', ['email' => auth()->user()->email])) }}&body={{ urlencode(__('lang.email_body', ['name' => auth()->user()->username])) }}"
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=admin@example.com&su={{ urlencode(__('lang.email_subject', ['email' => auth()->user()->email ?? ''])) }}&body={{ urlencode(__('lang.email_body', ['name' => auth()->user()->username ?? ''])) }}"
                    class="action-btn email-btn">
                     <span>{{ __('lang.send_email') }}</span>
                     <i class="bi bi-arrow-left"></i>
@@ -43,7 +43,7 @@
             <div class="card-content">
                 <h3 class="card-title">{{ __('lang.whatsapp') }}</h3>
                 <p class="card-detail">+201024102574</p>
-                <a href="https://wa.me/201024102574?text={{ urlencode(__('lang.whatsapp_msg', ['name' => auth()->user()->username, 'email' => auth()->user()->email])) }}" 
+                <a href="https://wa.me/201024102574?text={{ urlencode(__('lang.whatsapp_msg', ['name' => auth()->user()->username ?? '', 'email' => auth()->user()->email ?? ''])) }}" 
                    class="action-btn whatsapp-btn">
                     <span>{{ __('lang.start_chat') }}</span>
                     <i class="bi bi-arrow-left"></i>
@@ -51,6 +51,13 @@
             </div>
             <div class="card-decoration"></div>
         </div>
+    </div>
+    @if(session('success'))
+        <div class="alert alert-success" style="text-align:center; margin-bottom:1rem;">{{ session('success') }}</div>
+    @endif
+
+    <div style="text-align:center; margin-top:2rem; color:#6c757d; font-size:0.95rem;">
+        نحن هنا لدعمك دائماً. كل الحقوق محفوظة &copy; {{ date('Y') }}
     </div>
 </div>
 @endsection

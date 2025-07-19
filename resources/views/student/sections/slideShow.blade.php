@@ -1,6 +1,3 @@
-<div>
-    <!-- Order your soul. Reduce your wants. - Augustine -->
-</div>
 @extends('layouts.app')
 
 @section('title', __('Slide') . ': ' . __($slide['title']))
@@ -185,6 +182,9 @@
             transition: none;
         }
     }
+    .modal-backdrop{ 
+        display: none !important;
+    }
 </style>
 
 <div class="container-fluid" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
@@ -219,6 +219,145 @@
         @endif
     </div>
 </div>
+
+<!-- Modal for Finish Achievement (Arabic) -->
+<div class="modal fade" id="finishModal" tabindex="-1" aria-labelledby="finishModalLabel" aria-hidden="true" dir="rtl">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content celebration-bg arabic-font p-0" style="border-radius: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+            <div class="position-relative">
+                <div class="confetti confetti-1">🎉</div>
+                <div class="confetti confetti-2">🎊</div>
+                <div class="confetti confetti-3">✨</div>
+                <div class="confetti confetti-4">🎉</div>
+            </div>
+            <div class="modal-body p-5">
+                <div class="text-center mb-4">
+                    <div class="d-flex justify-content-center align-items-center gap-3 mb-3">
+                        <span class="emoji-large">🎉</span>
+                        <h1 class="arabic-font main-title mb-0" id="finishModalLabel">إنجاز رائع</h1>
+                        <span class="emoji-large">🎉</span>
+                    </div>
+                </div>
+                <div class="text-center mb-5">
+                    <h2 class="arabic-font achievement-text mb-2">
+                        كل درس تنهيه يقربك من الشهادة
+                    </h2>
+                    <div class="arabic-font achievement-text d-flex align-items-center justify-content-center gap-2">
+                        <span>أكثر</span>
+                        <span class="emoji-medium">💪</span>
+                    </div>
+                </div>
+                <div class="text-center mb-5">
+                    <div class="d-inline-flex align-items-center gap-2">
+                        <span class="arabic-font progress-text">من 13 درس مكتمل</span>
+                        <span class="progress-text fw-bold">4</span>
+                        <div class="progress-badge">✓</div>
+                    </div>
+                </div>
+                <div class="d-grid gap-3 mb-4">
+                    <button class="btn btn-primary-custom arabic-font text-white">
+                        أكمل الدرس التالي
+                    </button>
+                    <button class="btn btn-outline-custom arabic-font" data-bs-dismiss="modal">
+                        العودة للفصول
+                    </button>
+                </div>
+                <div class="text-center">
+                    <p class="arabic-font bottom-text mb-0">
+                        الممارسة تصنع الكمال، وعاد لتستشير مرة أخرى، مؤكد أن كل درس هو خطوة نحو إتقان أكبر والذي يمكن أن يقود النجاح بدوره
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap');
+    .arabic-font {
+        font-family: 'Noto Sans Arabic', sans-serif;
+    }
+    .celebration-bg {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    }
+    .confetti {
+        position: absolute;
+        animation: float 3s ease-in-out infinite;
+        font-size: 2rem;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(180deg); }
+    }
+    .confetti-1 { top: -20px; left: -20px; animation-delay: 0s; font-size: 2.5rem; }
+    .confetti-2 { top: -30px; right: -30px; animation-delay: 0.5s; font-size: 2rem; }
+    .confetti-3 { bottom: -20px; left: -30px; animation-delay: 1s; font-size: 2rem; }
+    .confetti-4 { bottom: -30px; right: -20px; animation-delay: 1.5s; font-size: 2.5rem; }
+    .btn-primary-custom {
+        background-color: #3b82f6;
+        border-color: #3b82f6;
+        border-radius: 1rem;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+    }
+    .btn-primary-custom:hover {
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+    .btn-outline-custom {
+        color: #3b82f6;
+        border-color: #3b82f6;
+        border-width: 2px;
+        border-radius: 1rem;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        background-color: white;
+    }
+    .btn-outline-custom:hover {
+        background-color: #f8fafc;
+        border-color: #3b82f6;
+        color: #3b82f6;
+    }
+    .progress-badge {
+        background-color: #10b981;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        font-weight: bold;
+    }
+    .main-title {
+        color: #3b82f6;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    .achievement-text {
+        color: #374151;
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1.6;
+    }
+    .progress-text {
+        color: #6b7280;
+        font-size: 1rem;
+    }
+    .bottom-text {
+        color: #9ca3af;
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+    .emoji-large {
+        font-size: 2.5rem;
+    }
+    .emoji-medium {
+        font-size: 1.5rem;
+    }
+</style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -283,6 +422,9 @@
                     if (num === pdfDoc.numPages) {
                         endNotification.style.display = 'block';
                         recordSlideAttempt();
+                        // Show the finish modal
+                        var finishModal = new bootstrap.Modal(document.getElementById('finishModal'));
+                        finishModal.show();
                         setTimeout(() => {
                             endNotification.style.display = 'none';
                         }, 3000);

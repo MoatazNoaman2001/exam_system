@@ -1,12 +1,15 @@
 <?php
 
+use App\Models\Notification;
+use App\Http\Middleware\IsStudent;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+// use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FaqController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
-// use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogoController;
@@ -39,9 +42,8 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Models\Notification;
 
-App::setLocale('ar');
+App::setLocale('en');
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
 
 
@@ -84,20 +86,17 @@ Route::get('/locale-test', function() {
 
 
 Route::get("/", [WelcomeController::class , "root"])->name('welcome');
+Route::view("/about", "about")->withoutMiddleware('auth')->name('about');
+Route::view("/contact", "contact")->name('contact');
+Route::post("/contact", [ContactUsController::class, 'store'])->name('contact.store');
 
+Route::view("/home", "home")->middleware('auth')->name('home');
 
-Route::get('/check-session', function () {
-    return Session::get('locale'); // لازم تطبع "ar"
-});
-
-Route::view("/home", "home")->middleware('auth')
-    
-    ->name('home');
 // Route::get('/admin', [DashboardController::class, 'index'])
 //     ->middleware(['auth', 'verified', 'admin'])
 //     ->name('admin.dashboard');
 // Admin Routes Group
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', SetLocale::class])->group(function () {
     
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -149,7 +148,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/exams/{exam}/edit', [AdminController::class, 'editExam'])->name('exams.edit');
     Route::put('/exams/{exam}', [AdminController::class, 'updateExam'])->name('exams.update');
     Route::delete('/exams/{exam}', [AdminController::class, 'destroyExam'])->name('exams.destroy');
-    
+
+    // Route::view('/exams/creat', 'components.exam.basic-info-create')->name('exams.partials.basic-info-create');
+
     // Quiz Attempts
     Route::get('/quiz-attempts', [AdminController::class, 'quizAttempts'])->name('quiz-attempts');
     Route::get('/quiz-attempts/{quizAttempt}', [AdminController::class, 'showQuizAttempt'])->name('quiz-attempts.show');
@@ -267,13 +268,20 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/terms-and-conditions', [TermsAndConditionsController::class, 'showTermsAndConditions'])->name('terms.conditions')->middleware('auth');
 
-Route::get('/about', [AboutController::class, 'index'])->name('about')->middleware('auth');
+Route::get('/about', [AboutController::class, 'index'])->name('about');
 
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
 
 
-Route::get('/contact-us', [ContactUsController::class, 'index'])->name('contact.us')->middleware('auth');
+// Route::post('/contact', [ContactUsController::class, 'index'])->name('contact.submit');
+// Route::post('/contact-us', [ContactUsController::class, 'store'])->name('contactus.store');
+
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/contactus', [ContactUsController::class, 'index'])->name('contactus.index');
+});
+
+// Route::get('/contact-us', [ContactUsController::class, 'index'])->name('contact.us')->middleware('auth');
 
 Route::get('/test-verification', function() {
     $user = App\Models\User::first();
@@ -282,7 +290,7 @@ Route::get('/test-verification', function() {
 
 
 
-Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'student', 'locale'])->group(function () {
     Route::get('/intro', [IntroController::class, 'index'])->name('intro.index');
     Route::get('/intro/step/{step}', [IntroController::class, 'step'])->name('intro.step');
     Route::post('/intro/step/{step}', [IntroController::class, 'store'])->name('intro.store');
@@ -297,7 +305,8 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified'])->gr
     Route::post('/slide/attempt', [SectionsController::class, 'recordAttempt'])->name('slide.attempt');
   
     Route::get('/setting',[SettingController::class, 'show'])->name('setting');
-    
+    Route::get('/contact', [ContactUsController::class, 'index'])->name('contact.us');
+    Route::post('/contact', [ContactUsController::class, 'store'])->name('contact.store');  
     // Route::view('/notifications', 'student.notifications.show')->name('notifications.show');
     // Plan Selection Routes
     Route::get('/plan/selection', [SectionsController::class, 'showPlanSelection'])->name('plan.selection');

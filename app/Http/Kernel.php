@@ -62,8 +62,9 @@ class Kernel extends HttpKernel
 
         // هنا ضفت ميدل وير خاصة بيكي
         'admin' => \App\Http\Middleware\IsAdmin::class,
+        'student' => \App\Http\Middleware\IsStudent::class,
         // 'locale' => \App\Http\Middleware\LocaleMiddleware::class,
-'setlocale' => \App\Http\Middleware\SetLocale::class,
+        'setlocale' => \App\Http\Middleware\SetLocale::class,
     ];
     protected $middlewarePriority = [
 

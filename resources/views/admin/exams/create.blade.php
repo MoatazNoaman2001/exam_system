@@ -123,7 +123,6 @@
                 <select class="form-control question-type" name="questions[0][type]" required>
                     <option value="single_choice">{{ __('Single Choice') }}</option>
                     <option value="multiple_choice">{{ __('Multiple Choice') }}</option>
-                    <option value="true_false">{{ __('True/False') }}</option>
                 </select>
             </div>
 
@@ -236,17 +235,10 @@
                 const questionType = this.value;
                 const questionIndex = this.name.match(/questions\[(\d+)\]/)[1];
                 
-                if (questionType === 'true_false') {
-                    // Add predefined true/false options
-                    addOption(questionElement, questionIndex, 'True', 'صحيح', true);
-                    addOption(questionElement, questionIndex, 'False', 'خطأ', false);
-                    questionElement.querySelector('.add-option').style.display = 'none';
-                } else {
-                    // For single/multiple choice, add 2 empty options by default
-                    addOption(questionElement, questionIndex);
-                    addOption(questionElement, questionIndex);
-                    questionElement.querySelector('.add-option').style.display = 'block';
-                }
+                // For single/multiple choice, add 2 empty options by default
+                addOption(questionElement, questionIndex);
+                addOption(questionElement, questionIndex);
+                questionElement.querySelector('.add-option').style.display = 'block';
             });
         }
         
@@ -263,27 +255,27 @@
 
     // Add option to question
     function addOption(questionElement, questionIndex, textEn = '', textAr = '', isCorrect = false) {
-        
         const optionsContainer = questionElement.querySelector('.options-container');
         const newOption = optionTemplate.cloneNode(true);
         newOption.style.display = 'block';
         
-        answersIndex[questionIndex]++;
-        const optionIndexZ = answersIndex[questionIndex];
-        
-        // Set names using the consistent index
-        newOption.querySelector('.option-text-en').name = `questions[${questionIndex}][options][${optionIndexZ}][text_en]`;
-        newOption.querySelector('.option-text-ar').name = `questions[${questionIndex}][options][${optionIndexZ}][text_ar]`;
-        // Update name attributes with the current question index and new option index
+        // Get current options count for this question
         const optionIndex = optionsContainer.querySelectorAll('.option-item').length;
-        const optionElements = newOption.querySelectorAll('[name]');
         
-        optionElements.forEach(el => {
-            const name = el.getAttribute('name')
-                .replace(/questions\[\d+\]/, `questions[${questionIndex}]`)
-                .replace(/options\[\d+\]/, `options[${optionIndex}]`);
-            el.setAttribute('name', name);
-        });
+        // Set names using the current option index
+        newOption.querySelector('.option-text-en').name = `questions[${questionIndex}][options][${optionIndex}][text_en]`;
+        newOption.querySelector('.option-text-ar').name = `questions[${questionIndex}][options][${optionIndex}][text_ar]`;
+        
+        // Set correct answer field based on question type
+        const questionType = questionElement.querySelector('.question-type').value;
+        const correctAnswerField = newOption.querySelector('.is-correct');
+        
+        if (questionType === 'multiple_choice') {
+            correctAnswerField.type = 'checkbox';
+        } else {
+            correctAnswerField.type = 'radio';
+            correctAnswerField.name = `questions[${questionIndex}][options][${optionIndex}][is_correct]`;
+        }
         
         // Set initial values if provided
         if (textEn) {
@@ -299,9 +291,31 @@
         // Add remove option event
         newOption.querySelector('.remove-option').addEventListener('click', function() {
             newOption.remove();
+            reindexOptions(questionElement, questionIndex);
         });
         
         optionsContainer.appendChild(newOption);
+    }
+
+    // Reindex options after deletion
+    function reindexOptions(questionElement, questionIndex) {
+        const options = questionElement.querySelectorAll('.option-item');
+        options.forEach((option, index) => {
+            // Update all name attributes with new index
+            option.querySelector('.option-text-en').name = `questions[${questionIndex}][options][${index}][text_en]`;
+            option.querySelector('.option-text-ar').name = `questions[${questionIndex}][options][${index}][text_ar]`;
+            
+            // Update correct answer field
+            const correctField = option.querySelector('.is-correct');
+            const questionType = questionElement.querySelector('.question-type').value;
+            
+            if (questionType === 'multiple_choice') {
+                correctField.type = 'checkbox';
+            } else {
+                correctField.type = 'radio';
+                correctField.name = `questions[${questionIndex}][options][${index}][is_correct]`;
+            }
+        });
     }
 
     // Update question numbers after deletion

@@ -17,7 +17,7 @@
                 <div class="col-md-4">
                     <h4 class="mb-0 fw-bold text-primary">
                         <i class="fas fa-file-alt me-2"></i>
-                        {{ $session->exam->title }}
+                        {{ app()->getLocale() === 'ar' ? $session->exam['text-ar'] : $session->exam->text }}
                     </h4>
                 </div>
                 <div class="col-md-8">
@@ -80,7 +80,7 @@
             </div>
 
             <div class="question-text">
-                {!! nl2br(e($currentQuestion->question_text)) !!}
+                {!! nl2br(e(app()->getLocale() === 'ar' ? $currentQuestion['question-ar'] : $currentQuestion->question)) !!}
             </div>
 
             <form id="answerForm" class="answers-container">
@@ -102,15 +102,15 @@
                                     <div class="answer-radio" data-type="radio"></div>
                                 @endif
                                 <div class="answer-text">
-                                    {{ App::getLocale() === 'ar' ? $answer['answer-ar'] : $answer->answer }}
+                                    {{ app()->getLocale() === 'ar' ? $answer['answer-ar'] : $answer->answer }}
                                 </div>
                             </div>
 
                             <input type="{{ $currentQuestion->type === 'multiple_choice' ? 'checkbox' : 'radio' }}" 
-                                   name="answers[]" 
+                                   name="{{ $currentQuestion->type === 'multiple_choice' ? 'answers[]' : 'answers' }}" 
                                    value="{{ $answer->id }}" 
                                    class="d-none answer-input"
-                                {{ isset($userAnswer) && $userAnswer->selected_answers && in_array($answer->id, json_decode($userAnswer->selected_answers)) ? 'checked' : '' }}
+                                {{ isset($userAnswer) && $userAnswer->selected_answers && in_array($answer->id, json_decode($userAnswer->selected_answers)) ? 'checked' : '' }}>
                         </div>
                     @endforeach
                 @endif
@@ -179,11 +179,11 @@
             </div>
 
             <div class="mt-3">
-                <button type="button" class="btn-primary-action" onclick="submitExam()">
+                <button type="button" class="btn-primary-action w-100 mb-2" onclick="submitExam()">
                     <i class="fas fa-check-circle me-2"></i>
                     {{ __('lang.submit_exam') }}
                 </button>
-                <button type="button" class="btn-danger mt-2" onclick="pauseExam()">
+                <button type="button" class="btn-danger w-100" onclick="pauseExam()">
                     <i class="fas fa-pause me-2"></i>
                     {{ __('lang.pause_exam') }}
                 </button>
@@ -224,6 +224,8 @@
             this.questionTimeSpent = 0;
             this.autoSaveInterval = null;
             this.activityUpdateInterval = null;
+            this.mainTimerInterval = null;
+            this.questionTimerInterval = null;
             
             this.initializeEventListeners();
             this.startTimers();
@@ -232,7 +234,7 @@
             this.startActivityUpdates();
             
             // Check session status every 30 seconds
-            setInterval(() => this.checkSessionStatus(), 30000);
+            this.statusCheckInterval = setInterval(() => this.checkSessionStatus(), 30000);
         }
 
         initializeEventListeners() {
@@ -242,9 +244,13 @@
             });
 
             // Navigation buttons
-            document.getElementById('prevBtn')?.addEventListener('click', () => this.previousQuestion());
-            document.getElementById('nextBtn')?.addEventListener('click', () => this.nextQuestion());
-            document.getElementById('saveAnswerBtn')?.addEventListener('click', () => this.saveCurrentAnswer());
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const saveBtn = document.getElementById('saveAnswerBtn');
+
+            if (prevBtn) prevBtn.addEventListener('click', () => this.previousQuestion());
+            if (nextBtn) nextBtn.addEventListener('click', () => this.nextQuestion());
+            if (saveBtn) saveBtn.addEventListener('click', () => this.saveCurrentAnswer());
 
             // Prevent accidental page leave
             window.addEventListener('beforeunload', (e) => {
@@ -297,18 +303,20 @@
                 const isSelected = input.checked;
                 input.checked = !isSelected;
                 selectedOption.classList.toggle('selected', !isSelected);
-                indicator.classList.toggle('checked', !isSelected);
+                if (indicator) indicator.classList.toggle('checked', !isSelected);
             } else {
                 // Single choice or true/false - clear others and select this one
                 document.querySelectorAll('.answer-option').forEach(option => {
                     option.classList.remove('selected');
-                    option.querySelector('.answer-input').checked = false;
-                    option.querySelector('.answer-radio, .answer-checkbox').classList.remove('checked');
+                    const optionInput = option.querySelector('.answer-input');
+                    const optionIndicator = option.querySelector('.answer-radio, .answer-checkbox');
+                    if (optionInput) optionInput.checked = false;
+                    if (optionIndicator) optionIndicator.classList.remove('checked');
                 });
                 
                 selectedOption.classList.add('selected');
                 input.checked = true;
-                indicator.classList.add('checked');
+                if (indicator) indicator.classList.add('checked');
             }
 
             // Show visual feedback
@@ -316,20 +324,27 @@
         }
 
         restoreAnswers() {
-            const userAnswers = @json($userAnswer->selected_answers ?? []);
-            
-            userAnswers.forEach(answerId => {
-                const option = document.querySelector(`[data-answer-id="${answerId}"]`);
-                if (option) {
-                    option.classList.add('selected');
-                    option.querySelector('.answer-input').checked = true;
-                    option.querySelector('.answer-radio, .answer-checkbox').classList.add('checked');
+            try {
+                const userAnswers = @json($userAnswer->selected_answers ?? []);
+                
+                if (Array.isArray(userAnswers)) {
+                    userAnswers.forEach(answerId => {
+                        const option = document.querySelector(`[data-answer-id="${answerId}"]`);
+                        if (option) {
+                            option.classList.add('selected');
+                            const input = option.querySelector('.answer-input');
+                            const indicator = option.querySelector('.answer-radio, .answer-checkbox');
+                            if (input) input.checked = true;
+                            if (indicator) indicator.classList.add('checked');
+                        }
+                    });
                 }
-            });
+            } catch (error) {
+                console.error('Error restoring answers:', error);
+            }
         }
 
         async saveCurrentAnswer() {
-            const formData = new FormData(document.getElementById('answerForm'));
             const selected_answers = [];
             
             document.querySelectorAll('.answer-input:checked').forEach(input => {
@@ -345,67 +360,62 @@
             
             this.showLoading();
 
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', routes.submitAnswer, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('[name="_token"]').value);
+            try {
+                const response = await fetch(routes.submitAnswer, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question_id: document.querySelector('[name="question_id"]').value,
+                        selected_answers: selected_answers,
+                        time_spent: Math.floor(this.questionTimeSpent / 1000)
+                    })
+                });
 
-                xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                    
-                        try {
-                            const result = JSON.parse(xhr.responseText);
-                            console.log(result);
-                        
-                            if (!result.success) {
-                                this.showAlert('{{ __("lang.exam_time_expired") }}', 'danger', 5000);
-                                setTimeout(() => {
-                                    window.location.href = routes.result;
-                                }, 2000);
-                                resolve(false);
-                            } else if (result.success) {
-                                // Update UI to show question as answered
-                                const navBtn = document.querySelector(`[data-question-index="${this.currentQuestionIndex}"]`);
-                                if (navBtn) {
-                                    navBtn.classList.add('answered');
-                                }
-                                
-                                // Update progress
-                                document.getElementById('answeredCount').textContent = (result.answered_questions?? []).length;
-                                document.getElementById('progressFill').style.width = ((result.answered_questions?? []).length / this.totalQuestions) * 100 + '%';
-                                
-                                this.showAlert('{{ __("lang.answer_saved_successfully") }}', 'success', 2000);
-                                resolve(true);
-                            } else {
-                                throw new Error('Unexpected response status');
-                            }
-                        } catch (error) {
-                            console.error('Error parsing response:', error);
-                            this.showAlert('{{ __("lang.error_saving_answer") }}', 'danger', 3000);
-                            resolve(false);
-                        }
-                    } else {
-                        console.error('Error saving answer:', xhr.statusText);
-                        this.showAlert('{{ __("lang.error_saving_answer") }}', 'danger', 3000);
-                        resolve(false);
+                const result = await response.json();
+                console.log(result);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                if (!result.success) {
+                    this.showAlert('{{ __("lang.exam_time_expired") }}', 'danger', 5000);
+                    setTimeout(() => {
+                        window.location.href = routes.result;
+                    }, 2000);
+                    return false;
+                } else {
+                    // Update UI to show question as answered
+                    const navBtn = document.querySelector(`[data-question-index="${this.currentQuestionIndex}"]`);
+                    if (navBtn) {
+                        navBtn.classList.add('answered');
                     }
-                };
-
-                xhr.onerror = () => {
-                    console.error('Network error saving answer');
-                    this.showAlert('{{ __("lang.error_saving_answer") }}', 'danger', 3000);
-                    resolve(false);
-                };
-
-                xhr.send(JSON.stringify({
-                    question_id: document.querySelector('[name="question_id"]').value,
-                    selected_answers: selected_answers,
-                    time_spent: Math.floor(this.questionTimeSpent / 1000)
-                }));
-            }).finally(() => {
+                    
+                    // Update progress
+                    const answeredCount = document.getElementById('answeredCount');
+                    const progressFill = document.getElementById('progressFill');
+                    
+                    if (answeredCount && result.answered_questions) {
+                        answeredCount.textContent = result.answered_questions.length;
+                    }
+                    if (progressFill && result.answered_questions) {
+                        progressFill.style.width = ((result.answered_questions.length / this.totalQuestions) * 100) + '%';
+                    }
+                    
+                    this.showAlert('{{ __("lang.answer_saved_successfully") }}', 'success', 2000);
+                    return true;
+                }
+            } catch (error) {
+                console.error('Error saving answer:', error);
+                this.showAlert('{{ __("lang.error_saving_answer") }}', 'danger', 3000);
+                return false;
+            } finally {
                 this.hideLoading();
-            });
+            }
         }
 
         startAutoSave() {
@@ -419,81 +429,57 @@
 
         startActivityUpdates() {
             // Update activity time every 10 seconds
-            this.activityUpdateInterval = setInterval(() => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', routes.updateActivity, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('[name="_token"]').value);
+            this.activityUpdateInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(routes.updateActivity, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            time_spent: 10 // 10 seconds
+                        })
+                    });
 
-                xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        try {
-                            const result = JSON.parse(xhr.responseText);
-                            
-                            if (result.status === 'expired') {
-                                this.timeExpired();
-                            } else if (result.status === 'success') {
-                                this.remainingTime = result.remaining_time;
-                            }
-                        } catch (error) {
-                            console.error('Error parsing activity update:', error);
-                        }
-                    } else {
-                        console.error('Error updating activity:', xhr.statusText);
+                    const result = await response.json();
+                    
+                    if (result.status === 'expired') {
+                        this.timeExpired();
+                    } else if (result.status === 'success') {
+                        this.remainingTime = result.remaining_time;
                     }
-                };
-
-                xhr.onerror = () => {
-                    console.error('Network error updating activity');
-                };
-
-                xhr.send(JSON.stringify({
-                    time_spent: 10 // 10 seconds
-                }));
+                } catch (error) {
+                    console.error('Error updating activity:', error);
+                }
             }, 10000);
         }
 
         async checkSessionStatus() {
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', routes.progress, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('[name="_token"]').value);
-
-                xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        try {
-                            const result = JSON.parse(xhr.responseText);
-                            
-                            if (result.status === 'success') {
-                                this.remainingTime = result.data.remaining_time;
-                                
-                                if (result.data.status === 'completed') {
-                                    window.location.href = routes.result;
-                                } else if (result.data.status === 'expired') {
-                                    this.timeExpired();
-                                }
-                                resolve();
-                            } else {
-                                throw new Error('Unexpected response status');
-                            }
-                        } catch (error) {
-                            console.error('Error parsing session status:', error);
-                            resolve();
-                        }
-                    } else {
-                        console.error('Error checking session status:', xhr.statusText);
-                        resolve();
+            try {
+                const response = await fetch(routes.progress, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value
                     }
-                };
+                });
 
-                xhr.onerror = () => {
-                    console.error('Network error checking session status');
-                    resolve();
-                };
-
-                xhr.send();
-            });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    this.remainingTime = result.data.remaining_time;
+                    
+                    if (result.data.status === 'completed') {
+                        window.location.href = routes.result;
+                    } else if (result.data.status === 'expired') {
+                        this.timeExpired();
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking session status:', error);
+            }
         }
 
         hasAnswers() {
@@ -506,7 +492,7 @@
 
         startTimers() {
             // Main exam timer
-            setInterval(() => {
+            this.mainTimerInterval = setInterval(() => {
                 this.remainingTime--;
                 this.updateTimerDisplay();
                 
@@ -516,7 +502,7 @@
             }, 1000);
 
             // Question timer
-            setInterval(() => {
+            this.questionTimerInterval = setInterval(() => {
                 this.questionTimeSpent = Date.now() - this.questionStartTime;
                 this.updateQuestionTimer();
             }, 1000);
@@ -526,13 +512,15 @@
             const timer = document.getElementById('timeRemaining');
             const timerContainer = document.getElementById('examTimer');
             
+            if (!timer) return;
+            
             const hours = Math.floor(this.remainingTime / 3600);
             const minutes = Math.floor((this.remainingTime % 3600) / 60);
             const seconds = this.remainingTime % 60;
             
             timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             
-            if (this.remainingTime <= 600) { // 10 minutes
+            if (this.remainingTime <= 600 && timerContainer) { // 10 minutes
                 timerContainer.classList.add('timer-warning');
             }
             
@@ -543,6 +531,8 @@
 
         updateQuestionTimer() {
             const timer = document.getElementById('questionTime');
+            if (!timer) return;
+            
             const totalSeconds = Math.floor(this.questionTimeSpent / 1000);
             const minutes = Math.floor(totalSeconds / 60);
             const seconds = totalSeconds % 60;
@@ -571,36 +561,31 @@
         async navigateToQuestion(questionIndex) {
             this.showLoading();
             
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', routes.navigate, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('[name="_token"]').value);
+            try {
+                const response = await fetch(routes.navigate, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question_index: questionIndex
+                    })
+                });
 
-                xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        this.questionStartTime = Date.now();
-                        window.location.reload();
-                        resolve();
-                    } else {
-                        console.error('Navigation error:', xhr.statusText);
-                        this.showAlert('{{ __("lang.navigation_error") }}', 'danger', 3000);
-                        resolve();
-                    }
-                };
-
-                xhr.onerror = () => {
-                    console.error('Network error during navigation');
-                    this.showAlert('{{ __("lang.navigation_error") }}', 'danger', 3000);
-                    resolve();
-                };
-
-                xhr.send(JSON.stringify({
-                    question_index: questionIndex
-                }));
-            }).finally(() => {
+                if (response.ok) {
+                    this.questionStartTime = Date.now();
+                    window.location.reload();
+                } else {
+                    throw new Error(`Navigation error: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Navigation error:', error);
+                this.showAlert('{{ __("lang.navigation_error") }}', 'danger', 3000);
+            } finally {
                 this.hideLoading();
-            });
+            }
         }
 
         async submitExam() {
@@ -613,38 +598,29 @@
             try {
                 await this.saveCurrentAnswer();
                 
-                return new Promise((resolve, reject) => {
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', routes.complete, true);
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('[name="_token"]').value);
-
-                    xhr.onload = () => {
-                        if (xhr.status >= 200 && xhr.status < 300) {
-                            if (this.autoSaveInterval) clearInterval(this.autoSaveInterval);
-                            if (this.activityUpdateInterval) clearInterval(this.activityUpdateInterval);
-                            
-                            this.showAlert('{{ __("lang.exam_submitted_successfully") }}', 'success', 3000);
-                            
-                            setTimeout(() => {
-                                window.location.href = routes.result;
-                            }, 2000);
-                            resolve();
-                        } else {
-                            console.error('Submit error:', xhr.statusText);
-                            this.showAlert('{{ __("lang.error_submitting_exam") }}', 'danger', 3000);
-                            resolve();
-                        }
-                    };
-
-                    xhr.onerror = () => {
-                        console.error('Network error submitting exam');
-                        this.showAlert('{{ __("lang.error_submitting_exam") }}', 'danger', 3000);
-                        resolve();
-                    };
-
-                    xhr.send();
+                const response = await fetch(routes.complete, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value,
+                        'Accept': 'application/json'
+                    }
                 });
+
+                if (response.ok) {
+                    this.clearAllIntervals();
+                    
+                    this.showAlert('{{ __("lang.exam_submitted_successfully") }}', 'success', 3000);
+                    
+                    setTimeout(() => {
+                        window.location.href = routes.result;
+                    }, 2000);
+                } else {
+                    throw new Error(`Submit error: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Submit error:', error);
+                this.showAlert('{{ __("lang.error_submitting_exam") }}', 'danger', 3000);
             } finally {
                 this.hideLoading();
             }
@@ -660,46 +636,36 @@
             try {
                 await this.saveCurrentAnswer();
                 
-                return new Promise((resolve, reject) => {
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', routes.pause, true);
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('[name="_token"]').value);
-
-                    xhr.onload = () => {
-                        if (xhr.status >= 200 && xhr.status < 300) {
-                            if (this.autoSaveInterval) clearInterval(this.autoSaveInterval);
-                            if (this.activityUpdateInterval) clearInterval(this.activityUpdateInterval);
-                            
-                            this.showAlert('{{ __("lang.exam_paused_successfully") }}', 'success', 2000);
-                            
-                            setTimeout(() => {
-                                window.location.href = routes.examsIndex;
-                            }, 2000);
-                            resolve();
-                        } else {
-                            console.error('Pause error:', xhr.statusText);
-                            this.showAlert('{{ __("lang.error_pausing_exam") }}', 'danger', 3000);
-                            resolve();
-                        }
-                    };
-
-                    xhr.onerror = () => {
-                        console.error('Network error pausing exam');
-                        this.showAlert('{{ __("lang.error_pausing_exam") }}', 'danger', 3000);
-                        resolve();
-                    };
-
-                    xhr.send();
+                const response = await fetch(routes.pause, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('[name="_token"]').value,
+                        'Accept': 'application/json'
+                    }
                 });
+
+                if (response.ok) {
+                    this.clearAllIntervals();
+                    
+                    this.showAlert('{{ __("lang.exam_paused_successfully") }}', 'success', 2000);
+                    
+                    setTimeout(() => {
+                        window.location.href = routes.examsIndex;
+                    }, 2000);
+                } else {
+                    throw new Error(`Pause error: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Pause error:', error);
+                this.showAlert('{{ __("lang.error_pausing_exam") }}', 'danger', 3000);
             } finally {
                 this.hideLoading();
             }
         }
 
         timeExpired() {
-            if (this.autoSaveInterval) clearInterval(this.autoSaveInterval);
-            if (this.activityUpdateInterval) clearInterval(this.activityUpdateInterval);
+            this.clearAllIntervals();
             
             this.showAlert('{{ __("lang.exam_time_expired") }}', 'danger', 5000);
             
@@ -708,8 +674,18 @@
             }, 3000);
         }
 
+        clearAllIntervals() {
+            if (this.autoSaveInterval) clearInterval(this.autoSaveInterval);
+            if (this.activityUpdateInterval) clearInterval(this.activityUpdateInterval);
+            if (this.mainTimerInterval) clearInterval(this.mainTimerInterval);
+            if (this.questionTimerInterval) clearInterval(this.questionTimerInterval);
+            if (this.statusCheckInterval) clearInterval(this.statusCheckInterval);
+        }
+
         showAlert(message, type, duration = 3000) {
             const alertBanner = document.getElementById('alertBanner');
+            if (!alertBanner) return;
+            
             alertBanner.className = `alert alert-${type} alert-banner`;
             alertBanner.innerHTML = `
                 <div class="d-flex align-items-center">
@@ -725,40 +701,48 @@
         }
 
         showLoading() {
-            document.getElementById('loadingOverlay').classList.remove('hidden');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.classList.remove('hidden');
+            }
         }
 
         hideLoading() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.classList.add('hidden');
+            }
         }
     }
 
     // Global functions for HTML onclick events
     function navigateToQuestion(index) {
-        examManager.navigateToQuestion(index);
+        if (window.examManager) {
+            window.examManager.navigateToQuestion(index);
+        }
     }
 
     function submitExam() {
-        examManager.submitExam();
+        if (window.examManager) {
+            window.examManager.submitExam();
+        }
     }
 
     function pauseExam() {
-        examManager.pauseExam();
+        if (window.examManager) {
+            window.examManager.pauseExam();
+        }
     }
 
     // Initialize the exam manager when page loads
-    let examManager;
     document.addEventListener('DOMContentLoaded', function() {
-        examManager = new ExamManager();
+        window.examManager = new ExamManager();
     });
 
     // Cleanup on page unload
     window.addEventListener('beforeunload', function() {
-        if (examManager && examManager.autoSaveInterval) {
-            clearInterval(examManager.autoSaveInterval);
-        }
-        if (examManager && examManager.activityUpdateInterval) {
-            clearInterval(examManager.activityUpdateInterval);
+        if (window.examManager) {
+            window.examManager.clearAllIntervals();
         }
     });
 </script>

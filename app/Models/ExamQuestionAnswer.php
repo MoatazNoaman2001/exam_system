@@ -17,7 +17,7 @@ class ExamQuestionAnswer extends Model
         'is_correct' => 'boolean',
     ];
 
-    public function examQuestion()
+    public function question()
     {
         return $this->belongsTo(ExamQuestion::class, 'exam_question_id');
     }
