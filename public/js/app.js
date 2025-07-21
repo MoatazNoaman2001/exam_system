@@ -285,6 +285,8 @@ class SidebarManager {
 
     // Language Dropdown Methods
     setupLanguageDropdowns() {
+        console.log(`is Admin or studet: ${this.config.isAdmin} ${this.config.isStudent}`);
+        
         if (this.config.isAdmin) {
             this.setupLanguageDropdown(this.elements.languageToggle, this.elements.languageDropdown);
         }
@@ -374,6 +376,8 @@ class SidebarManager {
     }
 
     setupMobileLanguageDropdown() {
+        console.log(`swticher: ${this.elements.mobileLanguageSwitcher} ${this.elements.mobileLanguageDropdown}`);
+        
         if (!this.elements.mobileLanguageSwitcher || !this.elements.mobileLanguageDropdown) return;
         
         let isMobileDropdownOpen = false;
@@ -384,10 +388,10 @@ class SidebarManager {
             
             isMobileDropdownOpen = !isMobileDropdownOpen;
             this.elements.mobileLanguageDropdown.classList.toggle('show', isMobileDropdownOpen);
+            console.log(`isMobileDropdownOpen: ${isMobileDropdownOpen}`);
             
             // Force styles for mobile
-            this.elements.mobileLanguageDropdown.style.opacity = isMobileDropdownOpen ? '1' : '0';
-            this.elements.mobileLanguageDropdown.style.visibility = isMobileDropdownOpen ? 'visible' : 'hidden';
+            this.elements.mobileLanguageDropdown.style.display = isMobileDropdownOpen ? 'flex' : 'none'
             this.elements.mobileLanguageDropdown.style.transform = isMobileDropdownOpen ? 
                 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(10px)';
         });

@@ -240,7 +240,7 @@
                             <span class="link-text">{{ __('lang.notifications') }}</span>
                         </a>
                     
-                        <div class="language-section border-top border-light border-opacity-25 mt-3 pt-3">
+                        <div class="language-section border-top border-light border-opacity-25 mt-3 pt-3 mx-2 my-3">
                             <small class="text-white-50 ps-3 d-block mb-2">{{ __('Language') }}</small>
                             
                             <a href="{{ route('locale.set', 'ar') }}" 
@@ -285,9 +285,9 @@
                     </a>
                     
                     <!-- Mobile Language Switcher: Simple and always visible -->
-                    <div class="mobile-nav-icon" title="{{ __('lang.language') }}">
+                    <div id='mobileLanguageSwitcher' class="mobile-nav-icon" title="{{ __('lang.language') }}">
                         <span class="icon-bg"><i class="fas fa-language"></i></span>
-                        <div class="d-flex flex-column gap-1 mt-2" style="position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 3000;">
+                        <div id='mobileLanguageDropdown' class="d-flex flex-column gap-1 mt-2" style="position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: white; padding: 1rem;  border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 3000;">
                             <a href="{{ route('locale.set', 'ar') }}" class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-primary' }}" style="width: 100px;">
                                 العربية
                             </a>

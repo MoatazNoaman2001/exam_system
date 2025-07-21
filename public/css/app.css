@@ -1068,19 +1068,35 @@ body {
         white-space: nowrap !important;
     }
     
-    /* Hide tooltips on mobile */
-    .student-sidebar .sidebar-link::after {
-        display: none !important;
-    }
-    
-    /* Hide toggle button on mobile */
-    .student-sidebar .sidebar-toggle {
-        display: none !important;
-    }
-    
-    /* Show mobile bottom nav for students */
     .mobile-bottom-nav {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%);
+        z-index: 2000;
         display: flex !important;
+        gap: 0.8rem; /* Reduced gap */
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 2rem;
+        padding: 0.4rem 0.8rem; /* Reduced padding */
+        border: 1.5px solid rgba(255, 255, 255, 0.18);
+        min-width: 200px; /* Reduced min-width */
+        max-width: 85vw; /* Reduced max-width */
+        overflow: hidden; /* Prevent overflow */
+    }
+    
+    .mobile-bottom-nav .icon-bg {
+        width: 38px; /* Reduced size */
+        height: 38px; /* Reduced size */
+        font-size: 1.1rem; /* Reduced font size */
+    }
+    
+    /* Ensure main content has proper bottom padding on mobile */
+    .main-content {
+        padding-bottom: 100px !important; /* Increased padding */
     }
 }
 
@@ -1120,4 +1136,70 @@ body {
     .mobile-bottom-nav {
         display: flex !important;
     }
+}
+
+.student-sidebar .language-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+}
+
+.student-sidebar .language-section small {
+    display: none; /* Hide the "Language" label when collapsed */
+}
+
+.student-sidebar.expanded .language-section small {
+    display: block;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Improve language links appearance when collapsed */
+.student-sidebar .language-section .sidebar-link {
+    margin: 0.15rem 0.5rem;
+    padding: 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.student-sidebar.expanded .language-section .sidebar-link {
+    margin: 0.15rem 0;
+    padding: 0.6rem 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    justify-content: flex-start;
+}
+
+.student-sidebar .language-section .sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+.student-sidebar .language-section .sidebar-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Hide language text when collapsed, show flag/icon only */
+.student-sidebar .language-section .sidebar-link i {
+    margin-right: 0;
+    font-size: 1rem;
+}
+
+.student-sidebar.expanded .language-section .sidebar-link i {
+    margin-right: 0.5rem;
+}
+
+/* .mobile-bottom-nav .mobile-nav-icon:nth-child(4) {
+    display: none !important; /* Hide the language switcher from mobile bottom nav */
+*/
+
+/* Adjust remaining items spacing */
+.mobile-bottom-nav {
+    justify-content: space-evenly;
 }
