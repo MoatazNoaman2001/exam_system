@@ -84,7 +84,7 @@
 
     <script>
         function copyLink() {
-            navigator.clipboard.writeText('{{ route('certificate.view') }}')
+            navigator.clipboard.writeText('{{ route('student.certificate.view') }}')
                 .then(() => alert('{{ __('lang.link_copied') }}'))
                 .catch(() => alert('{{ __('lang.copy_error') }}'));
         }

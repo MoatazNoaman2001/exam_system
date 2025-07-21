@@ -59,14 +59,14 @@
                 <h3 class="card-title">{{ __('lang.achievements') }}</h3>
             </div>
             <div class="card-body">
-                <a href="{{ route('certification') }}" class="settings-item">
+                <a href="{{ route('student.certification') }}" class="settings-item">
                     <div class="item-content">
                         <i class="fas fa-certificate item-icon"></i>
                         <span class="item-text">{{ __('lang.certifications') }}</span>
                     </div>
                     <i class="fas fa-chevron-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }} item-arrow"></i>
                 </a>
-                <a href="{{ route('leaderboard', ['userId' => auth()->id()]) }}" class="settings-item">
+                <a href="{{ route('student.leaderboard', ['userId' => auth()->id()]) }}" class="settings-item">
                     <div class="item-content">
                         <i class="fas fa-medal item-icon"></i>
                         <span class="item-text">{{ __('lang.leaderboard') }}</span>
@@ -157,7 +157,7 @@
                 <h3 class="card-title">{{ __('lang.support_help') }}</h3>
             </div>
             <div class="card-body">
-                <a href="{{ route('terms.conditions') }}" class="settings-item">
+                <a href="{{ route('student.terms.conditions') }}" class="settings-item">
                     <div class="item-content">
                         <i class="fas fa-file-contract item-icon"></i>
                         <span class="item-text">{{ __('lang.terms_conditions') }}</span>

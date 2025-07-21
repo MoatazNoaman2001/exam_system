@@ -47,7 +47,7 @@
                         <div class="leaderboard__user-info-frame">
                             <div class="leaderboard__rank-number">{{ $index + 1 }}</div>
                             <div class="leaderboard__user-info-container">
-                                <img class="leaderboard__avatar" src="{{ $topUser->image ? asset('storage/avatars/' . $topUser->image) : asset('images/default-avatar.png') }}" alt="{{ __('lang.avatar') }}" />
+                                <img class="leaderboard__avatar" src="{{ $topUser->image ? asset('storage/avatars/' . $topUser->image) : asset('images/person_placeholder.png') }}" alt="{{ __('lang.avatar') }}" />
                                 <div class="leaderboard__user-info">
                                     <div class="leaderboard__greeting-container">
                                         <div class="leaderboard__greeting-text">{{ $topUser->username }}</div>
@@ -60,7 +60,7 @@
                         </div>
                         <div class="leaderboard__medal">
                             @if($index < 3)
-                                <img class="leaderboard__star" src="{{ asset('images/Medal' . $index . '.svg') }}" alt="{{ __('lang.medal') }}" />
+                                <img class="leaderboard__star" src="{{ asset('images/Medal.png') }}" alt="{{ __('lang.medal') }}" />
                             @endif
                         </div>
                     </div>

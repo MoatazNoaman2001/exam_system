@@ -60,9 +60,7 @@ class SettingController extends Controller
                 'message' => $validator->errors()->first()
             ], 422);
         }
-
-        try {
-            $user = Auth::user();
+        $user = Auth::user();
             
             // Delete old avatar if exists
             if ($user->image && Storage::disk('public')->exists('avatars/' . $user->image)) {
@@ -96,14 +94,6 @@ class SettingController extends Controller
                 'message' => __('lang.avatar_updated_successfully'),
                 'avatar_url' => asset('storage/avatars/' . $avatarName)
             ]);
-
-        } catch (\Exception $e) {
-            \Log::error('Avatar update error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => __('lang.error_updating_avatar')
-            ], 500);
-        }
     }
 
     /**
@@ -350,10 +340,10 @@ class SettingController extends Controller
     /**
      * Show profile edit form
      */
-    public function show()
+    public function showProfile()
     {
         $user = Auth::user();
-        return view('student.setting', compact('user'));
+        return view('student.Profile', compact('user'));
     }
 
     /**
