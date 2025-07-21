@@ -33,7 +33,7 @@
                     </div>
                     
                     <div class="certificate-buttons">
-                        <a href="{{ route('certificate.download') }}" class="certificate-btn download">
+                        <a href="{{ route('student.certificate.download') }}" class="certificate-btn download">
                             <i class="fas fa-download"></i> {{ __('lang.download_certificate') }}
                         </a>
                         <button class="certificate-btn share" data-bs-toggle="modal" data-bs-target="#shareModal">
