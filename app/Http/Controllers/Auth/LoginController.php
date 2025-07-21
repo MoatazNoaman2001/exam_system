@@ -64,6 +64,7 @@ class LoginController extends Controller
             // $isFirstTime = !IntroAnswer::where('user_id', $user->id)->exists();
 
             $isFirstTime = $user->first_visit;
+            
             // dd($isFirstTime);
             if ($isFirstTime) {
                 $user->first_visit= false;
