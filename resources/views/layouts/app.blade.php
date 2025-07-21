@@ -174,17 +174,17 @@
                     </div>
                     <!-- Sidebar Footer for Admin -->
                     <div class="sidebar-footer">
-                        <!-- Language Switcher -->
-                        <div class="sidebar-link language-switcher-link {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" 
-                             data-title="{{ __('lang.language') }}" 
-                             id="languageToggle">
+                        <!-- Language Switcher: Simple and always visible -->
+                        <div class="sidebar-link" data-title="{{ __('lang.language') }}">
                             <i class="fas fa-language"></i>
                             <span class="link-text">{{ __('lang.language') }}</span>
-                            <div class="language-dropdown {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" id="languageDropdown">
-                                <a href="{{ route('locale.set', 'ar') }}"
-                                    class="dropdown-item {{ app()->getLocale() == 'ar' ? 'active' : '' }}">العربية</a>
-                                <a href="{{ route('locale.set', 'en') }}"
-                                    class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">English</a>
+                            <div class="d-flex flex-column gap-1 mt-2">
+                                <a href="{{ route('locale.set', 'ar') }}" class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-light' }}" style="width: 100px;">
+                                    العربية
+                                </a>
+                                <a href="{{ route('locale.set', 'en') }}" class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-primary' : 'btn-outline-light' }}" style="width: 100px;">
+                                    English
+                                </a>
                             </div>
                         </div>
                         <a class="btn btn-outline-light w-100" href="{{ route('logout') }}"
@@ -227,7 +227,7 @@
                             <i class="fas fa-trophy"></i>
                             <span class="link-text">{{ __('lang.achievements') }}</span>
                         </a>
-                        <a href="{{ route('student.setting') }}"
+                        <a href="{{ route('student.settings.index') }}"
                             class="sidebar-link {{ request()->routeIs('student.account*') ? 'active' : '' }}">
                             <i class="fas fa-user-cog"></i>
                             <span class="link-text">{{ __('lang.my_account') }}</span>
@@ -278,26 +278,20 @@
                         title="{{ __('lang.achievements') }}">
                         <span class="icon-bg"><i class="fas fa-trophy"></i></span>
                     </a>
-                    <a href="{{ route('student.setting') }}"
+                    <a href="{{ route('student.settings.index') }}"
                         class="mobile-nav-icon {{ request()->routeIs('student.account*') ? 'active' : '' }}"
                         title="{{ __('lang.my_account') }}">
                         <span class="icon-bg"><i class="fas fa-user-cog"></i></span>
                     </a>
                     
-                    <!-- Mobile Language Switcher -->
-                    <div class="mobile-nav-icon language-switcher-mobile" 
-                         id="mobileLanguageSwitcher" 
-                         title="{{ __('lang.language') }}">
+                    <!-- Mobile Language Switcher: Simple and always visible -->
+                    <div class="mobile-nav-icon" title="{{ __('lang.language') }}">
                         <span class="icon-bg"><i class="fas fa-language"></i></span>
-                        <div class="mobile-language-dropdown" id="mobileLanguageDropdown">
-                            <a href="{{ route('locale.set', 'ar') }}"
-                                class="mobile-dropdown-item {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
-                                <i class="fas fa-flag"></i>
+                        <div class="d-flex flex-column gap-1 mt-2" style="position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 3000;">
+                            <a href="{{ route('locale.set', 'ar') }}" class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-primary' }}" style="width: 100px;">
                                 العربية
                             </a>
-                            <a href="{{ route('locale.set', 'en') }}"
-                                class="mobile-dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}">
-                                <i class="fas fa-flag"></i>
+                            <a href="{{ route('locale.set', 'en') }}" class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-primary' : 'btn-outline-primary' }}" style="width: 100px;">
                                 English
                             </a>
                         </div>

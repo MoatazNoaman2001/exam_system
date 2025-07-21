@@ -50,13 +50,26 @@
         margin-bottom: 0.5rem;
     }
 
+    @if (app()->isLocale('ar'))
     .notification-time {
         font-size: 0.8rem;
         color: #7b88a8;
         position: absolute;
         top: 1rem;
-        {{ app()->isLocale('ar') ? 'left: 1rem' : 'right: 1rem' }};
-    }
+        left: 1rem;
+    }       
+    @endif
+
+    @if (app()->isLocale('en'))
+    .notification-time {
+        font-size: 0.8rem;
+        color: #7b88a8;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }       
+    @endif
+
 
     .no-notifications {
         text-align: center;

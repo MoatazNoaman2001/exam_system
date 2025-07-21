@@ -43,7 +43,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
-App::setLocale('en');
+// App::setLocale('en'); // Removed - this was preventing language switching
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
 
 
@@ -234,7 +234,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notification.unread-count');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notification.markAsRead');
 });
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'locale'])->group(function () {
     Route::get('/student/notifications', [NotificationController::class, 'index'])->name('student.notifications.show');
 });
 Route::get('/Achievement-Point', [AchievementPointController::class, 'AchievementPoint'])->name('AchievementPoint');
@@ -250,11 +250,11 @@ Route::get('/certificate/view', [CertificationController::class, 'view'])->name(
 
 
 
-Route::middleware(['auth'])->prefix('student')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('student.profile.show');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('student.profile.update');
-    Route::put('/profile/image', [ProfileController::class, 'updateImage'])->name('student.profile.update-image');
-});
+// Route::middleware(['auth'])->prefix('student')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'show'])->name('student.profile.show');
+//     Route::put('/profile', [ProfileController::class, 'update'])->name('student.profile.update');
+//     Route::put('/profile/image', [ProfileController::class, 'updateImage'])->name('student.profile.update-image');
+// });
 Route::delete('/user/delete', [ProfileController::class, 'destroy'])->name('user.delete')->middleware('auth');
 
 
@@ -307,11 +307,38 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'stu
     Route::get('/setting',[SettingController::class, 'show'])->name('setting');
     Route::get('/contact', [ContactUsController::class, 'index'])->name('contact.us');
     Route::post('/contact', [ContactUsController::class, 'store'])->name('contact.store');  
+    Route::post('setting/profile/edit', [SettingController::class, 'edit'])->name('profile.update-avatar');
+    Route::post('setting/notifications', [SettingController::class, 'update'])->name('settings.notifications');
+    Route::get('setting/security' , [SectionsController::class , 'show'])->name('security.show');
     // Route::view('/notifications', 'student.notifications.show')->name('notifications.show');
     // Plan Selection Routes
     Route::get('/plan/selection', [SectionsController::class, 'showPlanSelection'])->name('plan.selection');
     Route::post('/plan/store', [SectionsController::class, 'storePlan'])->name('plan.store');
     Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
+    // Settings routes
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+
+    // Profile management
+    Route::get('/profile', [SettingController::class, 'showProfile'])->name('profile.show');
+    Route::put('/profile', [SettingController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/avatar', [SettingController::class, 'updateAvatar'])->name('profile.update-avatar');
+    Route::delete('/profile/avatar', [SettingController::class, 'removeAvatar'])->name('profile.remove-avatar');
+    
+    // Security settings
+    Route::get('/security', [SettingController::class, 'showSecurity'])->name('security.show');
+    Route::put('/security/password', [SettingController::class, 'updatePassword'])->name('security.update-password');
+    
+    // App settings
+    Route::post('/settings/notifications', [SettingController::class, 'updateNotifications'])->name('settings.notifications');
+
+    // User statistics
+    Route::get('/stats', [SettingController::class, 'getUserStats'])->name('stats');
+    
+    // Account deletion
+    Route::delete('/account', [SettingController::class, 'deleteAccount'])->name('account.delete');
+    
+    // Add route alias for delete-account (to match your existing blade template)
+    Route::delete('/delete-account', [SettingController::class, 'deleteAccount'])->name('delete-account');
 
     // Route::get('/profile', [ProfileController::class, 'show'])->name('account');
 
