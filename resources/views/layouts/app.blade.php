@@ -248,6 +248,7 @@
                                 <i class="fas fa-language me-3"></i>العربية
                             </a>
                             
+                            
                             <a href="{{ route('locale.set', 'en') }}" 
                                class="sidebar-link {{ app()->getLocale() == 'en' ? 'active' : '' }}">
                                 <i class="fas fa-language me-3"></i>English
