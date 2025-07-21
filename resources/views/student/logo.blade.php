@@ -13,7 +13,7 @@
                 <h1 class="logo-text">Logo</h1>
                 <p class="ready">جاهز للانطلاق؟</p>
                 <p class="start">.ابدأ اﻵن رحلتك نحو الاحترافية</p>
-                <button class="use" onclick="window.location.href='{{ route('feature') }}'">
+                <button class="use" onclick="window.location.href='{{ route('student.feature') }}'">
                     بدء الاستخدام
                 </button>    
             </div>

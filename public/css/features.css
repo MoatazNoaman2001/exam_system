@@ -182,3 +182,6 @@ nav {
         font-size: 1.1rem;
     }
 }
+.main-content.student-layout {
+    margin: 0 !important;
+}

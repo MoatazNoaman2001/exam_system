@@ -14,11 +14,11 @@
                 <p class="feature-subtitle">.محتوى محدث، تمارين واقعية، وتتبع لتقدمك خطوة بخطوة</p>
                 
                 <div class="button-group">
-                    <button class="primary-btn" onclick="window.location.href='{{ route('welcome') }}'">التالي</button>
-                    <button class="secondary-btn" onclick="window.location.href='{{ route('index') }}'">السابق</button>
+                    <button class="primary-btn" onclick="window.location.href='{{ route('student.welcome') }}'">التالي</button>
+                    <button class="secondary-btn" onclick="window.location.href='{{ route('student.index') }}'">السابق</button>
                 </div>
                 
-                <div class="skip-container" onclick="window.location.href='{{ route('splash') }}'">
+                <div class="skip-container" onclick="window.location.href='{{ route('student.splash') }}'">
                     <i class="fas fa-arrow-left"></i>
                     <span>تخطي</span>
                 </div>

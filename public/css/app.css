@@ -490,6 +490,7 @@ body {
     transition: margin-left var(--transition-speed) ease;
 }
 
+
 [dir="rtl"] .main-content.student-layout {
     margin-right: var(--sidebar-width-collapsed);
     transition: margin-right var(--transition-speed) ease;

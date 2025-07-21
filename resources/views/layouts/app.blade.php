@@ -198,7 +198,7 @@
                 </div>
             @endif
 
-            @if (Auth::user()->role === 'student')
+            @if (Auth::user()->role === 'student' && !array_key_exists(request()->route()->getName(), ["student.index" , "student.feature"]))
                 <!-- Toggle Button -->
                 <button class="sidebar-toggle {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" 
                         id="studentSidebarToggleBtn" title="Toggle Sidebar">
@@ -212,9 +212,10 @@
                             <i class="fas fa-user-graduate"></i>
                         </div>
                         <h3 class="sidebar-title">{{ __('lang.student_panel') }}</h3>
-                        <p class="sidebar-subtitle">مرحباً {{ Auth::user()->username }}</p>
+                        <p class="sidebar-subtitle">مرحباً {{ Auth::user()->username }}</p> 
                     </div>
                     <div class="sidebar-menu">
+                        
                         <a href="{{ route('student.sections') }}"
                             class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}"
                             data-title="{{ __('lang.sections') }}">
@@ -247,7 +248,7 @@
                                class="sidebar-link {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
                                 <i class="fas fa-language me-3"></i>العربية
                             </a>
-                            
+
                             
                             <a href="{{ route('locale.set', 'en') }}" 
                                class="sidebar-link {{ app()->getLocale() == 'en' ? 'active' : '' }}">

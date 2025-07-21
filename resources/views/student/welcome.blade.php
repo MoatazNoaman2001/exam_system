@@ -6,12 +6,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <style>
+        .main-content.student-layout {
+    margin: 0 !important;
+}
+    </style>
     <div class="welcome-container">
-        <!-- Skip Button -->
-        <a href="{{ route('splash') }}" class="skip-btn btn btn-link">
-            <img src="/images/arrow-left.png" alt="{{ __('lang.skip') }}" class="arrow-icon" />
-            <span>{{ __('lang.skip') }}</span>
-        </a>
+       
         
         <!-- Main Content -->
         <div class="welcome-content text-center">
@@ -26,7 +27,7 @@
         </div>
         
         <!-- Next Button -->
-        <a href="{{ route('student.intro.index') }}" class="next-btn btn btn-primary" data-aos="fade-up" data-aos-delay="400">
+        <a href="{{ route('student.sections.index') }}" class="next-btn btn btn-primary" data-aos="fade-up" data-aos-delay="400">
             {{ __('lang.next') }}
         </a>
     </div>

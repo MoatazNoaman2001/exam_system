@@ -194,10 +194,6 @@ Route::get('/email/verify', [VerificationController::class, 'show'])->name('veri
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
-Route::get('/logo', [LogoController::class, 'index'])->name('index');
-Route::get('/feature', [FeaturesController::class, 'features'])->name('feature');
-Route::get('/welcome', [WelcomeController::class, 'welcome'])->name('welcome');
-Route::get('/splash', [SplashController::class, 'splash'])->name('splash');
 Route::get('/forget-password', [ForgetController::class, 'showForgetPasswordForm'])->name('forget-password');
 Route::post('/forget-password', [ForgetController::class, 'sendResetLinkEmail'])->name('forget-password.submit');
 
@@ -291,6 +287,13 @@ Route::get('/test-verification', function() {
 
 
 Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'student', 'locale'])->group(function () {
+
+
+    Route::get('/logo', [LogoController::class, 'index'])->name('index');
+    Route::get('/feature', [FeaturesController::class, 'features'])->name('feature');
+    Route::get('/welcome', [WelcomeController::class, 'welcome'])->name('welcome');
+    Route::get('/splash', [SplashController::class, 'splash'])->name('splash');
+    
     Route::get('/intro', [IntroController::class, 'index'])->name('intro.index');
     Route::get('/intro/step/{step}', [IntroController::class, 'step'])->name('intro.step');
     Route::post('/intro/step/{step}', [IntroController::class, 'store'])->name('intro.store');

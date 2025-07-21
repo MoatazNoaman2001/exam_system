@@ -20,6 +20,11 @@ class SectionsController extends Controller
     {
         $user = auth()->user();
 
+        if ($user->first_visit){
+            $user->first_visit = false;
+            $user->save();
+        }
+
         // Initialize sets to track unique chapter and domain IDs
         $completedChapterIds = [];
         $achievedDomainIds = [];

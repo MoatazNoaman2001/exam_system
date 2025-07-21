@@ -1,8 +1,8 @@
 /* welcome.css */
 .welcome-container {
   position: relative;
-  width: 99vw;
-  height: 90vh;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   font-family: 'Tajawal', sans-serif;
   text-align: center;
@@ -161,4 +161,8 @@
   .decorative-graphic {
       width: 60%;
   }
+}
+
+.main-content.student-layout {
+  margin: 0 !important;
 }
