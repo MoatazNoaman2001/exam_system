@@ -21,11 +21,12 @@ class WelcomeController extends Controller
             if ($user->role == "admin") {
                 return redirect('/admin/dashboard');
             } else {
-                $isFirstTime = !IntroAnswer::where('user_id', $user->id)->exists();
+                
+                $isFirstTime = $user->first_visit;
                 if ($isFirstTime) {
                     $user->first_visit= false;
                     $user->save();
-                    return redirect()->route('index');
+                    return redirect()->route('student.index');
                 }else{
                     return redirect()->route('student.sections');
                 }
