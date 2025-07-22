@@ -186,7 +186,7 @@
                                     English
                                 </a>
                             </div>
-                        </div>
+                        </div> 
                         <a class="btn btn-outline-light w-100" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form-admin').submit();">
                             <i class="fas fa-sign-out-alt me-2"></i> {{ __('lang.logout') }}
@@ -256,7 +256,6 @@
                             </a>
                         </div>
                         
-
                         <a href="{{ route('logout') }}" class="sidebar-link" data-title="{{ __('lang.logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
                             <i class="fas fa-sign-out-alt"></i>
@@ -319,7 +318,7 @@
             @endif
         @endauth
 
-        <main class="main-content {{ Auth::check() && Auth::user()->role === 'student' ? 'student-layout' : '' }}" id="mainContent">
+        <main class="main-content {{ Auth::check() && Auth::user()->role === 'student' ? 'student-layout' : '' }}" id="mainContent" style="{{Auth::check() && Auth::user()->role === 'admin'? 'margin-top: 80px' : ''}}">
             @yield('content')
         </main>
     </div>

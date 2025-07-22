@@ -1,11 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid p-0 min-vh-90 bg-light {{ app()->getLocale() === 'ar' ? 'direction-rtl' : 'direction-ltr' }}">
-    <div class="row g-0">
+<div class="{{ app()->getLocale() === 'ar' ? 'direction-rtl' : 'direction-ltr' }}">
+    <div class="row">
+        <!-- Right Column - Image -->
+        <div class="col-lg-6 d-lg-block">
+            <div class="position-relative h-100">
+                <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
+                     alt="PMP Professional Certification" class="w-100 h-100 object-fit-cover">
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"></div>
+                <div class="position-absolute bottom-0 {{ app()->getLocale() === 'ar' ? 'end-0 text-end' : 'start-0 text-start' }} p-5 text-white">
+                    <h2 class="fw-bold">{{ __('lang.advance_career') }}</h2>
+                    <p class="mb-0">{{ __('lang.access_resources') }}</p>
+                </div>
+            </div>
+        </div>
         <!-- Left Column - Form -->
         <div class="col-lg-6 d-flex align-items-center justify-content-center register-container">
-            <div class="w-100 px-4 px-md-5" style="max-width: 600px;">
+            <div class="w-100 px-4 px-md-5" style="max-width: 700px;">
                 <!-- Header -->
                 <div class="text-center mb-5">
                     <div class="d-flex align-items-center justify-content-center mb-3">
@@ -32,7 +44,7 @@
                 <form method="POST" action="{{ route('register') }}" class="needs-validation" novalidate dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
                     @csrf
 
-                    <div class="row g-3">
+                    <div class="row">
                         <!-- Username -->
                         <div class="col-12 mb-4">
                             <label for="username" class="form-label fw-medium {{ app()->getLocale() === 'ar' ? 'text-end d-block' : '' }}">{{ __('lang.username') }}</label>
@@ -132,7 +144,7 @@
                                     <option value="ar" {{ old('preferred_language') == 'ar' ? 'selected' : '' }}>{{ __('lang.arabic') }}</option>
                                     <option value="en" {{ old('preferred_language') == 'en' ? 'selected' : '' }}>{{ __('lang.english') }}</option>
                                 </select>
-                                <i class="fas fa-language field-icon {{ app()->getLocale() === 'ar' ? 'order-0' : '' }}"></i>
+                                {{-- <i class="fas fa-language field-icon {{ app()->getLocale() === 'ar' ? 'order-0' : '' }}"></i> --}}
                                 @error('preferred_language')
                                     <div class="invalid-feedback d-flex align-items-center {{ app()->getLocale() === 'ar' ? 'justify-content-end' : '' }}">
                                         <i class="fas fa-exclamation-circle {{ app()->getLocale() === 'ar' ? 'ms-1' : 'me-1' }}"></i> {{ $message }}
@@ -176,18 +188,7 @@
             </div>
         </div>
 
-        <!-- Right Column - Image -->
-        <div class="col-lg-6 d-none d-lg-block">
-            <div class="position-relative h-100">
-                <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
-                     alt="PMP Professional Certification" class="w-100 h-100 object-fit-cover">
-                <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"></div>
-                <div class="position-absolute bottom-0 {{ app()->getLocale() === 'ar' ? 'end-0 text-end' : 'start-0 text-start' }} p-5 text-white">
-                    <h2 class="fw-bold">{{ __('lang.advance_career') }}</h2>
-                    <p class="mb-0">{{ __('lang.access_resources') }}</p>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
 
