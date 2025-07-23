@@ -8,12 +8,14 @@ use App\Models\UserProgress;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+
 
 use Illuminate\Support\Str;
 
 class Plan extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasUlids;
 
     public $incrementing = false;
     protected $keyType = 'string';
