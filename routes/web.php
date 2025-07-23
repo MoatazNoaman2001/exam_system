@@ -1,5 +1,4 @@
 <?php
-
 use App\Models\Notification;
 use App\Http\Middleware\IsStudent;
 use App\Http\Middleware\SetLocale;
@@ -42,6 +41,7 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\EarnPointsController;
 
 // App::setLocale('en'); // Removed - this was preventing language switching
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
@@ -318,6 +318,8 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'stu
     Route::get('/plan/selection', [SectionsController::class, 'showPlanSelection'])->name('plan.selection');
     Route::post('/plan/store', [SectionsController::class, 'storePlan'])->name('plan.store');
     Route::get('/achievments', [AchievementController::class, 'index'])->name('achievements');
+            Route::Get('/endpoint', [EarnPointsController::class, 'index'])->name('user.point');
+
     // Settings routes
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
 
@@ -326,7 +328,8 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'stu
     Route::put('/profile', [SettingController::class, 'updateProfile'])->name('profile.update');
     Route::post('/profile/avatar', [SettingController::class, 'updateAvatar'])->name('profile.update-avatar');
     Route::delete('/profile/avatar', [SettingController::class, 'removeAvatar'])->name('profile.remove-avatar');
-    
+        Route::put('/profile/update-image', [SettingController::class, 'updateAvatar'])->name('profile.update-image');
+
     // Security settings
     Route::get('/security', [SettingController::class, 'showSecurity'])->name('security.show');
     Route::put('/security/password', [SettingController::class, 'updatePassword'])->name('security.update-password');

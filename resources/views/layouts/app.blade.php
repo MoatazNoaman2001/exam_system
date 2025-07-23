@@ -13,7 +13,7 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700&family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <!-- Vite Assets -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     

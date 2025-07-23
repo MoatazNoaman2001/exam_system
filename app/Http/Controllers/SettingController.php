@@ -190,6 +190,13 @@ class SettingController extends Controller
     /**
      * Update user profile
      */
+
+
+    public function showProfile()
+{
+    $user = Auth::user();
+    return view('student.Profile', compact('user'));
+}
     public function updateProfile(Request $request)
     {
         $user = Auth::user();

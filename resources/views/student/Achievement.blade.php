@@ -70,7 +70,9 @@ use Carbon\Carbon;
                     </span>
                 </div>
             </div>
-            <button class="action-btn">{{ __('lang.ways_to_earn_points') }}</button>
+<a href="{{ route('student.user.point') }}" class="action-btn">
+  {{ __('lang.ways_to_earn_points') }}
+</a>
         </div>
 
         <!-- Time Plan Card -->
