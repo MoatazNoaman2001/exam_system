@@ -62,7 +62,7 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <div class="d-flex ms-auto align-items-center">
                             <!-- Language Switcher for Navbar -->
-                            <div class="navbar-language-switcher me-3">
+                            <div class="navbar-language-switcher mx-4">
                                 <div class="btn-group" role="group">
                                     <a href="{{ route('locale.set', 'ar') }}"
                                         class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-primary' }}"
@@ -88,7 +88,7 @@
                                 <div class="d-flex align-items-center gap-2"
                                     dir="{{ app()->isLocale('ar') ? 'rtl' : 'ltr' }}"
                                     style="{{ app()->isLocale('ar') ? 'left: 10px' : 'right: 10px' }}">
-                                    <div class="d-flex align-items-center gap-1">
+                                    <div class="d-flex flex-row align-items-center justify-content-center gap-1">
                                         <span class="badge bg-primary rounded-pill text-uppercase">
                                             {{ Auth::user()->role }}
                                         </span>
@@ -97,16 +97,7 @@
                                         </span>
                                     </div>
                                     <div class="vr d-none d-sm-inline-block" style="height: 20px;"></div>
-                                    <a class="nav-link p-0" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        <span class="d-flex align-items-center gap-1 text-danger">
-                                            <i class="fas fa-sign-out-alt fa-sm"></i>
-                                            <span class="d-none d-sm-inline">{{ __('lang.logout') }}</span>
-                                        </span>
-                                    </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
+                                   
                                 </div>
                             @endguest
                         </div>
@@ -174,19 +165,7 @@
                     </div>
                     <!-- Sidebar Footer for Admin -->
                     <div class="sidebar-footer">
-                        <!-- Language Switcher: Simple and always visible -->
-                        <div class="sidebar-link" data-title="{{ __('lang.language') }}">
-                            <i class="fas fa-language"></i>
-                            <span class="link-text">{{ __('lang.language') }}</span>
-                            <div class="d-flex flex-column gap-1 mt-2">
-                                <a href="{{ route('locale.set', 'ar') }}" class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-light' }}" style="width: 100px;">
-                                    العربية
-                                </a>
-                                <a href="{{ route('locale.set', 'en') }}" class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-primary' : 'btn-outline-light' }}" style="width: 100px;">
-                                    English
-                                </a>
-                            </div>
-                        </div> 
+                      
                         <a class="btn btn-outline-light w-100" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form-admin').submit();">
                             <i class="fas fa-sign-out-alt me-2"></i> {{ __('lang.logout') }}

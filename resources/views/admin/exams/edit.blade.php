@@ -10,9 +10,6 @@
     </div>
 
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">{{ __('Exam Details') }}</h6>
-        </div>
         <div class="card-body">
             <form method="POST" action="{{ route('admin.exams.update', $exam) }}" id="examForm">
                 @csrf
@@ -94,9 +91,7 @@
         </div>
     </div>
 </div>
-@endsection
 
-@push('styles')
 <style>
     .question-card {
         border-left: 4px solid #4e73df;
@@ -146,9 +141,6 @@
         font-weight: bold;
     }
 </style>
-@endpush
-
-@push('scripts')
 <script>
 let questionCounter = {{ count($exam->questions) }};
 
@@ -238,6 +230,9 @@ function createChoiceOptions(selectElement, optionCount = 2) {
     const questionIndex = getQuestionIndex(selectElement);
     const questionType = selectElement.value;
     const inputType = questionType === 'multiple_choice' ? 'checkbox' : 'radio';
+
+    console.log('as,mdf');
+    
     
     let html = '<h6 class="mb-3">{{ __("Answer Options") }}</h6>';
     
@@ -381,3 +376,5 @@ document.addEventListener('change', function(e) {
     }
 });
 </script>
+
+@endsection

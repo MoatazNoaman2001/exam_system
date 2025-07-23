@@ -35,6 +35,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\certificationController;
 use App\Http\Controllers\ChangPasswordController;
+use App\Http\Controllers\Admin\AdminExamController;
 use App\Http\Controllers\CompletedActionController;
 use App\Http\Controllers\AchievementPointController;
 use App\Http\Controllers\VerificationCodeController;
@@ -140,13 +141,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', SetLocale::class])->
     
     
     // Exams Management
-    Route::get('/exams', [AdminController::class, 'exams'])->name('exams');
-    Route::get('/exams/create', [AdminController::class, 'createExam'])->name('exams.create');
-    Route::post('/admin/exams/import', [AdminController::class, 'import'])->name('exams.import');
-    Route::post('/exams', [AdminController::class, 'storeExam'])->name('exams.store');
-    Route::get('/exams/{exam}/edit', [AdminController::class, 'editExam'])->name('exams.edit');
-    Route::put('/exams/{exam}', [AdminController::class, 'updateExam'])->name('exams.update');
-    Route::delete('/exams/{exam}', [AdminController::class, 'destroyExam'])->name('exams.destroy');
+    Route::get('/exams', [AdminExamController::class, 'exams'])->name('exams');
+    Route::get('/exams/create', [AdminExamController::class, 'createExam'])->name('exams.create');
+    Route::post('/exams', [AdminExamController::class, 'storeExam'])->name('exams.store');
+    Route::get('/exams/{exam}/edit', [AdminExamController::class, 'editExam'])->name('exams.edit');
+    Route::put('/exams/{exam}', [AdminExamController::class, 'updateExam'])->name('exams.update');
+    Route::delete('/exams/{exam}', [AdminExamController::class, 'destroyExam'])->name('exams.destroy');
+    Route::post('/exams/import', [AdminExamController::class, 'import'])->name('exams.import');
 
     // Route::view('/exams/creat', 'components.exam.basic-info-create')->name('exams.partials.basic-info-create');
 
