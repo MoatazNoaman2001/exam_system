@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-    <link rel="stylesheet" href="{{ asset('css/root-welcome.css') }}">
+    <link rel="stylesheet" href="{{asset('css/welcome.css')}}">
 </head>
 <body>
     <!-- Header -->
@@ -28,12 +25,14 @@
                     <li><a href="#progress-tracking">Progress</a></li>
                     <li><a href="#testimonials">Testimonials</a></li>
                 </ul>
-                <form action="{{route('login')}}" method="GET">
-                    @csrf
-                    <button class="cta-button" type="submit" >Get Started</button>
-                </form>
-                <div class="mobile-menu">
-                    <i class="fas fa-bars"></i>
+                <div class="header-actions">
+                    <form action="{{route('login')}}" method="GET" style="display: inline-block;">
+                        @csrf
+                        <button class="cta-button" type="submit">Get Started</button>
+                    </form>
+                    <div class="mobile-menu">
+                        <i class="fas fa-bars"></i>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -46,10 +45,9 @@
                 <div class="hero-text">
                     <h1 class="text-primary">Master the PMP Exam with Confidence</h1>
                     <p class="text-primary">Our comprehensive platform combines expert lectures, realistic practice exams, and personalized progress tracking to help you pass the PMP exam on your first attempt.</p>
-                
-                    <form action="{{route('login')}}" method="GET">
+                    <form action="{{route('login')}}" method="GET" style="display: inline-block;">
                         @csrf
-                        <button class="cta-button" type="submit" >click to begin our joureny</button>
+                        <button class="cta-button" type="submit">Click to Begin Our Journey</button>
                     </form>
                 </div>
                 <div class="hero-image">
@@ -158,7 +156,10 @@
                                 <i class="fas fa-question-circle"></i>
                                 <span>200 Questions</span>
                             </div>
-                            <button class="cta-button">Start Exam</button>
+                            <form action="{{route('login')}}" method="GET" style="display: inline-block;">
+                                @csrf
+                                <button class="cta-button" type="submit">Start Exam</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -175,7 +176,10 @@
                                 <i class="fas fa-question-circle"></i>
                                 <span>50 Questions Each</span>
                             </div>
-                            <button class="cta-button">Start Exam</button>
+                            <form action="{{route('login')}}" method="GET" style="display: inline-block;">
+                                @csrf
+                                <button class="cta-button" type="submit">Start Exam</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -192,7 +196,10 @@
                                 <i class="fas fa-question-circle"></i>
                                 <span>20 Questions</span>
                             </div>
-                            <button class="cta-button">Start Quiz</button>
+                            <form action="{{route('login')}}" method="GET" style="display: inline-block;">
+                                @csrf
+                                <button class="cta-button" type="submit">Start Quiz</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -280,7 +287,6 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
         </div>
     </section>
@@ -290,10 +296,9 @@
         <div class="container">
             <h2>Ready to Start Your PMP Journey?</h2>
             <p>Join thousands of successful PMP candidates and take the first step toward your certification today.</p>
-          
-            <form action="{{route('login')}}" method="GET">
+            <form action="{{route('login')}}" method="GET" style="display: inline-block;">
                 @csrf
-                <button class="cta-button white" type="submit" >Lets Get Started</button>
+                <button class="cta-button white" type="submit">Let's Get Started</button>
             </form>
         </div>
     </section>
@@ -323,16 +328,6 @@
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>Features</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Video Lectures</a></li>
-                        <li><a href="#">Practice Exams</a></li>
-                        <li><a href="#">Study Planner</a></li>
-                        <li><a href="#">Progress Tracking</a></li>
-                        <li><a href="#">Mobile App</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
                     <h3>Company</h3>
                     <ul class="footer-links">
                         <li><a href="{{route('about')}}">About Us</a></li>
@@ -351,61 +346,199 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Mobile Menu Toggle
-        $('.mobile-menu').click(function() {
-            $('.nav-links').toggleClass('active');
-        });
-        
-        // Smooth Scrolling
-        $('a[href*="#"]').on('click', function(e) {
-            e.preventDefault();
-            $('html, body').animate(
-                {
-                    scrollTop: $($(this).attr('href')).offset().top - 80,
-                },
-                500,
-                'linear'
-            );
-        });
-        
-        // Header Scroll Effect
-        $(window).scroll(function() {
-            if ($(this).scrollTop() > 50) {
-                $('header').addClass('scrolled');
-            } else {
-                $('header').removeClass('scrolled');
+        // Mobile Menu Toggle with Animation
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+            
+            // Animate menu items
+            if (navLinks.classList.contains('active')) {
+                const menuItems = navLinks.querySelectorAll('li');
+                menuItems.forEach((item, index) => {
+                    item.style.setProperty('--i', index);
+                });
             }
         });
         
-        // Testimonials Slider
-        $('.testimonials-slider').slick({
-            dots: true,
-            infinite: true,
-            speed: 300,
-            slidesToShow: 1,
-            adaptiveHeight: true,
-            autoplay: true,
-            autoplaySpeed: 5000,
-            arrows: false
-        });
-        
-        // Animate Progress Bars on Scroll
-        $(window).scroll(function() {
-            $('.progress-fill').each(function() {
-                var position = $(this).parent().offset().top;
-                var scroll = $(window).scrollTop();
-                var windowHeight = $(window).height();
-                
-                if (scroll > position - windowHeight + 100) {
-                    $(this).css('width', $(this).attr('style'));
+        // Smooth Scrolling with Offset
+        document.querySelectorAll('a[href*="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.querySelector('.nav-links').classList.remove('active');
                 }
             });
         });
         
-        // Initialize all progress bars to 0
-        $(document).ready(function() {
-            $('.progress-fill').css('width', '0');
+        // Enhanced Header Scroll Effect
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', function() {
+            const currentScrollY = window.scrollY;
+            const header = document.querySelector('header');
+            
+            if (currentScrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            // Hide/show header on scroll
+            if (currentScrollY > lastScrollY && currentScrollY > 200) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+        
+        // Intersection Observer for Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Add animate class to trigger animations
+                    entry.target.classList.add('animate');
+                    
+                    // Handle different animation types
+                    if (entry.target.classList.contains('section-title')) {
+                        entry.target.classList.add('animate');
+                    }
+                    
+                    if (entry.target.classList.contains('feature-card')) {
+                        const cards = entry.target.parentElement.querySelectorAll('.feature-card');
+                        cards.forEach((card, index) => {
+                            card.style.setProperty('--delay', index);
+                            setTimeout(() => card.classList.add('animate'), index * 200);
+                        });
+                    }
+                    
+                    if (entry.target.classList.contains('exam-card')) {
+                        const cards = entry.target.parentElement.querySelectorAll('.exam-card');
+                        cards.forEach((card, index) => {
+                            card.style.setProperty('--delay', index);
+                            setTimeout(() => card.classList.add('animate'), index * 200);
+                        });
+                    }
+                    
+                    if (entry.target.classList.contains('plan-step')) {
+                        const steps = entry.target.parentElement.querySelectorAll('.plan-step');
+                        steps.forEach((step, index) => {
+                            step.style.setProperty('--delay', index);
+                            setTimeout(() => step.classList.add('animate'), index * 300);
+                        });
+                    }
+                    
+                    if (entry.target.classList.contains('stat-item')) {
+                        const stats = entry.target.parentElement.querySelectorAll('.stat-item');
+                        stats.forEach((stat, index) => {
+                            stat.style.setProperty('--delay', index);
+                            setTimeout(() => stat.classList.add('animate'), index * 200);
+                        });
+                    }
+                }
+            });
+        }, observerOptions);
+        
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Observe section titles
+            document.querySelectorAll('.section-title').forEach(el => observer.observe(el));
+            
+            // Observe feature cards
+            document.querySelectorAll('.feature-card').forEach(el => observer.observe(el));
+            
+            // Observe exam cards
+            document.querySelectorAll('.exam-card').forEach(el => observer.observe(el));
+            
+            // Observe plan steps
+            document.querySelectorAll('.plan-step').forEach(el => observer.observe(el));
+            
+            // Observe stat items
+            document.querySelectorAll('.stat-item').forEach(el => observer.observe(el));
+        });
+        
+        // Animate Progress Bars
+        const progressObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progressFill = entry.target.querySelector('.progress-fill');
+                    if (progressFill) {
+                        const width = progressFill.style.width;
+                        progressFill.style.width = '0';
+                        setTimeout(() => {
+                            progressFill.style.width = width;
+                        }, 300);
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        document.querySelectorAll('.stat-item').forEach(bar => {
+            progressObserver.observe(bar);
+        });
+        
+        // Parallax Effect for Hero
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const heroImages = document.querySelectorAll('.hero-img');
+            
+            if (hero) {
+                // Parallax background
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+                
+                // Parallax images
+                heroImages.forEach((img, index) => {
+                    const speed = 0.2 + (index * 0.1);
+                    img.style.transform = `translateY(${scrolled * speed}px)`;
+                });
+            }
+        });
+        
+        // Add loading animation to page elements
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+            
+            // Animate hero content on load
+            const heroText = document.querySelector('.hero-text');
+            const heroImage = document.querySelector('.hero-image');
+            
+            if (heroText) {
+                setTimeout(() => heroText.classList.add('fade-in-up'), 300);
+            }
+            if (heroImage) {
+                setTimeout(() => heroImage.classList.add('fade-in-up'), 600);
+            }
+        });
+        
+        // Performance optimized scroll handlers
+        let ticking = false;
+        
+        function updateScrollEffects() {
+            // Your scroll effects here
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(updateScrollEffects);
+                ticking = true;
+            }
         });
     </script>
 </body>
