@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\TestAttempt;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Test extends Model
 {
@@ -92,5 +93,9 @@ class Test extends Model
     public function scopeBySlide($query, $slideId)
     {
         return $query->where('slide_id', $slideId);
+    }
+
+    public function testAttempts(){
+        return $this->hasMany(TestAttempt::class);
     }
 }

@@ -13,7 +13,9 @@ return [
         'question' => 'Question',
         'question_number' => 'Question',
         'correct' => 'Correct',
+        "minutes"=>"Minutes",
         'close' => 'Close',
+        'select_question_type'=>"Select Question Type",
 
         // Form Fields
         'fields' => [
@@ -64,6 +66,7 @@ return [
             'remove_option' => 'Remove Option',
             'create_exam' => 'Create Exam',
             'cancel' => 'Cancel',
+            'add_first_question'=>"Add First Question",
             'save_draft' => 'Save as Draft',
         ],
 

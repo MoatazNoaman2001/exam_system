@@ -38,6 +38,7 @@ use App\Http\Controllers\ChangPasswordController;
 use App\Http\Controllers\Admin\AdminExamController;
 use App\Http\Controllers\CompletedActionController;
 use App\Http\Controllers\AchievementPointController;
+use App\Http\Controllers\Admin\ExamImportController;
 use App\Http\Controllers\VerificationCodeController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -149,6 +150,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', SetLocale::class])->
     Route::delete('/exams/{exam}', [AdminExamController::class, 'destroyExam'])->name('exams.destroy');
     Route::post('/exams/import', [AdminExamController::class, 'import'])->name('exams.import');
 
+    // Excel Import routes
+    Route::get('/exams/import', [ExamImportController::class, 'showImportForm'])->name('exams.import.form');
+    Route::post('/exams/import', [ExamImportController::class, 'import'])->name('exams.import');
+    Route::get('/exams/download-template', [ExamImportController::class, 'downloadTemplate'])->name('exams.download-template');
     // Route::view('/exams/creat', 'components.exam.basic-info-create')->name('exams.partials.basic-info-create');
 
     // Quiz Attempts
