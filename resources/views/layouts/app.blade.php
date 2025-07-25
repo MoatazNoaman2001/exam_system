@@ -20,40 +20,9 @@
     <!-- Custom CSS File -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-    <style>
-        @auth
-            
-        [dir="ltr"] .main-content {
-            margin-left: var(--sidebar-width);
-        }
-
-        [dir="rtl"] .main-content {
-            margin-right: var(--sidebar-width);
-        }
-
-        [dir="ltr"] .main-content.student-layout {
-            margin-left: var(--sidebar-width-collapsed);
-            transition: margin-left var(--transition-speed) ease;
-        }
-
-
-        [dir="rtl"] .main-content.student-layout {
-            margin-right: var(--sidebar-width-collapsed);
-            transition: margin-right var(--transition-speed) ease;
-        }
-
-        [dir="ltr"] .main-content.sidebar-expanded {
-            margin-left: var(--sidebar-width);
-        }
-
-        [dir="rtl"] .main-content.sidebar-expanded {
-            margin-right: var(--sidebar-width);
-        }
-
-
-        @endauth
-    </style>
-    
+    @auth
+    <link rel="stylesheet" href="{{ asset('css/authenticated-layout.css') }}">
+    @endauth    
     <!-- App Configuration for JavaScript -->
     <script>
         window.appConfig = {
