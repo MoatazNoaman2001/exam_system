@@ -967,7 +967,9 @@ return [
 
     'secure_login' => "Secure Login",
     "fast_access" => "Fast Access",
-    "achieve_goals" => "Achieve Goals"
+    "achieve_goals" => "Achieve Goals",
+
+    "enter_credentials_to_access" => "Enter Acount Info For Login"
 ];
 
 

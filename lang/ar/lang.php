@@ -1046,8 +1046,8 @@ return [
 
     'secure_login' => "تسجيل امن",
     "fast_access" => "دخول سريع",
-    "achieve_goals" => "تحقيق الاهداف"
-    
+    "achieve_goals" => "تحقيق الاهداف",
+    "enter_credentials_to_access" => "ادخل معلومات حسابك لدخول"
 ];
 
 
