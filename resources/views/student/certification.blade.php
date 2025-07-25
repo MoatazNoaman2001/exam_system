@@ -33,7 +33,7 @@
                     </div>
                     
                     <div class="certificate-buttons">
-                        <a href="{{ route('certificate.download') }}" class="certificate-btn download">
+                        <a href="{{ route('student.certificate.download') }}" class="certificate-btn download">
                             <i class="fas fa-download"></i> {{ __('lang.download_certificate') }}
                         </a>
                         <button class="certificate-btn share" data-bs-toggle="modal" data-bs-target="#shareModal">
@@ -52,15 +52,15 @@
                             </div>
                             <div class="modal-body">
                                 <div class="share-buttons">
-                                    <a href="https://wa.me/?text={{ urlencode(__('lang.check_my_certificate') . ': ' . route('certificate.view')) }}" 
+                                    <a href="https://wa.me/?text={{ urlencode(__('lang.check_my_certificate') . ': ' . route('student.certificate.view')) }}" 
                                        class="share-btn whatsapp" target="_blank">
                                         <i class="fab fa-whatsapp"></i> {{ __('lang.whatsapp') }}
                                     </a>
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('certificate.view')) }}" 
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('student.certificate.view')) }}" 
                                        class="share-btn facebook" target="_blank">
                                         <i class="fab fa-facebook-f"></i> {{ __('lang.facebook') }}
                                     </a>
-                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('certificate.view')) }}" 
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('student.certificate.view')) }}" 
                                        class="share-btn linkedin" target="_blank">
                                         <i class="fab fa-linkedin-in"></i> {{ __('lang.linkedin') }}
                                     </a>
@@ -84,7 +84,7 @@
 
     <script>
         function copyLink() {
-            navigator.clipboard.writeText('{{ route('certificate.view') }}')
+            navigator.clipboard.writeText('{{ route('student.certificate.view') }}')
                 .then(() => alert('{{ __('lang.link_copied') }}'))
                 .catch(() => alert('{{ __('lang.copy_error') }}'));
         }

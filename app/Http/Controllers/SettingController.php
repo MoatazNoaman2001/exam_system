@@ -60,9 +60,7 @@ class SettingController extends Controller
                 'message' => $validator->errors()->first()
             ], 422);
         }
-
-        try {
-            $user = Auth::user();
+        $user = Auth::user();
             
             // Delete old avatar if exists
             if ($user->image && Storage::disk('public')->exists('avatars/' . $user->image)) {
@@ -96,14 +94,6 @@ class SettingController extends Controller
                 'message' => __('lang.avatar_updated_successfully'),
                 'avatar_url' => asset('storage/avatars/' . $avatarName)
             ]);
-
-        } catch (\Exception $e) {
-            \Log::error('Avatar update error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => __('lang.error_updating_avatar')
-            ], 500);
-        }
     }
 
     /**
@@ -165,12 +155,19 @@ class SettingController extends Controller
             // You could store this in a separate settings table or use a JSON field
             // For now, let's create a notification about the preference change
             
+            DB::table('users')
+                ->where('id', $user->id)
+                ->update([
+                    'notifications_enabled' => $request->enabled,
+                    'updated_at' => now()
+                ]);
+        if ($request->enabled) {
             $this->createNotification(
                 $user->id, 
                 $request->enabled ? __('lang.notifications_enabled') : __('lang.notifications_disabled'),
                 __('lang.notification_settings_updated')
             );
-
+        }
             return response()->json([
                 'success' => true,
                 'message' => $request->enabled 
@@ -354,14 +351,7 @@ class SettingController extends Controller
         }
     }
 
-    /**
-     * Show profile edit form
-     */
-    public function show()
-    {
-        $user = Auth::user();
-        return view('student.setting', compact('user'));
-    }
+ 
 
     /**
      * Show security settings
@@ -431,6 +421,10 @@ class SettingController extends Controller
     private function createNotification($userId, $text, $subtext = null)
     {
         try {
+            $user = DB::table('users')->where('id', $userId)->first();
+            if (!$user->notifications_enabled) {
+                return; 
+            }
             DB::table('notifications')->insert([
                 'id' => Str::uuid(),
                 'user_id' => $userId,
@@ -444,6 +438,8 @@ class SettingController extends Controller
             \Log::error('Failed to create notification: ' . $e->getMessage());
         }
     }
+
+
 
     /**
      * Get user statistics for dashboard

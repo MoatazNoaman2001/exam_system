@@ -59,14 +59,14 @@
                 <h3 class="card-title">{{ __('lang.achievements') }}</h3>
             </div>
             <div class="card-body">
-                <a href="{{ route('certification') }}" class="settings-item">
+                <a href="{{ route('student.certification') }}" class="settings-item">
                     <div class="item-content">
                         <i class="fas fa-certificate item-icon"></i>
                         <span class="item-text">{{ __('lang.certifications') }}</span>
                     </div>
                     <i class="fas fa-chevron-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }} item-arrow"></i>
                 </a>
-                <a href="{{ route('leaderboard', ['userId' => auth()->id()]) }}" class="settings-item">
+                <a href="{{ route('student.leaderboard', ['userId' => auth()->id()]) }}" class="settings-item">
                     <div class="item-content">
                         <i class="fas fa-medal item-icon"></i>
                         <span class="item-text">{{ __('lang.leaderboard') }}</span>
@@ -114,16 +114,16 @@
                 <h3 class="card-title">{{ __('lang.app_settings') }}</h3>
             </div>
             <div class="card-body">
-                <div class="settings-item toggle-item">
-                    <div class="item-content">
-                        <i class="fas fa-bell item-icon"></i>
-                        <span class="item-text">{{ __('lang.notifications') }}</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked id="notificationToggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
+               <div class="settings-item toggle-item">
+    <div class="item-content">
+        <i class="fas fa-bell item-icon"></i>
+        <span class="item-text">{{ __('lang.notifications') }}</span>
+    </div>
+    <label class="switch">
+        <input type="checkbox" id="notificationToggle" {{ Auth::user()->notifications_enabled ? 'checked' : '' }}>
+        <span class="slider"></span>
+    </label>
+</div>
                 <div class="settings-item">
                     <div class="item-content">
                         <i class="fas fa-globe item-icon"></i>
@@ -157,7 +157,7 @@
                 <h3 class="card-title">{{ __('lang.support_help') }}</h3>
             </div>
             <div class="card-body">
-                <a href="{{ route('terms.conditions') }}" class="settings-item">
+                <a href="{{ route('student.terms.conditions') }}" class="settings-item">
                     <div class="item-content">
                         <i class="fas fa-file-contract item-icon"></i>
                         <span class="item-text">{{ __('lang.terms_conditions') }}</span>
@@ -455,38 +455,35 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Notification toggle
-    const notificationToggle = document.getElementById('notificationToggle');
-    if (notificationToggle) {
-        notificationToggle.addEventListener('change', function() {
-            const enabled = this.checked;
-            
-            fetch('{{ route("student.settings.notifications") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ enabled: enabled })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showNotification(data.message, 'success');
-                } else {
-                    // Revert toggle on error
-                    this.checked = !enabled;
-                    showNotification('{{ __("lang.error_updating_settings") }}', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Revert toggle on error
-                this.checked = !enabled;
-                showNotification('{{ __("lang.error_updating_settings") }}', 'error');
-            });
-        });
-    }
+const notificationToggle = document.getElementById('notificationToggle');
+if (notificationToggle) {
+    notificationToggle.addEventListener('change', function() {
+        const enabled = this.checked;
 
+        fetch('{{ route("student.settings.notifications") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ enabled: enabled })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(data.message, 'success');
+            } else {
+                this.checked = !enabled;
+                showNotification(data.message || '{{ __("lang.error_updating_settings") }}', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            this.checked = !enabled;
+            showNotification('{{ __("lang.error_updating_settings") }}', 'error');
+        });
+    });
+}
     // Confirm deletion
     window.confirmDeletion = function() {
         return confirm('{{ __("lang.type_delete_to_confirm") }}\n\n{{ __("lang.final_warning") }}');

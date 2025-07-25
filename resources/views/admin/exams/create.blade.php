@@ -1,350 +1,190 @@
 @extends('layouts.admin')
 
 @section('content')
+
+<link href="{{ asset('css/exam-create.css') }}" rel="stylesheet">
 <div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">{{ __('Create New Exam') }}</h1>
-        <a href="{{ route('admin.exams') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> {{ __('Back') }}
-        </a>
-    </div>
-
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">{{ __('Exam Details') }}</h6>
+        <!-- Page Header -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-200">{{ __('exams.create.page_title') }}</h1>
+            <a href="{{ route('admin.exams') }}" class="btn btn-secondary shadow-sm">
+                {{-- <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} fa-sm me-1"></i> --}}
+                {{ __('exams.create.back_to_exams') }}
+            </a>
         </div>
-        <div class="card-body">
-            <form method="POST" action="{{ route('admin.exams.store') }}" id="examForm">
-                @csrf
-                
-                <!-- Bilingual Exam Details -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="title_en">{{ __('Exam Title (English)') }}</label>
-                            <input type="text" class="form-control @error('title_en') is-invalid @enderror" 
-                                   id="title_en" name="title_en" value="{{ old('title_en') }}" required>
-                            @error('title_en')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+
+        <!-- Alert Messages -->
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <h6 class="alert-heading">{{ __('exams.create.errors.validation_title') }}</h6>
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="{{ __('exams.create.close') }}"></button>
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="{{ __('exams.create.close') }}"></button>
+            </div>
+        @endif
+
+        <!-- Main Form Card -->
+        <div class="card shadow-lg border-0">
+
+
+            <div class="card-body p-4">
+                <form method="POST" action="{{ route('admin.exams.store') }}" id="examForm" novalidate>
+                    @csrf
+
+                    <!-- Basic Exam Information -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary border-bottom pb-2 mb-3">
+                                <i class="fas fa-info-circle me-2"></i>{{ __('exams.create.basic_information') }}
+                            </h5>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="title_ar">{{ __('Exam Title (Arabic)') }} <span class="text-muted">(العنوان بالعربية)</span></label>
-                            <input type="text" class="form-control @error('title_ar') is-invalid @enderror" 
-                                   id="title_ar" name="title_ar" value="{{ old('title_ar') }}" required dir="rtl">
-                            @error('title_ar')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+
+                    <!-- Bilingual Titles -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control @error('title_en') is-invalid @enderror"
+                                    id="title_en" name="title_en" value="{{ old('title_en') }}"
+                                    placeholder="{{ __('exams.create.placeholders.title_en') }}" required>
+                                <label for="title_en">{{ __('exams.create.fields.title_en') }} <span
+                                        class="text-danger">*</span></label>
+                                @error('title_en')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control @error('title_ar') is-invalid @enderror"
+                                    id="title_ar" name="title_ar" value="{{ old('title_ar') }}"
+                                    placeholder="{{ __('exams.create.placeholders.title_ar') }}" dir="rtl" required>
+                                <label for="title_ar">{{ __('exams.create.fields.title_ar') }} <span
+                                        class="text-danger">*</span></label>
+                                @error('title_ar')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="description_en">{{ __('Description (English)') }}</label>
-                            <textarea class="form-control" id="description_en" name="description_en" rows="3">{{ old('description_en') }}</textarea>
+                    <!-- Bilingual Descriptions -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <textarea class="form-control @error('description_en') is-invalid @enderror" id="description_en" name="description_en"
+                                    style="height: 100px" placeholder="{{ __('exams.create.placeholders.description_en') }}">{{ old('description_en') }}</textarea>
+                                <label for="description_en">{{ __('exams.create.fields.description_en') }}</label>
+                                @error('description_en')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <textarea class="form-control @error('description_ar') is-invalid @enderror" id="description_ar" name="description_ar"
+                                    style="height: 100px" placeholder="{{ __('exams.create.placeholders.description_ar') }}" dir="rtl">{{ old('description_ar') }}</textarea>
+                                <label for="description_ar">{{ __('exams.create.fields.description_ar') }}</label>
+                                @error('description_ar')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="description_ar">{{ __('Description (Arabic)') }} <span class="text-muted">(الوصف بالعربية)</span></label>
-                            <textarea class="form-control" id="description_ar" name="description_ar" rows="3" dir="rtl">{{ old('description_ar') }}</textarea>
+
+                    <!-- Duration -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="number" class="form-control @error('duration') is-invalid @enderror"
+                                    id="duration" name="duration" value="{{ old('duration', 30) }}" min="1"
+                                    max="300" placeholder="{{ __('exams.create.placeholders.duration') }}" required>
+                                <label for="duration">{{ __('exams.create.fields.duration') }} <span
+                                        class="text-danger">*</span></label>
+                                <div class="form-text">{{ __('exams.create.hints.duration') }}</div>
+                                @error('duration')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="duration">{{ __('Duration (minutes)') }}</label>
-                    <input type="number" class="form-control @error('duration') is-invalid @enderror" 
-                           id="duration" name="duration" value="{{ old('duration', 30) }}" min="1" required>
-                    @error('duration')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
+                    <hr class="my-4">
 
-                <hr class="my-4">
+                    <!-- Questions Section -->
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <h5 class="text-primary border-bottom pb-2 mb-3">
+                                <i class="fas fa-question-circle me-2"></i>{{ __('exams.create.questions_section') }}
+                            </h5>
+                            <p class="text-muted">{{ __('exams.create.questions_help') }}</p>
+                        </div>
+                    </div>
 
-                <!-- Questions Section -->
-                <h4 class="mb-3">{{ __('Exam Questions') }}</h4>
-                <div id="questions-container">
-                    <!-- Questions will be added here dynamically -->
-                </div>
+                    <!-- Questions Container -->
+                    <div id="questions-container" class="mb-4">
+                        <!-- Questions will be dynamically added here -->
+                    </div>
 
-                <button type="button" class="btn btn-success mb-3" id="add-question">
-                    <i class="fas fa-plus"></i> {{ __('Add Question') }}
-                </button>
+                    <!-- Add Question Button -->
+                    <div class="text-center mb-4">
+                        <button type="button" class="btn btn-success btn-lg" id="add-question">
+                            <i class="fas fa-plus me-2"></i>{{ __('exams.create.buttons.add_question') }}
+                        </button>
+                    </div>
 
-                <div class="form-group mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> {{ __('Create Exam') }}
-                    </button>
-                </div>
-            </form>
+                    <!-- Submit Section -->
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary btn-lg me-3">
+                                <i class="fas fa-save me-2"></i>{{ __('exams.create.buttons.create_exam') }}
+                            </button>
+                            <a href="{{ route('admin.exams') }}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>{{ __('exams.create.buttons.cancel') }}
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
 </div>
 
-<!-- Question Template (Hidden) -->
-<div id="question-template" class="d-none">
-    <div class="card mb-4 question-card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">{{ __('Question') }} <span class="question-number">1</span></h5>
-            <button type="button" class="btn btn-sm btn-danger remove-question">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>{{ __('Question Text (English)') }}</label>
-                        <textarea class="form-control question-text-en" rows="2" required></textarea>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>{{ __('Question Text (Arabic)') }} <span class="text-muted">(النص بالعربية)</span></label>
-                        <textarea class="form-control question-text-ar" rows="2" dir="rtl" required></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>{{ __('Question Type') }}</label>
-                <select class="form-control question-type" name="questions[0][type]" required>
-                    <option value="single_choice">{{ __('Single Choice') }}</option>
-                    <option value="multiple_choice">{{ __('Multiple Choice') }}</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>{{ __('Points') }}</label>
-                <input type="number" class="form-control question-points" name="questions[0][points]" min="1" value="1" required>
-            </div>
-
-            <div class="options-container">
-                <!-- Options will be added here based on question type -->
-            </div>
-
-            <button type="button" class="btn btn-sm btn-outline-primary add-option mt-2">
-                <i class="fas fa-plus"></i> {{ __('Add Option') }}
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- Option Template (Hidden) -->
-<div id="option-template" style="display: none;">
-    <div class="option-item mb-2">
-        <div class="row">
-            <div class="col-md-5">
-                <input type="text" class="form-control option-text-en" placeholder="Option (English)" required>
-            </div>
-            <div class="col-md-5">
-                <input type="text" class="form-control option-text-ar" placeholder="الخيار (العربية)" dir="rtl" required>
-            </div>
-            <div class="col-md-2 d-flex align-items-center">
-                <div class="form-check me-2">
-                    <input class="form-check-input is-correct" type="checkbox" >
-                    <label class="form-check-label">{{ __('Correct') }}</label>
-                </div>
-                <button type="button" class="btn btn-sm btn-outline-danger remove-option">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
+@include('admin.exams.partials.question-templates')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    let questionCount = 0;
-    let answersIndex = {};
-    const questionsContainer = document.getElementById('questions-container');
-    const questionTemplate = document.getElementById('question-template');
-    const optionTemplate = document.getElementById('option-template');
-    const addQuestionBtn = document.getElementById('add-question');
-
-    console.log(`questionTemplate: ${questionTemplate}, questionContainer: ${questionsContainer}`);
-    
-
-    addQuestion();
-
-    // Add question event
-    addQuestionBtn.addEventListener('click', function() {
-        addQuestion();
-    });
-
-    function addQuestion() {
-        questionCount++;
-        answersIndex[questionCount] = 0;
-        
-        // Clone the inner card from the template
-        const questionCard = questionTemplate.querySelector('.question-card');
-        const newQuestion = questionCard.cloneNode(true);
-        
-        // Update question number
-        newQuestion.querySelector('.question-number').textContent = questionCount;
-        newQuestion.querySelector('.question-text-en').name = `questions[${questionCount}][text_en]`;
-        newQuestion.querySelector('.question-text-ar').name = `questions[${questionCount}][text_ar]`;
-        
-        // Update all name attributes with the new index
-        const questionElements = newQuestion.querySelectorAll('[name]');
-        questionElements.forEach(el => {
-            const name = el.getAttribute('name').replace(/questions\[\d+\]/g, `questions[${questionCount}]`);
-            el.setAttribute('name', name);
-        });
-
-        // Add to container
-        questionsContainer.appendChild(newQuestion);
-
-        // Add event listeners for the new question
-        setupQuestionEvents(newQuestion);
-
-        // Trigger change to setup options based on type
-        newQuestion.querySelector('.question-type').dispatchEvent(new Event('change'));
-    }
-
-    // Setup question events
-    function setupQuestionEvents(questionElement) {
-        // Remove question button
-        const removeButton = questionElement.querySelector('.remove-question');
-        if (removeButton) {
-            removeButton.addEventListener('click', function() {
-                questionElement.remove();
-                updateQuestionNumbers();
-            });
+    // Pass localized strings to JavaScript
+    window.examCreateTranslations = {
+        question: '{{ __('exams.create.question') }}',
+        removeQuestion: '{{ __('exams.create.buttons.remove_question') }}',
+        addOption: '{{ __('exams.create.buttons.add_option') }}',
+        removeOption: '{{ __('exams.create.buttons.remove_option') }}',
+        correct: '{{ __('exams.create.correct') }}',
+        questionNumber: '{{ __('exams.create.question_number') }}',
+        noQuestionsTitle: '{{ __('exams.create.empty_state.title') }}',
+        noQuestionsText: '{{ __('exams.create.empty_state.text') }}',
+        validationErrors: {
+            minOptions: '{{ __('exams.create.validation.min_options') }}',
+            minQuestions: '{{ __('exams.create.validation.min_questions') }}',
+            requiredField: '{{ __('exams.create.validation.required_field') }}',
+            singleCorrectAnswer: '{{ __('exams.create.validation.single_correct_answer') }}',
+            atLeastOneCorrect: '{{ __('exams.create.validation.at_least_one_correct') }}'
         }
-        
-        // Question type change
-        const questionTypeSelect = questionElement.querySelector('.question-type');
-        if (questionTypeSelect) {
-            questionTypeSelect.addEventListener('change', function() {
-                const optionsContainer = questionElement.querySelector('.options-container');
-                optionsContainer.innerHTML = '';
-                
-                const questionType = this.value;
-                const questionIndex = this.name.match(/questions\[(\d+)\]/)[1];
-                
-                // For single/multiple choice, add 2 empty options by default
-                addOption(questionElement, questionIndex);
-                addOption(questionElement, questionIndex);
-                questionElement.querySelector('.add-option').style.display = 'block';
-            });
-        }
-        
-        // Add option button
-        const addOptionButton = questionElement.querySelector('.add-option');
-        if (addOptionButton) {
-            addOptionButton.addEventListener('click', function() {
-                const questionIndex = this.closest('.question-card').querySelector('.question-type')
-                    .name.match(/questions\[(\d+)\]/)[1];
-                addOption(questionElement, questionIndex);
-            });
-        }
-    }
-
-    // Add option to question
-    function addOption(questionElement, questionIndex, textEn = '', textAr = '', isCorrect = false) {
-        const optionsContainer = questionElement.querySelector('.options-container');
-        const newOption = optionTemplate.cloneNode(true);
-        newOption.style.display = 'block';
-        
-        // Get current options count for this question
-        const optionIndex = optionsContainer.querySelectorAll('.option-item').length;
-        
-        // Set names using the current option index
-        newOption.querySelector('.option-text-en').name = `questions[${questionIndex}][options][${optionIndex}][text_en]`;
-        newOption.querySelector('.option-text-ar').name = `questions[${questionIndex}][options][${optionIndex}][text_ar]`;
-        
-        // Set correct answer field based on question type
-        const questionType = questionElement.querySelector('.question-type').value;
-        const correctAnswerField = newOption.querySelector('.is-correct');
-        
-        if (questionType === 'multiple_choice') {
-            correctAnswerField.type = 'checkbox';
-        } else {
-            correctAnswerField.type = 'radio';
-            correctAnswerField.name = `questions[${questionIndex}][options][${optionIndex}][is_correct]`;
-        }
-        
-        // Set initial values if provided
-        if (textEn) {
-            newOption.querySelector('.option-text-en').value = textEn;
-        }
-        if (textAr) {
-            newOption.querySelector('.option-text-ar').value = textAr;
-        }
-        if (isCorrect) {
-            newOption.querySelector('.is-correct').checked = true;
-        }
-        
-        // Add remove option event
-        newOption.querySelector('.remove-option').addEventListener('click', function() {
-            newOption.remove();
-            reindexOptions(questionElement, questionIndex);
-        });
-        
-        optionsContainer.appendChild(newOption);
-    }
-
-    // Reindex options after deletion
-    function reindexOptions(questionElement, questionIndex) {
-        const options = questionElement.querySelectorAll('.option-item');
-        options.forEach((option, index) => {
-            // Update all name attributes with new index
-            option.querySelector('.option-text-en').name = `questions[${questionIndex}][options][${index}][text_en]`;
-            option.querySelector('.option-text-ar').name = `questions[${questionIndex}][options][${index}][text_ar]`;
-            
-            // Update correct answer field
-            const correctField = option.querySelector('.is-correct');
-            const questionType = questionElement.querySelector('.question-type').value;
-            
-            if (questionType === 'multiple_choice') {
-                correctField.type = 'checkbox';
-            } else {
-                correctField.type = 'radio';
-                correctField.name = `questions[${questionIndex}][options][${index}][is_correct]`;
-            }
-        });
-    }
-
-    // Update question numbers after deletion
-    function updateQuestionNumbers() {
-        const questions = questionsContainer.querySelectorAll('.question-card');
-        questions.forEach((question, index) => {
-            question.querySelector('.question-number').textContent = index + 1;
-            // Update name attributes for all elements in the question
-            const questionElements = question.querySelectorAll('[name]');
-            questionElements.forEach(el => {
-                const name = el.getAttribute('name').replace(/questions\[\d+\]/g, `questions[${index + 1}]`);
-                el.setAttribute('name', name);
-            });
-        });
-    }
-    });
+    };
 </script>
 
-<style>
-    .question-card {
-        border-left: 4px solid #4e73df;
-    }
-    .option-item {
-        padding: 10px;
-        background-color: #f8f9fa;
-        border-radius: 5px;
-    }
-    [dir="rtl"] {
-        text-align: right;
-    }
-</style>
+<script src="{{ asset('js/exam-create.js') }}" defer></script>
+
 @endsection

@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="{{ asset('css/root-welcome.css') }}">
 </head>
 <body>
-    <!-- Header -->
+    @guest
+            <!-- Header -->
     <header id="header">
         <div class="container">
             <nav>
@@ -37,6 +38,8 @@
             </nav>
         </div>
     </header>
+    @endguest
+
 
     <!-- About Hero Section -->
     <section class="about-hero">
@@ -178,7 +181,8 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    @guest
+            <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -228,6 +232,7 @@
             </div>
         </div>
     </footer>
+    @endguest
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>

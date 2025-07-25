@@ -1026,6 +1026,80 @@ return [
         'After completing all the required exams',
         'You can download it from the "Certificates" section in your account',
     ],
+
+// Notifications
+    'notifications_enabled' => 'Notifications enabled',
+    'notifications_disabled' => 'Notifications disabled',
+    'notification_settings_updated' => 'Notification settings updated successfully',
+    'notifications_marked_as_read' => 'All notifications marked as read',
+    'error_updating_notifications' => 'An error occurred while updating notifications',
+'confirm_delete_notification' => 'Are you sure you want to delete this notification?',
+    'notification_deleted' => 'Notification deleted successfully',
+    'notification_not_found' => 'Notification not found',
+    'error_deleting_notification' => 'An error occurred while deleting the notification',
+
+    // General messages
+    'plan_set_success' => 'Congratulations! You have successfully set your plan! 🎯 Let’s start the journey to excellence!',
+    'exam' => 'exam',
+
+    // Exam score notifications
+    'exam_score_low' => 'Don’t worry! This is just the start of your amazing journey! 🌟',
+    'exam_score_low_subtext' => 'The next exam will be much better! Keep learning and trying!',
+    'exam_score_mid' => 'You’re on the right track! 🚀',
+    'exam_score_mid_subtext' => 'With more effort, you’ll reach the top! We believe in you!',
+    'exam_score_high' => 'Well done! You’re so close to excellence! ✨',
+    'exam_score_high_subtext' => 'Keep pushing forward, great success awaits you!',
+
+    // Domain and chapter completion notifications
+    'domain_completed' => 'Great achievement! You’ve mastered an entire domain! 🏆',
+    'domain_completed_subtext' => 'Every step brings you closer to achieving your big dreams!',
+    'chapter_completed' => 'Warm congratulations! You’ve added a new chapter to your achievements! 🎉',
+    'chapter_completed_subtext' => 'Knowledge is light, and every chapter you complete brightens your path!',
+
+    // Question milestone notification
+    'question_milestone' => 'Amazing! You’ve surpassed :milestone questions! 🤯',
+    'question_milestone_subtext' => 'Every question you solve builds a stronger mind! Keep challenging yourself!',
+
+    // Progress levels
+    'level_beginner' => 'Beginner',
+    'level_intermediate' => 'Intermediate',
+    'level_advanced' => 'Advanced',
+    'level_expert' => 'Expert',
+    'level_legend' => 'Legend',
+
+
+    // User settings
+    'please_select_image' => 'Please select an image',
+    'supported_formats' => 'Supported formats',
+    'file_too_large' => 'File is too large',
+    'avatar_updated_successfully' => 'Avatar updated successfully',
+    'profile_picture_changed' => 'Your profile picture has been changed',
+    'avatar_removed_successfully' => 'Avatar removed successfully',
+    'error_updating_avatar' => 'An error occurred while updating the avatar',
+    'notifications_enabled' => 'Notifications enabled',
+    'notifications_disabled' => 'Notifications disabled',
+    'notification_settings_updated' => 'Notification settings updated',
+    'error_updating_settings' => 'An error occurred while updating settings',
+    'username_required' => 'Username is required',
+    'username_alpha_dash' => 'Username can only contain letters, numbers, dashes, and underscores',
+    'username_taken' => 'Username is already taken',
+    'email_required' => 'Email is required',
+    'email_invalid' => 'Please enter a valid email address',
+    'email_taken' => 'Email is already registered',
+    'phone_required' => 'Phone number is required',
+    'profile_updated_successfully' => 'Profile updated successfully',
+    'your_profile_information_has_been_updated' => 'Your profile information has been updated',
+    'error_updating_profile' => 'An error occurred while updating the profile',
+    'current_password_required' => 'Current password is required',
+    'new_password_required' => 'New password is required',
+    'new_password_min' => 'New password must be at least 8 characters',
+    'password_confirmation_mismatch' => 'Password confirmation does not match',
+    'current_password_incorrect' => 'Current password is incorrect',
+    'password_updated_successfully' => 'Password updated successfully',
+    'your_password_has_been_changed' => 'Your password has been changed',
+    'error_updating_password' => 'An error occurred while updating the password',
+    'account_deleted_successfully' => 'Account deleted successfully',
+    'error_deleting_account' => 'An error occurred while deleting the account',
 ];
 
 

@@ -547,7 +547,7 @@ body {
 .navbar-language-switcher .btn {
     font-size: 0.8rem;
     padding: 0.25rem 0.5rem;
-    border: 1px solid #dee2e6;
+    border: 2px solid #dee2e6;
     transition: all 0.3s ease;
 }
 
@@ -557,14 +557,13 @@ body {
 }
 
 .navbar-language-switcher .btn:first-child {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .navbar-language-switcher .btn:last-child {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .language-switcher .btn {
@@ -1204,3 +1203,5 @@ body {
 .mobile-bottom-nav {
     justify-content: space-evenly;
 }
+
+

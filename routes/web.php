@@ -34,6 +34,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\certificationController;
 use App\Http\Controllers\ChangPasswordController;
+use App\Http\Controllers\Admin\AdminExamController;
 use App\Http\Controllers\CompletedActionController;
 use App\Http\Controllers\AchievementPointController;
 use App\Http\Controllers\VerificationCodeController;
@@ -86,7 +87,6 @@ Route::get('/locale-test', function() {
 
 
 Route::get("/", [WelcomeController::class , "root"])->name('welcome');
-Route::view("/about", "about")->withoutMiddleware('auth')->name('about');
 Route::view("/contact", "contact")->name('contact');
 Route::post("/contact", [ContactUsController::class, 'store'])->name('contact.store');
 
@@ -141,13 +141,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', SetLocale::class])->
     
     
     // Exams Management
-    Route::get('/exams', [AdminController::class, 'exams'])->name('exams');
-    Route::get('/exams/create', [AdminController::class, 'createExam'])->name('exams.create');
-    Route::post('/admin/exams/import', [AdminController::class, 'import'])->name('exams.import');
-    Route::post('/exams', [AdminController::class, 'storeExam'])->name('exams.store');
-    Route::get('/exams/{exam}/edit', [AdminController::class, 'editExam'])->name('exams.edit');
-    Route::put('/exams/{exam}', [AdminController::class, 'updateExam'])->name('exams.update');
-    Route::delete('/exams/{exam}', [AdminController::class, 'destroyExam'])->name('exams.destroy');
+    Route::get('/exams', [AdminExamController::class, 'exams'])->name('exams');
+    Route::get('/exams/create', [AdminExamController::class, 'createExam'])->name('exams.create');
+    Route::post('/exams', [AdminExamController::class, 'storeExam'])->name('exams.store');
+    Route::get('/exams/{exam}/edit', [AdminExamController::class, 'editExam'])->name('exams.edit');
+    Route::put('/exams/{exam}', [AdminExamController::class, 'updateExam'])->name('exams.update');
+    Route::delete('/exams/{exam}', [AdminExamController::class, 'destroyExam'])->name('exams.destroy');
+    Route::post('/exams/import', [AdminExamController::class, 'import'])->name('exams.import');
 
     // Route::view('/exams/creat', 'components.exam.basic-info-create')->name('exams.partials.basic-info-create');
 
@@ -229,6 +229,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notification.unread-count');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notification.markAsRead');
+    Route::delete('/notifications/delete/{id}', [NotificationController::class, 'delete'])->name('notifications.delete');
 });
 Route::middleware(['auth', 'locale'])->group(function () {
     Route::get('/student/notifications', [NotificationController::class, 'index'])->name('student.notifications.show');
@@ -237,20 +238,14 @@ Route::get('/Achievement-Point', [AchievementPointController::class, 'Achievemen
 Route::get('/plan', [PlanController::class, 'Plan'])->name('Plan');
 Route::post('/plan/update', [PlanController::class, 'update'])->name('plan.update');
 Route::get('/setting', [SettingController::class, 'show'])->name('setting');
-Route::get('/certification', [certificationController::class, 'certification'])->name('certification');
-
-Route::get('/leaderboard/{userId}', [LeaderBoardController::class, 'showLeaderBoard'])->name('leaderboard');
-
-Route::get('/certificate/download', [CertificationController::class, 'download'])->name('certificate.download');
-Route::get('/certificate/view', [CertificationController::class, 'view'])->name('certificate.view');
 
 
 
-// Route::middleware(['auth'])->prefix('student')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'show'])->name('student.profile.show');
-//     Route::put('/profile', [ProfileController::class, 'update'])->name('student.profile.update');
-//     Route::put('/profile/image', [ProfileController::class, 'updateImage'])->name('student.profile.update-image');
-// });
+Route::middleware(['auth'])->prefix('student')->group(function () {
+    // Route::get('/profile', [ProfileController::class, 'show'])->name('student.profile.show');
+    // Route::put('/profile', [ProfileController::class, 'update'])->name('student.profile.update');
+    Route::put('/profile/image', [ProfileController::class, 'updateImage'])->name('student.profile.update-image');
+});
 Route::delete('/user/delete', [ProfileController::class, 'destroy'])->name('user.delete')->middleware('auth');
 
 
@@ -262,9 +257,10 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::get('/terms-and-conditions', [TermsAndConditionsController::class, 'showTermsAndConditions'])->name('terms.conditions')->middleware('auth');
 
-Route::get('/about', [AboutController::class, 'index'])->name('about');
+// Route::get('/about', [AboutController::class, 'index'])->name('about');
+
+Route::view("/about", "about")->name('about');
 
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
@@ -329,6 +325,14 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'stu
     Route::post('/profile/avatar', [SettingController::class, 'updateAvatar'])->name('profile.update-avatar');
     Route::delete('/profile/avatar', [SettingController::class, 'removeAvatar'])->name('profile.remove-avatar');
         Route::put('/profile/update-image', [SettingController::class, 'updateAvatar'])->name('profile.update-image');
+
+    #certificate 
+    Route::get('/certification', [certificationController::class, 'certification'])->name('certification');
+    Route::get('/leaderboard/{userId}', [LeaderBoardController::class, 'showLeaderBoard'])->name('leaderboard');
+    Route::get('/certificate/download', [CertificationController::class, 'download'])->name('certificate.download');
+    Route::get('/certificate/view', [CertificationController::class, 'view'])->name('certificate.view');
+
+    Route::get('/terms-and-conditions', [TermsAndConditionsController::class, 'showTermsAndConditions'])->name('terms.conditions');
 
     // Security settings
     Route::get('/security', [SettingController::class, 'showSecurity'])->name('security.show');
