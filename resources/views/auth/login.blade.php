@@ -554,76 +554,314 @@
         100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
-    /* Responsive Design */
+    /* Mobile-First Responsive Design */
     @media (max-width: 992px) {
+        body {
+            overflow-y: auto;
+            height: auto;
+        }
+
+        .login-container {
+            height: auto;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
         .login-wrapper {
             flex-direction: column;
-            height: 100vh;
+            height: auto;
+            min-height: 100vh;
         }
 
         .design-half {
-            padding: 1.5rem;
-            height: 40vh;
+            padding: 2rem 1rem 1rem;
+            height: auto;
+            min-height: 200px;
             width: 100%;
+            flex: none;
         }
 
         .form-half {
-            padding: 1.5rem;
-            height: 60vh;
+            padding: 1rem 1rem 2rem;
+            height: auto;
+            min-height: calc(100vh - 200px);
             width: 100%;
+            flex: 1;
+            overflow-y: visible;
+        }
+
+        .brand-section {
+            margin-bottom: 1rem;
+        }
+
+        .brand-logo {
+            margin-bottom: 1rem;
+            flex-direction: row;
+            gap: 1rem;
         }
 
         .brand-name {
             font-size: 2rem;
         }
 
+        .welcome-content {
+            margin-bottom: 1rem;
+        }
+
         .welcome-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
         }
 
         .welcome-subtitle {
-            font-size: 1rem;
+            font-size: 0.9rem;
+            margin-bottom: 0;
         }
 
         .brand-icon {
-            width: 60px;
-            height: 60px;
-            font-size: 1.8rem;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+
+        .design-features {
+            display: none; /* Hide on mobile to save space */
         }
 
         .form-title {
-            font-size: 1.5rem;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .design-half {
-            height: 35vh;
-            padding: 1rem;
-            width: 100%;
+            font-size: 1.75rem;
         }
 
-        .form-half {
-            padding: 1rem;
-            height: 65vh;
-            width: 100%;
+        .form-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group-modern {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-control-modern {
+            padding: 0.875rem 0.875rem 0.875rem 3rem;
+            font-size: 1rem;
         }
 
         .form-options {
             flex-direction: column;
             align-items: flex-start;
             gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-login {
+            padding: 1rem;
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .design-half {
+            padding: 1.5rem 1rem 0.5rem;
+            min-height: 150px;
+        }
+
+        .form-half {
+            padding: 0.5rem 1rem 1.5rem;
+            min-height: calc(100vh - 150px);
         }
 
         .brand-logo {
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+        }
+
+        .welcome-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 0.85rem;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1.25rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+        }
+
+        .form-subtitle {
+            font-size: 0.9rem;
+        }
+
+        .form-header {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group-modern {
+            margin-bottom: 1rem;
+        }
+
+        .form-control-modern {
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            font-size: 0.95rem;
+        }
+
+        .input-icon {
+            left: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .password-toggle {
+            right: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .form-label-modern {
+            font-size: 0.9rem;
+            margin-bottom: 0.375rem;
+        }
+
+        .btn-login {
+            padding: 0.875rem;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .signup-link {
+            font-size: 0.9rem;
+        }
+
+        /* Hide floating shapes on mobile for better performance */
+        .floating-shapes {
+            display: none;
+        }
+
+        .design-half::before {
+            animation: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .design-half {
+            padding: 1rem 0.75rem 0.25rem;
+            min-height: 120px;
+        }
+
+        .form-half {
+            padding: 0.25rem 0.75rem 1rem;
+            min-height: calc(100vh - 120px);
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+        }
+
+        .welcome-title {
+            font-size: 1.1rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 0.8rem;
+        }
+
+        .brand-icon {
+            width: 35px;
+            height: 35px;
+            font-size: 1.1rem;
+        }
+
+        .form-title {
+            font-size: 1.25rem;
+        }
+
+        .form-subtitle {
+            font-size: 0.85rem;
+        }
+
+        .form-container {
+            max-width: 100%;
+        }
+
+        .form-control-modern {
+            padding: 0.7rem 0.7rem 0.7rem 2.25rem;
+            font-size: 0.9rem;
+        }
+
+        .input-icon {
+            left: 0.7rem;
+            font-size: 0.9rem;
+        }
+
+        .password-toggle {
+            right: 0.7rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-login {
+            padding: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .form-options {
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-check-label-modern {
+            font-size: 0.85rem;
+        }
+
+        .forgot-link {
+            font-size: 0.85rem;
+        }
+
+        .signup-link {
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Landscape orientation on mobile */
+    @media (max-width: 992px) and (orientation: landscape) {
+        .login-wrapper {
+            flex-direction: row;
+        }
+
+        .design-half {
+            width: 40%;
+            height: 100vh;
+            padding: 1rem;
+        }
+
+        .form-half {
+            width: 60%;
+            height: 100vh;
+            padding: 1rem;
         }
 
         .design-features {
-            flex-direction: column;
-            align-items: center;
+            display: none;
+        }
+
+        .brand-logo {
+            flex-direction: row;
             gap: 0.75rem;
+        }
+
+        .welcome-title {
+            font-size: 1.25rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 0.9rem;
         }
     }
 
@@ -645,6 +883,35 @@
     [dir="rtl"] .signup-link a {
         margin-right: 0;
         margin-left: 0.25rem;
+    }
+
+    /* Mobile RTL adjustments */
+    @media (max-width: 768px) {
+        [dir="rtl"] .form-control-modern {
+            padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+        }
+
+        [dir="rtl"] .input-icon {
+            right: 0.75rem;
+        }
+
+        [dir="rtl"] .password-toggle {
+            left: 0.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        [dir="rtl"] .form-control-modern {
+            padding: 0.7rem 2.25rem 0.7rem 0.7rem;
+        }
+
+        [dir="rtl"] .input-icon {
+            right: 0.7rem;
+        }
+
+        [dir="rtl"] .password-toggle {
+            left: 0.7rem;
+        }
     }
 </style>
 
