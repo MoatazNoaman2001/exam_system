@@ -1,9 +1,8 @@
-// Exam Create JavaScript - Dashboard Style Compatible
 'use strict';
 
 class ExamQuestionManager {
     constructor() {
-        console.log('Initializing Exam Question Manager...');
+        console.log('Initializing Enhanced Exam Question Manager...');
         
         this.questionCount = 0;
         this.questionsContainer = document.getElementById('questions-container');
@@ -32,7 +31,7 @@ class ExamQuestionManager {
         // Warn before leaving page with unsaved changes
         this.setupUnsavedChangesWarning();
         
-        console.log('Exam Question Manager initialized successfully');
+        console.log('Enhanced Exam Question Manager initialized successfully');
     }
 
     setupEventListeners() {
@@ -54,6 +53,19 @@ class ExamQuestionManager {
                 this.addQuestion();
             }
         });
+
+        // Real-time validation
+        document.addEventListener('input', (e) => {
+            if (e.target.closest('.question-card')) {
+                this.validateQuestionInRealTime(e.target.closest('.question-card'));
+            }
+        });
+
+        document.addEventListener('change', (e) => {
+            if (e.target.closest('.question-card')) {
+                this.validateQuestionInRealTime(e.target.closest('.question-card'));
+            }
+        });
     }
 
     addQuestion() {
@@ -72,7 +84,7 @@ class ExamQuestionManager {
         if (questionNumber) questionNumber.textContent = this.questionCount;
         if (questionCount) questionCount.textContent = this.questionCount;
         
-        // Set up form field names
+        // Set up form field names with proper structure
         this.setupQuestionFieldNames(questionCard, this.questionCount);
         
         // Add to container
@@ -96,16 +108,22 @@ class ExamQuestionManager {
     }
 
     setupQuestionFieldNames(questionCard, questionIndex) {
-        // Set names for question fields
+        // Set names for question fields using proper array notation
         const questionTextEn = questionCard.querySelector('.question-text-en');
         const questionTextAr = questionCard.querySelector('.question-text-ar');
         const questionType = questionCard.querySelector('.question-type');
         const questionPoints = questionCard.querySelector('.question-points');
         
-        if (questionTextEn) questionTextEn.name = `questions[${questionIndex}][text_en]`;
-        if (questionTextAr) questionTextAr.name = `questions[${questionIndex}][text_ar]`;
-        if (questionType) questionType.name = `questions[${questionIndex}][type]`;
-        if (questionPoints) questionPoints.name = `questions[${questionIndex}][points]`;
+        // Use zero-based index for array notation
+        const arrayIndex = questionIndex - 1;
+        
+        if (questionTextEn) questionTextEn.name = `questions[${arrayIndex}][text_en]`;
+        if (questionTextAr) questionTextAr.name = `questions[${arrayIndex}][text_ar]`;
+        if (questionType) questionType.name = `questions[${arrayIndex}][type]`;
+        if (questionPoints) questionPoints.name = `questions[${arrayIndex}][points]`;
+        
+        // Set data attributes for easier identification
+        questionCard.setAttribute('data-question-index', arrayIndex);
     }
 
     setupQuestionEvents(questionCard) {
@@ -117,7 +135,7 @@ class ExamQuestionManager {
             });
         }
         
-        // Question type change
+        // Question type change - THIS IS CRITICAL FOR CORRECT ANSWER HANDLING
         const questionTypeSelect = questionCard.querySelector('.question-type');
         if (questionTypeSelect) {
             questionTypeSelect.addEventListener('change', (e) => {
@@ -129,37 +147,65 @@ class ExamQuestionManager {
         const addOptionButton = questionCard.querySelector('.add-option');
         if (addOptionButton) {
             addOptionButton.addEventListener('click', () => {
-                const questionIndex = this.getQuestionIndex(questionCard);
+                const questionIndex = this.getQuestionArrayIndex(questionCard);
                 this.addOption(questionCard, questionIndex);
             });
         }
     }
 
     addDefaultOptions(questionCard) {
-        const questionIndex = this.getQuestionIndex(questionCard);
+        const questionIndex = this.getQuestionArrayIndex(questionCard);
         // Add 2 default options
         this.addOption(questionCard, questionIndex);
         this.addOption(questionCard, questionIndex);
     }
 
+    // ENHANCED: Proper handling of question type changes with correct input names
     handleQuestionTypeChange(questionCard, questionType) {
         const options = questionCard.querySelectorAll('.option-card');
+        const questionIndex = this.getQuestionArrayIndex(questionCard);
         
-        options.forEach(option => {
+        // Clear any existing validation errors
+        this.clearQuestionValidationErrors(questionCard);
+        
+        options.forEach((option, optionIndex) => {
             const correctInput = option.querySelector('.is-correct');
-            const questionIndex = this.getQuestionIndex(questionCard);
-            const optionIndex = this.getOptionIndex(option);
+            const correctLabel = option.querySelector('.form-check-label');
             
             if (questionType === 'single_choice') {
+                // Convert to radio button for single choice
                 correctInput.type = 'radio';
                 correctInput.name = `questions[${questionIndex}][correct_answer]`;
                 correctInput.value = optionIndex;
+                correctInput.checked = false; // Clear previous selections
+                
+                // Update label text
+                if (correctLabel) {
+                    correctLabel.textContent = this.translations.correctAnswer || 'Correct Answer';
+                }
+                
             } else if (questionType === 'multiple_choice') {
+                // Convert to checkbox for multiple choice
                 correctInput.type = 'checkbox';
                 correctInput.name = `questions[${questionIndex}][options][${optionIndex}][is_correct]`;
                 correctInput.value = '1';
+                correctInput.checked = false; // Clear previous selections
+                
+                // Update label text
+                if (correctLabel) {
+                    correctLabel.textContent = this.translations.correctOption || 'Correct Option';
+                }
             }
+            
+            // Update unique IDs to avoid conflicts
+            this.updateOptionIds(option, questionIndex, optionIndex);
         });
+        
+        // Add visual indicators for question type
+        this.updateQuestionTypeVisuals(questionCard, questionType);
+        
+        // Validate after type change
+        this.validateQuestionInRealTime(questionCard);
     }
 
     addOption(questionCard, questionIndex) {
@@ -171,7 +217,7 @@ class ExamQuestionManager {
         const currentOptions = optionsContainer.querySelectorAll('.option-card');
         const optionIndex = currentOptions.length;
         
-        // Setup field names
+        // Setup field names with proper array structure
         this.setupOptionFieldNames(optionCard, questionIndex, optionIndex);
         
         // Setup remove button
@@ -188,7 +234,7 @@ class ExamQuestionManager {
         // Add to container
         optionsContainer.appendChild(optionCard);
         
-        // Update question type behavior
+        // Update question type behavior with correct input names
         const questionType = questionCard.querySelector('.question-type').value;
         if (questionType) {
             this.handleQuestionTypeChange(questionCard, questionType);
@@ -197,9 +243,10 @@ class ExamQuestionManager {
         // Update unique IDs for form controls
         this.updateOptionIds(optionCard, questionIndex, optionIndex);
 
-        console.log(`Added option ${optionIndex + 1} to question ${questionIndex}`);
+        console.log(`Added option ${optionIndex + 1} to question ${questionIndex + 1}`);
     }
 
+    // ENHANCED: Proper option field name setup
     setupOptionFieldNames(optionCard, questionIndex, optionIndex) {
         const optionTextEn = optionCard.querySelector('.option-text-en');
         const optionTextAr = optionCard.querySelector('.option-text-ar');
@@ -207,11 +254,18 @@ class ExamQuestionManager {
         const reasonTextAr = optionCard.querySelector('.reason-text-ar');
         const isCorrect = optionCard.querySelector('.is-correct');
         
+        // Use proper array notation for nested fields
         if (optionTextEn) optionTextEn.name = `questions[${questionIndex}][options][${optionIndex}][text_en]`;
         if (optionTextAr) optionTextAr.name = `questions[${questionIndex}][options][${optionIndex}][text_ar]`;
         if (reasonTextEn) reasonTextEn.name = `questions[${questionIndex}][options][${optionIndex}][reason]`;
         if (reasonTextAr) reasonTextAr.name = `questions[${questionIndex}][options][${optionIndex}][reason_ar]`;
-        if (isCorrect) isCorrect.name = `questions[${questionIndex}][options][${optionIndex}][is_correct]`;
+        
+        // The is_correct field name will be set by handleQuestionTypeChange
+        // to ensure it matches the question type (radio vs checkbox)
+        if (isCorrect) {
+            isCorrect.setAttribute('data-question-index', questionIndex);
+            isCorrect.setAttribute('data-option-index', optionIndex);
+        }
     }
 
     setupCharacterCounters(optionCard) {
@@ -288,20 +342,25 @@ class ExamQuestionManager {
         }, 300);
     }
 
+    // ENHANCED: Proper reindexing with correct input names
     reindexOptions(questionCard) {
-        const questionIndex = this.getQuestionIndex(questionCard);
+        const questionIndex = this.getQuestionArrayIndex(questionCard);
         const options = questionCard.querySelectorAll('.option-card');
         
         options.forEach((option, index) => {
+            // Update all field names with new index
             this.setupOptionFieldNames(option, questionIndex, index);
             this.updateOptionIds(option, questionIndex, index);
         });
         
-        // Update question type behavior after reindexing
+        // Update question type behavior after reindexing to fix input names
         const questionType = questionCard.querySelector('.question-type').value;
         if (questionType) {
             this.handleQuestionTypeChange(questionCard, questionType);
         }
+        
+        // Validate after reindexing
+        this.validateQuestionInRealTime(questionCard);
     }
 
     removeQuestion(questionCard) {
@@ -330,19 +389,24 @@ class ExamQuestionManager {
         }, 300);
     }
 
+    // ENHANCED: Proper question numbering with correct input names
     updateQuestionNumbers() {
         const questions = this.questionsContainer.querySelectorAll('.question-card');
         
         questions.forEach((question, index) => {
             const questionNumber = question.querySelector('.question-number');
             const questionCount = question.querySelector('.question-count');
-            const newIndex = index + 1;
+            const newDisplayNumber = index + 1;
+            const newArrayIndex = index; // Zero-based for array
             
-            if (questionNumber) questionNumber.textContent = newIndex;
-            if (questionCount) questionCount.textContent = newIndex;
+            if (questionNumber) questionNumber.textContent = newDisplayNumber;
+            if (questionCount) questionCount.textContent = newDisplayNumber;
+            
+            // Update data attribute
+            question.setAttribute('data-question-index', newArrayIndex);
             
             // Update all field names in this question
-            this.setupQuestionFieldNames(question, newIndex);
+            this.setupQuestionFieldNames(question, newDisplayNumber);
             
             // Update options for this question
             this.reindexOptions(question);
@@ -351,14 +415,163 @@ class ExamQuestionManager {
         this.questionCount = questions.length;
     }
 
-    getQuestionIndex(questionCard) {
+    // ENHANCED: Get proper array index (zero-based)
+    getQuestionArrayIndex(questionCard) {
+        const dataIndex = questionCard.getAttribute('data-question-index');
+        if (dataIndex !== null) {
+            return parseInt(dataIndex);
+        }
+        
+        // Fallback: calculate from position
         const questions = Array.from(this.questionsContainer.querySelectorAll('.question-card'));
-        return questions.indexOf(questionCard) + 1;
+        return questions.indexOf(questionCard);
     }
 
     getOptionIndex(optionCard) {
         const options = Array.from(optionCard.closest('.options-container').querySelectorAll('.option-card'));
         return options.indexOf(optionCard);
+    }
+
+    updateQuestionTypeVisuals(questionCard, questionType) {
+        const optionsContainer = questionCard.querySelector('.options-container');
+        
+        // Remove existing type classes
+        optionsContainer.classList.remove('single-choice-mode', 'multiple-choice-mode');
+        
+        // Add appropriate class for styling
+        if (questionType === 'single_choice') {
+            optionsContainer.classList.add('single-choice-mode');
+        } else if (questionType === 'multiple_choice') {
+            optionsContainer.classList.add('multiple-choice-mode');
+        }
+    }
+
+    // ENHANCED: Real-time validation
+    validateQuestionInRealTime(questionCard) {
+        const questionIndex = this.getQuestionArrayIndex(questionCard);
+        const questionNumber = questionIndex + 1;
+        
+        // Clear previous validation states
+        this.clearQuestionValidationErrors(questionCard);
+        
+        const errors = [];
+        
+        // Validate question fields
+        const questionTextEn = questionCard.querySelector('.question-text-en');
+        const questionTextAr = questionCard.querySelector('.question-text-ar');
+        const questionType = questionCard.querySelector('.question-type');
+        const questionPoints = questionCard.querySelector('.question-points');
+        
+        if (!questionTextEn?.value.trim()) {
+            questionTextEn?.classList.add('is-invalid');
+            errors.push('English text required');
+        }
+        
+        if (!questionTextAr?.value.trim()) {
+            questionTextAr?.classList.add('is-invalid');
+            errors.push('Arabic text required');
+        }
+        
+        if (!questionType?.value) {
+            questionType?.classList.add('is-invalid');
+            errors.push('Question type required');
+        }
+        
+        if (!questionPoints?.value || questionPoints.value < 1) {
+            questionPoints?.classList.add('is-invalid');
+            errors.push('Points must be at least 1');
+        }
+        
+        // Validate options
+        const options = questionCard.querySelectorAll('.option-card');
+        let hasCorrectAnswer = false;
+        
+        if (options.length < 2) {
+            errors.push('At least 2 options required');
+        }
+        
+        options.forEach((option, optionIndex) => {
+            const optionTextEn = option.querySelector('.option-text-en');
+            const optionTextAr = option.querySelector('.option-text-ar');
+            const isCorrect = option.querySelector('.is-correct');
+            
+            if (!optionTextEn?.value.trim()) {
+                optionTextEn?.classList.add('is-invalid');
+            }
+            
+            if (!optionTextAr?.value.trim()) {
+                optionTextAr?.classList.add('is-invalid');
+            }
+            
+            if (isCorrect?.checked) {
+                hasCorrectAnswer = true;
+            }
+        });
+        
+        // Validate correct answers based on question type
+        if (questionType?.value) {
+            if (questionType.value === 'single_choice') {
+                const checkedRadios = questionCard.querySelectorAll('.is-correct:checked');
+                if (checkedRadios.length === 0) {
+                    errors.push('Select one correct answer');
+                    this.highlightCorrectAnswerError(questionCard, 'single');
+                } else if (checkedRadios.length > 1) {
+                    errors.push('Only one correct answer allowed');
+                    this.highlightCorrectAnswerError(questionCard, 'single');
+                }
+            } else if (questionType.value === 'multiple_choice') {
+                if (!hasCorrectAnswer) {
+                    errors.push('Select at least one correct answer');
+                    this.highlightCorrectAnswerError(questionCard, 'multiple');
+                }
+            }
+        }
+        
+        // Update question validation state
+        if (errors.length === 0) {
+            questionCard.classList.remove('has-errors');
+            questionCard.classList.add('validated');
+        } else {
+            questionCard.classList.add('has-errors');
+            questionCard.classList.remove('validated');
+        }
+        
+        return errors.length === 0;
+    }
+
+    clearQuestionValidationErrors(questionCard) {
+        // Remove validation classes
+        const invalidElements = questionCard.querySelectorAll('.is-invalid');
+        invalidElements.forEach(element => {
+            element.classList.remove('is-invalid');
+        });
+        
+        // Remove error highlighting
+        const optionsContainer = questionCard.querySelector('.options-container');
+        optionsContainer.classList.remove('correct-answer-error');
+        optionsContainer.removeAttribute('data-error');
+        
+        questionCard.classList.remove('has-errors');
+    }
+
+    highlightCorrectAnswerError(questionCard, type) {
+        const optionsContainer = questionCard.querySelector('.options-container');
+        
+        // Add error highlighting
+        optionsContainer.classList.add('correct-answer-error');
+        
+        // Add visual indicator for the specific type of error
+        if (type === 'single') {
+            optionsContainer.setAttribute('data-error', 'Select exactly one correct answer');
+        } else if (type === 'multiple') {
+            optionsContainer.setAttribute('data-error', 'Select at least one correct answer');
+        }
+        
+        // Remove highlighting after 5 seconds
+        setTimeout(() => {
+            optionsContainer.classList.remove('correct-answer-error');
+            optionsContainer.removeAttribute('data-error');
+        }, 5000);
     }
 
     showEmptyState() {
@@ -385,12 +598,16 @@ class ExamQuestionManager {
         // Show loading state
         this.setSubmitButtonLoading(true);
         
+        // Log form data for debugging
+        this.logFormData();
+        
         // Submit form after short delay to show loading
         setTimeout(() => {
             this.form.submit();
         }, 500);
     }
 
+    // ENHANCED: Comprehensive form validation
     validateForm() {
         let isValid = true;
         const errors = [];
@@ -410,7 +627,7 @@ class ExamQuestionManager {
         }
         
         questions.forEach((question, index) => {
-            const questionValid = this.validateQuestion(question, index + 1, errors);
+            const questionValid = this.validateQuestionInRealTime(question);
             if (!questionValid) {
                 isValid = false;
             }
@@ -452,93 +669,6 @@ class ExamQuestionManager {
         return isValid;
     }
 
-    validateQuestion(questionCard, questionNumber, errors) {
-        let isValid = true;
-        
-        // Validate question text
-        const questionTextEn = questionCard.querySelector('.question-text-en');
-        const questionTextAr = questionCard.querySelector('.question-text-ar');
-        const questionType = questionCard.querySelector('.question-type');
-        const questionPoints = questionCard.querySelector('.question-points');
-        
-        if (!questionTextEn?.value.trim()) {
-            errors.push(`Question ${questionNumber}: English text is required.`);
-            questionTextEn?.classList.add('is-invalid');
-            isValid = false;
-        }
-        
-        if (!questionTextAr?.value.trim()) {
-            errors.push(`Question ${questionNumber}: Arabic text is required.`);
-            questionTextAr?.classList.add('is-invalid');
-            isValid = false;
-        }
-        
-        if (!questionType?.value) {
-            errors.push(`Question ${questionNumber}: Question type is required.`);
-            questionType?.classList.add('is-invalid');
-            isValid = false;
-        }
-        
-        if (!questionPoints?.value || questionPoints.value < 1) {
-            errors.push(`Question ${questionNumber}: Points must be at least 1.`);
-            questionPoints?.classList.add('is-invalid');
-            isValid = false;
-        }
-        
-        // Validate options
-        const options = questionCard.querySelectorAll('.option-card');
-        
-        if (options.length < 2) {
-            errors.push(`Question ${questionNumber}: At least 2 options are required.`);
-            isValid = false;
-        }
-        
-        let hasCorrectAnswer = false;
-        let optionTextsValid = true;
-        
-        options.forEach((option, optionIndex) => {
-            const optionTextEn = option.querySelector('.option-text-en');
-            const optionTextAr = option.querySelector('.option-text-ar');
-            const isCorrect = option.querySelector('.is-correct');
-            
-            if (!optionTextEn?.value.trim()) {
-                errors.push(`Question ${questionNumber}, Option ${optionIndex + 1}: English text is required.`);
-                optionTextEn?.classList.add('is-invalid');
-                optionTextsValid = false;
-            }
-            
-            if (!optionTextAr?.value.trim()) {
-                errors.push(`Question ${questionNumber}, Option ${optionIndex + 1}: Arabic text is required.`);
-                optionTextAr?.classList.add('is-invalid');
-                optionTextsValid = false;
-            }
-            
-            if (isCorrect?.checked) {
-                hasCorrectAnswer = true;
-            }
-        });
-        
-        if (!optionTextsValid) {
-            isValid = false;
-        }
-        
-        if (!hasCorrectAnswer) {
-            errors.push(`Question ${questionNumber}: At least one option must be marked as correct.`);
-            isValid = false;
-        }
-        
-        // Validate single choice has only one correct answer
-        if (questionType?.value === 'single_choice') {
-            const correctAnswers = questionCard.querySelectorAll('.is-correct:checked');
-            if (correctAnswers.length > 1) {
-                errors.push(`Question ${questionNumber}: Single choice questions can have only one correct answer.`);
-                isValid = false;
-            }
-        }
-        
-        return isValid;
-    }
-
     clearValidationStates() {
         // Remove all is-invalid classes
         const invalidElements = document.querySelectorAll('.is-invalid');
@@ -549,6 +679,12 @@ class ExamQuestionManager {
         // Remove existing error alerts
         const existingAlerts = document.querySelectorAll('.validation-alert');
         existingAlerts.forEach(alert => alert.remove());
+        
+        // Clear question validation states
+        const questions = this.questionsContainer.querySelectorAll('.question-card');
+        questions.forEach(question => {
+            this.clearQuestionValidationErrors(question);
+        });
     }
 
     showValidationErrors(errors) {
@@ -574,6 +710,36 @@ class ExamQuestionManager {
             
             // Scroll to top smoothly
             container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    // Debug helper: Log form data structure
+    logFormData() {
+        if (console && console.log) {
+            const formData = new FormData(this.form);
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            console.log('Form Data Structure:', data);
+            
+            // Also log questions structure specifically
+            const questions = this.questionsContainer.querySelectorAll('.question-card');
+            questions.forEach((question, index) => {
+                console.log(`Question ${index + 1} structure:`, {
+                    questionIndex: this.getQuestionArrayIndex(question),
+                    type: question.querySelector('.question-type')?.value,
+                    optionsCount: question.querySelectorAll('.option-card').length,
+                    correctAnswerInputs: Array.from(question.querySelectorAll('.is-correct')).map(input => ({
+                        type: input.type,
+                        name: input.name,
+                        value: input.value,
+                        checked: input.checked
+                    }))
+                });
+            });
         }
     }
 
@@ -705,159 +871,9 @@ class ExamQuestionManager {
     }
 }
 
-// Additional CSS for notifications (injected dynamically)
-const notificationStyles = document.createElement('style');
-notificationStyles.textContent = `
-    .notification-toast {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-    }
-    
-    .notification-content {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        flex: 1;
-    }
-    
-    .notification-content i {
-        font-size: 1.125rem;
-    }
-    
-    .notification-close {
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        padding: 0.25rem;
-        border-radius: 4px;
-        transition: background-color 0.2s ease;
-    }
-    
-    .notification-close:hover {
-        background: rgba(255, 255, 255, 0.2);
-    }
-    
-    .character-counter {
-        font-size: 0.75rem;
-        color: var(--gray-500);
-        text-align: right;
-        margin-top: 0.25rem;
-        font-weight: 500;
-    }
-    
-    [dir="rtl"] .character-counter {
-        text-align: left;
-    }
-    
-    /* Enhanced form validation styles */
-    .form-control.is-invalid {
-        border-color: var(--danger-red);
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-    }
-    
-    .form-control.is-invalid:focus {
-        border-color: var(--danger-red);
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-    }
-    
-    /* Smooth transitions for validation states */
-    .form-control {
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    
-    /* Enhanced button loading state */
-    .btn.loading {
-        position: relative;
-        color: transparent !important;
-        pointer-events: none;
-    }
-    
-    .btn.loading::after {
-        content: "";
-        position: absolute;
-        width: 1rem;
-        height: 1rem;
-        top: 50%;
-        left: 50%;
-        margin-left: -0.5rem;
-        margin-top: -0.5rem;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        border-top-color: white;
-        animation: spinner 0.8s linear infinite;
-    }
-    
-    @keyframes spinner {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-    
-    /* RTL support for notifications */
-    [dir="rtl"] .notification-toast {
-        right: auto;
-        left: 20px;
-        transform: translateX(-100%);
-    }
-    
-    [dir="rtl"] .notification-toast.show {
-        transform: translateX(0);
-    }
-`;
-document.head.appendChild(notificationStyles);
-
-// Utility functions
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-}
-
-// Error handling
-window.addEventListener('error', function(e) {
-    console.error('Exam Create Error:', e.error);
-});
-
-// Performance monitoring
-if ('performance' in window) {
-    window.addEventListener('load', function() {
-        setTimeout(function() {
-            try {
-                const perfData = performance.getEntriesByType('navigation')[0];
-                const loadTime = perfData.loadEventEnd - perfData.loadEventStart;
-                console.log('Exam Create Page Load Time:', loadTime + 'ms');
-            } catch (error) {
-                console.warn('Performance monitoring failed:', error);
-            }
-        }, 0);
-    });
-}
-
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, initializing Exam Question Manager...');
+    console.log('DOM loaded, initializing Enhanced Exam Question Manager...');
     new ExamQuestionManager();
 });
 

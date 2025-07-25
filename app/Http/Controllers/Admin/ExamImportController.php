@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 use App\Models\Exam;
+use Illuminate\Support\Str;
 use App\Models\ExamQuestion;
-use App\Models\QuestionExamAnswer;
+use Illuminate\Http\Request;
+use App\Models\ExamQuestionAnswer;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class ExamImportController extends Controller
 {
@@ -469,7 +469,7 @@ class ExamImportController extends Controller
             ]);
             
             foreach ($questionData['options'] as $optionData) {
-                QuestionExamAnswer::create([
+                ExamQuestionAnswer::create([
                     'id' => Str::uuid(),
                     'exam_question_id' => $question->id,
                     'answer' => $optionData['text_en'],

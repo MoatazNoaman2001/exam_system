@@ -3,106 +3,96 @@
 namespace App\Imports;
 
 use App\Models\Exam;
-use App\Models\Question;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Maatwebsite\Excel\Concerns\WithStartRow;
+use Illuminate\Support\Str;
+use App\Models\ExamQuestion;
+use App\Models\ExamQuestionAnswer;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ExamsImport implements WithMultipleSheets
+class ExamImport implements ToCollection, WithHeadingRow
 {
-    public function sheets(): array
+    private $exam = null;
+    private $questionsCreated = 0;
+    
+    public function collection(Collection $collection)
     {
-        return [
-            'En' => new QuestionsSheetImport('en'),
-            'Ar' => new QuestionsSheetImport('ar'),
-        ];
-    }
-}
-
-class QuestionsSheetImport implements ToModel, WithStartRow
-{
-    protected $language;
-
-    public function __construct($language)
-    {
-        $this->language = $language;
-    }
-
-    public function startRow(): int
-    {
-        return 2;
-    }
-
-    public function model(array $row)
-    {
-        // Skip empty rows
-        if (empty($row[0])) {
-            return null;
+        foreach ($collection as $row) {
+            // Skip empty rows
+            if (empty($row['question_text_en'])) {
+                continue;
+            }
+            
+            // Create exam only once (from first question row)
+            if ($this->exam === null) {
+                $this->exam = $this->createExam($row);
+            }
+            
+            // Create question
+            $this->createQuestion($row);
         }
-
-        // Create or update exam
-        $exam = Exam::firstOrCreate(
-            ['text' => 'Sample Exam '.date('Y-m-d')], // Adjust as needed
-            [
-                'description' => 'Imported exam',
-                'time' => 60,
-                'passing_score' => 70,
-                'is_active' => true
-            ]
-        );
-
-        // Determine question type
-        $questionType = str_contains($row[1], 'Single choice') ? 
-        'single_choice' : 
-                       (str_contains($row[1], 'Multiple choice') ? 
-                       'multiple_choice' : 'single_choice');
-
-        // Prepare options
-        $options = [
-            'en' => [
-                'A' => $row[2] ?? '',
-                'B' => $row[3] ?? '',
-                'C' => $row[4] ?? '',
-                'D' => $row[5] ?? ''
-            ],
-            'ar' => [
-                'A' => $row[2] ?? '',
-                'B' => $row[3] ?? '',
-                'C' => $row[4] ?? '',
-                'D' => $row[5] ?? ''
-            ]
-        ];
-
-        // Prepare correct answers
-        $correctAnswer = $this->parseCorrectAnswer($row[7] ?? '');
-
-        return new Question([
-            'exam_id' => $exam->id,
-            'text' => [
-                'en' => $this->cleanQuestionText($row[1]),
-                'ar' => $this->cleanQuestionText($row[1]) // Adjust for Arabic sheet
-            ],
-            'type' => $questionType,
-            'options' => $options,
-            'correct_answer' => $correctAnswer,
-            'explanation' => [
-                'en' => $row[8] ?? '',
-                'ar' => $row[8] ?? '' // Adjust for Arabic sheet
-            ],
-            'language' => $this->language
+        
+        // Update exam with total questions count
+        if ($this->exam) {
+            $this->exam->update(['number_of_questions' => $this->questionsCreated]);
+        }
+    }
+    
+    private function createExam($row)
+    {
+        return Exam::create([
+            'id' => Str::uuid(),
+            'text' => $row['exam_title_en'] ?? 'Imported Exam',
+            'text-ar' => $row['exam_title_ar'] ?? '',
+            'description' => $row['exam_description_en'] ?? '',
+            'description-ar' => $row['exam_description_ar'] ?? '',
+            'time' => (int) ($row['duration_minutes'] ?? 30),
+            'number_of_questions' => 0, // Will update later
+            'is_completed' => false,
         ]);
     }
-
-    protected function cleanQuestionText($text)
+    
+    private function createQuestion($row)
     {
-        return preg_replace('/Single choice\.|Multiple choice\./', '', $text);
-    }
-
-    protected function parseCorrectAnswer($answer)
-    {
-        if (str_contains($answer, ' and ')) {
-            return explode(' and ', str_replace(['Option', ' ', '.'], '', $answer));
+        $question = ExamQuestion::create([
+            'id' => Str::uuid(),
+            'exam_id' => $this->exam->id,
+            'question' => $row['question_text_en'],
+            'question-ar' => $row['question_text_ar'] ?? '',
+            'text-ar' => $row['question_text_ar'] ?? '',
+            'type' => $row['question_type'] ?? 'single_choice',
+            'marks' => (int) ($row['question_points'] ?? 1),
+        ]);
+        
+        $this->questionsCreated++;
+        
+        // Create options (up to 4)
+        for ($i = 1; $i <= 4; $i++) {
+            $optionTextEn = $row["option_{$i}_text_en"] ?? null;
+            
+            if (empty($optionTextEn)) {
+                break; // No more options
+            }
+            
+            ExamQuestionAnswer::create([
+                'id' => Str::uuid(),
+                'exam_question_id' => $question->id,
+                'answer' => $optionTextEn,
+                'answer-ar' => $row["option_{$i}_text_ar"] ?? '',
+                'reason' => $row["option_{$i}_reason_en"] ?? null,
+                'reason-ar' => $row["option_{$i}_reason_ar"] ?? null,
+                'is_correct' => ($row["option_{$i}_is_correct"] ?? 0) == 1,
+            ]);
         }
-        return str_replace(['Option', ' ', '.'], '', $answer);
+    }
+    
+    public function getExam()
+    {
+        return $this->exam;
+    }
+    
+    public function getQuestionsCount()
+    {
+        return $this->questionsCreated;
     }
 }

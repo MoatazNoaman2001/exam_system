@@ -140,12 +140,6 @@
                                            title="Edit Exam">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button type="button" 
-                                                class="btn btn-sm btn-info"
-                                                onclick="viewExam('{{ $exam->id }}')"
-                                                title="View Details">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
                                         <form action="{{ route('admin.exams.destroy', $exam) }}" 
                                               method="POST" 
                                               style="display: inline;"

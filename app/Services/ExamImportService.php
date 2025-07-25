@@ -3,14 +3,14 @@
 namespace App\Services;
 
 use App\Models\Exam;
+use Illuminate\Support\Str;
 use App\Models\ExamQuestion;
-use App\Models\QuestionExamAnswer;
+use App\Models\ExamQuestionAnswer;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class ExamImportService
 {
@@ -328,7 +328,7 @@ class ExamImportService
             ]);
             
             foreach ($questionData['options'] as $optionData) {
-                QuestionExamAnswer::create([
+                ExamQuestionAnswer::create([
                     'id' => Str::uuid(),
                     'exam_question_id' => $question->id,
                     'answer' => $optionData['text_en'],

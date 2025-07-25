@@ -40,5 +40,56 @@ class ExamQuestionAnswer extends Model
     {
         return app()->getLocale() === 'ar' ? $this->attributes['reason-ar'] : $this->reason;
     }
+
+    public function examQuestion()
+    {
+        return $this->belongsTo(ExamQuestion::class, 'exam_question_id');
+    }
+
+    /**
+     * Scope for correct answers
+     */
+    public function scopeCorrect($query)
+    {
+        return $query->where('is_correct', true);
+    }
+
+    /**
+     * Scope for incorrect answers
+     */
+    public function scopeIncorrect($query)
+    {
+        return $query->where('is_correct', false);
+    }
+
+    /**
+     * Check if this answer has explanation
+     */
+    public function hasReason()
+    {
+        return !empty($this->reason) || !empty($this->{'reason-ar'});
+    }
+
+    /**
+     * Get reason in preferred language
+     */
+    public function getReasonInLanguage($language = 'en')
+    {
+        if ($language === 'ar') {
+            return $this->{'reason-ar'} ?: $this->reason;
+        }
+        return $this->reason ?: $this->{'reason-ar'};
+    }
+
+    /**
+     * Get answer text in preferred language
+     */
+    public function getAnswerInLanguage($language = 'en')
+    {
+        if ($language === 'ar') {
+            return $this->{'answer-ar'} ?: $this->answer;
+        }
+        return $this->answer ?: $this->{'answer-ar'};
+    }
 }
 ?>
