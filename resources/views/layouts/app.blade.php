@@ -23,6 +23,17 @@
     @auth
     <link rel="stylesheet" href="{{ asset('css/authenticated-layout.css') }}">
     @endauth    
+
+
+    @guest
+        <style>
+            .main-content {
+                margin-right: 0px !important;
+                margin-left: 0px !important;
+                padding: 0px !important;
+            }
+        </style>
+    @endguest
     <!-- App Configuration for JavaScript -->
     <script>
         window.appConfig = {
