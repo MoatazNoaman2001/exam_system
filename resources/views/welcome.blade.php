@@ -16,7 +16,7 @@
             <nav>
                 <div class="logo">
                     <i class="fas fa-graduation-cap"></i>
-                    <span>PMP Master</span>
+                    <span>Sprint Skills</span>
                 </div>
                 <ul class="nav-links">
                     <li><a href="#features">Features</a></li>

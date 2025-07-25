@@ -12,7 +12,7 @@ return [
     "dont_have_account"=> "Don't have an account?",
     "sign_up"=> "Sign up",
     "welcome_back"=> "Welcome Back",
-    "sign_in_to_continue"=> "Sign in to continue your PMP exam preparation",
+    "sign_in_to_continue"=> "Sign in to advance your journey toward management mastery",
     "plan_progress"=> "Plan Progress",
     "progress"=> "Progress",
     "days_left"=> "Days Left",
@@ -973,7 +973,63 @@ return [
     'auto_saved' => 'Auto Saved',
 
     'why_this_is_correct' => "why this is correct ?",
-    "enter_credentials_to_access" => "Enter Acount Info For Login"
+    "enter_credentials_to_access" => "Enter Acount Info For Login",
+
+    // =========================
+    // PERFORMANCE DIAGRAM TEXTS
+    // =========================
+    
+    // Header
+    'your_overall_performance' => 'Your Overall Performance',
+    'passed' => 'Passed',
+    'failed' => 'Failed',
+    
+    // Main Messages
+    'you_have_passed_congratulations' => 'You have passed the exam, congratulations.',
+    'you_did_not_pass_additional_preparation' => 'You did not pass the exam. Additional preparation is recommended before retaking.',
+    
+    // Performance Categories (with percentages)
+    'need_improvement' => 'Need Improvement',
+    'need_improvement_range' => '0-40%',
+    'below_target' => 'Below Target', 
+    'below_target_range' => '41-59%',
+    'target' => 'Target',
+    'target_range' => '60-79%',
+    'above_target' => 'Above Target',
+    'above_target_range' => '80-100%',
+    
+    // Performance Scale Labels
+    'failing' => 'Failing',
+    'passing' => 'Passing',
+    
+    // Explanation Section
+    'what_does_this_diagram_mean' => 'What Does this Diagram Mean?',
+    'diagram_explanation' => 'The diagram uses four different performance rating categories to show your overall performance on the exam. Each rating reflects how many questions you answered correctly.',
+    'performance_rating_categories' => 'Performance Rating Categories:',
+    
+    // Detailed Category Descriptions
+    'above_target_label' => 'Above Target:',
+    'above_target_description' => 'Your performance exceeds the minimum requirements for this exam',
+    
+    'target_label' => 'Target:',
+    'target_description' => 'Your performance meets the minimum requirements for this exam',
+    
+    'below_target_label' => 'Below Target:',
+    'below_target_description' => 'Your performance is slightly below target and fails to meet the minimum requirements for this exam. Additional preparation is recommended before re-examination.',
+    
+    'need_improvement_label' => 'Need Improvement:',
+    'need_improvement_description' => 'Your performance is far below target and fails to meet the minimum requirements for this exam. Additional preparation is strongly recommended before re-examination.',
+    
+    // User Performance Status
+    'your_performance' => 'Your Performance',
+    'above_target_message' => 'Excellent work! You have exceeded expectations and demonstrated strong mastery of the subject matter.',
+    'target_message' => 'Good job! You have met the minimum requirements and passed the exam successfully.',
+    'below_target_message' => 'You\'re close but need some improvement. Consider reviewing the areas where you had difficulty and retake when ready.',
+    'need_improvement_message_detailed' => 'Significant additional study is recommended. Focus on understanding the fundamental concepts before attempting the exam again.',
+    
+    // Legal Disclaimer
+    'categories_disclaimer' => 'The categories presented on this report were created to help you see where you may need additional preparation. They should not be used or interpreted for other purposes, such as, job placement decisions.',
+    'categories_disclaimer_prefix' => '**',
 ];
 
 

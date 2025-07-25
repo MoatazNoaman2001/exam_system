@@ -442,85 +442,112 @@
 </style>
 
 <div class="results-container" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
-    <!-- Performance Diagram -->
+    <!-- Performance Diagram - Fully Localized -->
     <div class="performance-diagram">
         <div class="performance-header">
-            <span class="performance-status">Your Overall Performance</span>
+            <span class="performance-status">{{ __('lang.your_overall_performance') }}</span>
             <span class="status-badge {{ $results['statistics']['final_score'] >= 60 ? 'status-passed' : 'status-failed' }}">
-                {{ $results['statistics']['final_score'] >= 60 ? 'Passed' : 'Failed' }}
+                {{ $results['statistics']['final_score'] >= 60 ? __('lang.passed') : __('lang.failed') }}
             </span>
         </div>
-        
+
         @if($results['statistics']['final_score'] >= 60)
-            <p class="mb-3">You have passed the exam, congratulations.</p>
+            <p class="mb-3">{{ __('lang.you_have_passed_congratulations') }}</p>
         @else
-            <p class="mb-3">You did not pass the exam. Additional preparation is recommended before retaking.</p>
+            <p class="mb-3">{{ __('lang.you_did_not_pass_additional_preparation') }}</p>
         @endif
 
         <div class="performance-bar-container">
             <div class="performance-sections">
                 <div class="performance-section section-need-improvement" style="width: 25%;">
-                    Need Improvement
-                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">0-40%</small>
+                    {{ __('lang.need_improvement') }}
+                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">{{ __('lang.need_improvement_range') }}</small>
                 </div>
                 <div class="performance-section section-below-target" style="width: 25%;">
-                    Below Target
-                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">41-59%</small>
+                    {{ __('lang.below_target') }}
+                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">{{ __('lang.below_target_range') }}</small>
                 </div>
                 <div class="performance-section section-target" style="width: 25%;">
-                    Target
-                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">60-79%</small>
+                    {{ __('lang.target') }}
+                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">{{ __('lang.target_range') }}</small>
                 </div>
                 <div class="performance-section section-above-target" style="width: 25%;">
-                    Above Target
-                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">80-100%</small>
+                    {{ __('lang.above_target') }}
+                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">{{ __('lang.above_target_range') }}</small>
                 </div>
             </div>
             @php
                 $score = $results['statistics']['final_score'];
                 $position = min(100, max(0, $score));
-                
+
                 // Determine which category the user falls into
                 $userCategory = '';
                 if ($score >= 80) {
-                    $userCategory = 'Above Target';
+                    $userCategory = __('lang.above_target');
                 } elseif ($score >= 60) {
-                    $userCategory = 'Target';
+                    $userCategory = __('lang.target');
                 } elseif ($score >= 41) {
-                    $userCategory = 'Below Target';
+                    $userCategory = __('lang.below_target');
                 } else {
-                    $userCategory = 'Need Improvement';
+                    $userCategory = __('lang.need_improvement');
                 }
             @endphp
             <div class="performance-indicator" style="left: {{ $position }}%;" data-category="{{ $userCategory }}"></div>
         </div>
 
         <div class="performance-labels">
-            <span>← Failing</span>
-            <span>Passing →</span>
+            <span>← {{ __('lang.failing') }}</span>
+            <span>{{ __('lang.passing') }} →</span>
         </div>
 
         <div class="performance-explanation">
-            <h5><i class="fas fa-info-circle me-2"></i>What Does this Diagram Mean?</h5>
-            <p class="mb-3">The diagram uses four different performance rating categories to show your overall performance on the exam. Each rating reflects how many questions you answered correctly.</p>
-            
+            <h5><i class="fas fa-info-circle me-2"></i>{{ __('lang.what_does_this_diagram_mean') }}</h5>
+            <p class="mb-3">{{ __('lang.diagram_explanation') }}</p>
+
             <div class="row">
-                <div class="col-md-6">
-                    <strong>Performance Rating Categories:</strong>
+                <div class="col-md-12">
+                    <strong>{{ __('lang.performance_rating_categories') }}</strong>
                     <ul class="mt-2">
-                        <li><strong>Above Target:</strong> Your performance exceeds the minimum requirements for this exam</li>
-                        <li><strong>Target:</strong> Your performance meets the minimum requirements for this exam</li>
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <ul class="mt-2" style="list-style: none; padding-left: 0;">
-                        <li><strong>Below Target:</strong> Your performance is slightly below target and fails to meet the minimum requirements for this exam. Additional preparation is recommended before re-examination.</li>
-                        <li><strong>Need Improvement:</strong> Your performance is far below target and fails to meet the minimum requirements for this exam. Additional preparation is strongly recommended before re-examination.</li>
+                        <li><strong>{{ __('lang.above_target_label') }}</strong> {{ __('lang.above_target_description') }}</li>
+                        <li><strong>{{ __('lang.target_label') }}</strong> {{ __('lang.target_description') }}</li>
+
+                        <li><strong>{{ __('lang.below_target_label') }}</strong> {{ __('lang.below_target_description') }}</li>
+                        <li><strong>{{ __('lang.need_improvement_label') }}</strong> {{ __('lang.need_improvement_description') }}</li>
                     </ul>
                 </div>
             </div>
-            
-            <small class="text-muted mt-3 d-block">**The categories presented on this report were created to help you see where you may need additional preparation. They should not be used or interpreted for other purposes, such as, job placement decisions.</small>
+
+            @php
+                $score = $results['statistics']['final_score'];
+                $userStatus = '';
+                $statusColor = '';
+                $userMessage = '';
+
+                if ($score >= 80) {
+                    $userStatus = __('lang.above_target');
+                    $statusColor = 'var(--pmp-success)';
+                    $userMessage = __('lang.above_target_message');
+                } elseif ($score >= 60) {
+                    $userStatus = __('lang.target');
+                    $statusColor = 'var(--pmp-success)';
+                    $userMessage = __('lang.target_message');
+                } elseif ($score >= 41) {
+                    $userStatus = __('lang.below_target');
+                    $statusColor = 'var(--pmp-warning)';
+                    $userMessage = __('lang.below_target_message');
+                } else {
+                    $userStatus = __('lang.need_improvement');
+                    $statusColor = 'var(--pmp-danger)';
+                    $userMessage = __('lang.need_improvement_message_detailed');
+                }
+            @endphp
+
+            <div class="mt-3 p-3 rounded" style="background: rgba(37, 99, 235, 0.1); border-left: 4px solid {{ $statusColor }};">
+                <strong style="color: {{ $statusColor }};">{{ __('lang.your_performance') }}: {{ $userStatus }}</strong>
+                <p class="mb-0 mt-1">{{ $userMessage }}</p>
+            </div>
+
+            <small class="text-muted mt-3 d-block">{{ __('lang.categories_disclaimer_prefix') }}{{ __('lang.categories_disclaimer') }}</small>
         </div>
     </div>
 
