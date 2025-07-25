@@ -158,6 +158,7 @@ body {
     color: var(--sidebar-color);
     text-decoration: none;
     display: flex;
+    justify-content: end;
     align-items: center;
     padding: 0.75rem 1rem;
     margin: 0.2rem 0;
@@ -206,6 +207,9 @@ body {
     width: 100%;
 }
 
+#logout-form-student .sidebar-link {
+    width: 100%;
+} 
 .sidebar-link i {
     width: 24px;
     text-align: center;
@@ -216,7 +220,6 @@ body {
 
 .sidebar.rtl .sidebar-link i {
     margin-right: 0;
-    margin-left: 0.75rem;
 }
 
 .sidebar-link:hover i {
@@ -255,6 +258,7 @@ body {
 .sidebar.collapsed.rtl .sidebar-link i {
     margin-left: 0;
 }
+
 
 /* Toggle Button */
 .sidebar-toggle {
@@ -352,6 +356,7 @@ body {
     padding: 0.75rem;
     transition: all var(--transition-speed) ease;
     border-radius: 8px;
+    
     margin: 0.25rem 0.5rem;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -375,7 +380,7 @@ body {
 }
 
 .student-sidebar.expanded.rtl .sidebar-link {
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 .student-sidebar .sidebar-link i {
@@ -1176,5 +1181,3 @@ body {
 .mobile-bottom-nav {
     justify-content: space-evenly;
 }
-
-

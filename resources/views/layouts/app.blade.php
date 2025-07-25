@@ -234,7 +234,7 @@
                             <span class="link-text">{{ __('lang.notifications') }}</span>
                         </a>
                     
-                        <div class="language-section border-top border-light border-opacity-25 mt-3 pt-3 mx-2 my-3">
+                        <div class="language-section border-top border-light border-opacity-25 mt-3 pt-3 my-3">
                             <small class="text-white-50 ps-3 d-block mb-2">{{ __('Language') }}</small>
                             
                             <a href="{{ route('locale.set', 'ar') }}" 
@@ -249,13 +249,14 @@
                             </a>
                         </div>
                         
-                        <a href="{{ route('logout') }}" class="sidebar-link" data-title="{{ __('lang.logout') }}"
-                            onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span class="link-text">{{ __('lang.logout') }}</span>
-                        </a>
-                        <form id="logout-form-student" action="{{ route('logout') }}" method="POST" class="d-none">
+                        
+                        <form id="logout-form-student" action="{{ route('logout') }}" method="POST" class="d-flex">
                             @csrf
+                            <a href="#" class="sidebar-link" data-title="{{ __('lang.logout') }}"
+                               onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="link-text">{{ __('lang.logout') }}</span>
+                            </a>
                         </form>
                     </div>
                 </div>

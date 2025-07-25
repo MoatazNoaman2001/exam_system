@@ -110,7 +110,7 @@ class ExamController extends Controller
         $validator = Validator::make($request->all(), [
             'question_id' => 'required|exists:exam_questions,id',
             'selected_answers' => 'required|array',
-            'selected_answers.*' => 'integer',
+            'selected_answers.*' => 'string',
             'time_spent' => 'required|integer|min:0'
         ]);
 
@@ -253,6 +253,7 @@ class ExamController extends Controller
             ->where('user_id', Auth::id())
             ->findOrFail($sessionId);
 
+
         if ($session->status !== 'completed') {
             return redirect()->route('student.exams.take', $sessionId)
                 ->with('error', __('lang.exam_not_completed'));
@@ -260,6 +261,7 @@ class ExamController extends Controller
 
         $serviceResults = $this->examService->getDetailedResults($sessionId);
 
+        // dd($serviceResults);
         // Restructure the data to match the Blade template expectations
         $results = [
             'results' => $serviceResults['results'], // The question-by-question results

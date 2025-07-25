@@ -1,6 +1,3 @@
-<div>
-    <!-- Smile, breathe, and go slowly. - Thich Nhat Hanh -->
-</div>
 @extends('layouts.app')
 
 @section('title', __('lang.exam_results') . ' - ' . $session->exam->title)
@@ -37,6 +34,266 @@
         padding: 2rem;
     }
 
+    /* Performance Diagram Styles */
+    .performance-diagram {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .performance-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .performance-status {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--pmp-gray-800);
+    }
+
+    .status-badge {
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .status-passed {
+        background: var(--pmp-success);
+        color: white;
+    }
+
+    .status-failed {
+        background: var(--pmp-danger);
+        color: white;
+    }
+
+    .performance-bar-container {
+        position: relative;
+        height: 40px;
+        background: var(--pmp-gray-200);
+        border-radius: 20px;
+        overflow: hidden;
+        margin: 1.5rem 0;
+    }
+
+    .performance-sections {
+        display: flex;
+        height: 100%;
+        position: relative;
+    }
+
+    .performance-section {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .section-need-improvement {
+        background: #ff6b35;
+    }
+
+    .section-below-target {
+        background: #f7b733;
+    }
+
+    .section-target {
+        background: #20bf6b;
+    }
+
+    .section-above-target {
+        background: #0fb9b1;
+    }
+
+    .performance-indicator {
+        position: absolute;
+        top: -10px;
+        bottom: -10px;
+        width: 4px;
+        background: var(--pmp-gray-800);
+        border-radius: 2px;
+        z-index: 10;
+    }
+
+    .performance-indicator::after {
+        content: attr(data-category);
+        position: absolute;
+        top: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--pmp-gray-800);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .performance-indicator::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 6px solid var(--pmp-gray-800);
+    }
+
+    .performance-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: var(--pmp-gray-600);
+    }
+
+    .performance-explanation {
+        margin-top: 1.5rem;
+        padding: 1.5rem;
+        background: var(--pmp-gray-50);
+        border-radius: 0.5rem;
+        border-left: 4px solid var(--pmp-primary);
+    }
+
+    /* Answer Explanation Styles */
+    .answer-explanation {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid;
+    }
+
+    .explanation-correct {
+        background: #d1fae5;
+        border-color: var(--pmp-success);
+    }
+
+    .explanation-incorrect {
+        background: #fee2e2;
+        border-color: var(--pmp-danger);
+    }
+
+    .explanation-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .explanation-text {
+        margin-bottom: 0;
+        line-height: 1.6;
+    }
+
+    /* Enhanced Answer Item Styles */
+    .answer-item {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        border-radius: 0.75rem;
+        border: 2px solid;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .answer-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .answer-correct {
+        background: #d1fae5;
+        border-color: var(--pmp-success);
+    }
+
+    .answer-selected-correct {
+        background: #d1fae5;
+        border-color: var(--pmp-success);
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
+    }
+
+    .answer-selected-incorrect {
+        background: #fee2e2;
+        border-color: var(--pmp-danger);
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+    }
+
+    .answer-unselected {
+        background: white;
+        border-color: var(--pmp-gray-200);
+    }
+
+    .answer-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: white;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .icon-correct {
+        background: var(--pmp-success);
+    }
+
+    .icon-incorrect {
+        background: var(--pmp-danger);
+    }
+
+    .icon-neutral {
+        background: var(--pmp-gray-400);
+    }
+
+    .answer-content {
+        flex: 1;
+    }
+
+    .answer-text {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--pmp-gray-800);
+    }
+
+    .answer-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .label-correct {
+        color: var(--pmp-success);
+    }
+
+    .label-your-answer {
+        color: var(--pmp-primary);
+    }
+
+    .label-wrong {
+        color: var(--pmp-danger);
+    }
+
+    /* Rest of your existing styles... */
     .result-header {
         text-align: center;
         margin-bottom: 3rem;
@@ -79,35 +336,6 @@
         letter-spacing: 1px;
     }
 
-    .result-status {
-        padding: 1rem 2rem;
-        border-radius: 50px;
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 2rem;
-        display: inline-block;
-    }
-
-    .status-excellent {
-        background: var(--pmp-success);
-        color: white;
-    }
-
-    .status-good {
-        background: var(--pmp-primary);
-        color: white;
-    }
-
-    .status-needs-improvement {
-        background: var(--pmp-warning);
-        color: white;
-    }
-
-    .status-failed {
-        background: var(--pmp-danger);
-        color: white;
-    }
-
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -122,54 +350,6 @@
         text-align: center;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         border: 1px solid var(--pmp-gray-200);
-    }
-
-    .stat-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1rem;
-        font-size: 1.5rem;
-        color: white;
-    }
-
-    .stat-value {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--pmp-gray-800);
-        margin-bottom: 0.5rem;
-    }
-
-    .stat-label {
-        color: var(--pmp-gray-600);
-        font-weight: 500;
-    }
-
-    .icon-total {
-        background: var(--pmp-primary);
-    }
-
-    .icon-correct {
-        background: var(--pmp-success);
-    }
-
-    .icon-incorrect {
-        background: var(--pmp-danger);
-    }
-
-    .icon-unanswered {
-        background: var(--pmp-warning);
-    }
-
-    .icon-time {
-        background: var(--pmp-info);
-    }
-
-    .icon-accuracy {
-        background: var(--pmp-primary);
     }
 
     .detailed-results {
@@ -191,49 +371,28 @@
 
     .question-summary {
         border: 1px solid var(--pmp-gray-200);
-        border-radius: 0.5rem;
-        margin-bottom: 1rem;
+        border-radius: 0.75rem;
+        margin-bottom: 1.5rem;
         overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .question-summary:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .question-header {
         background: var(--pmp-gray-50);
-        padding: 1rem;
+        padding: 1.25rem;
         cursor: pointer;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        transition: background 0.3s ease;
     }
 
     .question-header:hover {
         background: var(--pmp-gray-100);
-    }
-
-    .question-title {
-        font-weight: 600;
-        color: var(--pmp-gray-800);
-    }
-
-    .question-status {
-        padding: 0.25rem 0.75rem;
-        border-radius: 15px;
-        font-size: 0.875rem;
-        font-weight: 500;
-    }
-
-    .status-correct {
-        background: #d1fae5;
-        color: var(--pmp-success);
-    }
-
-    .status-incorrect {
-        background: #fee2e2;
-        color: var(--pmp-danger);
-    }
-
-    .status-not-answered {
-        background: #fef3c7;
-        color: var(--pmp-warning);
     }
 
     .question-details {
@@ -247,163 +406,10 @@
     }
 
     .question-text {
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         color: var(--pmp-gray-700);
         line-height: 1.6;
-    }
-
-    .answers-list {
-        margin: 1rem 0;
-    }
-
-    .answer-item {
-        padding: 0.75rem;
-        margin-bottom: 0.5rem;
-        border-radius: 0.5rem;
-        border: 1px solid var(--pmp-gray-200);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .answer-correct {
-        background: #d1fae5;
-        border-color: var(--pmp-success);
-    }
-
-    .answer-selected {
-        background: #dbeafe;
-        border-color: var(--pmp-primary);
-    }
-
-    .answer-wrong {
-        background: #fee2e2;
-        border-color: var(--pmp-danger);
-    }
-
-    .answer-icon {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
-        color: white;
-        flex-shrink: 0;
-    }
-
-    .icon-check {
-        background: var(--pmp-success);
-    }
-
-    .icon-cross {
-        background: var(--pmp-danger);
-    }
-
-    .icon-selected {
-        background: var(--pmp-primary);
-    }
-
-    .time-spent {
-        font-size: 0.875rem;
-        color: var(--pmp-gray-600);
-        margin-top: 0.5rem;
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        margin-top: 3rem;
-        flex-wrap: wrap;
-    }
-
-    .btn-action {
-        padding: 0.75rem 2rem;
-        border: none;
-        border-radius: 0.75rem;
-        font-weight: 600;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary {
-        background: var(--pmp-primary);
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background: #1d4ed8;
-        transform: translateY(-2px);
-    }
-
-    .btn-success {
-        background: var(--pmp-success);
-        color: white;
-    }
-
-    .btn-success:hover {
-        background: #047857;
-        transform: translateY(-2px);
-    }
-
-    .btn-info {
-        background: var(--pmp-info);
-        color: white;
-    }
-
-    .btn-info:hover {
-        background: #0e7490;
-        transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-        background: var(--pmp-gray-600);
-        color: white;
-    }
-
-    .btn-secondary:hover {
-        background: var(--pmp-gray-700);
-        transform: translateY(-2px);
-    }
-
-    .recommendations {
-        background: white;
-        border-radius: 1rem;
-        padding: 2rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        margin-bottom: 2rem;
-    }
-
-    .recommendation-item {
-        padding: 1rem;
-        border-radius: 0.5rem;
-        margin-bottom: 1rem;
-        border-left: 4px solid;
-    }
-
-    .recommendation-success {
-        background: #d1fae5;
-        border-color: var(--pmp-success);
-    }
-
-    .recommendation-warning {
-        background: #fef3c7;
-        border-color: var(--pmp-warning);
-    }
-
-    .recommendation-danger {
-        background: #fee2e2;
-        border-color: var(--pmp-danger);
-    }
-
-    .recommendation-info {
-        background: #e0f2fe;
-        border-color: var(--pmp-info);
+        font-size: 1.1rem;
     }
 
     @media (max-width: 768px) {
@@ -411,65 +417,120 @@
             padding: 1rem;
         }
 
-        .score-circle {
-            width: 150px;
-            height: 150px;
-        }
-
-        .score-inner {
-            width: 120px;
-            height: 120px;
-        }
-
-        .score-value {
-            font-size: 2rem;
-        }
-
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .action-buttons {
+        .performance-sections {
             flex-direction: column;
-            align-items: center;
+            height: auto;
         }
 
-        .btn-action {
-            width: 100%;
-            max-width: 300px;
-            justify-content: center;
+        .performance-section {
+            height: 40px;
+        }
+
+        .performance-indicator {
+            display: none;
+        }
+
+        .answer-item {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .answer-icon {
+            align-self: flex-start;
         }
     }
 </style>
 
 <div class="results-container" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
-    <!-- Result Header -->
+    <!-- Performance Diagram -->
+    <div class="performance-diagram">
+        <div class="performance-header">
+            <span class="performance-status">Your Overall Performance</span>
+            <span class="status-badge {{ $results['statistics']['final_score'] >= 60 ? 'status-passed' : 'status-failed' }}">
+                {{ $results['statistics']['final_score'] >= 60 ? 'Passed' : 'Failed' }}
+            </span>
+        </div>
+        
+        @if($results['statistics']['final_score'] >= 60)
+            <p class="mb-3">You have passed the exam, congratulations.</p>
+        @else
+            <p class="mb-3">You did not pass the exam. Additional preparation is recommended before retaking.</p>
+        @endif
+
+        <div class="performance-bar-container">
+            <div class="performance-sections">
+                <div class="performance-section section-need-improvement" style="width: 25%;">
+                    Need Improvement
+                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">0-40%</small>
+                </div>
+                <div class="performance-section section-below-target" style="width: 25%;">
+                    Below Target
+                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">41-59%</small>
+                </div>
+                <div class="performance-section section-target" style="width: 25%;">
+                    Target
+                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">60-79%</small>
+                </div>
+                <div class="performance-section section-above-target" style="width: 25%;">
+                    Above Target
+                    <small style="display: block; font-size: 0.7rem; opacity: 0.8;">80-100%</small>
+                </div>
+            </div>
+            @php
+                $score = $results['statistics']['final_score'];
+                $position = min(100, max(0, $score));
+                
+                // Determine which category the user falls into
+                $userCategory = '';
+                if ($score >= 80) {
+                    $userCategory = 'Above Target';
+                } elseif ($score >= 60) {
+                    $userCategory = 'Target';
+                } elseif ($score >= 41) {
+                    $userCategory = 'Below Target';
+                } else {
+                    $userCategory = 'Need Improvement';
+                }
+            @endphp
+            <div class="performance-indicator" style="left: {{ $position }}%;" data-category="{{ $userCategory }}"></div>
+        </div>
+
+        <div class="performance-labels">
+            <span>← Failing</span>
+            <span>Passing →</span>
+        </div>
+
+        <div class="performance-explanation">
+            <h5><i class="fas fa-info-circle me-2"></i>What Does this Diagram Mean?</h5>
+            <p class="mb-3">The diagram uses four different performance rating categories to show your overall performance on the exam. Each rating reflects how many questions you answered correctly.</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Performance Rating Categories:</strong>
+                    <ul class="mt-2">
+                        <li><strong>Above Target:</strong> Your performance exceeds the minimum requirements for this exam</li>
+                        <li><strong>Target:</strong> Your performance meets the minimum requirements for this exam</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="mt-2" style="list-style: none; padding-left: 0;">
+                        <li><strong>Below Target:</strong> Your performance is slightly below target and fails to meet the minimum requirements for this exam. Additional preparation is recommended before re-examination.</li>
+                        <li><strong>Need Improvement:</strong> Your performance is far below target and fails to meet the minimum requirements for this exam. Additional preparation is strongly recommended before re-examination.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <small class="text-muted mt-3 d-block">**The categories presented on this report were created to help you see where you may need additional preparation. They should not be used or interpreted for other purposes, such as, job placement decisions.</small>
+        </div>
+    </div>
+
+    <!-- Result Header with Score Circle -->
     <div class="result-header">
         <div class="score-circle" style="--score-angle: {{ ($results['statistics']['final_score'] / 100) * 360 }}deg;">
             <div class="score-inner">
                 <div class="score-value">{{ number_format($results['statistics']['final_score'], 1) }}%</div>
                 <div class="score-label">{{ __('lang.final_score') }}</div>
             </div>
-        </div>
-
-        @php
-        $scoreStatus = 'failed';
-        $statusText = __('lang.failed');
-        if ($results['statistics']['final_score'] >= 85) {
-        $scoreStatus = 'excellent';
-        $statusText = __('lang.excellent_performance');
-        } elseif ($results['statistics']['final_score'] >= 70) {
-        $scoreStatus = 'good';
-        $statusText = __('lang.good_performance');
-        } elseif ($results['statistics']['final_score'] >= 60) {
-        $scoreStatus = 'needs-improvement';
-        $statusText = __('lang.needs_improvement');
-        }
-        @endphp
-
-        <div class="result-status status-{{ $scoreStatus }}">
-            <i class="fas fa-{{ $scoreStatus === 'excellent' ? 'trophy' : ($scoreStatus === 'good' ? 'medal' : ($scoreStatus === 'needs-improvement' ? 'exclamation-triangle' : 'times-circle')) }} me-2"></i>
-            {{ $statusText }}
         </div>
 
         <h2 class="mt-3">{{ $session->exam->title }}</h2>
@@ -479,75 +540,39 @@
     <!-- Statistics Grid -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-icon icon-total">
+            <div class="stat-icon icon-total" style="width: 60px; height: 60px; background: var(--pmp-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
                 <i class="fas fa-list-ol"></i>
             </div>
-            <div class="stat-value">{{ $results['statistics']['total_questions'] }}</div>
-            <div class="stat-label">{{ __('lang.total_questions') }}</div>
+            <div class="stat-value" style="font-size: 2rem; font-weight: 700; color: var(--pmp-gray-800); margin-bottom: 0.5rem;">{{ $results['statistics']['total_questions'] }}</div>
+            <div class="stat-label" style="color: var(--pmp-gray-600); font-weight: 500;">{{ __('lang.total_questions') }}</div>
         </div>
 
         <div class="stat-card">
-            <div class="stat-icon icon-correct">
+            <div class="stat-icon icon-correct" style="width: 60px; height: 60px; background: var(--pmp-success); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
                 <i class="fas fa-check"></i>
             </div>
-            <div class="stat-value">{{ $results['statistics']['correct_answers'] }}</div>
-            <div class="stat-label">{{ __('lang.correct_answers') }}</div>
+            <div class="stat-value" style="font-size: 2rem; font-weight: 700; color: var(--pmp-gray-800); margin-bottom: 0.5rem;">{{ $results['statistics']['correct_answers'] }}</div>
+            <div class="stat-label" style="color: var(--pmp-gray-600); font-weight: 500;">{{ __('lang.correct_answers') }}</div>
         </div>
 
         <div class="stat-card">
-            <div class="stat-icon icon-incorrect">
+            <div class="stat-icon icon-incorrect" style="width: 60px; height: 60px; background: var(--pmp-danger); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
                 <i class="fas fa-times"></i>
             </div>
-            <div class="stat-value">{{ $results['statistics']['incorrect_answers'] }}</div>
-            <div class="stat-label">{{ __('lang.incorrect_answers') }}</div>
+            <div class="stat-value" style="font-size: 2rem; font-weight: 700; color: var(--pmp-gray-800); margin-bottom: 0.5rem;">{{ $results['statistics']['incorrect_answers'] }}</div>
+            <div class="stat-label" style="color: var(--pmp-gray-600); font-weight: 500;">{{ __('lang.incorrect_answers') }}</div>
         </div>
 
         <div class="stat-card">
-            <div class="stat-icon icon-unanswered">
-                <i class="fas fa-question"></i>
-            </div>
-            <div class="stat-value">{{ $results['statistics']['unanswered_questions'] }}</div>
-            <div class="stat-label">{{ __('lang.unanswered_questions') }}</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon icon-time">
+            <div class="stat-icon icon-time" style="width: 60px; height: 60px; background: var(--pmp-info); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
                 <i class="fas fa-clock"></i>
             </div>
-            <div class="stat-value">{{ gmdate('H:i:s', $results['statistics']['total_time_spent']) }}</div>
-            <div class="stat-label">{{ __('lang.time_spent') }}</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon icon-accuracy">
-                <i class="fas fa-percentage"></i>
-            </div>
-            <div class="stat-value">{{ number_format($results['statistics']['accuracy_percentage'], 1) }}%</div>
-            <div class="stat-label">{{ __('lang.accuracy') }}</div>
+            <div class="stat-value" style="font-size: 2rem; font-weight: 700; color: var(--pmp-gray-800); margin-bottom: 0.5rem;">{{ gmdate('H:i:s', $results['statistics']['total_time_spent']) }}</div>
+            <div class="stat-label" style="color: var(--pmp-gray-600); font-weight: 500;">{{ __('lang.time_spent') }}</div>
         </div>
     </div>
 
-    <!-- Recommendations Section -->
-    @if(isset($recommendations) && count($recommendations) > 0)
-    <div class="recommendations">
-        <h3 class="section-title">
-            <i class="fas fa-lightbulb me-2"></i>
-            {{ __('lang.recommendations') }}
-        </h3>
-
-        @foreach($recommendations as $recommendation)
-        <div class="recommendation-item recommendation-{{ $recommendation['type'] }}">
-            <h5>
-                <i class="fas fa-{{ $recommendation['type'] === 'success' ? 'check-circle' : ($recommendation['type'] === 'warning' ? 'exclamation-triangle' : ($recommendation['type'] === 'danger' ? 'times-circle' : 'info-circle')) }} me-2"></i>
-                {{ $recommendation['title'] }}
-            </h5>
-            <p class="mb-0">{{ $recommendation['message'] }}</p>
-        </div>
-        @endforeach
-    </div>
-    @endif
-
-    <!-- Question by Question Results -->
+    <!-- Question by Question Results with Explanations -->
     <div class="detailed-results">
         <h3 class="section-title">
             <i class="fas fa-list-alt me-2"></i>
@@ -558,7 +583,7 @@
             @foreach($results['results'] as $index => $result)
             <div class="question-summary">
                 <div class="question-header" onclick="toggleQuestionDetails({{ $index }})">
-                    <div class="question-title">
+                    <div class="question-title" style="font-weight: 600; color: var(--pmp-gray-800);">
                         {{ __('lang.question') }} {{ $result['question_number'] }}
                         @if($result['question']->type)
                         <small class="text-muted">({{ ucfirst(str_replace('_', ' ', $result['question']->type)) }})</small>
@@ -566,17 +591,17 @@
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         @if($result['answered'])
-                        @if($result['is_correct'])
-                        <span class="question-status status-correct">
-                            <i class="fas fa-check me-1"></i>{{ __('lang.correct') }}
-                        </span>
+                            @if($result['is_correct'])
+                            <span class="question-status" style="padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.875rem; font-weight: 500; background: #d1fae5; color: var(--pmp-success);">
+                                <i class="fas fa-check me-1"></i>{{ __('lang.correct') }}
+                            </span>
+                            @else
+                            <span class="question-status" style="padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.875rem; font-weight: 500; background: #fee2e2; color: var(--pmp-danger);">
+                                <i class="fas fa-times me-1"></i>{{ __('lang.incorrect') }}
+                            </span>
+                            @endif
                         @else
-                        <span class="question-status status-incorrect">
-                            <i class="fas fa-times me-1"></i>{{ __('lang.incorrect') }}
-                        </span>
-                        @endif
-                        @else
-                        <span class="question-status status-not-answered">
+                        <span class="question-status" style="padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.875rem; font-weight: 500; background: #fef3c7; color: var(--pmp-warning);">
                             <i class="fas fa-question me-1"></i>{{ __('lang.not_answered') }}
                         </span>
                         @endif
@@ -592,52 +617,83 @@
 
                     <div class="answers-list">
                         <strong>{{ __('lang.answers') }}:</strong>
-                    @foreach($result['question']->answers as $answer)
-                        @php
-                            $isCorrect = in_array($answer->id, $result['correct_answers']);
+                        @foreach($result['question']->answers as $answer)
+                            @php
+                                // Get user's selected answers
+                                $selectedAnswers = [];
+                                if ($result['user_answer'] && $result['user_answer']->selected_answers) {
+                                    $selectedAnswers = is_string($result['user_answer']->selected_answers) 
+                                        ? json_decode($result['user_answer']->selected_answers, true) ?? []
+                                        : $result['user_answer']->selected_answers;
+                                }
 
-                            $selectedAnswers = [];
-                            if ($result['user_answer'] && is_string($result['user_answer']->selected_answers)) {
-                            $selectedAnswers = json_decode($result['user_answer']->selected_answers, true) ?? [];
-                            }
+                                $isCorrect = $answer->is_correct;
+                                $isSelected = in_array($answer->uuid, $selectedAnswers) || in_array($answer->id, $selectedAnswers);
+                                
+                                // Determine answer styling
+                                $answerClass = '';
+                                $iconClass = '';
+                                $labelClass = '';
+                                $labelText = '';
+                                
+                                if ($isCorrect) {
+                                    $answerClass = $isSelected ? 'answer-selected-correct' : 'answer-correct';
+                                    $iconClass = 'icon-correct';
+                                    $labelClass = 'label-correct';
+                                    $labelText = __('lang.correct_answer');
+                                } elseif ($isSelected) {
+                                    $answerClass = 'answer-selected-incorrect';
+                                    $iconClass = 'icon-incorrect';
+                                    $labelClass = 'label-wrong';
+                                    $labelText = __('lang.your_answer');
+                                } else {
+                                    $answerClass = 'answer-unselected';
+                                    $iconClass = 'icon-neutral';
+                                }
+                            @endphp
 
-                            $isSelected = in_array($answer->id, $selectedAnswers);
-
-                            $answerClass = '';
-                            $iconClass = '';
-                            if ($isCorrect) {
-                            $answerClass = 'answer-correct';
-                            $iconClass = 'icon-check';
-                            } elseif ($isSelected && !$isCorrect) {
-                            $answerClass = 'answer-wrong';
-                            $iconClass = 'icon-cross';
-                            }
-                        @endphp
-
-
-
-                        <div class="answer-item {{ $answerClass }}">
-                            @if($iconClass)
-                            <div class="answer-icon {{ $iconClass }}">
-                                <i class="fas fa-{{ $isCorrect ? 'check' : ($isSelected ? 'user' : 'times') }}"></i>
+                            <div class="answer-item {{ $answerClass }}">
+                                <div class="answer-icon {{ $iconClass }}">
+                                    @if($isCorrect)
+                                        <i class="fas fa-check"></i>
+                                    @elseif($isSelected)
+                                        <i class="fas fa-user"></i>
+                                    @else
+                                        <i class="fas fa-circle"></i>
+                                    @endif
+                                </div>
+                                <div class="answer-content">
+                                    @if($labelText)
+                                        <div class="answer-label {{ $labelClass }}">{{ $labelText }}</div>
+                                    @endif
+                                    <div class="answer-text">
+                                        {{ app()->getLocale() === 'ar' ? ($answer->{'answer-ar'} ?? $answer->answer) : $answer->answer }}
+                                    </div>
+                                    
+                                    {{-- Show explanation if answer is correct or was selected incorrectly --}}
+                                    @if(($isCorrect || $isSelected) && ($answer->reason || $answer->{'reason-ar'}))
+                                        <div class="answer-explanation {{ $isCorrect ? 'explanation-correct' : 'explanation-incorrect' }}">
+                                            <div class="explanation-title">
+                                                @if($isCorrect)
+                                                    <i class="fas fa-lightbulb"></i>
+                                                    {{ __('lang.why_this_is_correct') }}
+                                                @else
+                                                    <i class="fas fa-info-circle"></i>
+                                                    {{ __('lang.why_this_is_incorrect') }}
+                                                @endif
+                                            </div>
+                                            <div class="explanation-text">
+                                                {{ app()->getLocale() === 'ar' ? ($answer->{'reason-ar'} ?? $answer->reason) : $answer->reason }}
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
-                            @endif
-                            <div class="flex-grow-1">
-                                {{ $answer->answer_text }}
-                                @if($isCorrect)
-                                <small class="text-success d-block">{{ __('lang.correct_answer') . ' : ' . $answer->answer }} </small>
-                                @elseif($isSelected && !$isCorrect)
-                                <small class="text-danger d-block">{{ __('lang.your_answer') . ' : ' . $answer->answer }}</small>
-                                @elseif($isSelected)
-                                <small class="text-primary d-block">{{ __('lang.your_answer') . ' : ' . $answer->answer }}</small>
-                                @endif
-                            </div>
-                        </div>
                         @endforeach
                     </div>
 
                     @if($result['answered'])
-                    <div class="time-spent">
+                    <div class="time-spent" style="font-size: 0.875rem; color: var(--pmp-gray-600); margin-top: 1rem;">
                         <i class="fas fa-clock me-1"></i>
                         {{ __('lang.time_spent_on_question') }}: {{ gmdate('i:s', $result['time_spent']) }}
                     </div>
@@ -649,18 +705,18 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="action-buttons">
-        <a href="{{ route('student.exams.index') }}" class="btn-action btn-secondary">
+    <div class="action-buttons" style="display: flex; gap: 1rem; justify-content: center; margin-top: 3rem; flex-wrap: wrap;">
+        <a href="{{ route('student.exams.index') }}" class="btn-action btn-secondary" style="padding: 0.75rem 2rem; border: none; border-radius: 0.75rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; background: var(--pmp-gray-600); color: white;">
             <i class="fas fa-arrow-left"></i>
             {{ __('lang.back_to_exams') }}
         </a>
 
-        @if($results['statistics']['final_score'] < 70)
-            <a href="{{ route('student.exams.index', $session->exam->id) }}" class="btn-action btn-success">
-            <i class="fas fa-redo"></i>
-            {{ __('lang.retake_exam') }}
+        @if($results['statistics']['final_score'] < 60)
+            <a href="{{ route('student.exams.show', $session->exam->id) }}" class="btn-action btn-success" style="padding: 0.75rem 2rem; border: none; border-radius: 0.75rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; background: var(--pmp-success); color: white;">
+                <i class="fas fa-redo"></i>
+                {{ __('lang.retake_exam') }}
             </a>
-            @endif
+        @endif
     </div>
 </div>
 
@@ -693,6 +749,29 @@
                 toggleQuestionDetails(index);
             }
         }
+
+        // Animate performance indicator
+        const indicator = document.querySelector('.performance-indicator');
+        if (indicator) {
+            indicator.style.opacity = '0';
+            indicator.style.transform = 'translateX(-20px)';
+            setTimeout(() => {
+                indicator.style.transition = 'all 1s ease';
+                indicator.style.opacity = '1';
+                indicator.style.transform = 'translateX(0)';
+            }, 500);
+        }
+
+        // Animate score circle
+        const scoreCircle = document.querySelector('.score-circle');
+        if (scoreCircle) {
+            scoreCircle.style.background = 'conic-gradient(var(--pmp-success) 0deg, var(--pmp-success) 0deg, var(--pmp-gray-200) 0deg)';
+            setTimeout(() => {
+                scoreCircle.style.transition = 'background 2s ease-in-out';
+                const scoreAngle = {{ ($results['statistics']['final_score'] / 100) * 360 }};
+                scoreCircle.style.background = `conic-gradient(var(--pmp-success) 0deg, var(--pmp-success) ${scoreAngle}deg, var(--pmp-gray-200) ${scoreAngle}deg)`;
+            }, 800);
+        }
     });
 
     // Add smooth scroll to question details
@@ -707,39 +786,13 @@
         });
     });
 
-    // Print functionality
-    function printResults() {
-        window.print();
-    }
-
-    // Share results functionality
-    function shareResults() {
-        const shareData = {
-            title: '{{ __("lang.exam_results") }} - {{ $session->exam->title }}',
-            text: `{{ __("lang.scored") }} {{ number_format($results['statistics']['final_score'], 1) }}% {{ __("lang.in_exam") }}`,
-            url: window.location.href
-        };
-
-        if (navigator.share) {
-            navigator.share(shareData);
-        } else {
-            // Fallback - copy to clipboard
-            navigator.clipboard.writeText(`${shareData.title}\n${shareData.text}\n${shareData.url}`);
-            alert('{{ __("lang.results_copied_to_clipboard") }}');
-        }
-    }
-
-    // Add keyboard shortcuts
+    // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
         if (e.ctrlKey || e.metaKey) {
             switch (e.key) {
-                case 'p':
-                    e.preventDefault();
-                    printResults();
-                    break;
                 case 'r':
                     e.preventDefault();
-                    window.location.href = '{{ route("student.exams.review", $session->id) }}';
+                    location.reload();
                     break;
                 case 'b':
                     e.preventDefault();
@@ -748,51 +801,6 @@
             }
         }
     });
-
-    // Add animation effects
-    window.addEventListener('load', function() {
-        // Animate score circle
-        const scoreCircle = document.querySelector('.score-circle');
-        scoreCircle.style.background = 'conic-gradient(var(--pmp-success) 0deg, var(--pmp-success) 0deg, var(--pmp-gray-200) 0deg)';
-
-        setTimeout(() => {
-            scoreCircle.style.transition = 'background 2s ease-in-out';
-            scoreCircle.style.background = `conic-gradient(var(--pmp-success) 0deg, var(--pmp-success) {{ ($results['statistics']['final_score'] / 100) * 360 }}deg, var(--pmp-gray-200) {{ ($results['statistics']['final_score'] / 100) * 360 }}deg)`;
-        }, 500);
-
-        // Animate stat cards
-        const statCards = document.querySelectorAll('.stat-card');
-        statCards.forEach((card, index) => {
-            setTimeout(() => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'all 0.5s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 200 * index);
-        });
-    });
 </script>
 
-<style media="print">
-    .action-buttons {
-        display: none !important;
-    }
-
-    .question-details {
-        display: block !important;
-    }
-
-    .toggle-icon {
-        display: none !important;
-    }
-
-    .question-header {
-        cursor: default !important;
-    }
-
-    .question-header:hover {
-        background: var(--pmp-gray-50) !important;
-    }
-</style>
 @endsection
