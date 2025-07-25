@@ -39,13 +39,13 @@
         margin: 0;
         padding: 0;
         overflow: hidden;
-        height: 100vh;
-        width: 100vw;
+        height: 100%;
+        width: 100%;
     }
 
     .login-container {
-        height: 100vh;
-        width: 100vw;
+        height: 100%;
+        width: 100%;
         display: flex;
         padding: 0;
         margin: 0;
@@ -71,7 +71,7 @@
         align-items: center;
         color: white;
         text-align: center;
-        padding: 2rem;
+        /* padding: 2rem; */
         height: 100vh;
         width: 50%;
     }
