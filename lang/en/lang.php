@@ -969,6 +969,10 @@ return [
     "fast_access" => "Fast Access",
     "achieve_goals" => "Achieve Goals",
 
+    'clear' => 'clear',
+    'auto_saved' => 'Auto Saved',
+
+    'why_this_is_correct' => "why this is correct ?",
     "enter_credentials_to_access" => "Enter Acount Info For Login"
 ];
 

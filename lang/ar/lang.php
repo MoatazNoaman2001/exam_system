@@ -1044,6 +1044,10 @@ return [
     'about' => 'حول',
 
 
+    'clear' => 'مسح',
+    'auto_saved' => 'حفظ تلقائي',
+
+    "why_this_is_correct" => "لماذا هذه الاجابه صحيحة",
     'secure_login' => "تسجيل امن",
     "fast_access" => "دخول سريع",
     "achieve_goals" => "تحقيق الاهداف",
