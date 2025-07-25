@@ -1042,6 +1042,11 @@ return [
     'security' => 'الأمان',
     'terms_and_policy' => 'الشروط والسياسة',
     'about' => 'حول',
+
+
+    'secure_login' => "تسجيل امن",
+    "fast_access" => "دخول سريع",
+    "achieve_goals" => "تحقيق الاهداف"
     
 ];
 

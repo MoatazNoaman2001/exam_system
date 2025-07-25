@@ -964,6 +964,10 @@ return [
     'security' => 'Security',
     'terms_and_policy' => 'Terms & Policy',
     'about' => 'About',
+
+    'secure_login' => "Secure Login",
+    "fast_access" => "Fast Access",
+    "achieve_goals" => "Achieve Goals"
 ];
 
 
