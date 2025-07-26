@@ -292,59 +292,22 @@
         </div>
     </section>
 
-    <!-- Progress Tracking Section -->
+    <!-- Insightful Progress Tracking Section -->
     <section class="progress-tracking" id="progress-tracking">
         <div class="container">
-            <div class="section-title">
-                <h2>{{ __('lang.Track Your Progress') }}</h2>
-                <p>{{ __('lang.Visualize your improvement and stay motivated with our comprehensive analytics.') }}</p>
-            </div>
+            {{-- <div class="section-title">
+                <h2>{{ __('Insightful Progress Tracking') }}</h2>
+                <p>{{ __('Explore your learning journey with interactive charts that reflect your performance across topics, time management, and question types. Visual dashboards help you stay on track and focused—your data will appear here once you get started.') }}</p>
+            </div> --}}
             <div class="progress-container">
                 <div class="progress-content">
-                    <h2>{{ __('lang.Data-Driven Preparation') }}</h2>
-                    <p>{{ __('lang.Our advanced analytics track your performance across all knowledge areas, question types, and time management to give you a clear picture of your readiness for the actual exam.') }}</p>
-                    <div class="progress-stats">
-                        <div class="stat-item">
-                            <div class="stat-header">
-                                <span class="stat-title">{{ __('lang.Overall Readiness') }}</span>
-                                <span class="stat-percent">78%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 78%"></div>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-header">
-                                <span class="stat-title">{{ __('lang.Knowledge Areas') }}</span>
-                                <span class="stat-percent">85%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 85%"></div>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-header">
-                                <span class="stat-title">{{ __('lang.Process Groups') }}</span>
-                                <span class="stat-percent">72%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 72%"></div>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-header">
-                                <span class="stat-title">{{ __('lang.Time Management') }}</span>
-                                <span class="stat-percent">91%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 91%"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <h2>{{ __('Dynamic Visual Reports (Coming to Life with Your Data)') }}</h2>
+                    <p>{{ __('Our system generates insightful dashboards to help you measure readiness and identify improvement areas. The examples below are for demonstration purposes only.') }}</p>
+   
                 </div>
                 <div class="progress-image">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71" alt="{{ __('lang.Progress Dashboard') }}" class="progress-img progress-img-main">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f" alt="{{ __('lang.Progress Background') }}" class="progress-img progress-img-bg">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="{{ __('Progress Dashboard') }}" class="progress-img progress-img-main">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="{{ __('Progress Background') }}" class="progress-img progress-img-bg">
                 </div>
             </div>
         </div>
@@ -362,7 +325,7 @@
                     <div class="testimonial-content">
                         {{ __('lang.PMP Master\'s practice exams were incredibly similar to the actual PMP exam. The detailed explanations for each question helped me understand not just what the right answer was, but why it was correct. I passed on my first attempt!') }}
                     </div>
-                    <div class="testimonial-author">
+                    {{-- <div class="testimonial-author">
                         <div class="author-avatar">
                             <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="{{ __('lang.Sarah Johnson') }}">
                         </div>
@@ -370,7 +333,7 @@
                             <h4>{{ __('lang.Sarah Johnson') }}</h4>
                             <p>{{ __('lang.Newly Certified PMP') }}</p>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -396,10 +359,10 @@
                     <h3>{{ __('lang.PMP Master') }}</h3>
                     <p>{{ __('lang.The most comprehensive PMP exam preparation platform with personalized study plans, realistic practice exams, and progress tracking.') }}</p>
                     <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/pmarabchapter/"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://t.me/+z_AtT8ZlqehmZDhk"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.linkedin.com/company/pm-arabcommunity/"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/pm_arab_chapter/"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">
@@ -409,7 +372,6 @@
                         <li><a href="#">{{ __('lang.Study Tips') }}</a></li>
                         <li><a href="#">{{ __('lang.PMBOK Summary') }}</a></li>
                         <li><a href="#">{{ __('lang.FAQ') }}</a></li>
-                        <li><a href="#">{{ __('lang.Blog') }}</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -417,9 +379,7 @@
                     <ul class="footer-links">
                         <li><a href="{{route('about')}}">{{ __('lang.About Us') }}</a></li>
                         <li><a href="#">{{ __('lang.Our Instructors') }}</a></li>
-                        <li><a href="#">{{ __('lang.Success Stories') }}</a></li>
                         <li><a href="{{route('contact')}}">{{ __('lang.Contact Us') }}</a></li>
-                        <li><a href="#">{{ __('lang.Careers') }}</a></li>
                     </ul>
                 </div>
             </div>
