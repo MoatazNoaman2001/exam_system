@@ -1174,6 +1174,12 @@ return [
     'error_updating_password' => 'حدث خطأ أثناء تحديث كلمة المرور',
     'account_deleted_successfully' => 'تم حذف الحساب بنجاح',
     'error_deleting_account' => 'حدث خطأ أثناء حذف الحساب',
+
+
+    'secure_login' => "تسجيل امن",
+    "fast_access" => "دخول سريع",
+    "achieve_goals" => "تحقيق الاهداف",
+    "enter_credentials_to_access" => "ادخل معلومات حسابك لدخول"
 ];
 
 

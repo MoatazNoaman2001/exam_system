@@ -14,7 +14,7 @@
                     <div class="leaderboard__top-frame">
                         <div class="leaderboard__title">{{ __('lang.leaderboard') }}</div>
                         <div class="leaderboard__arrow-right">
-                            <img class="leaderboard__vuesax-outline-arrow-right" src="{{ asset('images/vuesax-outline-arrow-right.svg') }}" alt="{{ __('lang.arrow_right') }}" />
+                            <img class="leaderboard__vuesax-outline-arrow-right" src="{{ asset('images/arrow-left.png') }}" alt="{{ __('lang.arrow_right') }}" />
                         </div>
                     </div>
                 </div>

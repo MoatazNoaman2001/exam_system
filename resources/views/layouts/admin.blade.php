@@ -194,9 +194,6 @@
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
-@endsection
-
-@section('scripts')
 <!-- Additional admin-specific JS -->
 <!-- Bootstrap core JavaScript-->
 <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
@@ -211,5 +208,4 @@
 <!-- Page level plugins -->
 <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
 
-@stack('scripts')
 @endsection

@@ -14,7 +14,10 @@ return [
         'question' => 'السؤال',
         'question_number' => 'السؤال',
         'correct' => 'صحيح',
+        'Minutes'=>"Minutes",
         'close' => 'إغلاق',
+
+        'select_question_type'=>"اختر نوع السؤال",
 
         // Form Fields
         'fields' => [
@@ -65,6 +68,7 @@ return [
             'remove_option' => 'حذف الخيار',
             'create_exam' => 'إنشاء الامتحان',
             'cancel' => 'إلغاء',
+            'add_first_question'=>"اضف السؤال الاول",
             'save_draft' => 'حفظ كمسودة',
         ],
 

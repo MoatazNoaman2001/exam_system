@@ -1,169 +1,204 @@
 @extends('layouts.admin')
 
+@section('title', __('exams.create.page_title'))
+
+@section('page-title', __('exams.create.page_title'))
+
 @section('content')
 
-<link href="{{ asset('css/exam-create.css') }}" rel="stylesheet">
-<div class="container-fluid">
-        <!-- Page Header -->
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-200">{{ __('exams.create.page_title') }}</h1>
-            <a href="{{ route('admin.exams') }}" class="btn btn-secondary shadow-sm">
-                {{-- <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }} fa-sm me-1"></i> --}}
-                {{ __('exams.create.back_to_exams') }}
+<link rel="stylesheet" href="{{ asset('css/exam-create.css') }}">
+<div class="exam-create-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="page-title">{{ __('exams.create.page_title') }}</h1>
+                <p class="page-subtitle">{{ __('exams.create.page_subtitle') }}</p>
+            </div>
+            <div class="header-actions">
+                <a href="{{ route('admin.exams') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }}"></i>
+                    {{ __('exams.create.back_to_exams') }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h6 class="alert-title">{{ __('exams.create.errors.validation_title') }}</h6>
+            </div>
+            <ul class="alert-list">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('exams.create.close') }}"></button>
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert-header">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('exams.create.close') }}"></button>
+        </div>
+    @endif
+
+    <!-- Main Form -->
+    <form method="POST" action="{{ route('admin.exams.store') }}" id="examForm" class="exam-form" novalidate>
+        @csrf
+
+        <!-- Basic Information Card -->
+        <div class="form-card">
+            <div class="card-header">
+                <div class="card-header-content">
+                    <i class="fas fa-info-circle"></i>
+                    <h3 class="card-title">{{ __('exams.create.basic_information') }}</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Bilingual Titles -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title_en" class="form-label required">
+                            {{ __('exams.create.fields.title_en') }}
+                        </label>
+                        <input type="text" 
+                               class="form-control @error('title_en') is-invalid @enderror"
+                               id="title_en" 
+                               name="title_en" 
+                               value="{{ old('title_en') }}"
+                               placeholder="{{ __('exams.create.placeholders.title_en') }}" 
+                               required>
+                        @error('title_en')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title_ar" class="form-label required">
+                            {{ __('exams.create.fields.title_ar') }}
+                        </label>
+                        <input type="text" 
+                               class="form-control @error('title_ar') is-invalid @enderror"
+                               id="title_ar" 
+                               name="title_ar" 
+                               value="{{ old('title_ar') }}"
+                               placeholder="{{ __('exams.create.placeholders.title_ar') }}" 
+                               dir="rtl" 
+                               required>
+                        @error('title_ar')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Bilingual Descriptions -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="description_en" class="form-label">
+                            {{ __('exams.create.fields.description_en') }}
+                        </label>
+                        <textarea class="form-control @error('description_en') is-invalid @enderror" 
+                                  id="description_en" 
+                                  name="description_en"
+                                  rows="4" 
+                                  placeholder="{{ __('exams.create.placeholders.description_en') }}">{{ old('description_en') }}</textarea>
+                        @error('description_en')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description_ar" class="form-label">
+                            {{ __('exams.create.fields.description_ar') }}
+                        </label>
+                        <textarea class="form-control @error('description_ar') is-invalid @enderror" 
+                                  id="description_ar" 
+                                  name="description_ar"
+                                  rows="4" 
+                                  placeholder="{{ __('exams.create.placeholders.description_ar') }}" 
+                                  dir="rtl">{{ old('description_ar') }}</textarea>
+                        @error('description_ar')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Duration -->
+                <div class="form-row">
+                    <div class="form-group form-group-quarter">
+                        <label for="duration" class="form-label required">
+                            {{ __('exams.create.fields.duration') }}
+                        </label>
+                        <div class="input-group">
+                            <input type="number" 
+                                   class="form-control @error('duration') is-invalid @enderror"
+                                   id="duration" 
+                                   name="duration" 
+                                   value="{{ old('duration', 30) }}" 
+                                   min="1"
+                                   max="300" 
+                                   placeholder="30" 
+                                   required>
+                            <span class="input-group-text">{{ __('exams.create.minutes') }}</span>
+                        </div>
+                        <div class="form-help">{{ __('exams.create.hints.duration') }}</div>
+                        @error('duration')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions Section -->
+        <div class="form-card">
+            <div class="card-header">
+                <div class="card-header-content">
+                    <i class="fas fa-question-circle"></i>
+                    <h3 class="card-title">{{ __('exams.create.questions_section') }}</h3>
+                </div>
+                <div class="card-actions">
+                    <button type="button" class="btn btn-success" id="add-question">
+                        <i class="fas fa-plus"></i>
+                        {{ __('exams.create.buttons.add_question') }}
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="section-help">{{ __('exams.create.questions_help') }}</p>
+                
+                <!-- Questions Container -->
+                <div id="questions-container" class="questions-container">
+                    <!-- Questions will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Section -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-save"></i>
+                {{ __('exams.create.buttons.create_exam') }}
+            </button>
+            <a href="{{ route('admin.exams') }}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-times"></i>
+                {{ __('exams.create.buttons.cancel') }}
             </a>
         </div>
-
-        <!-- Alert Messages -->
-        @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <h6 class="alert-heading">{{ __('exams.create.errors.validation_title') }}</h6>
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                    aria-label="{{ __('exams.create.close') }}"></button>
-            </div>
-        @endif
-
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                    aria-label="{{ __('exams.create.close') }}"></button>
-            </div>
-        @endif
-
-        <!-- Main Form Card -->
-        <div class="card shadow-lg border-0">
-
-
-            <div class="card-body p-4">
-                <form method="POST" action="{{ route('admin.exams.store') }}" id="examForm" novalidate>
-                    @csrf
-
-                    <!-- Basic Exam Information -->
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <h5 class="text-primary border-bottom pb-2 mb-3">
-                                <i class="fas fa-info-circle me-2"></i>{{ __('exams.create.basic_information') }}
-                            </h5>
-                        </div>
-                    </div>
-
-                    <!-- Bilingual Titles -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control @error('title_en') is-invalid @enderror"
-                                    id="title_en" name="title_en" value="{{ old('title_en') }}"
-                                    placeholder="{{ __('exams.create.placeholders.title_en') }}" required>
-                                <label for="title_en">{{ __('exams.create.fields.title_en') }} <span
-                                        class="text-danger">*</span></label>
-                                @error('title_en')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control @error('title_ar') is-invalid @enderror"
-                                    id="title_ar" name="title_ar" value="{{ old('title_ar') }}"
-                                    placeholder="{{ __('exams.create.placeholders.title_ar') }}" dir="rtl" required>
-                                <label for="title_ar">{{ __('exams.create.fields.title_ar') }} <span
-                                        class="text-danger">*</span></label>
-                                @error('title_ar')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bilingual Descriptions -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <textarea class="form-control @error('description_en') is-invalid @enderror" id="description_en" name="description_en"
-                                    style="height: 100px" placeholder="{{ __('exams.create.placeholders.description_en') }}">{{ old('description_en') }}</textarea>
-                                <label for="description_en">{{ __('exams.create.fields.description_en') }}</label>
-                                @error('description_en')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <textarea class="form-control @error('description_ar') is-invalid @enderror" id="description_ar" name="description_ar"
-                                    style="height: 100px" placeholder="{{ __('exams.create.placeholders.description_ar') }}" dir="rtl">{{ old('description_ar') }}</textarea>
-                                <label for="description_ar">{{ __('exams.create.fields.description_ar') }}</label>
-                                @error('description_ar')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Duration -->
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                <input type="number" class="form-control @error('duration') is-invalid @enderror"
-                                    id="duration" name="duration" value="{{ old('duration', 30) }}" min="1"
-                                    max="300" placeholder="{{ __('exams.create.placeholders.duration') }}" required>
-                                <label for="duration">{{ __('exams.create.fields.duration') }} <span
-                                        class="text-danger">*</span></label>
-                                <div class="form-text">{{ __('exams.create.hints.duration') }}</div>
-                                @error('duration')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="my-4">
-
-                    <!-- Questions Section -->
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            <h5 class="text-primary border-bottom pb-2 mb-3">
-                                <i class="fas fa-question-circle me-2"></i>{{ __('exams.create.questions_section') }}
-                            </h5>
-                            <p class="text-muted">{{ __('exams.create.questions_help') }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Questions Container -->
-                    <div id="questions-container" class="mb-4">
-                        <!-- Questions will be dynamically added here -->
-                    </div>
-
-                    <!-- Add Question Button -->
-                    <div class="text-center mb-4">
-                        <button type="button" class="btn btn-success btn-lg" id="add-question">
-                            <i class="fas fa-plus me-2"></i>{{ __('exams.create.buttons.add_question') }}
-                        </button>
-                    </div>
-
-                    <!-- Submit Section -->
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-primary btn-lg me-3">
-                                <i class="fas fa-save me-2"></i>{{ __('exams.create.buttons.create_exam') }}
-                            </button>
-                            <a href="{{ route('admin.exams') }}" class="btn btn-outline-secondary btn-lg">
-                                <i class="fas fa-times me-2"></i>{{ __('exams.create.buttons.cancel') }}
-                            </a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+    </form>
 </div>
 
 @include('admin.exams.partials.question-templates')
+
+<script src="{{ asset('js/exam-create.js') }}" defer></script>
 <script>
     // Pass localized strings to JavaScript
     window.examCreateTranslations = {
@@ -184,7 +219,12 @@
         }
     };
 </script>
-
-<script src="{{ asset('js/exam-create.js') }}" defer></script>
-
 @endsection
+
+@push('scripts')
+
+
+@endpush
+
+@push('styles')
+@endpush

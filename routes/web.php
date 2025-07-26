@@ -37,6 +37,7 @@ use App\Http\Controllers\ChangPasswordController;
 use App\Http\Controllers\Admin\AdminExamController;
 use App\Http\Controllers\CompletedActionController;
 use App\Http\Controllers\AchievementPointController;
+use App\Http\Controllers\Admin\ExamImportController;
 use App\Http\Controllers\VerificationCodeController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -44,7 +45,7 @@ use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\EarnPointsController;
 
-// App::setLocale('en'); // Removed - this was preventing language switching
+// App::setLocale('ar'); // Removed - this was preventing language switching
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
 
 
@@ -141,14 +142,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', SetLocale::class])->
     
     
     // Exams Management
-    Route::get('/exams', [AdminExamController::class, 'exams'])->name('exams');
-    Route::get('/exams/create', [AdminExamController::class, 'createExam'])->name('exams.create');
-    Route::post('/exams', [AdminExamController::class, 'storeExam'])->name('exams.store');
-    Route::get('/exams/{exam}/edit', [AdminExamController::class, 'editExam'])->name('exams.edit');
-    Route::put('/exams/{exam}', [AdminExamController::class, 'updateExam'])->name('exams.update');
-    Route::delete('/exams/{exam}', [AdminExamController::class, 'destroyExam'])->name('exams.destroy');
+    Route::get('/exams', [AdminExamController::class, 'index'])->name('exams');
+    Route::get('/exams/create', [AdminExamController::class, 'create'])->name('exams.create');
+    Route::post('/exams', [AdminExamController::class, 'store'])->name('exams.store');
+    Route::get('/exams/{exam}/edit', [AdminExamController::class, 'edit'])->name('exams.edit');
+    Route::put('/exams/{exam}', [AdminExamController::class, 'update'])->name('exams.update');
+    Route::delete('/exams/{exam}', [AdminExamController::class, 'destroy'])->name('exams.destroy');
     Route::post('/exams/import', [AdminExamController::class, 'import'])->name('exams.import');
 
+    // Excel Import routes
+    Route::get('/exams/import', [ExamImportController::class, 'showImportForm'])->name('exams.import.form');
+    Route::post('/exams/import', [ExamImportController::class, 'import'])->name('exams.import');
+    Route::get('/exams/download-template', [ExamImportController::class, 'downloadTemplate'])->name('exams.download-template');
     // Route::view('/exams/creat', 'components.exam.basic-info-create')->name('exams.partials.basic-info-create');
 
     // Quiz Attempts

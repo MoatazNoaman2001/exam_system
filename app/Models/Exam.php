@@ -70,4 +70,60 @@ class Exam extends Model
     {
         return app()->getLocale() === 'ar' ? $this->attributes['description-ar'] : $this->description;
     }
+
+     /**
+     * Get plan schedules
+     */
+    public function planSchedules()
+    {
+        return $this->hasMany(PlanSchedule::class, 'exam_id');
+    }
+
+    /**
+     * Get user progress records
+     */
+    public function userProgress()
+    {
+        return $this->hasMany(UserProgress::class, 'exam_id');
+    }
+
+    /**
+     * Calculate total marks for the exam
+     */
+    public function getTotalMarksAttribute()
+    {
+        return $this->examQuestions()->sum('marks');
+    }
+
+    /**
+     * Get exam duration in hours
+     */
+    public function getDurationInHoursAttribute()
+    {
+        return round($this->time / 60, 2);
+    }
+
+    /**
+     * Check if exam is active
+     */
+    public function getIsActiveAttribute()
+    {
+        return !$this->is_completed && !$this->deleted_at;
+    }
+
+    /**
+     * Scope for active exams
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_completed', false);
+    }
+
+    /**
+     * Scope for completed exams
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->where('is_completed', true);
+    }
 }

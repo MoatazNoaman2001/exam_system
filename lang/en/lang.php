@@ -966,6 +966,7 @@ return [
     'about' => 'About',
 
 
+
     //FAQ
     'title' => 'Frequently Asked Questions',
     'subtitle' => 'Everything you need to know in one place',
@@ -1100,6 +1101,12 @@ return [
     'error_updating_password' => 'An error occurred while updating the password',
     'account_deleted_successfully' => 'Account deleted successfully',
     'error_deleting_account' => 'An error occurred while deleting the account',
+
+    'secure_login' => "Secure Login",
+    "fast_access" => "Fast Access",
+    "achieve_goals" => "Achieve Goals",
+
+    "enter_credentials_to_access" => "Enter Acount Info For Login"
 ];
 
 

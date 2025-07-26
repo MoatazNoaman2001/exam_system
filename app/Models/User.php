@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\ExamSession;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;    
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -103,5 +104,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ExamAttempt::class);
     }
     
+
+    public function examSessions()
+    {
+        return $this->hasMany(ExamSession::class);
+    }
 
 }

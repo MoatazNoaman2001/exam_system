@@ -19,7 +19,21 @@
     
     <!-- Custom CSS File -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    
+
+    @auth
+    <link rel="stylesheet" href="{{ asset('css/authenticated-layout.css') }}">
+    @endauth    
+
+
+    @guest
+        <style>
+            .main-content {
+                margin-right: 0px !important;
+                margin-left: 0px !important;
+                padding: 0px !important;
+            }
+        </style>
+    @endguest
     <!-- App Configuration for JavaScript -->
     <script>
         window.appConfig = {
@@ -177,7 +191,7 @@
                 </div>
             @endif
 
-            @if (Auth::user()->role === 'student' && !array_key_exists(request()->route()->getName(), ["student.index" , "student.feature"]))
+            @if (Auth::user()->role === 'student' && !array_key_exists(request()->route()->getName(), ["student.index" , "student.feature", "login"]))
                 <!-- Toggle Button -->
                 <button class="sidebar-toggle {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" 
                         id="studentSidebarToggleBtn" title="Toggle Sidebar">

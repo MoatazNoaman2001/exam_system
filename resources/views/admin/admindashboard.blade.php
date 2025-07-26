@@ -1,411 +1,306 @@
 @extends('layouts.admin')
 
-@section('title', 'Admin Dashboard')
+@section('title', __('dashboard.title'))
+
+@section('page-title', __('dashboard.title'))
 
 @section('content')
-<div class="container-fluid">
-    <!-- Dashboard Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <h1 class="h3 mb-0 text-gray-800">{{__('lang.admin_dashboard')}}</h1>
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
-                        <i class="fas fa-calendar"></i> This Month
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">{{__('lang.this_week')}}</a></li>
-                        <li><a class="dropdown-item" href="#">{{__('lang.this_month')}}</a></li>
-                        <li><a class="dropdown-item" href="#">{{__('lang.last_month')}}</a></li>
-                    </ul>
-                </div>
+
+
+<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+<!-- Statistics Cards -->
+<div class="stats-grid">
+    <!-- Users Stats -->
+    <div class="stat-card stat-card-blue">
+        <div class="stat-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-content">
+            <h3 class="stat-number">{{ number_format($totalUsers) }}</h3>
+            <p class="stat-label">{{ __('dashboard.stats.total_users') }}</p>
+            <div class="stat-meta">
+                <span class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    +{{ $newUsersThisMonth }}
+                </span>
+                <span class="stat-period">{{ __('dashboard.this_month') }}</span>
             </div>
         </div>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{__('lang.total_users')}}</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalUsers ?? '1,234' }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-users fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Active Users -->
+    <div class="stat-card stat-card-green">
+        <div class="stat-icon">
+            <i class="fas fa-user-clock"></i>
         </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">{{__('lang.active_learners')}}</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $activeLearners ?? '892' }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-graduation-cap fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{__('lang.quiz_attempts')}}</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $quizAttempts ?? '3,456' }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">{{__('lang.download_pdfs')}}</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $jobApplications ?? '0' }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-briefcase fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> 
-    </div>
-
-    <!-- Charts Row -->
-    <div class="row mb-4">
-        <!-- Learning Progress Chart -->
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.learning_progress_overview')}}</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">{{__('lang.export_data')}}</a></li>
-                            <li><a class="dropdown-item" href="#">{{__('lang.view_details')}}</a></li>
-                            <li><a class="dropdown-item" href="#">{{__('lang.this_week')}}</a></li>
-                            <li><a class="dropdown-item" href="#">{{__('lang.this_month')}}</a></li>
-                            <li><a class="dropdown-item" href="#">{{__('lang.this_month')}}</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <canvas id="learningProgressChart" width="400" height="200"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Domain Completion Pie Chart -->
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.domain_completion')}}</h6>
-                </div>
-                <div class="card-body">
-                    <canvas id="domainChart" width="300" height="300"></canvas>
-                </div>
+        <div class="stat-content">
+            <h3 class="stat-number">{{ number_format($activeUsers) }}</h3>
+            <p class="stat-label">{{ __('dashboard.stats.active_users') }}</p>
+            <div class="stat-meta">
+                <span class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    {{ round(($activeUsers / max($totalUsers, 1)) * 100, 1) }}%
+                </span>
+                <span class="stat-period">{{ __('dashboard.last_7_days') }}</span>
             </div>
         </div>
     </div>
 
-    <!-- Data Tables Row -->
-    <div class="row">
-        <!-- Recent Users -->
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.recent_users')}}</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="recentUsersTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>{{__('lang.name')}}</th>
-                                    <th>{{__('lang.email')}}</th>
-                                    <th>{{__('lang.role')}}</th>
-                                    <th>{{__('lang.status')}}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($recentUsers ?? [] as $user)
-                                <tr>
-                                    <td>{{ $user->username }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>
-                                        <span class="badge badge-{{ $user->role === 'admin' ? 'danger' : 'info' }}">
-                                            {{ ucfirst($user->role) }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        @if($user->verified)
-                                            <span class="badge badge-success">Verified</span>
-                                        @else
-                                            <span class="badge badge-warning">Pending</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="4" class="text-center">No recent users found</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-center mt-3">
-                        <a href="{{ route('admin.users') }}" class="btn btn-primary btn-sm">{{__('lang.view_all_users')}}</a>
-                    </div>
-                </div>
-            </div>
+    <!-- Total Exams -->
+    <div class="stat-card stat-card-purple">
+        <div class="stat-icon">
+            <i class="fas fa-file-alt"></i>
         </div>
-
-        <!-- Recent Quiz Attempts -->
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.recent_quiz_attempts')}}</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="recentQuizzesTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>{{__('lang.user')}}</th>
-                                    <th>{{__('lang.quiz')}}</th>
-                                    <th>{{__('lang.score')}}</th>
-                                    <th>{{__('lang.Date')}}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($recentQuizAttempts ?? [] as $attempt)
-                                <tr>
-                                    <td>{{ $attempt->user->username ?? 'N/A' }}</td>
-                                    <td>{{ Str::limit($attempt->quiz->question ?? 'Quiz', 30) }}</td>
-                                    <td>
-                                        <span class="badge badge-{{ $attempt->score >= 80 ? 'success' : ($attempt->score >= 60 ? 'warning' : 'danger') }}">
-                                            {{ $attempt->score }}%
-                                        </span>
-                                    </td>
-                                    <td>{{ $attempt->created_at ? $attempt->created_at->format('M d, Y') : 'N/A' }}</td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="4" class="text-center">{{__('lang.no_recent_quiz_attempts')}}</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-center mt-3">
-                        <a href="{{ route('admin.quiz-attempts') }}" class="btn btn-primary btn-sm">{{__('lang.view_all_attempts')}}</a>
-                    </div>
-                </div>
+        <div class="stat-content">
+            <h3 class="stat-number">{{ number_format($totalExams) }}</h3>
+            <p class="stat-label">{{ __('dashboard.stats.total_exams') }}</p>
+            <div class="stat-meta">
+                <span class="stat-change">
+                    {{ number_format($totalExamAttempts) }}
+                </span>
+                <span class="stat-period">{{ __('dashboard.attempts') }}</span>
             </div>
         </div>
     </div>
 
-    <!-- System Status & Quick Actions -->
-    <div class="row">
-        <div class="col-lg-8 mb-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.system_overview')}}</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <div class="border-left-primary p-3">
-                                <div class="text-primary font-weight-bold">{{__('lang.total_domains')}}</div>
-                                <div class="h4">{{ $totalDomains ?? '12' }}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="border-left-success p-3">
-                                <div class="text-success font-weight-bold">{{__('lang.total_slides')}}</div>
-                                <div class="h4">{{ $totalSlides ?? '456' }}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="border-left-info p-3">
-                                <div class="text-info font-weight-bold">{{__('lang.active_exams')}}</div>
-                                <div class="h4">{{ $activeExams ?? '8' }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Average Score -->
+    <div class="stat-card stat-card-orange">
+        <div class="stat-icon">
+            <i class="fas fa-chart-line"></i>
         </div>
-
-        <div class="col-lg-4 mb-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.quick_actions')}}</h6>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-user-plus"></i> {{__('lang.add_new_user')}}
-                        </a>
-                        <a href="{{ route('admin.domains.create') }}" class="btn btn-success btn-sm">
-                            <i class="fas fa-plus"></i> {{__('lang.create_domain')}}
-                        </a>
-                        <a href="{{ route('admin.chapters.create') }}" class="btn btn-success btn-sm">
-                            <i class="fas fa-plus"></i> {{__('lang.create_chapter')}}
-                        </a>
-                        <a href="{{ route('admin.slides.create') }}" class="btn btn-info btn-sm">
-                            <i class="fas fa-file-powerpoint"></i> {{__('lang.add_slide')}}
-                        </a>
-                        <a href="{{ route('admin.exams.create') }}" class="btn btn-warning btn-sm">
-                            <i class="fas fa-clipboard-check"></i> {{__('lang.create_exam')}}
-                        </a>
-                        <a href="{{ route('admin.notifications.create') }}" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-bell"></i> {{__('lang.send_notification')}}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Notifications -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{__('lang.recent_system_notifications')}}</h6>
-                </div>
-                <div class="card-body">
-                    @forelse($recentNotifications ?? [] as $notification)
-                    <div class="d-flex align-items-center mb-3 p-3 bg-light rounded">
-                        <div class="mr-3">
-                            <i class="fas fa-bell text-primary"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="font-weight-bold">{{ $notification->text }}</div>
-                            @if($notification->subtext)
-                            <div class="text-muted small">{{ $notification->subtext }}</div>
-                            @endif
-                            <div class="text-muted small">{{ $notification->created_at ? $notification->created_at->diffForHumans() : 'Recently' }}</div>
-                        </div>
-                        <div>
-                            @if(!$notification->is_seen)
-                            <span class="badge badge-primary">New</span>
-                            @endif
-                        </div>
-                    </div>
-                    @empty
-                    <div class="text-center text-muted">
-                        <i class="fas fa-bell-slash fa-2x mb-2"></i>
-                        <p>{{__('lang.no_recent_notifications')}}</p>
-                    </div>
-                    @endforelse
-                </div>
+        <div class="stat-content">
+            <h3 class="stat-number">{{ number_format($avgExamScore, 1) }}%</h3>
+            <p class="stat-label">{{ __('dashboard.stats.avg_score') }}</p>
+            <div class="stat-meta">
+                <span class="stat-change {{ $avgExamScore >= 70 ? 'positive' : 'negative' }}">
+                    <i class="fas fa-{{ $avgExamScore >= 70 ? 'arrow-up' : 'arrow-down' }}"></i>
+                    {{ $avgExamScore >= 70 ? __('Good') : __('Needs Improvement') }}
+                </span>
+                <span class="stat-period">{{ __('Overall') }}</span>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Chart.js Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Charts and Analytics -->
+<div class="charts-grid">
+    <!-- User Registration Chart -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h3 class="chart-title">{{ __('dashboard.charts.user_registrations') }}</h3>
+            <div class="chart-actions">
+                <button class="btn-icon" onclick="downloadChart('registrationChart')">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chart-content">
+            <canvas id="registrationChart"></canvas>
+        </div>
+    </div>
+
+    <!-- User Activity Levels -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h3 class="chart-title">{{ __('dashboard.charts.user_activity') }}</h3>
+        </div>
+        <div class="chart-content">
+            <canvas id="activityChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity and Performance -->
+<div class="activity-grid">
+    <!-- Recent Exam Sessions -->
+    <div class="activity-card">
+        <div class="activity-header">
+            <h3 class="activity-title">{{ __('dashboard.recent_exams') }}</h3>
+            <a href="#" class="view-all-link">{{ __('dashboard.view_all') }}</a>
+        </div>
+        <div class="activity-content">
+            @forelse($recentExamSessions as $session)
+
+            <div class="activity-item">
+                <div class="activity-avatar">
+                    
+                    @if($session->user->image)
+                        <img src="{{ $session->user->image ? asset('storage/avatars/' . $session->user->image) : asset('images/person_placeholder.png') }}" alt="{{ $session->user->username }}">
+                    @else
+                        <i class="fas fa-user-graduate"></i>
+                    @endif
+                </div>
+                <div class="activity-details">
+                    <p class="activity-user">{{ $session->user->username }}</p>
+                    <p class="activity-description">
+                        {{ app()->getLocale() == 'ar' && $session->exam->{'text-ar'} ? $session->exam->{'text-ar'} : $session->exam->text }}
+                    </p>
+                    <span class="activity-time">{{ $session->completed_at->diffForHumans() }}</span>
+                </div>
+                <div class="activity-score">
+                    <span class="score-badge {{ $session->score >= 80 ? 'success' : ($session->score >= 60 ? 'warning' : 'danger') }}">
+                        {{ number_format($session->score, 1) }}%
+                    </span>
+                </div>
+            </div>
+            @empty
+            <div class="empty-state">
+                <i class="fas fa-clipboard-list"></i>
+                <p>{{ __('dashboard.no_recent_exams') }}</p>
+            </div>
+            @endforelse
+        </div>
+    </div>
+
+    <!-- Domain Performance -->
+    <div class="activity-card">
+        <div class="activity-header">
+            <h3 class="activity-title">{{ __('dashboard.domain_performance') }}</h3>
+        </div>
+        <div class="activity-content">
+            @forelse($domainPerformance as $domain)
+            <div class="performance-item">
+                <div class="performance-info">
+                    <h4 class="domain-name">{{ $domain['name'] }}</h4>
+                    <p class="domain-attempts">{{ $domain['attempts'] }} {{ __('dashboard.attempts') }}</p>
+                </div>
+                <div class="performance-score">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ $domain['avg_score'] }}%"></div>
+                    </div>
+                    <span class="score-text">{{ $domain['avg_score'] }}%</span>
+                </div>
+            </div>
+            @empty
+            <div class="empty-state">
+                <i class="fas fa-chart-bar"></i>
+                <p>{{ __('dashboard.no_domain_data') }}</p>
+            </div>
+            @endforelse
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats Summary -->
+<div class="summary-grid">
+    <div class="summary-card">
+        <h4 class="summary-title">{{ __('dashboard.content_overview') }}</h4>
+        <div class="summary-stats">
+            <div class="summary-item">
+                <span class="summary-label">{{ __('dashboard.chapters') }}</span>
+                <span class="summary-value">{{ number_format($totalChapters) }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">{{ __('dashboard.slides') }}</span>
+                <span class="summary-value">{{ number_format($totalSlides) }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">{{ __('dashboard.domains') }}</span>
+                <span class="summary-value">{{ number_format($totalDomains) }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">{{ __('dashboard.quizzes') }}</span>
+                <span class="summary-value">{{ number_format($totalQuizzes) }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <h4 class="summary-title">{{ __('dashboard.user_progress') }}</h4>
+        <div class="summary-stats">
+            <div class="summary-item">
+                <span class="summary-label">{{ __('dashboard.avg_progress') }}</span>
+                <span class="summary-value">{{ number_format($userProgressStats->avg_progress ?? 0, 1) }}%</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">{{ __('dashboard.avg_points') }}</span>
+                <span class="summary-value">{{ number_format($userProgressStats->avg_points ?? 0) }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">{{ __('dashboard.avg_streak') }}</span>
+                <span class="summary-value">{{ number_format($userProgressStats->avg_streak ?? 0) }} {{ __('dashboard.days') }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">{{ __('dashboard.verified_users') }}</span>
+                <span class="summary-value">{{ number_format($verifiedUsers) }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Users Card -->
+    <div class="summary-card">
+        <h4 class="summary-title">{{ __('Recent Users') }}</h4>
+        <div class="recent-users-list">
+            @forelse($recentUsers as $user)
+            <div class="recent-user-item">
+                <div class="user-avatar-small">
+                    @if($user->image)
+                        <img src="{{ asset('storage/avatars/' . $user->image) }}" alt="{{ $user->username }}">
+                    @else
+                        <i class="fas fa-user"></i>
+                    @endif
+                </div>
+                <div class="user-info-small">
+                    <p class="user-name-small">{{ $user->username }}</p>
+                    <p class="user-date-small">{{ $user->created_at->diffForHumans() }}</p>
+                </div>
+                <div class="user-status-small">
+                    <span class="status-badge {{ $user->verified ? 'verified' : 'unverified' }}">
+                        <i class="fas fa-{{ $user->verified ? 'check-circle' : 'clock' }}"></i>
+                    </span>
+                </div>
+            </div>
+            @empty
+            <div class="empty-state-small">
+                <i class="fas fa-users"></i>
+                <p>{{ __('No recent users') }}</p>
+            </div>
+            @endforelse
+        </div>
+    </div>
+
+    <!-- System Status Card -->
+    <div class="summary-card">
+        <h4 class="summary-title">{{ __('System Status') }}</h4>
+        <div class="system-status">
+            <div class="status-item">
+                <span class="status-label">{{ __('Active Plans') }}</span>
+                <span class="status-value">
+                    {{ number_format($activePlans) }}/{{ number_format($totalPlans) }}
+                    <span class="status-indicator {{ $activePlans > 0 ? 'active' : 'inactive' }}"></span>
+                </span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">{{ __('Total Tests') }}</span>
+                <span class="status-value">
+                    {{ number_format($totalTests ?? 0) }}
+                    <span class="status-indicator active"></span>
+                </span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">{{ __('User Engagement') }}</span>
+                <span class="status-value">
+                    {{ $totalUsers > 0 ? round(($activeUsers / $totalUsers) * 100, 1) : 0 }}%
+                    <span class="status-indicator {{ $totalUsers > 0 && ($activeUsers / $totalUsers) > 0.3 ? 'active' : 'warning' }}"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('js/dashboard.js') }}"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Learning Progress Chart
-    const ctx1 = document.getElementById('learningProgressChart').getContext('2d');
-    new Chart(ctx1, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            datasets: [{
-                label: 'Quiz Attempts',
-                data: [65, 78, 90, 81, 96, 105],
-                borderColor: '#4e73df',
-                backgroundColor: 'rgba(78, 115, 223, 0.1)',
-                tension: 0.3
-            }, {
-                label: 'Test Completions',
-                data: [45, 52, 68, 61, 72, 85],
-                borderColor: '#1cc88a',
-                backgroundColor: 'rgba(28, 200, 138, 0.1)',
-                tension: 0.3
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+    // Pass data to JavaScript
+    window.dashboardData = {
+        chartData: @json($chartData),
+        userActivityLevels: @json($userActivityLevels),
+        locale: '{{ app()->getLocale() }}'
+    };
 
-    // Domain Completion Chart
-    const ctx2 = document.getElementById('domainChart').getContext('2d');
-    new Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-            labels: ['الفصول', 'المجالات', 'الاختبارات'],
-            datasets: [{
-                data: [40, 25, 20],
-                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e']
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
+    // Initialize dashboard when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDashboard();
     });
-});
 </script>
-
-@push('styles')
-<style>
-    :root{
-        --sidebar-bg: #2c3e50;
-    }
-    .card-header{
-        background-color: var(--sidebar-bg) !important;
-    }
-    .border-left-primary {
-        border-left: 0.25rem solid #4e73df !important;
-    }
-    .border-left-success {
-        border-left: 0.25rem solid #1cc88a !important;
-    }
-    .border-left-info {
-        border-left: 0.25rem solid #36b9cc !important;
-    }
-    .border-left-warning {
-        border-left: 0.25rem solid #f6c23e !important;
-    }
-    .text-gray-800 {
-        color: #5a5c69 !important;
-    }
-    .text-gray-300 {
-        color: #dddfeb !important;
-    }
-</style>
-@endpush
 @endsection
+
