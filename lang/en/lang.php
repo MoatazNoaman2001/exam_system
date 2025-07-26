@@ -1,5 +1,90 @@
 <?php 
 return [
+    'PMP Master - Your Complete PMP Exam Preparation System' => 'PMP Master - Your Complete PMP Exam Preparation System',
+    'Sprint Skills' => 'Sprint Skills',
+    'Features' => 'Features',
+    'Study Plan' => 'Study Plan',
+    'Practice Exams' => 'Practice Exams',
+    'Progress' => 'Progress',
+    'Testimonials' => 'Testimonials',
+    'Get Started' => 'Get Started',
+    'Master the Art and Science of Management' => 'Master the Art and Science of Management',
+    'Join a dynamic learning experience designed to help you grow in all areas of modern management from agile leadership to portfolio excellence.' => 'Join a dynamic learning experience designed to help you grow in all areas of modern management from agile leadership to portfolio excellence.',
+    'Let’s Build Your Future in Management' => 'Let’s Build Your Future in Management',
+    'PMP Exam Dashboard' => 'PMP Exam Dashboard',
+    'PMP Study Materials' => 'PMP Study Materials',
+    'PMP Progress Tracking' => 'PMP Progress Tracking',
+    'Everything You Need to Succeed' => 'Everything You Need to Succeed',
+    'Our platform provides all the tools and resources to prepare effectively for the PMP certification exam.' => 'Our platform provides all the tools and resources to prepare effectively for the PMP certification exam.',
+    '🧠 Foundational Knowledge' => '🧠 Foundational Knowledge',
+    'Explore essential concepts and proven frameworks across various management disciplines—from strategic planning to agile leadership—to build a solid foundation for growth.' => 'Explore essential concepts and proven frameworks across various management disciplines—from strategic planning to agile leadership—to build a solid foundation for growth.',
+    '✅ Hands-On Learning' => '✅ Hands-On Learning',
+    'Test your knowledge with full-length, timed practice exams that mimic the actual PMP exam format and difficulty level.' => 'Test your knowledge with full-length, timed practice exams that mimic the actual PMP exam format and difficulty level.',
+    '📊 Personalized Learning Journey' => '📊 Personalized Learning Journey',
+    'Track your growth with a smart system that adapts to your learning style, highlights areas for improvement, and helps you stay on track to achieve your goals.' => 'Track your growth with a smart system that adapts to your learning style, highlights areas for improvement, and helps you stay on track to achieve your goals.',
+    'Personalized Study Plan' => 'Personalized Study Plan',
+    'Tell us your exam date and we\'ll create a customized study schedule that fits your timeline.' => 'Tell us your exam date and we\'ll create a customized study schedule that fits your timeline.',
+    'Study Plan' => 'Study Plan',
+    'Study Plan Background' => 'Study Plan Background',
+    'Study Smarter, Not Harder' => 'Study Smarter, Not Harder',
+    'Our adaptive learning system creates a personalized study plan based on your available study time, learning pace, and progress. Focus on what matters most for your exam success.' => 'Our adaptive learning system creates a personalized study plan based on your available study time, learning pace, and progress. Focus on what matters most for your exam success.',
+    'Set Your Exam Date' => 'Set Your Exam Date',
+    'Tell us when you plan to take the exam and how many hours per week you can study.' => 'Tell us when you plan to take the exam and how many hours per week you can study.',
+    'Take Initial Assessment' => 'Take Initial Assessment',
+    'Complete our diagnostic test to identify your strengths and weaknesses.' => 'Complete our diagnostic test to identify your strengths and weaknesses.',
+    'Follow Your Plan' => 'Follow Your Plan',
+    'Receive daily study tasks tailored to your needs and timeline.' => 'Receive daily study tasks tailored to your needs and timeline.',
+    'Realistic Practice Exams' => 'Realistic Practice Exams',
+    'Simulate the actual exam experience with our comprehensive question bank.' => 'Simulate the actual exam experience with our comprehensive question bank.',
+    'Full-Length Exam' => 'Full-Length Exam',
+    'Questions' => 'Questions',
+    'Full-Length Mock Exam' => 'Full-Length Mock Exam',
+    'Complete 4-hour simulation with questions covering all knowledge areas and process groups.' => 'Complete 4-hour simulation with questions covering all knowledge areas and process groups.',
+    'Start Exam' => 'Start Exam',
+    'Knowledge Area Exam' => 'Knowledge Area Exam',
+    'Knowledge Area Tests' => 'Knowledge Area Tests',
+    'Focus on specific PMBOK knowledge areas to strengthen your weak points.' => 'Focus on specific PMBOK knowledge areas to strengthen your weak points.',
+    'Questions Each' => 'Questions Each',
+    'Quick Quiz' => 'Quick Quiz',
+    'Daily Quick Quizzes' => 'Daily Quick Quizzes',
+    'Short 20-question quizzes to reinforce concepts and keep your knowledge fresh.' => 'Short 20-question quizzes to reinforce concepts and keep your knowledge fresh.',
+    'Start Quiz' => 'Start Quiz',
+    'Track Your Progress' => 'Track Your Progress',
+    'Visualize your improvement and stay motivated with our comprehensive analytics.' => 'Visualize your improvement and stay motivated with our comprehensive analytics.',
+    'Data-Driven Preparation' => 'Data-Driven Preparation',
+    'Our advanced analytics track your performance across all knowledge areas, question types, and time management to give you a clear picture of your readiness for the actual exam.' => 'Our advanced analytics track your performance across all knowledge areas, question types, and time management to give you a clear picture of your readiness for the actual exam.',
+    'Overall Readiness' => 'Overall Readiness',
+    'Knowledge Areas' => 'Knowledge Areas',
+    'Process Groups' => 'Process Groups',
+    'Time Management' => 'Time Management',
+    'Progress Dashboard' => 'Progress Dashboard',
+    'Progress Background' => 'Progress Background',
+    'Success Stories' => 'Success Stories',
+    'Hear from PMP candidates who achieved certification with our platform.' => 'Hear from PMP candidates who achieved certification with our platform.',
+    'PMP Master\'s practice exams were incredibly similar to the actual PMP exam. The detailed explanations for each question helped me understand not just what the right answer was, but why it was correct. I passed on my first attempt!' => 'PMP Master\'s practice exams were incredibly similar to the actual PMP exam. The detailed explanations for each question helped me understand not just what the right answer was, but why it was correct. I passed on my first attempt!',
+    'Sarah Johnson' => 'Sarah Johnson',
+    'Newly Certified PMP' => 'Newly Certified PMP',
+    'Ready to Start Your PMP Journey?' => 'Ready to Start Your PMP Journey?',
+    'Join thousands of successful PMP candidates and take the first step toward your certification today.' => 'Join thousands of successful PMP candidates and take the first step toward your certification today.',
+    'Let\'s Get Started' => 'Let\'s Get Started',
+    'PMP Master' => 'PMP Master',
+    'The most comprehensive PMP exam preparation platform with personalized study plans, realistic practice exams, and progress tracking.' => 'The most comprehensive PMP exam preparation platform with personalized study plans, realistic practice exams, and progress tracking.',
+    'Resources' => 'Resources',
+    'PMP Exam Guide' => 'PMP Exam Guide',
+    'Study Tips' => 'Study Tips',
+    'PMBOK Summary' => 'PMBOK Summary',
+    'FAQ' => 'FAQ',
+    'Blog' => 'Blog',
+    'Company' => 'Company',
+    'About Us' => 'About Us',
+    'Our Instructors' => 'Our Instructors',
+    'Success Stories' => 'Success Stories',
+    'Contact Us' => 'Contact Us',
+    'Careers' => 'Careers',
+    'All rights reserved.' => 'All rights reserved.',
+    'Privacy Policy' => 'Privacy Policy',
+    'Terms of Service' => 'Terms of Service',
+    
     "student_panel"=> "Student Panel",
     "home"=> "Home",
     "sections"=> "Sections",
@@ -12,7 +97,7 @@ return [
     "dont_have_account"=> "Don't have an account?",
     "sign_up"=> "Sign up",
     "welcome_back"=> "Welcome Back",
-    "sign_in_to_continue"=> "Sign in to continue your PMP exam preparation",
+    "sign_in_to_continue"=> "Sign in to advance your journey toward management mastery",
     "plan_progress"=> "Plan Progress",
     "progress"=> "Progress",
     "days_left"=> "Days Left",
@@ -1106,7 +1191,67 @@ return [
     "fast_access" => "Fast Access",
     "achieve_goals" => "Achieve Goals",
 
-    "enter_credentials_to_access" => "Enter Acount Info For Login"
+    'clear' => 'clear',
+    'auto_saved' => 'Auto Saved',
+
+    'why_this_is_correct' => "why this is correct ?",
+    "enter_credentials_to_access" => "Enter Acount Info For Login",
+
+    // =========================
+    // PERFORMANCE DIAGRAM TEXTS
+    // =========================
+    
+    // Header
+    'your_overall_performance' => 'Your Overall Performance',
+    'passed' => 'Passed',
+    'failed' => 'Failed',
+    
+    // Main Messages
+    'you_have_passed_congratulations' => 'You have passed the exam, congratulations.',
+    'you_did_not_pass_additional_preparation' => 'You did not pass the exam. Additional preparation is recommended before retaking.',
+    
+    // Performance Categories (with percentages)
+    'need_improvement' => 'Need Improvement',
+    'need_improvement_range' => '0-40%',
+    'below_target' => 'Below Target', 
+    'below_target_range' => '41-59%',
+    'target' => 'Target',
+    'target_range' => '60-79%',
+    'above_target' => 'Above Target',
+    'above_target_range' => '80-100%',
+    
+    // Performance Scale Labels
+    'failing' => 'Failing',
+    'passing' => 'Passing',
+    
+    // Explanation Section
+    'what_does_this_diagram_mean' => 'What Does this Diagram Mean?',
+    'diagram_explanation' => 'The diagram uses four different performance rating categories to show your overall performance on the exam. Each rating reflects how many questions you answered correctly.',
+    'performance_rating_categories' => 'Performance Rating Categories:',
+    
+    // Detailed Category Descriptions
+    'above_target_label' => 'Above Target:',
+    'above_target_description' => 'Your performance exceeds the minimum requirements for this exam',
+    
+    'target_label' => 'Target:',
+    'target_description' => 'Your performance meets the minimum requirements for this exam',
+    
+    'below_target_label' => 'Below Target:',
+    'below_target_description' => 'Your performance is slightly below target and fails to meet the minimum requirements for this exam. Additional preparation is recommended before re-examination.',
+    
+    'need_improvement_label' => 'Need Improvement:',
+    'need_improvement_description' => 'Your performance is far below target and fails to meet the minimum requirements for this exam. Additional preparation is strongly recommended before re-examination.',
+    
+    // User Performance Status
+    'your_performance' => 'Your Performance',
+    'above_target_message' => 'Excellent work! You have exceeded expectations and demonstrated strong mastery of the subject matter.',
+    'target_message' => 'Good job! You have met the minimum requirements and passed the exam successfully.',
+    'below_target_message' => 'You\'re close but need some improvement. Consider reviewing the areas where you had difficulty and retake when ready.',
+    'need_improvement_message_detailed' => 'Significant additional study is recommended. Focus on understanding the fundamental concepts before attempting the exam again.',
+    
+    // Legal Disclaimer
+    'categories_disclaimer' => 'The categories presented on this report were created to help you see where you may need additional preparation. They should not be used or interpreted for other purposes, such as, job placement decisions.',
+    'categories_disclaimer_prefix' => '**',
 ];
 
 

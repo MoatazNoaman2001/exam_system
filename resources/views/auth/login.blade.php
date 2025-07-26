@@ -913,6 +913,14 @@
             left: 0.7rem;
         }
     }
+    .backcontainer {
+        position: absolute; left: 15px; top: 15px; display: flex; gap: 8px;
+        color: gray;
+        cursor: pointer;
+        text-decoration: none;
+        background-color: transparent;
+        border: 0px;
+    }
 </style>
 
 <div class="login-container">
@@ -933,7 +941,7 @@
                         <i class="fas fa-graduation-cap"></i>
                     </div>
                 </div>
-                <h1 class="brand-name">PMP Master</h1>
+                <h1 class="brand-name">Sprint Skills</h1>
             </div>
             
             <div class="welcome-content">
@@ -959,7 +967,12 @@
 
         <!-- Form Half -->
         <div class="form-half">
+            <a class="backcontainer" href="{{route('welcome')}}">
+                <p>Home</p>
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
             <div class="form-container">
+                
                 <div class="form-header">
                     <h2 class="form-title">{{ __('lang.sign_in') }}</h2>
                     <p class="form-subtitle">{{ __('lang.enter_credentials_to_access') }}</p>

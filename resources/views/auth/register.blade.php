@@ -22,7 +22,7 @@
                 <div class="text-center mb-5">
                     <div class="d-flex align-items-center justify-content-center mb-3">
                         <i class="fas fa-graduation-cap fa-2x text-primary {{ app()->getLocale() === 'ar' ? 'ms-2' : 'me-2' }}"></i>
-                        <span class="h3 fw-bold text-primary mb-0">PMP Master</span>
+                        <span class="h3 fw-bold text-primary mb-0">Sprint Skills</span>
                     </div>
                     <h1 class="h2 fw-bold">{{ __('lang.create_professional_account') }}</h1>
                     <p class="text-muted">{{ __('lang.join_community') }}</p>
