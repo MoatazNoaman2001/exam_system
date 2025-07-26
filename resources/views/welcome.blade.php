@@ -1,13 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PMP Master - Your Complete PMP Exam Preparation System</title>
+    <title>{{ __('lang.PMP Master - Your Complete PMP Exam Preparation System') }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/welcome.css')}}">
+    <style>
+        /* Fix image aspect ratio in progress tracking */
+        .hero-text h1 {
+            color: #f0f0f0 !important;
+        }
+        .hero-text p {
+            color: #f0f0f0 !important;
+        }
+        .section-title h1 {
+            color: #f0f0f0 !important;
+        }
+
+        .section-title p {
+            color: #f0f0f0 !important;
+        }
+        .progress-image {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+        .progress-img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+        }
+        .progress-img-bg {
+            position: absolute;
+            top: 20px;
+            left: -20px;
+            opacity: 0.5;
+            z-index: -1;
+        }
+        /* Fix header logo alignment */
+        .logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        /* RTL adjustments for Arabic */
+        html[lang="ar"] .nav-links,
+        html[lang="ar"] .hero-content,
+        html[lang="ar"] .features-grid,
+        html[lang="ar"] .plan-container,
+        html[lang="ar"] .exams-grid,
+        html[lang="ar"] .progress-container,
+        html[lang="ar"] .testimonials-slider,
+        html[lang="ar"] .footer-content {
+            direction: rtl;
+        }
+        html[lang="ar"] .hero-text,
+        html[lang="ar"] .section-title,
+        html[lang="ar"] .feature-card,
+        html[lang="ar"] .plan-content,
+        html[lang="ar"] .exam-content,
+        html[lang="ar"] .progress-content,
+        html[lang="ar"] .testimonial-content {
+            text-align: right;
+        }
+        /* Language switcher styles */
+        .language-switcher {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .language-switcher a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .language-switcher a:hover {
+            background-color: #f0f0f0;
+        }
+        .language-switcher a.active {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -16,19 +97,23 @@
             <nav>
                 <div class="logo">
                     <i class="fas fa-graduation-cap"></i>
-                    <span>Sprint Skills</span>
+                    <span>{{ __('lang.Sprint Skills') }}</span>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#study-plan">Study Plan</a></li>
-                    <li><a href="#practice-exams">Practice Exams</a></li>
-                    <li><a href="#progress-tracking">Progress</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#features">{{ __('lang.Features') }}</a></li>
+                    <li><a href="#study-plan">{{ __('lang.Study Plan') }}</a></li>
+                    <li><a href="#practice-exams">{{ __('lang.Practice Exams') }}</a></li>
+                    <li><a href="#progress-tracking">{{ __('lang.Progress') }}</a></li>
+                    <li><a href="#testimonials">{{ __('lang.Testimonials') }}</a></li>
                 </ul>
                 <div class="header-actions">
+                    <div class="language-switcher">
+                        <a href="{{ route('locale.set', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
+                        <a href="{{ route('locale.set', 'ar') }}" class="{{ app()->getLocale() == 'ar' ? 'active' : '' }}">AR</a>
+                    </div>
                     <form action="{{route('login')}}" method="GET" style="display: inline-block;">
                         @csrf
-                        <button class="cta-button" type="submit">Get Started</button>
+                        <button class="cta-button" type="submit">{{ __('lang.Get Started') }}</button>
                     </form>
                     <div class="mobile-menu">
                         <i class="fas fa-bars"></i>
@@ -43,17 +128,17 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1 class="text-primary">Master the PMP Exam with Confidence</h1>
-                    <p class="text-primary">Our comprehensive platform combines expert lectures, realistic practice exams, and personalized progress tracking to help you pass the PMP exam on your first attempt.</p>
+                    <h1 class="text-primary">{{ __('lang.Master the Art and Science of Management') }}</h1>
+                    <p class="text-primary">{{ __('lang.Join a dynamic learning experience designed to help you grow in all areas of modern management from agile leadership to portfolio excellence.') }}</p>
                     <form action="{{route('login')}}" method="GET" style="display: inline-block;">
                         @csrf
-                        <button class="cta-button" type="submit">Click to Begin Our Journey</button>
+                        <button class="cta-button" type="submit">{{ __('lang.Let’s Build Your Future in Management') }}</button>
                     </form>
                 </div>
                 <div class="hero-image">
-                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="PMP Exam Dashboard" class="hero-img hero-img-1">
-                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="PMP Study Materials" class="hero-img hero-img-2">
-                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="PMP Progress Tracking" class="hero-img hero-img-3">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173" alt="{{ __('lang.PMP Exam Dashboard') }}" class="hero-img hero-img-1">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b" alt="{{ __('lang.PMP Study Materials') }}" class="hero-img hero-img-2">
+                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40" alt="{{ __('lang.PMP Progress Tracking') }}" class="hero-img hero-img-3">
                 </div>
             </div>
         </div>
@@ -63,30 +148,30 @@
     <section class="features" id="features">
         <div class="container">
             <div class="section-title">
-                <h2>Everything You Need to Succeed</h2>
-                <p>Our platform provides all the tools and resources to prepare effectively for the PMP certification exam.</p>
+                <h2>{{ __('lang.Everything You Need to Succeed') }}</h2>
+                <p>{{ __('lang.Our platform provides all the tools and resources to prepare effectively for the PMP certification exam.') }}</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-book-open"></i>
                     </div>
-                    <h3>Comprehensive Lectures</h3>
-                    <p>Access 50+ hours of video lectures covering all PMBOK knowledge areas and process groups, taught by PMP-certified instructors.</p>
+                    <h3>{{ __('lang.🧠 Foundational Knowledge') }}</h3>
+                    <p>{{ __('lang.Explore essential concepts and proven frameworks across various management disciplines—from strategic planning to agile leadership—to build a solid foundation for growth.') }}</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-clipboard-check"></i>
                     </div>
-                    <h3>Realistic Practice Exams</h3>
-                    <p>Test your knowledge with full-length, timed practice exams that mimic the actual PMP exam format and difficulty level.</p>
+                    <h3>{{ __('lang.✅ Hands-On Learning') }}</h3>
+                    <p>{{ __('lang.Test your knowledge with full-length, timed practice exams that mimic the actual PMP exam format and difficulty level.') }}</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Smart Progress Tracking</h3>
-                    <p>Our system analyzes your performance and adapts your study plan to focus on areas that need improvement.</p>
+                    <h3>{{ __('lang.📊 Personalized Learning Journey') }}</h3>
+                    <p>{{ __('lang.Track your growth with a smart system that adapts to your learning style, highlights areas for improvement, and helps you stay on track to achieve your goals.') }}</p>
                 </div>
             </div>
         </div>
@@ -96,37 +181,37 @@
     <section class="study-plan" id="study-plan">
         <div class="container">
             <div class="section-title">
-                <h2>Personalized Study Plan</h2>
-                <p>Tell us your exam date and we'll create a customized study schedule that fits your timeline.</p>
+                <h2>{{ __('lang.Personalized Study Plan') }}</h2>
+                <p>{{ __('lang.Tell us your exam date and we\'ll create a customized study schedule that fits your timeline.') }}</p>
             </div>
             <div class="plan-container">
                 <div class="plan-image">
-                    <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Study Plan" class="plan-img plan-img-main">
-                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Study Plan Background" class="plan-img plan-img-bg">
+                    <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d" alt="{{ __('lang.Study Plan') }}" class="plan-img plan-img-main">
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4" alt="{{ __('lang.Study Plan Background') }}" class="plan-img plan-img-bg">
                 </div>
                 <div class="plan-content">
-                    <h2>Study Smarter, Not Harder</h2>
-                    <p>Our adaptive learning system creates a personalized study plan based on your available study time, learning pace, and progress. Focus on what matters most for your exam success.</p>
+                    <h2>{{ __('lang.Study Smarter, Not Harder') }}</h2>
+                    <p>{{ __('lang.Our adaptive learning system creates a personalized study plan based on your available study time, learning pace, and progress. Focus on what matters most for your exam success.') }}</p>
                     <div class="plan-steps">
                         <div class="plan-step">
                             <div class="step-number">1</div>
                             <div class="step-content">
-                                <h4>Set Your Exam Date</h4>
-                                <p>Tell us when you plan to take the exam and how many hours per week you can study.</p>
+                                <h4>{{ __('lang.Set Your Exam Date') }}</h4>
+                                <p>{{ __('lang.Tell us when you plan to take the exam and how many hours per week you can study.') }}</?p>
                             </div>
                         </div>
                         <div class="plan-step">
                             <div class="step-number">2</div>
                             <div class="step-content">
-                                <h4>Take Initial Assessment</h4>
-                                <p>Complete our diagnostic test to identify your strengths and weaknesses.</p>
+                                <h4>{{ __('lang.Take Initial Assessment') }}</h4>
+                                <p>{{ __('lang.Complete our diagnostic test to identify your strengths and weaknesses.') }}</p>
                             </div>
                         </div>
                         <div class="plan-step">
                             <div class="step-number">3</div>
                             <div class="step-content">
-                                <h4>Follow Your Plan</h4>
-                                <p>Receive daily study tasks tailored to your needs and timeline.</p>
+                                <h4>{{ __('lang.Follow Your Plan') }}</h4>
+                                <p>{{ __('lang.Receive daily study tasks tailored to your needs and timeline.') }}</p>
                             </div>
                         </div>
                     </div>
@@ -139,66 +224,66 @@
     <section class="practice-exams" id="practice-exams">
         <div class="container">
             <div class="section-title">
-                <h2>Realistic Practice Exams</h2>
-                <p>Simulate the actual exam experience with our comprehensive question bank.</p>
+                <h2>{{ __('lang.Realistic Practice Exams') }}</h2>
+                <p>{{ __('lang.Simulate the actual exam experience with our comprehensive question bank.') }}</p>
             </div>
             <div class="exams-grid">
                 <div class="exam-card">
                     <div class="exam-image">
-                        <img src="https://images.unsplash.com/photo-1551269901-5c5e14c25df7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Full-Length Exam">
-                        <div class="exam-tag">200 Questions</div>
+                        <img src="https://images.unsplash.com/photo-1551269901-5c5e14c25df7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="{{ __('lang.Full-Length Exam') }}">
+                        <div class="exam-tag">200 {{ __('lang.Questions') }}</div>
                     </div>
                     <div class="exam-content">
-                        <h3>Full-Length Mock Exam</h3>
-                        <p>Complete 4-hour simulation with questions covering all knowledge areas and process groups.</p>
+                        <h3>{{ __('lang.Full-Length Mock Exam') }}</h3>
+                        <p>{{ __('lang.Complete 4-hour simulation with questions covering all knowledge areas and process groups.') }}</p>
                         <div class="exam-meta">
                             <div class="exam-questions">
                                 <i class="fas fa-question-circle"></i>
-                                <span>200 Questions</span>
+                                <span>200 {{ __('lang.Questions') }}</span>
                             </div>
                             <form action="{{route('login')}}" method="GET" style="display: inline-block;">
                                 @csrf
-                                <button class="cta-button" type="submit">Start Exam</button>
+                                <button class="cta-button" type="submit">{{ __('lang.Start Exam') }}</button>
                             </form>
                         </div>
                     </div>
                 </div>
                 <div class="exam-card">
                     <div class="exam-image">
-                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Knowledge Area Exam">
-                        <div class="exam-tag">50 Questions</div>
+                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="{{ __('lang.Knowledge Area Exam') }}">
+                        <div class="exam-tag">50 {{ __('lang.Questions') }}</div>
                     </div>
                     <div class="exam-content">
-                        <h3>Knowledge Area Tests</h3>
-                        <p>Focus on specific PMBOK knowledge areas to strengthen your weak points.</p>
+                        <h3>{{ __('lang.Knowledge Area Tests') }}</h3>
+                        <p>{{ __('lang.Focus on specific PMBOK knowledge areas to strengthen your weak points.') }}</p>
                         <div class="exam-meta">
                             <div class="exam-questions">
                                 <i class="fas fa-question-circle"></i>
-                                <span>50 Questions Each</span>
+                                <span>50 {{ __('lang.Questions Each') }}</span>
                             </div>
                             <form action="{{route('login')}}" method="GET" style="display: inline-block;">
                                 @csrf
-                                <button class="cta-button" type="submit">Start Exam</button>
+                                <button class="cta-button" type="submit">{{ __('lang.Start Exam') }}</button>
                             </form>
                         </div>
                     </div>
                 </div>
                 <div class="exam-card">
                     <div class="exam-image">
-                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Quick Quiz">
-                        <div class="exam-tag">20 Questions</div>
+                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="{{ __('lang.Quick Quiz') }}">
+                        <div class="exam-tag">20 {{ __('lang.Questions') }}</div>
                     </div>
                     <div class="exam-content">
-                        <h3>Daily Quick Quizzes</h3>
-                        <p>Short 20-question quizzes to reinforce concepts and keep your knowledge fresh.</p>
+                        <h3>{{ __('lang.Daily Quick Quizzes') }}</h3>
+                        <p>{{ __('lang.Short 20-question quizzes to reinforce concepts and keep your knowledge fresh.') }}</p>
                         <div class="exam-meta">
                             <div class="exam-questions">
                                 <i class="fas fa-question-circle"></i>
-                                <span>20 Questions</span>
+                                <span>20 {{ __('lang.Questions') }}</span>
                             </div>
                             <form action="{{route('login')}}" method="GET" style="display: inline-block;">
                                 @csrf
-                                <button class="cta-button" type="submit">Start Quiz</button>
+                                <button class="cta-button" type="submit">{{ __('lang.Start Quiz') }}</button>
                             </form>
                         </div>
                     </div>
@@ -211,17 +296,17 @@
     <section class="progress-tracking" id="progress-tracking">
         <div class="container">
             <div class="section-title">
-                <h2>Track Your Progress</h2>
-                <p>Visualize your improvement and stay motivated with our comprehensive analytics.</p>
+                <h2>{{ __('lang.Track Your Progress') }}</h2>
+                <p>{{ __('lang.Visualize your improvement and stay motivated with our comprehensive analytics.') }}</p>
             </div>
             <div class="progress-container">
                 <div class="progress-content">
-                    <h2>Data-Driven Preparation</h2>
-                    <p>Our advanced analytics track your performance across all knowledge areas, question types, and time management to give you a clear picture of your readiness for the actual exam.</p>
+                    <h2>{{ __('lang.Data-Driven Preparation') }}</h2>
+                    <p>{{ __('lang.Our advanced analytics track your performance across all knowledge areas, question types, and time management to give you a clear picture of your readiness for the actual exam.') }}</p>
                     <div class="progress-stats">
                         <div class="stat-item">
                             <div class="stat-header">
-                                <span class="stat-title">Overall Readiness</span>
+                                <span class="stat-title">{{ __('lang.Overall Readiness') }}</span>
                                 <span class="stat-percent">78%</span>
                             </div>
                             <div class="progress-bar">
@@ -230,7 +315,7 @@
                         </div>
                         <div class="stat-item">
                             <div class="stat-header">
-                                <span class="stat-title">Knowledge Areas</span>
+                                <span class="stat-title">{{ __('lang.Knowledge Areas') }}</span>
                                 <span class="stat-percent">85%</span>
                             </div>
                             <div class="progress-bar">
@@ -239,7 +324,7 @@
                         </div>
                         <div class="stat-item">
                             <div class="stat-header">
-                                <span class="stat-title">Process Groups</span>
+                                <span class="stat-title">{{ __('lang.Process Groups') }}</span>
                                 <span class="stat-percent">72%</span>
                             </div>
                             <div class="progress-bar">
@@ -248,7 +333,7 @@
                         </div>
                         <div class="stat-item">
                             <div class="stat-header">
-                                <span class="stat-title">Time Management</span>
+                                <span class="stat-title">{{ __('lang.Time Management') }}</span>
                                 <span class="stat-percent">91%</span>
                             </div>
                             <div class="progress-bar">
@@ -258,8 +343,8 @@
                     </div>
                 </div>
                 <div class="progress-image">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Progress Dashboard" class="progress-img progress-img-main">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Progress Background" class="progress-img progress-img-bg">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71" alt="{{ __('lang.Progress Dashboard') }}" class="progress-img progress-img-main">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f" alt="{{ __('lang.Progress Background') }}" class="progress-img progress-img-bg">
                 </div>
             </div>
         </div>
@@ -269,21 +354,21 @@
     <section class="testimonials" id="testimonials">
         <div class="container">
             <div class="section-title">
-                <h2>Success Stories</h2>
-                <p>Hear from PMP candidates who achieved certification with our platform.</p>
+                <h2>{{ __('lang.Success Stories') }}</h2>
+                <p>{{ __('lang.Hear from PMP candidates who achieved certification with our platform.') }}</p>
             </div>
             <div class="testimonials-slider">
                 <div class="testimonial-card">
                     <div class="testimonial-content">
-                        "PMP Master's practice exams were incredibly similar to the actual PMP exam. The detailed explanations for each question helped me understand not just what the right answer was, but why it was correct. I passed on my first attempt!"
+                        {{ __('lang.PMP Master\'s practice exams were incredibly similar to the actual PMP exam. The detailed explanations for each question helped me understand not just what the right answer was, but why it was correct. I passed on my first attempt!') }}
                     </div>
                     <div class="testimonial-author">
                         <div class="author-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah Johnson">
+                            <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="{{ __('lang.Sarah Johnson') }}">
                         </div>
                         <div class="author-info">
-                            <h4>Sarah Johnson</h4>
-                            <p>Newly Certified PMP</p>
+                            <h4>{{ __('lang.Sarah Johnson') }}</h4>
+                            <p>{{ __('lang.Newly Certified PMP') }}</p>
                         </div>
                     </div>
                 </div>
@@ -294,11 +379,11 @@
     <!-- CTA Section -->
     <section class="cta" id="cta">
         <div class="container">
-            <h2>Ready to Start Your PMP Journey?</h2>
-            <p>Join thousands of successful PMP candidates and take the first step toward your certification today.</p>
+            <h2>{{ __('lang.Ready to Start Your PMP Journey?') }}</h2>
+            <p>{{ __('lang.Join thousands of successful PMP candidates and take the first step toward your certification today.') }}</p>
             <form action="{{route('login')}}" method="GET" style="display: inline-block;">
                 @csrf
-                <button class="cta-button white" type="submit">Let's Get Started</button>
+                <button class="cta-button white" type="submit">{{ __('lang.Let\'s Get Started') }}</button>
             </form>
         </div>
     </section>
@@ -308,8 +393,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>PMP Master</h3>
-                    <p>The most comprehensive PMP exam preparation platform with personalized study plans, realistic practice exams, and progress tracking.</p>
+                    <h3>{{ __('lang.PMP Master') }}</h3>
+                    <p>{{ __('lang.The most comprehensive PMP exam preparation platform with personalized study plans, realistic practice exams, and progress tracking.') }}</p>
                     <div class="footer-social">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -318,28 +403,28 @@
                     </div>
                 </div>
                 <div class="footer-column">
-                    <h3>Resources</h3>
+                    <h3>{{ __('lang.Resources') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="#">PMP Exam Guide</a></li>
-                        <li><a href="#">Study Tips</a></li>
-                        <li><a href="#">PMBOK Summary</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">{{ __('lang.PMP Exam Guide') }}</a></li>
+                        <li><a href="#">{{ __('lang.Study Tips') }}</a></li>
+                        <li><a href="#">{{ __('lang.PMBOK Summary') }}</a></li>
+                        <li><a href="#">{{ __('lang.FAQ') }}</a></li>
+                        <li><a href="#">{{ __('lang.Blog') }}</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>Company</h3>
+                    <h3>{{ __('lang.Company') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="{{route('about')}}">About Us</a></li>
-                        <li><a href="#">Our Instructors</a></li>
-                        <li><a href="#">Success Stories</a></li>
-                        <li><a href="{{route('contact')}}">Contact Us</a></li>
-                        <li><a href="#">Careers</a></li>
+                        <li><a href="{{route('about')}}">{{ __('lang.About Us') }}</a></li>
+                        <li><a href="#">{{ __('lang.Our Instructors') }}</a></li>
+                        <li><a href="#">{{ __('lang.Success Stories') }}</a></li>
+                        <li><a href="{{route('contact')}}">{{ __('lang.Contact Us') }}</a></li>
+                        <li><a href="#">{{ __('lang.Careers') }}</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 PMP Master. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+                <p>&copy; 2023 {{ __('lang.PMP Master') }}. {{ __('lang.All rights reserved.') }} | <a href="#">{{ __('lang.Privacy Policy') }}</a> | <a href="#">{{ __('lang.Terms of Service') }}</a></p>
             </div>
         </div>
     </footer>

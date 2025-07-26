@@ -34,6 +34,17 @@
             }
         </style>
     @endguest
+
+    @auth
+        @if (auth()->user() && auth()->user()->role === "admin")
+        <style>
+            .main-content {
+                padding: 0px 10px !important;
+            }
+        </style>
+            
+        @endif
+    @endauth
     <!-- App Configuration for JavaScript -->
     <script>
         window.appConfig = {

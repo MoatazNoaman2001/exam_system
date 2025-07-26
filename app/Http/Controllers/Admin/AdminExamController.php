@@ -272,6 +272,8 @@ class AdminExamController extends Controller
                 $hasCorrectAnswer = true;
             }
 
+            // dd($answerData);
+
             ExamQuestionAnswer::create([
                 'id' => Str::uuid(),
                 'exam_question_id' => $question->id,

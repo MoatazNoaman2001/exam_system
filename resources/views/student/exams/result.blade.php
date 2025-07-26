@@ -697,6 +697,9 @@
                                         {{ app()->getLocale() === 'ar' ? ($answer->{'answer-ar'} ?? $answer->answer) : $answer->answer }}
                                     </div>
                                     
+                                    {{-- <div class="answer-text">
+                                        {{ app()->getLocale() === 'ar' ? ($answer->{'answer-ar'} ?? $answer->reason) : $answer->reason }}
+                                    </div> --}}
                                     {{-- Show explanation if answer is correct or was selected incorrectly --}}
                                     @if(($isCorrect || $isSelected) && ($answer->reason || $answer->{'reason-ar'}))
                                         <div class="answer-explanation {{ $isCorrect ? 'explanation-correct' : 'explanation-incorrect' }}">
@@ -739,7 +742,7 @@
         </a>
 
         @if($results['statistics']['final_score'] < 60)
-            <a href="{{ route('student.exams.show', $session->exam->id) }}" class="btn-action btn-success" style="padding: 0.75rem 2rem; border: none; border-radius: 0.75rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; background: var(--pmp-success); color: white;">
+            <a href="{{ route('student.exams.index', $session->exam->id) }}" class="btn-action btn-success" style="padding: 0.75rem 2rem; border: none; border-radius: 0.75rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; background: var(--pmp-success); color: white;">
                 <i class="fas fa-redo"></i>
                 {{ __('lang.retake_exam') }}
             </a>

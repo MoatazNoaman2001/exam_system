@@ -268,6 +268,7 @@ class ExamController extends Controller
             'statistics' => $serviceResults['statistics'] // The overall statistics
         ];
 
+        // dd($results);
         // Optional: Generate recommendations based on performance
         $recommendations = $this->generateRecommendations($serviceResults['statistics']);
 
