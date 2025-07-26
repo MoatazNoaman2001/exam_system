@@ -97,7 +97,7 @@
             <nav>
                 <div class="logo">
                     <i class="fas fa-graduation-cap"></i>
-                    <span>{{ __('lang.Sprint Skills') }}</span>
+                    <span>{{ __('Sprint Skills') }}</span>
                 </div>
                 <ul class="nav-links">
                     <li><a href="#features">{{ __('lang.Features') }}</a></li>
@@ -424,7 +424,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 {{ __('lang.PMP Master') }}. {{ __('lang.All rights reserved.') }} | <a href="#">{{ __('lang.Privacy Policy') }}</a> | <a href="#">{{ __('lang.Terms of Service') }}</a></p>
+                <p>&copy; 2023 {{ __('Sprint Skills') }}. {{ __('lang.All rights reserved.') }} | <a href="#">{{ __('lang.Privacy Policy') }}</a> | <a href="#">{{ __('lang.Terms of Service') }}</a></p>
             </div>
         </div>
     </footer>
