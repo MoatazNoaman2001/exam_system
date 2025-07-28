@@ -6,10 +6,12 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
   line-height: 1.6;
   color: #333;
   overflow-x: hidden;
+  font-family: 'Tajawal', 'Cairo', sans-serif;
+  background-color: var(--pmp-gray-50);
+
 }
 
 .container {

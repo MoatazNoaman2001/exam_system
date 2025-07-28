@@ -12,32 +12,40 @@
     <link rel="stylesheet" href="{{ asset('css/root-welcome.css') }}">
 </head>
 <body>
-    <!-- Header -->
+
+    @guest
+        
     <header id="header">
         <div class="container">
             <nav>
                 <div class="logo">
                     <i class="fas fa-graduation-cap"></i>
-                    <span>PMP Master</span>
+                    <span>{{ __('Sprint Skills') }}</span>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="{{ url('/') }}">Home</a></li>
-                    <li><a href="{{ url('/about') }}">About</a></li>
-                    <li><a href="{{ url('/contact') }}" class="active">Contact</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#features">{{ __('lang.Features') }}</a></li>
+                    <li><a href="#study-plan">{{ __('lang.Study Plan') }}</a></li>
+                    <li><a href="#practice-exams">{{ __('lang.Practice Exams') }}</a></li>
+                    <li><a href="#progress-tracking">{{ __('lang.Progress') }}</a></li>
+                    <li><a href="#testimonials">{{ __('lang.Testimonials') }}</a></li>
                 </ul>
-                <form action="{{route('login')}}" method="GET">
-                    @csrf
-                    <button class="cta-button" type="submit">Get Started</button>
-                </form>
-                <div class="mobile-menu">
-                    <i class="fas fa-bars"></i>
+                <div class="header-actions">
+                    <div class="language-switcher">
+                        <a href="{{ route('locale.set', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
+                        <a href="{{ route('locale.set', 'ar') }}" class="{{ app()->getLocale() == 'ar' ? 'active' : '' }}">AR</a>
+                    </div>
+                    <form action="{{route('login')}}" method="GET" style="display: inline-block;">
+                        @csrf
+                        <button class="cta-button" type="submit">{{ __('lang.Get Started') }}</button>
+                    </form>
+                    <div class="mobile-menu">
+                        <i class="fas fa-bars"></i>
+                    </div>
                 </div>
             </nav>
         </div>
     </header>
-
+    @endguest
     <!-- Contact Hero Section -->
     <section class="contact-hero">
         <div class="container">
@@ -85,13 +93,14 @@
                 </div>
                 <div class="contact-info">
                     <h2>Contact Information</h2>
+                
                     <div class="info-item">
                         <div class="info-icon">
-                            <i class="fas fa-map-marker-alt"></i>
+                            <i class="fas fa-phone-alt"></i>
                         </div>
                         <div class="info-content">
-                            <h3>Our Office</h3>
-                            <p>123 Project Management Way<br>Suite 456<br>San Francisco, CA 94107</p>
+                            <h3>Phone</h3>
+                            <p>+00905302354029<br>Monday-Friday, 9am-5pm PST</p>
                         </div>
                     </div>
                     <div class="info-item">
@@ -99,8 +108,8 @@
                             <i class="fas fa-phone-alt"></i>
                         </div>
                         <div class="info-content">
-                            <h3>Phone</h3>
-                            <p>+1 (800) 555-PMPM<br>Monday-Friday, 9am-5pm PST</p>
+                            <h3>Phone2</h3>
+                            <p>+0016193544916<br>Monday-Friday, 9am-5pm PST</p>
                         </div>
                     </div>
                     <div class="info-item">
@@ -109,7 +118,7 @@
                         </div>
                         <div class="info-content">
                             <h3>Email</h3>
-                            <p>support@pmpmaster.com<br>help@pmpmaster.com</p>
+                            <p>ihsan.arslan_84@hotmail.com<br>help@pmpmaster.com</p>
                         </div>
                     </div>
                     <div class="info-item">
@@ -195,56 +204,45 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    @guest
+            <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>PMP Master</h3>
-                    <p>The most comprehensive PMP exam preparation platform with personalized study plans, realistic practice exams, and progress tracking.</p>
+                    <h3>Sprint Skills</h3>
+                    <p>{{ __('about.The most comprehensive management education platform with personalized study plans, AI-driven analytics, and bilingual support for Arabic-speaking professionals.') }}</p>
                     <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/pmarabchapter/"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://t.me/+z_AtT8ZlqehmZDhk"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.linkedin.com/company/pm-arabcommunity/"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/pm_arab_chapter/"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">
-                    <h3>Resources</h3>
+                    <h3>{{ __('lang.Resources') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="#">PMP Exam Guide</a></li>
-                        <li><a href="#">Study Tips</a></li>
-                        <li><a href="#">PMBOK Summary</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">{{ __('lang.PMP Exam Guide') }}</a></li>
+                        <li><a href="#">{{ __('lang.Study Tips') }}</a></li>
+                        <li><a href="#">{{ __('lang.PMBOK Summary') }}</a></li>
+                        <li><a href="#">{{ __('lang.FAQ') }}</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>Features</h3>
+                    <h3>{{ __('lang.Company') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Video Lectures</a></li>
-                        <li><a href="#">Practice Exams</a></li>
-                        <li><a href="#">Study Planner</a></li>
-                        <li><a href="#">Progress Tracking</a></li>
-                        <li><a href="#">Mobile App</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Company</h3>
-                    <ul class="footer-links">
-                        <li><a href="{{ url('/about') }}">About Us</a></li>
-                        <li><a href="#">Our Instructors</a></li>
-                        <li><a href="#">Success Stories</a></li>
-                        <li><a href="{{ url('/contact') }}">Contact Us</a></li>
-                        <li><a href="#">Careers</a></li>
+                        <li><a href="{{route('about')}}">{{ __('lang.About Us') }}</a></li>
+                        <li><a href="#">{{ __('lang.Our Instructors') }}</a></li>
+                        <li><a href="{{route('contact')}}">{{ __('lang.Contact Us') }}</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 PMP Master. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+                <p>&copy; 2025 Sprint Skills. {{ __('about.All rights reserved.') }} | <a href="#">{{ __('about.Privacy Policy') }}</a> | <a href="#">{{ __('about.Terms of Service') }}</a></p>
             </div>
         </div>
     </footer>
+    @endguest
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
