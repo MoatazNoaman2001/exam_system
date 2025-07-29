@@ -933,8 +933,8 @@
         color: rgb(17, 17, 111)
     }
     .logo-img {
-        width: 60px !important;
-        height: 60px !important;
+        width: 240px !important;
+        height: 240px !important;
         color: white;
         -webkit-user-drag: none !important;
         user-select: none !important;
@@ -957,11 +957,8 @@
             </div>
             
             <div class="brand-section">
-                <div class="brand-logo">
-                    <div class="brand-icon">
-                        <img class="logo-img" src="{{asset('images/Sprint_Skills_logo_White.png')}}" alt="logo">
-                    </div>
-                </div>
+                <img class="logo-img" src="{{asset('images/Sprint_Skills_logo_White.png')}}" alt="logo">
+
                 <h1 class="brand-name">Sprint Skills</h1>
             </div>
             
