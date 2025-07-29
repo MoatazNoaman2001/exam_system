@@ -3,8 +3,8 @@
 @section('content')
 <style>
     .logo-img {
-        width: 60px !important;
-        height: 60px !important;
+        width: 240px !important;
+        height: 240px !important;
         -webkit-user-drag: none !important;
         user-select: none !important;
         -moz-user-select: none !important;
@@ -37,7 +37,7 @@
                 <div class="text-center mb-5">
                     <div class="d-flex align-items-center justify-content-center mb-3">
                         <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
-                        <span class="h3 fw-bold text-primary mb-0">Sprint Skills</span>
+                        <span class="h3 fw-bold mb-0" style="color: rgb(26, 89, 123); font-size: 22px">Sprint Skills</span>
                     </div>
                     <h1 class="h2 fw-bold">{{ __('lang.create_professional_account') }}</h1>
                     <p class="text-muted">{{ __('lang.join_community') }}</p>
