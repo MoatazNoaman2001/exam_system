@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .logo-img {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    
+</style>
 <div class="{{ app()->getLocale() === 'ar' ? 'direction-rtl' : 'direction-ltr' }}">
     <div class="row">
         <!-- Right Column - Image -->
@@ -24,7 +31,7 @@
                 <!-- Header -->
                 <div class="text-center mb-5">
                     <div class="d-flex align-items-center justify-content-center mb-3">
-                        <i class="fas fa-graduation-cap fa-2x text-primary {{ app()->getLocale() === 'ar' ? 'ms-2' : 'me-2' }}"></i>
+                        <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
                         <span class="h3 fw-bold text-primary mb-0">Sprint Skills</span>
                     </div>
                     <h1 class="h2 fw-bold">{{ __('lang.create_professional_account') }}</h1>
