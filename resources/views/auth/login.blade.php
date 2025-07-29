@@ -936,6 +936,11 @@
         width: 60px !important;
         height: 60px !important;
         color: white;
+        -webkit-user-drag: none !important;
+        user-select: none !important;
+        -moz-user-select: none !important;
+        -webkit-user-select: none !important;
+        -ms-user-select: none !important;
     }
 </style>
 
