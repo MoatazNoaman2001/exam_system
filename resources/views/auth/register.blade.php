@@ -17,6 +17,9 @@
         </div>
         <!-- Left Column - Form -->
         <div class="col-lg-6 d-flex align-items-center justify-content-center register-container">
+            <a class="backcontainer" href="{{route('welcome')}}">
+                <p>{{__('lang.home')}}</p>
+            </a>
             <div class="w-100 px-4 px-md-5" style="max-width: 700px;">
                 <!-- Header -->
                 <div class="text-center mb-5">
@@ -369,4 +372,24 @@ body {
 .register-container {
     padding: 80px 0 !important;
 }
+
+[dir='rtl'] .backcontainer {
+        position: absolute; left: 15px; top: 15px; display: flex; gap: 8px;
+        color: gray;
+        cursor: pointer;
+        text-decoration: none;
+        background-color: transparent;
+        border: 0px;
+    }       
+    [dir='ltr'] .backcontainer {
+        position: absolute; right: 15px; top: 15px; display: flex; gap: 8px;
+        color: rgb(70, 70, 70);
+        cursor: pointer;
+        text-decoration: none;
+        background-color: transparent;
+        border: 0px;
+    }
+    .backcontainer:hover{
+        color: rgb(17, 17, 111)
+    }
 </style>

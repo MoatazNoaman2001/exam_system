@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('About Sprint Skills - Where Purpose Meets Performance in Modern Management') }}</title>
+    <title>{{ __('about.About Sprint Skills - Where Purpose Meets Performance in Modern Management') }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     @if(app()->getLocale() == 'ar')
@@ -25,15 +25,15 @@
                     <span>Sprint Skills</span>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="{{ url('/') }}">{{ __('Home') }}</a></li>
-                    <li><a href="{{ url('/about') }}" class="active">{{ __('About') }}</a></li>
-                    <li><a href="{{ url('/contact') }}">{{ __('Contact') }}</a></li>
-                    <li><a href="#features">{{ __('Features') }}</a></li>
-                    <li><a href="#testimonials">{{ __('Testimonials') }}</a></li>
+                    <li><a href="{{ url('/') }}">{{ __('lang.home') }}</a></li>
+                    <li><a href="{{ url('/about') }}" class="active">{{ __('lang.about') }}</a></li>
+                    <li><a href="{{ url('/contact') }}">{{ __('lang.Contact Us') }}</a></li>
+                    <li><a href="#features">{{ __('lang.Features') }}</a></li>
+                    <li><a href="#testimonials">{{ __('lang.Testimonials') }}</a></li>
                 </ul>
                 <form action="{{route('login')}}" method="GET">
                     @csrf
-                    <button class="cta-button" type="submit">{{ __('Get Started') }}</button>
+                    <button class="cta-button" type="submit">{{ __('lang.Get Started') }}</button>
                 </form>
                 <div class="mobile-menu">
                     <i class="fas fa-bars"></i>
@@ -48,8 +48,8 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>{{ __('About Sprint Skills') }}</h1>
-                    <p class="text-white">{{ __('Where purpose meets performance in modern management') }}</p>
+                    <h1>{{ __('about.About Sprint Skills') }}</h1>
+                    <p class="text-white">{{ __('about.Where purpose meets performance in modern management') }}</p>
                 </div>
             </div>
         </div>
@@ -59,29 +59,29 @@
     <section class="our-story" id="genesis">
         <div class="container">
             <div class="section-title">
-                <h2>{{ __('Our Genesis') }}</h2>
-                <p>{{ __('How Sprint Skills became the leading management education platform') }}</p>
+                <h2>{{ __('about.Our Genesis') }}</h2>
+                <p>{{ __('about.How Sprint Skills became the leading management education platform') }}</p>
             </div>
             <div class="story-timeline">
                 <div class="timeline-item">
-                    <div class="timeline-year">{{ __('Genesis') }}</div>
+                    <div class="timeline-year">{{ __('about.Genesis') }}</div>
                     <div class="timeline-content">
-                        <h3>{{ __('Conceived by Multidisciplinary Experts') }}</h3>
-                        <p>{{ __('Sprint Skills was conceived by a multidisciplinary team of engineers-turned-managers, humanitarian program leaders, and tech educators who spent years guiding NGOs, startups, and corporate projects across the Middle East and beyond. They discovered that most learning platforms focus on isolated certificates, while real managers must juggle strategy, stakeholders, quality, finance, and social impact simultaneously.') }}</p>
+                        <h3>{{ __('about.Conceived by Multidisciplinary Experts') }}</h3>
+                        <p>{{ __('about.Sprint Skills was conceived by a multidisciplinary team of engineers-turned-managers, humanitarian program leaders, and tech educators who spent years guiding NGOs, startups, and corporate projects across the Middle East and beyond. They discovered that most learning platforms focus on isolated certificates, while real managers must juggle strategy, stakeholders, quality, finance, and social impact simultaneously.') }}</p>
                     </div>
                 </div>
                 <div class="timeline-item">
-                    <div class="timeline-year">{{ __('Evolution') }}</div>
+                    <div class="timeline-year">{{ __('about.Evolution') }}</div>
                     <div class="timeline-content">
-                        <h3>{{ __('From Certification Prep to Holistic Mastery') }}</h3>
-                        <p>{{ __('Early success with PMP-prep cohorts revealed a broader need for an all-in-one space where professionals could build project, program, portfolio, and business skills—supported by adaptive technology and bilingual resources.') }}</p>
+                        <h3>{{ __('about.From Certification Prep to Holistic Mastery') }}</h3>
+                        <p>{{ __('about.Early success with PMP-prep cohorts revealed a broader need for an all-in-one space where professionals could build project, program, portfolio, and business skills—supported by adaptive technology and bilingual resources.') }}</p>
                     </div>
                 </div>
                 <div class="timeline-item">
-                    <div class="timeline-year">{{ __('Today') }}</div>
+                    <div class="timeline-year">{{ __('about.Today') }}</div>
                     <div class="timeline-content">
-                        <h3>{{ __('Where We Stand Today') }}</h3>
-                        <p>{{ __('Sprint Skills hosts modular courses, AI-driven progress analytics, peer forums, and practical toolkits covering leadership, strategy execution, quality systems, risk, change, and digital transformation. New content is peer-reviewed by certified experts and field practitioners before release.') }}</p>
+                        <h3>{{ __('about.Where We Stand Today') }}</h3>
+                        <p>{{ __('about.Sprint Skills hosts modular courses, AI-driven progress analytics, peer forums, and practical toolkits covering leadership, strategy execution, quality systems, risk, change, and digital transformation. New content is peer-reviewed by certified experts and field practitioners before release.') }}</p>
                     </div>
                 </div>
             </div>
@@ -93,25 +93,25 @@
         <div class="container">
             <div class="mission-content">
                 <div class="mission-text">
-                    <h2>{{ __('Challenges That Shaped Us') }}</h2>
+                    <h2>{{ __('about.Challenges That Shaped Us') }}</h2>
                     <div class="challenges-list">
                         <div class="challenge-item">
                             <i class="fas fa-cogs"></i>
-                            <p>{{ __('Integrating agile, hybrid, and predictive methods into one coherent learning path') }}</p>
+                            <p>{{ __('about.Integrating agile, hybrid, and predictive methods into one coherent learning path') }}</p>
                         </div>
                         <div class="challenge-item">
                             <i class="fas fa-globe"></i>
-                            <p>{{ __('Delivering a bilingual Arabic–English interface that runs smoothly on low-bandwidth networks common in our region') }}</p>
+                            <p>{{ __('about.Delivering a bilingual Arabic–English interface that runs smoothly on low-bandwidth networks common in our region') }}</p>
                         </div>
                         <div class="challenge-item">
                             <i class="fas fa-balance-scale"></i>
-                            <p>{{ __('Sustaining an open-access model while securing funding for continuous content quality and platform innovation') }}</p>
+                            <p>{{ __('about.Sustaining an open-access model while securing funding for continuous content quality and platform innovation') }}</p>
                         </div>
                     </div>
-                    <p class="challenge-conclusion">{{ __('Each obstacle refined our architecture, pedagogy, and community culture.') }}</p>
+                    <p class="challenge-conclusion">{{ __('about.Each obstacle refined our architecture, pedagogy, and community culture.') }}</p>
                 </div>
                 <div class="mission-image">
-                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="{{ __('Team working together') }}">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="{{ __('about.Team working together') }}">
                 </div>
             </div>
         </div>
@@ -125,15 +125,15 @@
                     <div class="vm-icon">
                         <i class="fas fa-eye"></i>
                     </div>
-                    <h3>{{ __('Vision') }}</h3>
-                    <p>{{ __('To democratize world-class management education for every Arabic-speaking professional and their global peers.') }}</p>
+                    <h3>{{ __('about.Vision') }}</h3>
+                    <p>{{ __('about.To democratize world-class management education for every Arabic-speaking professional and their global peers.') }}</p>
                 </div>
                 <div class="vm-item">
                     <div class="vm-icon">
                         <i class="fas fa-rocket"></i>
                     </div>
-                    <h3>{{ __('Mission') }}</h3>
-                    <p>{{ __('Equip leaders with actionable knowledge, adaptive tools, and a supportive community so they can deliver initiatives that improve lives and economies.') }}</p>
+                    <h3>{{ __('about.Mission') }}</h3>
+                    <p>{{ __('about.Equip leaders with actionable knowledge, adaptive tools, and a supportive community so they can deliver initiatives that improve lives and economies.') }}</p>
                 </div>
             </div>
         </div>
@@ -143,39 +143,39 @@
     <section class="values-section" id="values">
         <div class="container">
             <div class="section-title">
-                <h2>{{ __('Core Values') }}</h2>
-                <p>{{ __('The principles that guide everything we do') }}</p>
+                <h2>{{ __('about.Core Values') }}</h2>
+                <p>{{ __('about.The principles that guide everything we do') }}</p>
             </div>
             <div class="values-grid">
                 <div class="value-item">
                     <div class="value-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3>{{ __('Integrity') }}</h3>
+                    <h3>{{ __('about.Integrity') }}</h3>
                 </div>
                 <div class="value-item">
                     <div class="value-icon">
                         <i class="fas fa-star"></i>
                     </div>
-                    <h3>{{ __('Practical Excellence') }}</h3>
+                    <h3>{{ __('about.Practical Excellence') }}</h3>
                 </div>
                 <div class="value-item">
                     <div class="value-icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
-                    <h3>{{ __('Continuous Learning') }}</h3>
+                    <h3>{{ __('about.Continuous Learning') }}</h3>
                 </div>
                 <div class="value-item">
                     <div class="value-icon">
                         <i class="fas fa-handshake"></i>
                     </div>
-                    <h3>{{ __('Collaboration') }}</h3>
+                    <h3>{{ __('about.Collaboration') }}</h3>
                 </div>
                 <div class="value-item">
                     <div class="value-icon">
                         <i class="fas fa-lightbulb"></i>
                     </div>
-                    <h3>{{ __('Impact-Driven Innovation') }}</h3>
+                    <h3>{{ __('about.Impact-Driven Innovation') }}</h3>
                 </div>
             </div>
         </div>
@@ -185,17 +185,17 @@
     <section class="team-section" id="team">
         <div class="container">
             <div class="section-title">
-                <h2>{{ __('Meet Our Team') }}</h2>
-                <p>{{ __('The experts behind Sprint Skills success') }}</p>
+                <h2>{{ __('about.Meet Our Team') }}</h2>
+                <p>{{ __('about.The experts behind Sprint Skills success') }}</p>
             </div>
             <div class="team-grid">
                 <div class="team-member">
                     <div class="member-photo">
                         <img src="https://avatars.githubusercontent.com/u/99621213?v=4" alt="Moataz Noaman">
                     </div>
-                    <h3>{{ __('Moataz Noaman') }}</h3>
-                    <p class="member-title">{{ __('Software Engineer') }}</p>
-                    <p class="member-bio">{{ __('PMP, Engineer Responsible for Design and Development of the Platform.') }}</p>
+                    <h3>{{ __('about.Moataz Noaman') }}</h3>
+                    <p class="member-title">{{ __('about.Software Engineer') }}</p>
+                    <p class="member-bio">{{ __('about.PMP, Engineer Responsible for Design and Development of the Platform.') }}</p>
                     <div class="member-social">
                         <a href="https://www.linkedin.com/in/moataz-noaman/"><i class="fab fa-linkedin-in"></i></a>
                     </div>
@@ -204,9 +204,9 @@
                     <div class="member-photo">
                         <img src="https://avatars.githubusercontent.com/u/93217206?v=4" alt="Hager Abd Alaziz">
                     </div>
-                    <h3>{{ __('Hager Abd Alaziz') }}</h3>
-                    <p class="member-title">{{ __('Software Engineer') }}</p>
-                    <p class="member-bio">{{ __('PMP, Engineer Responsible for Design and Development of the Platform.') }}</p>
+                    <h3>{{ __('about.Hager Abd Alaziz') }}</h3>
+                    <p class="member-title">{{ __('about.Software Engineer') }}</p>
+                    <p class="member-bio">{{ __('about.PMP, Engineer Responsible for Design and Development of the Platform.') }}</p>
                     <div class="member-social">
                         <a href="https://www.linkedin.com/in/hager-hussien/"><i class="fab fa-linkedin-in"></i></a>
                     </div>
@@ -221,19 +221,19 @@
             <div class="stats-grid">
                 <div class="stat-item">
                     <div class="stat-number">10,000+</div>
-                    <div class="stat-label">{{ __('Professionals Trained') }}</div>
+                    <div class="stat-label">{{ __('about.Professionals Trained') }}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">95%</div>
-                    <div class="stat-label">{{ __('Success Rate') }}</div>
+                    <div class="stat-label">{{ __('about.Success Rate') }}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">100+</div>
-                    <div class="stat-label">{{ __('Modular Courses') }}</div>
+                    <div class="stat-label">{{ __('about.Modular Courses') }}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">2</div>
-                    <div class="stat-label">{{ __('Languages Supported') }}</div>
+                    <div class="stat-label">{{ __('about.Languages Supported') }}</div>
                 </div>
             </div>
         </div>
@@ -242,11 +242,11 @@
     <!-- CTA Section -->
     <section class="cta" id="cta">
         <div class="container">
-            <h2>{{ __('Join Our Community') }}</h2>
-            <p>{{ __('Whether you aim to earn a certification, scale a nonprofit venture, or steer a multinational portfolio, Sprint Skills is built to sprint with you every step of the way.') }}</p>
+            <h2>{{ __('about.Join Our Community') }}</h2>
+            <p>{{ __('about.Whether you aim to earn a certification, scale a nonprofit venture, or steer a multinational portfolio, Sprint Skills is built to sprint with you every step of the way.') }}</p>
             <form action="{{route('login')}}" method="GET">
                 @csrf
-                <button class="cta-button white" type="submit">{{ __('Join Us Today') }}</button>
+                <button class="cta-button white" type="submit">{{ __('about.Join Us Today') }}</button>
             </form>
         </div>
     </section>
@@ -257,48 +257,35 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>Sprint Skills</h3>
-                    <p>{{ __('The most comprehensive management education platform with personalized study plans, AI-driven analytics, and bilingual support for Arabic-speaking professionals.') }}</p>
+                    <h3>{{ __('Sprint Skills') }}</h3>
+                    <p>{{ __('lang.footer_text') }}</p>
                     <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/pmarabchapter/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://t.me/+z_AtT8ZlqehmZDhk" target="_blank"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.linkedin.com/company/pm-arabcommunity/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/pm_arab_chapter/" target="_blank"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">
-                    <h3>{{ __('Resources') }}</h3>
+                    <h3>{{ __('lang.Resources') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="#">{{ __('Management Guide') }}</a></li>
-                        <li><a href="#">{{ __('Study Tips') }}</a></li>
-                        <li><a href="#">{{ __('PMBOK Summary') }}</a></li>
-                        <li><a href="#">{{ __('FAQ') }}</a></li>
-                        <li><a href="#">{{ __('Blog') }}</a></li>
+                        <li><a href="#">{{ __('lang.PMP Exam Guide') }}</a></li>
+                        <li><a href="#">{{ __('lang.Study Tips') }}</a></li>
+                        <li><a href="#">{{ __('lang.PMBOK Summary') }}</a></li>
+                        <li><a href="#">{{ __('lang.FAQ') }}</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>{{ __('Features') }}</h3>
+                    <h3>{{ __('lang.Company') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="#">{{ __('Video Lectures') }}</a></li>
-                        <li><a href="#">{{ __('Interactive Courses') }}</a></li>
-                        <li><a href="#">{{ __('Study Planner') }}</a></li>
-                        <li><a href="#">{{ __('Progress Tracking') }}</a></li>
-                        <li><a href="#">{{ __('Mobile App') }}</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>{{ __('Company') }}</h3>
-                    <ul class="footer-links">
-                        <li><a href="{{ url('/about') }}">{{ __('About Us') }}</a></li>
-                        <li><a href="#">{{ __('Our Instructors') }}</a></li>
-                        <li><a href="#">{{ __('Success Stories') }}</a></li>
-                        <li><a href="{{ url('/contact') }}">{{ __('Contact Us') }}</a></li>
-                        <li><a href="#">{{ __('Careers') }}</a></li>
+                        <li><a href="{{route('about')}}">{{ __('lang.About Us') }}</a></li>
+                        <li><a href="#">{{ __('lang.Our Instructors') }}</a></li>
+                        <li><a href="{{route('contact')}}">{{ __('lang.Contact Us') }}</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Sprint Skills. {{ __('All rights reserved.') }} | <a href="#">{{ __('Privacy Policy') }}</a> | <a href="#">{{ __('Terms of Service') }}</a></p>
+                <p>&copy; 2025 Sprint Skills. {{ __('about.All rights reserved.') }} | <a href="#">{{ __('about.Privacy Policy') }}</a> | <a href="#">{{ __('about.Terms of Service') }}</a></p>
             </div>
         </div>
     </footer>

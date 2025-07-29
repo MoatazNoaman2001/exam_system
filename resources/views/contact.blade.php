@@ -20,27 +20,21 @@
             <nav>
                 <div class="logo">
                     <i class="fas fa-graduation-cap"></i>
-                    <span>{{ __('Sprint Skills') }}</span>
+                    <span>Sprint Skills</span>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="#features">{{ __('lang.Features') }}</a></li>
-                    <li><a href="#study-plan">{{ __('lang.Study Plan') }}</a></li>
-                    <li><a href="#practice-exams">{{ __('lang.Practice Exams') }}</a></li>
-                    <li><a href="#progress-tracking">{{ __('lang.Progress') }}</a></li>
-                    <li><a href="#testimonials">{{ __('lang.Testimonials') }}</a></li>
+                    <li><a href="{{ url('/') }}">{{ __('Home') }}</a></li>
+                    <li><a href="{{ url('/about') }}" class="active">{{ __('About') }}</a></li>
+                    <li><a href="{{ url('/contact') }}">{{ __('Contact') }}</a></li>
+                    <li><a href="#features">{{ __('Features') }}</a></li>
+                    <li><a href="#testimonials">{{ __('Testimonials') }}</a></li>
                 </ul>
-                <div class="header-actions">
-                    <div class="language-switcher">
-                        <a href="{{ route('locale.set', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
-                        <a href="{{ route('locale.set', 'ar') }}" class="{{ app()->getLocale() == 'ar' ? 'active' : '' }}">AR</a>
-                    </div>
-                    <form action="{{route('login')}}" method="GET" style="display: inline-block;">
-                        @csrf
-                        <button class="cta-button" type="submit">{{ __('lang.Get Started') }}</button>
-                    </form>
-                    <div class="mobile-menu">
-                        <i class="fas fa-bars"></i>
-                    </div>
+                <form action="{{route('login')}}" method="GET">
+                    @csrf
+                    <button class="cta-button" type="submit">{{ __('Get Started') }}</button>
+                </form>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
                 </div>
             </nav>
         </div>
@@ -213,10 +207,10 @@
                     <h3>Sprint Skills</h3>
                     <p>{{ __('about.The most comprehensive management education platform with personalized study plans, AI-driven analytics, and bilingual support for Arabic-speaking professionals.') }}</p>
                     <div class="footer-social">
-                        <a href="https://www.facebook.com/pmarabchapter/"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://t.me/+z_AtT8ZlqehmZDhk"><i class="fab fa-telegram"></i></a>
-                        <a href="https://www.linkedin.com/company/pm-arabcommunity/"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://www.instagram.com/pm_arab_chapter/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/pmarabchapter/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://t.me/+z_AtT8ZlqehmZDhk" target="_blank"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.linkedin.com/company/pm-arabcommunity/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/pm_arab_chapter/" target="_blank"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">

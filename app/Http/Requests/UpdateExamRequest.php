@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests;
+
+use App\Http\Requests\StoreExamRequest;
 
 class UpdateExamRequest extends StoreExamRequest
 {

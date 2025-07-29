@@ -913,13 +913,29 @@
             left: 0.7rem;
         }
     }
-    .backcontainer {
+    [dir='rtl'] .backcontainer {
         position: absolute; left: 15px; top: 15px; display: flex; gap: 8px;
         color: gray;
         cursor: pointer;
         text-decoration: none;
         background-color: transparent;
         border: 0px;
+    }       
+    [dir='ltr'] .backcontainer {
+        position: absolute; right: 15px; top: 15px; display: flex; gap: 8px;
+        color: rgb(70, 70, 70);
+        cursor: pointer;
+        text-decoration: none;
+        background-color: transparent;
+        border: 0px;
+    }
+    .backcontainer:hover{
+        color: rgb(17, 17, 111)
+    }
+    .logo-img {
+        width: 60px !important;
+        height: 60px !important;
+        color: white;
     }
 </style>
 
@@ -938,7 +954,7 @@
             <div class="brand-section">
                 <div class="brand-logo">
                     <div class="brand-icon">
-                        <i class="fas fa-graduation-cap"></i>
+                        <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
                     </div>
                 </div>
                 <h1 class="brand-name">Sprint Skills</h1>
@@ -968,8 +984,7 @@
         <!-- Form Half -->
         <div class="form-half">
             <a class="backcontainer" href="{{route('welcome')}}">
-                <p>Home</p>
-                <i class="fa-solid fa-arrow-left"></i>
+                <p>{{__('lang.home')}}</p>
             </a>
             <div class="form-container">
                 

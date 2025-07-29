@@ -80,6 +80,10 @@
             background-color: #007bff;
             color: white;
         }
+        .logo-img {
+            width: 60px !important;
+            height: 60px !important;
+        }
     </style>
 </head>
 <body>
@@ -88,7 +92,7 @@
         <div class="container">
             <nav>
                 <div class="logo">
-                    <i class="fas fa-graduation-cap"></i>
+                    <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
                     <span>{{ __('Sprint Skills') }}</span>
                 </div>
                 <ul class="nav-links">
@@ -173,7 +177,7 @@
     <section class="study-plan" id="study-plan">
         <div class="container">
             <div class="section-title">
-                <h2>{{ __('lang.Personalized Study Plan') }}</h2>
+                <h2  style="color: white !important;">{{ __('lang.Personalized Study Plan') }}</h2>
                 <p>{{ __('lang.Tell us your exam date and we\'ll create a customized study schedule that fits your timeline.') }}</p>
             </div>
             <div class="plan-container">
@@ -341,10 +345,10 @@
                     <h3>{{ __('Sprint Skills') }}</h3>
                     <p>{{ __('lang.footer_text') }}</p>
                     <div class="footer-social">
-                        <a href="https://www.facebook.com/pmarabchapter/"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://t.me/+z_AtT8ZlqehmZDhk"><i class="fab fa-telegram"></i></a>
-                        <a href="https://www.linkedin.com/company/pm-arabcommunity/"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://www.instagram.com/pm_arab_chapter/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/pmarabchapter/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://t.me/+z_AtT8ZlqehmZDhk" target="_blank"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.linkedin.com/company/pm-arabcommunity/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/pm_arab_chapter/" target="_blank"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">
