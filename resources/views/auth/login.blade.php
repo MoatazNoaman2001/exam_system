@@ -959,7 +959,7 @@
             <div class="brand-section">
                 <div class="brand-logo">
                     <div class="brand-icon">
-                        <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
+                        <img class="logo-img" src="{{asset('images/Sprint_Skills_logo_White.png')}}" alt="logo">
                     </div>
                 </div>
                 <h1 class="brand-name">Sprint Skills</h1>

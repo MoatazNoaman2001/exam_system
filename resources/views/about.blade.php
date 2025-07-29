@@ -21,7 +21,7 @@
         <div class="container">
             <nav>
                 <div class="logo">
-                    <i class="fas fa-graduation-cap"></i>
+                    <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
                     <span>Sprint Skills</span>
                 </div>
                 <ul class="nav-links">
@@ -161,7 +161,7 @@
                 </div>
                 <div class="value-item">
                     <div class="value-icon">
-                        <i class="fas fa-graduation-cap"></i>
+                        <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
                     </div>
                     <h3>{{ __('about.Continuous Learning') }}</h3>
                 </div>

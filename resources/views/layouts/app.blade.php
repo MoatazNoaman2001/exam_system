@@ -32,6 +32,7 @@
                 margin-left: 0px !important;
                 padding: 0px !important;
             }
+
         </style>
     @endguest
 
@@ -78,7 +79,7 @@
                         @endif
                     @endauth
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        <i class="fas fa-graduation-cap me-1"></i>
+                        <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
