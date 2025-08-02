@@ -117,6 +117,7 @@ class AdminExamController extends Controller
             $exam = Exam::with(['examQuestions.answers'])
                 ->findOrFail($examId);
 
+            // dd(strval($exam));
             return view('admin.exams.edit', compact('exam'));
         } catch (\Exception $e) {
             Log::error('Error loading exam for edit', ['exam_id' => $examId, 'error' => $e->getMessage()]);

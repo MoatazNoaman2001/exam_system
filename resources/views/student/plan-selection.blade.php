@@ -32,7 +32,7 @@
                                 <strong>{{ __('lang.6_8_weeks') }}</strong>
                             </div>
                             <div class="recommendation-item">
-                                <i class="fas fa-graduation-cap"></i>
+                                <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
                                 <span>{{ __('lang.beginners') }}</span>
                                 <strong>{{ __('lang.8_10_weeks') }}</strong>
                             </div>

@@ -13,7 +13,6 @@
         <div class="header-content">
             <div class="header-left">
                 <h1 class="page-title">{{ __('exams.create.page_title') }}</h1>
-                <p class="page-subtitle">{{ __('exams.create.page_subtitle') }}</p>
             </div>
             <div class="header-actions">
                 <a href="{{ route('admin.exams') }}" class="btn btn-secondary">
@@ -220,11 +219,3 @@
     };
 </script>
 @endsection
-
-@push('scripts')
-
-
-@endpush
-
-@push('styles')
-@endpush

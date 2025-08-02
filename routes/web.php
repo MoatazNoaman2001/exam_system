@@ -90,7 +90,7 @@ Route::get('/locale-test', function() {
 Route::get("/", [WelcomeController::class , "root"])->name('welcome');
 Route::view("/contact", "contact")->name('contact');
 Route::post("/contact", [ContactUsController::class, 'store'])->name('contact.store');
-
+Route::view('/privacy', 'privacy');
 Route::view("/home", "home")->middleware('auth')->name('home');
 
 // Route::get('/admin', [DashboardController::class, 'index'])

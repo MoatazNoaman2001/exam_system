@@ -228,6 +228,33 @@ nav {
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+}
+ /* Language switcher styles */
+ .language-switcher {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.language-switcher a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+.language-switcher a:hover {
+    background-color: #f0f0f0;
+}
+.language-switcher a.active {
+    background-color: #007bff;
+    color: white;
+}
 .feature-icon {
     width: 80px;
     height: 80px;
@@ -262,6 +289,17 @@ nav {
     align-items: center;
     justify-content: space-between;
     margin-top: 50px;
+}
+
+.logo-img {
+    width: 60px !important;
+    height: 60px !important;
+    color: white;
+    -webkit-user-drag: none !important;
+    user-select: none !important;
+    -moz-user-select: none !important;
+    -webkit-user-select: none !important;
+    -ms-user-select: none !important;
 }
 
 .plan-image {
