@@ -280,15 +280,15 @@ From project and program management to leadership and strategy, our tools and re
 
     "Sections"=> "Sections",
     "Chapters"=> "Chapters 📚",
-    "Chapters Description"=> "Organized lessons aimed at clarifying the PMP guide with requirements and activities for each detail",
+    "Chapters Description"=> "Learning units based on chapters of the official guide, including in-depth explanations and exercises to consolidate concepts",
     "Chapter"=> "Chapter",
     "Completed"=> "Completed",
     "Fields"=> "Domain 🎯",
-    "Fields Description"=> "Three domains covering the essential exam standards",
+    "Fields Description"=> "Three focus areas cover the core of the exam criteria: people, processes, and the business environment.",
     "Fields Label"=> "Domains",
     "Achieved"=> "Achieved",
     "Tests"=> "Exams 📝",
-    "Tests Description"=> "Comprehensive exams to simulate the real PMP exam experience",
+    "Tests Description"=> "Comprehensive tests that accurately simulate the official PMP exam environment and measure your actual readiness.",
     "Tests Label"=> "Exams",
     "Coming Soon Message"=> "This section will be activated soon",
     "language" => "Language",
@@ -337,7 +337,7 @@ From project and program management to leadership and strategy, our tools and re
     "In Progress"=> "In Progress",
     "Not Started"=> "Not Started",
     "Locked"=> "Locked",
-    "Minutes"=> "{count} Minute | {count} Minutes",
+    "Minutes"=> "{count} Sec | {count} Minutes",
     "easy"=> "Easy",
     "medium"=> "Medium",
     "hard"=> "Hard",
@@ -357,7 +357,7 @@ From project and program management to leadership and strategy, our tools and re
         'choose_your_plan' => 'Choose Your Study Plan',
         'subtitle' => 'Select a plan that matches your experience level and timeline',
         'pmi_recommendation' => 'PMI ATPs Recommendation',
-        'pmi_recommendation_text' => 'Our plans are built on PMI ATPs recommendations that suggest 6-8 weeks for experienced learners and 8-10 weeks for beginners.',
+        'pmi_recommendation_text' => 'This plan is designed based on the guidelines of PMI-Authorized Training Partners (PMI-ATPs), who recommend a study duration of 2–6 weeks for experienced learners and 8–10 weeks for beginners.',
         'experienced_learners' => 'For experienced learners:',
         'beginners' => 'For beginners:',
         '6_8_weeks' => '6-8 weeks',
@@ -1259,6 +1259,20 @@ From project and program management to leadership and strategy, our tools and re
     // Legal Disclaimer
     'categories_disclaimer' => 'The categories presented on this report were created to help you see where you may need additional preparation. They should not be used or interpreted for other purposes, such as, job placement decisions.',
     'categories_disclaimer_prefix' => '**',
+
+    
+    
+    "arabic"=> "Arabic",
+    "english"=> "English",
+
+
+
+     'Home' => 'Home',
+    'About' => 'About',
+    'Contact' => 'Contact',
+    'Features' => 'Features',
+    'Testimonials' => 'Testimonials',
+
 ];
 
 

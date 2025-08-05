@@ -13,9 +13,17 @@
                 <div class="leaderboard__inner-frame2">
                     <div class="leaderboard__top-frame">
                         <div class="leaderboard__title">{{ __('lang.leaderboard') }}</div>
-                        <div class="leaderboard__arrow-right">
-                            <img class="leaderboard__vuesax-outline-arrow-right" src="{{ asset('images/arrow-left.png') }}" alt="{{ __('lang.arrow_right') }}" />
-                        </div>
+                     <div class="leaderboard__arrow-right">
+    <a href="{{ route('student.settings.index') }}">
+        <img class="leaderboard__vuesax-outline-arrow-right" 
+             src="{{ asset('images/arrow-left.png') }}" 
+             alt="{{ __('lang.arrow_right') }}"
+             style="{{ app()->getLocale() == 'ar' ? 'transform: scaleX(-1);' : '' }}" />
+    </a>
+</div>
+
+
+
                     </div>
                 </div>
             </div>

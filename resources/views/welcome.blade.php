@@ -291,7 +291,7 @@
     </section>
 
     <!-- Insightful Progress Tracking Section -->
-    <section class="progress-tracking" id="progress-tracking">
+    <!-- <section class="progress-tracking" id="progress-tracking">
         <div class="container">
             <div class="progress-container">
                 <div class="progress-content">
@@ -308,7 +308,7 @@
                 </div> --}}
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Testimonials Section -->
     <section class="testimonials" id="testimonials">
@@ -327,17 +327,18 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta" id="cta">
-        <div class="container">
-            <h2>{{ __('lang.Start Your Learning Journey Today') }}</h2>
-            <p>{{ __('lang.Practical knowledge. Real impact. All in one platform.') }}</p>
-            <form action="{{route('login')}}" method="GET" style="display: inline-block;">
-                @csrf
-                <button class="cta-button white" type="submit">{{ __('lang.Let\'s Get Started') }}</button>
-            </form>
-        </div>
-    </section>
+   <!-- CTA Section -->
+<section class="cta" id="cta">
+    <div class="container">
+        <h2>{{ __('lang.Start Your Learning Journey Today') }}</h2>
+        <p>{{ __('lang.Practical knowledge. Real impact. All in one platform.') }}</p>
+        <form action="{{route('login')}}" method="GET" style="display: inline-block;">
+                        @csrf
+                        <button class="cta-button" type="submit">{{ __('lang.Get Started') }}</button>
+                    </form>
+
+    </div>
+</section>
 
     <!-- Footer -->
     <footer>
@@ -356,9 +357,7 @@
                 <div class="footer-column">
                     <h3>{{ __('lang.Resources') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="#">{{ __('lang.PMP Exam Guide') }}</a></li>
-                        <li><a href="#">{{ __('lang.Study Tips') }}</a></li>
-                        <li><a href="#">{{ __('lang.PMBOK Summary') }}</a></li>
+                
                         <li><a href="#">{{ __('lang.FAQ') }}</a></li>
                     </ul>
                 </div>
@@ -366,7 +365,6 @@
                     <h3>{{ __('lang.Company') }}</h3>
                     <ul class="footer-links">
                         <li><a href="{{route('about')}}">{{ __('lang.About Us') }}</a></li>
-                        <li><a href="#">{{ __('lang.Our Instructors') }}</a></li>
                         <li><a href="{{route('contact')}}">{{ __('lang.Contact Us') }}</a></li>
                     </ul>
                 </div>

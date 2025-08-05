@@ -247,20 +247,23 @@
                             <span class="link-text">{{ __('lang.notifications') }}</span>
                         </a>
                     
-                        <div class="language-section border-top border-light border-opacity-25 mt-3 pt-3 my-3">
-                            <small class="text-white-50 ps-3 d-block mb-2">{{ __('Language') }}</small>
-                            
-                            <a href="{{ route('locale.set', 'ar') }}" 
-                               class="sidebar-link {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
-                                <i class="fas fa-language me-3"></i>العربية
-                            </a>
+                       <div class="language-section border-top border-light border-opacity-25 mt-3 pt-3 my-3">
+    <small class="text-white-50 ps-3 d-block mb-2">{{ __('Language') }}</small>
+    
+    <a href="{{ route('locale.set', 'ar') }}" 
+       class="sidebar-link {{ app()->getLocale() == 'ar' ? 'active' : '' }}"
+       data-title="{{ __('lang.arabic') }}">
+        <i class="fas fa-language "></i>
+        <span class="link-text">{{ __('lang.arabic') }}</span>
+    </a>
 
-                            
-                            <a href="{{ route('locale.set', 'en') }}" 
-                               class="sidebar-link {{ app()->getLocale() == 'en' ? 'active' : '' }}">
-                                <i class="fas fa-language me-3"></i>English
-                            </a>
-                        </div>
+    <a href="{{ route('locale.set', 'en') }}" 
+       class="sidebar-link {{ app()->getLocale() == 'en' ? 'active' : '' }}"
+       data-title="{{ __('lang.english') }}">
+        <i class="fas fa-language"></i>
+        <span class="link-text">{{ __('lang.english') }}</span>
+    </a>
+</div>
                         
                         
                         <form id="logout-form-student" action="{{ route('logout') }}" method="POST" class="d-flex">

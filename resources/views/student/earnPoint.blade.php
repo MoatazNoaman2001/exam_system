@@ -236,8 +236,8 @@
 
     <div class="rewards-container">
         <div class="rewards-header">
-            <h1>طرق الحصول على النقاط</h1>
-            <p>اكتشف كيف يمكنك كسب النقاط وتفعيل إمكانياتك الكاملة</p>
+            <h1>{{ __('rewards.title') }}</h1>
+            <p>{{ __('rewards.subtitle') }}</p>
         </div>
 
         <div class="rewards-grid">
@@ -249,8 +249,8 @@
                     <span>50+</span>
                     <i class="fas fa-book-open reward-icon"></i>
                 </div>
-                <h3 class="reward-title">إكمال درس</h3>
-                <p class="reward-desc">احصل على نقاط عند إكمال أي درس في المنصة التعليمية</p>
+                <h3 class="reward-title">{{ __('rewards.complete_lesson') }} </h3>
+                <p class="reward-desc"> {{ __('rewards.complete_lesson_desc') }}  </p>
                </a>
               </div>
    
@@ -263,8 +263,8 @@
                     <span>80+</span>
                     <i class="fas fa-book-open reward-icon"></i>
                 </div>
-                <h3 class="reward-title">إكمال مجال</h3>
-                <p class="reward-desc">احصل على نقاط عند إكمال أي مجال في المنصة التعليمية</p>
+                <h3 class="reward-title">{{ __('rewards.complete_domain') }}</h3>
+                <p class="reward-desc">{{ __('rewards.complete_domain_desc') }} </p>
                </a>
               </div>
 
@@ -276,8 +276,8 @@
                     <span>100+</span>
                     <i class="fas fa-clipboard-check reward-icon"></i>
                 </div>
-                <h3 class="reward-title">إكمال اختبار</h3>
-                <p class="reward-desc">احصل على مكافأة كبيرة عند إكمال اختبار بنجاح</p>
+                <h3 class="reward-title">{{ __('rewards.complete_exam') }}</h3>
+                <p class="reward-desc">{{ __('rewards.complete_exam_desc') }}</p>
            </a>
               </div>
                             
@@ -290,8 +290,8 @@
                     <span>75+</span>
                     <i class="fas fa-question-circle reward-icon"></i>
                 </div>
-                <h3 class="reward-title">حل 20 سؤال تدريب</h3>
-                <p class="reward-desc">احصل على مكافأة كبيرة عند حل 20 سؤال تدريبي في أي مسار تعليمي</p>
+                <h3 class="reward-title"> {{ __('rewards.solve_questions') }}</h3>
+                <p class="reward-desc">{{ __('rewards.solve_questions_desc') }}</p>
               </a>
               </div>
                                                     
@@ -301,8 +301,8 @@
                     <span>30+</span>
                     <i class="fas fa-trophy reward-icon"></i>
                 </div>
-                <h3 class="reward-title">تحقيق إنجاز</h3>
-                <p class="reward-desc">احصل على نقاط عند تحقيق أي إنجاز في ملفك الشخصي</p>
+                <h3 class="reward-title"> {{ __('rewards.achievement') }}</h3>
+                <p class="reward-desc">{{ __('rewards.achievement_desc') }}</p>
             </div>
             
             <div class="reward-card">
@@ -310,17 +310,20 @@
                     <span>20+</span>
                     <i class="fas fa-calendar-check reward-icon"></i>
                 </div>
-                <h3 class="reward-title">دراسة يومية متتالية (3 أيام)</h3>
-                <p class="reward-desc">احصل على نقاط عند الدراسة لمدة 3 أيام متتالية بدون انقطاع</p>
+                <h3 class="reward-title">{{ __('rewards.daily_study') }}</h3>
+                <p class="reward-desc">{{ __('rewards.daily_study_desc') }}</p>
             </div>
         </div>
         
-        <!-- زر الرجوع في الجزء السفلي -->
         <div class="back-btn-container">
-            <a href="{{ route('student.achievements') }}" class="back-btn">
-    <i class="fas fa-arrow-left"></i> العودة إلى الإنجازات
-</a>
-        </div>
+    <a href="{{ route('student.achievements') }}" class="back-btn">
+        @if(app()->getLocale() == 'ar')
+            {{ __('rewards.back_to_achievements') }} <i class="fas fa-arrow-right"></i>
+        @else
+            <i class="fas fa-arrow-left"></i> {{ __('rewards.back_to_achievements') }}
+        @endif
+    </a>
+</div>
     </div>
     
     <script>

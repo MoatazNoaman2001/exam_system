@@ -71,7 +71,6 @@
         align-items: center;
         color: white;
         text-align: center;
-        /* padding: 2rem; */
         height: 100vh;
         width: 50%;
     }
@@ -263,6 +262,7 @@
         width: 100%;
         max-width: 400px;
         position: relative;
+        top:50px
     }
 
     .form-header {
@@ -740,7 +740,6 @@
             font-size: 0.9rem;
         }
 
-        /* Hide floating shapes on mobile for better performance */
         .floating-shapes {
             display: none;
         }
@@ -829,7 +828,6 @@
         }
     }
 
-    /* Landscape orientation on mobile */
     @media (max-width: 992px) and (orientation: landscape) {
         .login-wrapper {
             flex-direction: row;
@@ -885,7 +883,6 @@
         margin-left: 0.25rem;
     }
 
-    /* Mobile RTL adjustments */
     @media (max-width: 768px) {
         [dir="rtl"] .form-control-modern {
             padding: 0.75rem 2.5rem 0.75rem 0.75rem;
@@ -912,26 +909,95 @@
         [dir="rtl"] .password-toggle {
             left: 0.7rem;
         }
+        .form-container{
+            top:20px
+        }
     }
-    [dir='rtl'] .backcontainer {
-        position: absolute; left: 15px; top: 15px; display: flex; gap: 8px;
-        color: gray;
-        cursor: pointer;
+
+    /* Top Bar and Language Switcher */
+    .top-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 1rem;
+        justify-content: flex-start;
+        position: absolute;
+        top:15px;
+        left: 15px;
+    
+    }
+
+    .backcontainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-decoration: none;
-        background-color: transparent;
-        border: 0px;
-    }       
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        background: var(--gray-100);
+        color: var(--gray-700);
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: 500;
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .backcontainer:hover {
+        background: var(--gray-200);
+        color: var(--primary-blue);
+        transform: translateY(-1px);
+    }
+
+    .backcontainer.active {
+        background: var(--primary-blue);
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .backcontainer p {
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    [dir="rtl"] .backcontainer {
+        font-family: 'Tajawal', 'Cairo', sans-serif;
+    }
+    [dir="ltr"] .top-bar  {
+       left:580px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+        .top-bar {
+            width: 70%;
+            height: inherit;
+            gap: 2px;
+            padding: 0.75rem;
+            flex-wrap: wrap;
+          
+           
+        }
+
+        .backcontainer {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+            min-width: 35px;
+        }
+    }
+
+    /* Remove conflicting styles */
+    [dir='rtl'] .backcontainer,
     [dir='ltr'] .backcontainer {
-        position: absolute; right: 15px; top: 15px; display: flex; gap: 8px;
-        color: rgb(70, 70, 70);
-        cursor: pointer;
-        text-decoration: none;
-        background-color: transparent;
-        border: 0px;
+        position: static;
+        border: none;
     }
-    .backcontainer:hover{
-        color: rgb(17, 17, 111)
+
+    .language-switcher {
+        display: none; /* Hide the old language switcher */
     }
+
     .logo-img {
         width: 240px !important;
         height: 240px !important;
@@ -942,6 +1008,44 @@
         -webkit-user-select: none !important;
         -ms-user-select: none !important;
     }
+
+    .top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 10px 15px;
+    z-index: 2000;
+    border-bottom: 1px solid #eee;
+}
+.form-half {
+    padding-top: 60px; 
+}
+.lang-dropdown {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .lang-menu {
+        display: none;
+    }
+    .lang-dropdown {
+        display: block;
+        width: 100%;
+    }
+    .lang-dropdown select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+}
+
 </style>
 
 <div class="login-container">
@@ -957,8 +1061,7 @@
             </div>
             
             <div class="brand-section">
-                <img class="logo-img" src="{{asset('images/Sprint_Skills_logo_White.png')}}" alt="logo">
-
+                <img class="logo-img" src="{{ asset('images/Sprint_Skills_logo_White.png') }}" alt="logo">
                 <h1 class="brand-name">Sprint Skills</h1>
             </div>
             
@@ -985,11 +1088,22 @@
 
         <!-- Form Half -->
         <div class="form-half">
-            <a class="backcontainer" href="{{route('welcome')}}">
-                <p>{{__('lang.home')}}</p>
-            </a>
+            <div class="top-bar">
+                <a href="{{ route('welcome') }}" 
+                   class="backcontainer {{ Route::currentRouteName() == 'welcome' ? 'active' : '' }}">
+                    <p>{{ __('lang.home') }}</p>
+                </a>
+                <a href="{{ route('locale.set', 'en') }}" 
+                   class="backcontainer {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                    <p>EN</p>
+                </a>
+                <a href="{{ route('locale.set', 'ar') }}" 
+                   class="backcontainer {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
+                    <p>AR</p>
+                </a>
+            </div>
+           
             <div class="form-container">
-                
                 <div class="form-header">
                     <h2 class="form-title">{{ __('lang.sign_in') }}</h2>
                     <p class="form-subtitle">{{ __('lang.enter_credentials_to_access') }}</p>

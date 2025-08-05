@@ -293,6 +293,15 @@ nav {
   animation: float3 7s ease-in-out infinite;
 }
 
+.hero-img-1,
+.hero-img-2,
+.hero-img-3 {
+  filter: none !important; 
+  backdrop-filter: none !important; 
+  opacity: 1 !important;
+  z-index: 10; 
+}
+
 @keyframes float1 {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-15px) rotate(1deg); }
@@ -565,6 +574,19 @@ nav {
   z-index: 1;
   opacity: 0.8;
   animation: planFloat2 6s ease-in-out infinite;
+}
+
+.plan-img,
+.plan-img-main,
+.plan-img-bg {
+  filter: none !important;
+  backdrop-filter: none !important; 
+  opacity: 1 !important; 
+  z-index: 10 !important; 
+}
+
+.design-half::before {
+  opacity: 0 !important; 
 }
 
 @keyframes planFloat1 {
@@ -1057,7 +1079,7 @@ nav {
   right: 0;
   bottom: 0;
   background: linear-gradient(135deg, rgba(44, 62, 80, 0.8) 0%, rgba(52, 152, 219, 0.6) 50%, rgba(41, 128, 185, 0.8) 100%);
-  z-index: 1;
+ 
 }
 
 .cta h2 {
