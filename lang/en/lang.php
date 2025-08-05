@@ -470,6 +470,7 @@ From project and program management to leadership and strategy, our tools and re
     'matching' => 'Matching',
     'mixed' => 'Mixed',
 
+    'sec_per_q' => 'Sec/Q',
     // Time
     'time' => 'Time',
     'duration' => 'Duration',

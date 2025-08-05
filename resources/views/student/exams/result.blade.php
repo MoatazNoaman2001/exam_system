@@ -439,6 +439,10 @@
             align-self: flex-start;
         }
     }
+
+    small {
+        padding: 0px 6px;
+    }
 </style>
 
 <div class="results-container" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
@@ -468,7 +472,8 @@
                     <small style="display: block; font-size: 0.7rem; opacity: 0.8;">{{ __('lang.below_target_range') }}</small>
                 </div>
                 <div class="performance-section section-target" style="width: 25%;">
-                    {{ __('lang.target') }}
+                    {{ __('lang.target') }}   
+                    
                     <small style="display: block; font-size: 0.7rem; opacity: 0.8;">{{ __('lang.target_range') }}</small>
                 </div>
                 <div class="performance-section section-above-target" style="width: 25%;">
@@ -697,9 +702,9 @@
                                         {{ app()->getLocale() === 'ar' ? ($answer->{'answer-ar'} ?? $answer->answer) : $answer->answer }}
                                     </div>
                                     
-                                    {{-- <div class="answer-text">
-                                        {{ app()->getLocale() === 'ar' ? ($answer->{'answer-ar'} ?? $answer->reason) : $answer->reason }}
-                                    </div> --}}
+                                    <div class="answer-text">
+                                        {{ app()->getLocale() === 'ar' ? $answer->{'reason-ar'} : $answer->reason }}
+                                    </div>
                                     {{-- Show explanation if answer is correct or was selected incorrectly --}}
                                     @if(($isCorrect || $isSelected) && ($answer->reason || $answer->{'reason-ar'}))
                                         <div class="answer-explanation {{ $isCorrect ? 'explanation-correct' : 'explanation-incorrect' }}">

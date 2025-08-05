@@ -58,4 +58,6 @@ return [
     'CTA Text' => 'Join thousands of successful PMP candidates and take the first step.',
     'Get Started' => 'Get Started',
     'Get Started Today' => 'Get Started Today',
+
+    'Contact' => 'Contact',
 ];

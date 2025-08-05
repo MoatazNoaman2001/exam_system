@@ -674,7 +674,7 @@
                             </div>
                             <div class="stat-item">
                                 <span class="stat-number">{{ number_format($exam->time / $exam->number_of_questions, 1) }}</span>
-                                <span class="stat-label">{{ __('lang.min_per_q') }}</span>
+                                <span class="stat-label">{{ __('lang.sec_per_q') }}</span>
                             </div>
                         </div>
                         

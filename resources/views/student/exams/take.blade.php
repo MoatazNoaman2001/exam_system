@@ -142,9 +142,9 @@
                             <div class="answer-text">
                                 {{ $answer->answer_text }}
                                 <!-- Debug info (remove in production) -->
-                                <small class="text-muted" style="display: block; font-size: 10px;">
+                                {{-- <small class="text-muted" style="display: block; font-size: 10px;">
                                     UUID: {{ $answerUuid }} | ID: {{ $answer->id }}
-                                </small>
+                                </small> --}}
                             </div>
                         </div>
                         
@@ -161,7 +161,7 @@
                 @endforeach
                 
                 <!-- Debug Section (remove in production) -->
-                <div class="mt-3 p-2 bg-light rounded" style="font-size: 12px;">
+                {{-- <div class="mt-3 p-2 bg-light rounded" style="font-size: 12px;">
                     <strong>Debug Info:</strong><br>
                     Question ID: {{ $currentQuestion->id }}<br>
                     Question Type: {{ $currentQuestion->type }}<br>
@@ -174,7 +174,7 @@
                             <br>{{ $loop->iteration }}. UUID: "{{ $answer->uuid ?? 'NO_UUID' }}" | ID: {{ $answer->id }}
                         @endforeach
                     </div>
-                </div>
+                </div> --}}
             @endif
         </div>
 

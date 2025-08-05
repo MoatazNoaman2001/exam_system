@@ -343,6 +343,9 @@ return [
     "chapter_progress" => "تقدم الفصل",
     "domain_progress" => "تقدم المجال",
 
+
+    'sec_per_q' => 'ثاني/سؤال',
+
     "Overall Progress"=> "التقدم العام",
     "Slides Completed"=> "{count} شريحة مكتملة | {count} شرائح مكتملة",
     "Search Slides"=> "البحث في الشرائح",
@@ -689,6 +692,8 @@ return [
         'too_long' => 'طويل جداً',
         'invalid_email' => 'عنوان بريد إلكتروني غير صالح',
         'invalid_phone' => 'رقم هاتف غير صالح',
+
+        'Contact' => 'تواصل معنا',
     
         // Pagination - ترقيم الصفحات
         'first' => 'الأول',

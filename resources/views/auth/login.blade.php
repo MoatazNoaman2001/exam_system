@@ -964,9 +964,6 @@
     [dir="rtl"] .backcontainer {
         font-family: 'Tajawal', 'Cairo', sans-serif;
     }
-    [dir="ltr"] .top-bar  {
-       left:580px;
-    }
 
     /* Responsive adjustments */
     @media (max-width: 767.98px) {
@@ -1014,13 +1011,11 @@
     top: 0;
     left: 0;
     right: 0;
-    background: #fff;
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     padding: 10px 15px;
     z-index: 2000;
-    border-bottom: 1px solid #eee;
 }
 .form-half {
     padding-top: 60px; 

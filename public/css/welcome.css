@@ -249,7 +249,7 @@ nav {
 /* Dynamic Hero Images */
 .hero-image {
   position: relative;
-  height: 600px;
+  height: 400px;
   animation: slideInRight 1s ease-out;
 }
 
@@ -547,7 +547,7 @@ nav {
 
 .plan-image {
   position: relative;
-  height: 600px;
+  height: 400px;
 }
 
 .plan-img {
@@ -1371,7 +1371,6 @@ footer::before {
   }
   
   .hero-image {
-      height: 400px;
       margin-top: 3rem;
   }
   

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ __('contact.Page Title') }}</title>
-    <link rel="shortcut icon" href="{{asset('images/Sprint_Skills.ico')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{asset('images/Sprint_Skills.ico')}}" type="image/x-icon"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/root-welcome.css') }}">
@@ -55,7 +55,7 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>{{ __('contact.Contact PMP Master') }}</h1>
+                    <h1>{{ __('contact.Contact') }} Sprint Skills</h1>
                     <p>{{ __('contact.We are here to help') }}</p>
                 </div>
             </div>
