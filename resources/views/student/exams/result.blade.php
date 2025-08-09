@@ -702,9 +702,6 @@
                                         {{ app()->getLocale() === 'ar' ? ($answer->{'answer-ar'} ?? $answer->answer) : $answer->answer }}
                                     </div>
                                     
-                                    <div class="answer-text">
-                                        {{ app()->getLocale() === 'ar' ? $answer->{'reason-ar'} : $answer->reason }}
-                                    </div>
                                     {{-- Show explanation if answer is correct or was selected incorrectly --}}
                                     @if(($isCorrect || $isSelected) && ($answer->reason || $answer->{'reason-ar'}))
                                         <div class="answer-explanation {{ $isCorrect ? 'explanation-correct' : 'explanation-incorrect' }}">

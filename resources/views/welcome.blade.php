@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/welcome.css')}}">
+    {{-- <script src="{{asset('js/welcome.js')}}" defer></script> --}}
     <style>
         /* Fix image aspect ratio in progress tracking */
         .hero-text h1 {
@@ -358,8 +359,9 @@
                     <h3>{{ __('lang.Resources') }}</h3>
                     <ul class="footer-links">
                 
-                        <li><a href="#">{{ __('lang.FAQ') }}</a></li>
-                    </ul>
+                        <ul class="footer-links">
+                            <li><a href="{{ route('faq') }}">{{ __('lang.FAQ') }}</a></li>
+                        </ul>                    </ul>
                 </div>
                 <div class="footer-column">
                     <h3>{{ __('lang.Company') }}</h3>

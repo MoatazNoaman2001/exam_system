@@ -15,7 +15,6 @@ body {
 }
 
 .container {
-  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -390,13 +389,8 @@ nav {
   right: 0;
   bottom: 0;
   background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(47,128,237,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(47,128,237,0.1)"/></svg>');
-  animation: patternMove 15s linear infinite;
 }
 
-@keyframes patternMove {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(20px, 20px); }
-}
 
 .features-grid {
   display: grid;
@@ -1304,53 +1298,59 @@ footer::before {
 }
 
 @media (max-width: 768px) {
-  /* Header Mobile */
+
+  .container {
+    width: 100% !important; /* Override 90% to ensure full width */
+    padding: 0 15px;
+  }
+
   .nav-links {
-      position: fixed;
-      top: 80px;
-      left: -100%;
-      width: 100%;
-      height: calc(100vh - 80px);
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(20px);
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      padding-top: 3rem;
-      transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      z-index: 999;
+    position: fixed;
+    top: 80px;
+    left: -100%;
+    width: 100vw; /* Use viewport width to prevent overflow */
+    height: calc(100vh - 80px);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 3rem;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Faster transition */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    overflow-x: hidden; /* Prevent horizontal overflow */
   }
-  
+
   .nav-links.active {
-      left: 0;
+    left: 0;
   }
-  
+
   .nav-links li {
-      margin: 1.5rem 0;
-      transform: translateY(20px);
-      opacity: 0;
-      transition: all 0.3s ease;
+    margin: 1.5rem 0;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    /* transition-delay: calc(var(--i, 0) * 0.05s); Faster item animation */
   }
-  
+
   .nav-links.active li {
-      transform: translateY(0);
-      opacity: 1;
-      transition-delay: calc(var(--i, 0) * 0.1s);
+    transform: translateY(0);
+    opacity: 1;
   }
-  
+
   .nav-links a {
-      font-size: 1.3rem;
-      font-weight: 600;
+    font-size: 1.3rem;
+    font-weight: 600;
   }
-  
+
   .mobile-menu {
-      display: block;
-      z-index: 1001;
+    display: block;
+    z-index: 1001;
   }
-  
+
   .header-actions .cta-button {
-      display: none;
+    display: none;
   }
   
   /* Hero Mobile */
@@ -1676,6 +1676,8 @@ footer::before {
 .mb-4 {
   margin-bottom: 2rem;
 }
+
+
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {

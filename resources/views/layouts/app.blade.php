@@ -6,24 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    <link rel="shortcut icon" href="{{asset('images/Sprint_Skills.ico')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('images/Sprint_Skills.ico') }}" type="image/x-icon">
 
     <!-- External Scripts and Fonts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700&family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700&family=Cairo:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <!-- Vite Assets -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    
+
     <!-- Custom CSS File -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     @auth
-    <link rel="stylesheet" href="{{ asset('css/authenticated-layout.css') }}">
-    @endauth    
+        <link rel="stylesheet" href="{{ asset('css/authenticated-layout.css') }}">
+    @endauth
 
 
     @guest
@@ -33,18 +35,16 @@
                 margin-left: 0px !important;
                 padding: 0px !important;
             }
-
         </style>
     @endguest
 
     @auth
-        @if (auth()->user() && auth()->user()->role === "admin")
-        <style>
-            .main-content {
-                padding: 0px 10px !important;
-            }
-        </style>
-            
+        @if (auth()->user() && auth()->user()->role === 'admin')
+            <style>
+                .main-content {
+                    padding: 0px 10px !important;
+                }
+            </style>
         @endif
     @endauth
     <!-- App Configuration for JavaScript -->
@@ -80,10 +80,11 @@
                         @endif
                     @endauth
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
+                        <img class="logo-img" src="{{ asset('images/Sprint_Skills_logo.png') }}" alt="logo">
                         {{ config('app.name', 'Laravel') }}
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -124,7 +125,7 @@
                                         </span>
                                     </div>
                                     <div class="vr d-none d-sm-inline-block" style="height: 20px;"></div>
-                                   
+
                                 </div>
                             @endguest
                         </div>
@@ -184,6 +185,16 @@
                             <i class="fas fa-clipboard-check"></i>
                             <span class="link-text">{{ __('lang.test_attempts') }}</span>
                         </a>
+                        <a href="{{ route('admin.contact.index') }}"
+                            class="sidebar-link {{ request()->routeIs('admin.contact*') ? 'active' : '' }}">
+                            <i class="fas fa-clipboard-check"></i>
+                            <span class="link-text">{{ __('lang.contacts') }}</span>
+                        </a>
+                        <a href="{{ route('admin.faq.index') }}"
+                            class="sidebar-link {{ request()->routeIs('admin.faq*') ? 'active' : '' }}">
+                            <i class="fas fa-clipboard-check"></i>
+                            <span class="link-text">{{ __('lang.faq') }}</span>
+                        </a>
                         <a href="{{ route('admin.notifications') }}"
                             class="sidebar-link {{ request()->routeIs('admin.notifications*') ? 'active' : '' }}">
                             <i class="fas fa-bell"></i>
@@ -192,7 +203,7 @@
                     </div>
                     <!-- Sidebar Footer for Admin -->
                     <div class="sidebar-footer">
-                      
+
                         <a class="btn btn-outline-light w-100" href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form-admin').submit();">
                             <i class="fas fa-sign-out-alt me-2"></i> {{ __('lang.logout') }}
@@ -204,10 +215,11 @@
                 </div>
             @endif
 
-            @if (Auth::user()->role === 'student' && !array_key_exists(request()->route()->getName(), ["student.index" , "student.feature", "login"]))
+            @if (Auth::user()->role === 'student' &&
+                    !array_key_exists(request()->route()->getName(), ['student.index', 'student.feature', 'login']))
                 <!-- Toggle Button -->
-                <button class="sidebar-toggle {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" 
-                        id="studentSidebarToggleBtn" title="Toggle Sidebar">
+                <button class="sidebar-toggle {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" id="studentSidebarToggleBtn"
+                    title="Toggle Sidebar">
                     <i class="fas fa-bars"></i>
                 </button>
 
@@ -218,10 +230,10 @@
                             <i class="fas fa-user-graduate"></i>
                         </div>
                         <h3 class="sidebar-title">{{ __('lang.student_panel') }}</h3>
-                        <p class="sidebar-subtitle">مرحباً {{ Auth::user()->username }}</p> 
+                        <p class="sidebar-subtitle">مرحباً {{ Auth::user()->username }}</p>
                     </div>
                     <div class="sidebar-menu">
-                        
+
                         <a href="{{ route('student.sections') }}"
                             class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}"
                             data-title="{{ __('lang.sections') }}">
@@ -243,33 +255,34 @@
                             class="sidebar-link {{ request()->routeIs('student.notifications*') ? 'active' : '' }}"
                             data-title="{{ __('lang.notifications') }}">
                             <i class="fas fa-bell"></i>
-                            <span class="notification-badge {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" id="sidebarNotificationBadge">0</span>
+                            <span class="notification-badge {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}"
+                                id="sidebarNotificationBadge">0</span>
                             <span class="link-text">{{ __('lang.notifications') }}</span>
                         </a>
-                    
-                       <div class="language-section border-top border-light border-opacity-25 mt-3 pt-3 my-3">
-    <small class="text-white-50 ps-3 d-block mb-2">{{ __('Language') }}</small>
-    
-    <a href="{{ route('locale.set', 'ar') }}" 
-       class="sidebar-link {{ app()->getLocale() == 'ar' ? 'active' : '' }}"
-       data-title="{{ __('lang.arabic') }}">
-        <i class="fas fa-language "></i>
-        <span class="link-text">{{ __('lang.arabic') }}</span>
-    </a>
 
-    <a href="{{ route('locale.set', 'en') }}" 
-       class="sidebar-link {{ app()->getLocale() == 'en' ? 'active' : '' }}"
-       data-title="{{ __('lang.english') }}">
-        <i class="fas fa-language"></i>
-        <span class="link-text">{{ __('lang.english') }}</span>
-    </a>
-</div>
-                        
-                        
+                        <div class="language-section border-top border-light border-opacity-25 mt-3 pt-3 my-3">
+                            <small class="text-white-50 ps-3 d-block mb-2">{{ __('Language') }}</small>
+
+                            <a href="{{ route('locale.set', 'ar') }}"
+                                class="sidebar-link {{ app()->getLocale() == 'ar' ? 'active' : '' }}"
+                                data-title="{{ __('lang.arabic') }}">
+                                <i class="fas fa-language "></i>
+                                <span class="link-text">{{ __('lang.arabic') }}</span>
+                            </a>
+
+                            <a href="{{ route('locale.set', 'en') }}"
+                                class="sidebar-link {{ app()->getLocale() == 'en' ? 'active' : '' }}"
+                                data-title="{{ __('lang.english') }}">
+                                <i class="fas fa-language"></i>
+                                <span class="link-text">{{ __('lang.english') }}</span>
+                            </a>
+                        </div>
+
+
                         <form id="logout-form-student" action="{{ route('logout') }}" method="POST" class="d-flex">
                             @csrf
                             <a href="#" class="sidebar-link" data-title="{{ __('lang.logout') }}"
-                               onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
+                                onclick="event.preventDefault(); document.getElementById('logout-form-student').submit();">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span class="link-text">{{ __('lang.logout') }}</span>
                             </a>
@@ -294,15 +307,20 @@
                         title="{{ __('lang.my_account') }}">
                         <span class="icon-bg"><i class="fas fa-user-cog"></i></span>
                     </a>
-                    
+
                     <!-- Mobile Language Switcher: Simple and always visible -->
                     <div id='mobileLanguageSwitcher' class="mobile-nav-icon" title="{{ __('lang.language') }}">
                         <span class="icon-bg"><i class="fas fa-language"></i></span>
-                        <div id='mobileLanguageDropdown' class="d-flex flex-column gap-1 mt-2" style="position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: white; padding: 1rem;  border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 3000;">
-                            <a href="{{ route('locale.set', 'ar') }}" class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-primary' }}" style="width: 100px;">
+                        <div id='mobileLanguageDropdown' class="d-flex flex-column gap-1 mt-2"
+                            style="position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: white; padding: 1rem;  border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 3000;">
+                            <a href="{{ route('locale.set', 'ar') }}"
+                                class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-primary' }}"
+                                style="width: 100px;">
                                 العربية
                             </a>
-                            <a href="{{ route('locale.set', 'en') }}" class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-primary' : 'btn-outline-primary' }}" style="width: 100px;">
+                            <a href="{{ route('locale.set', 'en') }}"
+                                class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-primary' : 'btn-outline-primary' }}"
+                                style="width: 100px;">
                                 English
                             </a>
                         </div>
@@ -313,7 +331,8 @@
                         title="{{ __('lang.notifications') }}">
                         <span class="icon-bg">
                             <i class="fas fa-bell"></i>
-                            <span class="notification-badge {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" id="mobileNotificationBadge">0</span>
+                            <span class="notification-badge {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}"
+                                id="mobileNotificationBadge">0</span>
                         </span>
                     </a>
 
@@ -321,14 +340,16 @@
                         onclick="event.preventDefault(); document.getElementById('logout-form-student-mobile').submit();">
                         <span class="icon-bg"><i class="fas fa-sign-out-alt"></i></span>
                     </a>
-                    <form id="logout-form-student-mobile" action="{{ route('logout') }}" method="POST" class="d-none">
+                    <form id="logout-form-student-mobile" action="{{ route('logout') }}" method="POST"
+                        class="d-none">
                         @csrf
                     </form>
                 </nav>
             @endif
         @endauth
 
-        <main class="main-content {{ Auth::check() && Auth::user()->role === 'student' ? 'student-layout' : '' }}" id="mainContent" style="{{Auth::check() && Auth::user()->role === 'admin'? 'margin-top: 80px' : ''}}">
+        <main class="main-content {{ Auth::check() && Auth::user()->role === 'student' ? 'student-layout' : '' }}"
+            id="mainContent" style="{{ Auth::check() && Auth::user()->role === 'admin' ? 'margin-top: 80px' : '' }}">
             @yield('content')
         </main>
     </div>
@@ -336,4 +357,5 @@
     <!-- Custom JavaScript File -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
+
 </html>

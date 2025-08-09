@@ -20,6 +20,7 @@ use App\Http\Controllers\ForgetController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\SplashController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\WelcomeController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\FeaturesController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\EarnPointsController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Controllers\LeaderBoardController;
 use App\Http\Controllers\NewPasswordController;
@@ -43,7 +45,6 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\EarnPointsController;
 
 // App::setLocale('ar'); // Removed - this was preventing language switching
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
@@ -88,8 +89,8 @@ Route::get('/locale-test', function() {
 
 
 Route::get("/", [WelcomeController::class , "root"])->name('welcome');
-Route::view("/contact", "contact")->name('contact');
-Route::post("/contact", [ContactUsController::class, 'store'])->name('contact.store');
+// Route::view("/contact", "contact")->name('contact');
+// Route::post("/contact", [ContactUsController::class, 'store'])->name('contact.store');
 Route::view('/privacy', 'privacy');
 Route::view("/home", "home")->middleware('auth')->name('home');
 
@@ -208,6 +209,34 @@ Route::post('/verification-code', [VerificationCodeController::class, 'verifyCod
 Route::get('/new-password', [NewPasswordController::class, 'showNewPasswordForm'])->name('new-password');
 Route::post('/new-password', [NewPasswordController::class, 'resetPassword'])->name('new-password.submit');
 
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+Route::get('/faq', [FaqController::class, 'index'])->name('faq');
+
+// Admin routes (protected by admin middleware)
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    
+    // Contact Management
+    Route::get('/contacts', [ContactController::class, 'adminIndex'])->name('contact.index');
+    Route::get('/contacts/{contact}', [ContactController::class, 'show'])->name('contact.show');
+    Route::post('/contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contact.reply');
+    Route::patch('/contacts/{contact}/mark-read', [ContactController::class, 'markAsRead'])->name('contact.mark-read');
+    Route::delete('/contacts/{contact}', [ContactController::class, 'destroy'])->name('contact.destroy');
+    Route::post('/contacts/bulk-action', [ContactController::class, 'bulkAction'])->name('contact.bulk-action');
+    Route::get('/contacts/export', [ContactController::class, 'export'])->name('contact.export');
+
+    // FAQ Management
+    Route::get('/faq', [FaqController::class, 'adminIndex'])->name('faq.index');
+    Route::get('/faq/create', [FaqController::class, 'create'])->name('faq.create');
+    Route::post('/faq', [FaqController::class, 'store'])->name('faq.store');
+    Route::get('/faq/{faq}', [FaqController::class, 'show'])->name('faq.show');
+    Route::get('/faq/{faq}/edit', [FaqController::class, 'edit'])->name('faq.edit');
+    Route::put('/faq/{faq}', [FaqController::class, 'update'])->name('faq.update');
+    Route::delete('/faq/{faq}', [FaqController::class, 'destroy'])->name('faq.destroy');
+    Route::patch('/faq/{faq}/toggle-status', [FaqController::class, 'toggleStatus'])->name('faq.toggle-status');
+    Route::post('/faq/reorder', [FaqController::class, 'reorder'])->name('faq.reorder');
+});
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::get('/completed-action/{userId}', [CompletedActionController::class, 'completedAction'])->name('completed-action');

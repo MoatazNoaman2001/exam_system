@@ -1,76 +1,127 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\Faq;
+use App\Http\Requests\StoreFaqRequest;
+use App\Http\Requests\UpdateFaqRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
-class FAQController extends Controller
+class FaqController extends Controller
 {
-    // بيانات الأسئلة (يمكن لاحقًا نقلها لقاعدة البيانات)
-    private $faqs = [
-        [
-            'category' => 'account',
-            'question' => 'How do I reset my password?',
-            'answer' => 'To reset your password, go to the login page and click on "Forgot Password".'
-        ],
-        [
-            'category' => 'account',
-            'question' => 'Can I change my email address?',
-            'answer' => 'Yes, you can change your email address in the account settings section.'
-        ],
-        [
-            'category' => 'billing',
-            'question' => 'What payment methods do you accept?',
-            'answer' => 'We accept all major credit cards (Visa, MasterCard, American Express) as well as PayPal.'
-        ],
-        [
-            'category' => 'billing',
-            'question' => 'How do I cancel my subscription?',
-            'answer' => 'You can cancel your subscription at any time by going to the "Billing" section in your account settings.'
-        ],
-        [
-            'category' => 'features',
-            'question' => 'How do I use the advanced analytics feature?',
-            'answer' => 'Our advanced analytics can be accessed from the dashboard. Click on "Analytics" in the main menu.'
-        ],
-        [
-            'category' => 'troubleshooting',
-            'question' => 'The page isn\'t loading correctly. What should I do?',
-            'answer' => 'Try refreshing the page, clear your browser cache and cookies, or try using a different browser.'
-        ]
-    ];
-
-    private $categories = [
-        'all' => 'All Questions',
-        'account' => 'Account',
-        'billing' => 'Billing',
-        'features' => 'Features',
-        'troubleshooting' => 'Troubleshooting'
-    ];
-
-    /**
-     * عرض صفحة الأسئلة الشائعة
-     */
-    public function index()
+    public function __construct()
     {
-        return view('student.FAQ', [
-            'faqs' => $this->faqs,
-            'categories' => $this->categories
-        ]);
+        $this->middleware('admin')->except(['index', 'show']);
     }
 
-    /**
-     * بحث الأسئلة الشائعة (AJAX)
-     */
-    public function search(Request $request)
+    public function index(): View
     {
-        $query = strtolower($request->input('search'));
+        $faqs = Faq::active()->ordered()->get();
+        return view('faq', compact('faqs'));
+    }
 
-        $filtered = array_filter($this->faqs, function ($faq) use ($query) {
-            return str_contains(strtolower($faq['question']), $query) ||
-                   str_contains(strtolower($faq['answer']), $query);
-        });
+    public function adminIndex(): View
+    {
+        $faqs = Faq::ordered()->get();
+        return view('admin.faq.index', compact('faqs'));
+    }
 
-        return view('student.partials.faq_list', ['faqs' => $filtered])->render();
+    public function create(): View
+    {
+        return view('admin.faq.create');
+    }
+
+    public function store(StoreFaqRequest $request): RedirectResponse
+    {
+        $faq = new Faq([
+            'order' => $request->order ?? 0,
+            'is_active' => $request->boolean('is_active', true)
+        ]);
+
+        // Set multilingual content
+        $faq->setQuestionForLocale('en', $request->question_en);
+        $faq->setAnswerForLocale('en', $request->answer_en);
+        
+        if ($request->question_ar) {
+            $faq->setQuestionForLocale('ar', $request->question_ar);
+        }
+        
+        if ($request->answer_ar) {
+            $faq->setAnswerForLocale('ar', $request->answer_ar);
+        }
+
+        $faq->save();
+
+        return redirect()->route('admin.faq.index')
+            ->with('success', 'FAQ created successfully!');
+    }
+
+    public function show(Faq $faq): View
+    {
+        return view('admin.faq.show', compact('faq'));
+    }
+
+    public function edit(Faq $faq): View
+    {
+        return view('admin.faq.edit', compact('faq'));
+    }
+
+    public function update(UpdateFaqRequest $request, Faq $faq): RedirectResponse
+    {
+        $faq->order = $request->order ?? 0;
+        $faq->is_active = $request->boolean('is_active', true);
+
+        // Update multilingual content
+        $faq->setQuestionForLocale('en', $request->question_en);
+        $faq->setAnswerForLocale('en', $request->answer_en);
+        
+        if ($request->question_ar) {
+            $faq->setQuestionForLocale('ar', $request->question_ar);
+        }
+        
+        if ($request->answer_ar) {
+            $faq->setAnswerForLocale('ar', $request->answer_ar);
+        }
+
+        $faq->save();
+
+        return redirect()->route('admin.faq.index')
+            ->with('success', 'FAQ updated successfully!');
+    }
+
+    public function destroy(Faq $faq): RedirectResponse
+    {
+        $faq->delete();
+        
+        return redirect()->route('admin.faq.index')
+            ->with('success', 'FAQ deleted successfully!');
+    }
+
+    // Toggle active status
+    public function toggleStatus(Faq $faq): RedirectResponse
+    {
+        $faq->update(['is_active' => !$faq->is_active]);
+        
+        $status = $faq->is_active ? 'activated' : 'deactivated';
+        return redirect()->back()
+            ->with('success', "FAQ {$status} successfully!");
+    }
+
+    // Reorder FAQs
+    public function reorder(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'faqs' => 'required|array',
+            'faqs.*.id' => 'required|exists:faqs,id',
+            'faqs.*.order' => 'required|integer|min:0'
+        ]);
+
+        foreach ($request->faqs as $faqData) {
+            Faq::where('id', $faqData['id'])->update(['order' => $faqData['order']]);
+        }
+
+        return redirect()->back()
+            ->with('success', 'FAQ order updated successfully!');
     }
 }
