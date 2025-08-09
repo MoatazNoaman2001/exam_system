@@ -389,6 +389,13 @@
     </header>
     @endguest
 
+
+    @auth
+        @if (auth()->user()->role === 'student')
+            <button class="back_to_setting" onclick="history.back()">
+            </button>
+        @endif
+    @endauth
     <!-- About Hero Section -->
     <section class="about-hero">
         <div class="container">

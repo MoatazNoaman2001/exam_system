@@ -10,7 +10,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ __('lang.Privacy Policy') }} - Sprint Skills</title>
-    <link rel="shortcut icon" href="{{asset('images/Sprint_Skills.ico')}}" type="image/x-icon"> 
+    <link rel="shortcut icon" href="{{ asset('images/Sprint_Skills.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/root-welcome.css') }}">
@@ -309,6 +309,105 @@
                 padding-right: 1.5rem;
             }
         }
+        .back_to_setting {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            background: linear-gradient(135deg, #2F80ED, #1565C0);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(47, 128, 237, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.3px;
+            direction: ltr; /* Always LTR for proper icon alignment */
+        }
+        
+        /* English text */
+        html[lang="en"] .back_to_setting::before {
+            content: "Back to Settings";
+        }
+        
+        /* Arabic text */
+        html[lang="ar"] .back_to_setting::before {
+            content: "العودة إلى الإعدادات";
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            letter-spacing: normal;
+        }
+        
+        .back_to_setting:hover {
+            background: linear-gradient(135deg, #1565C0, #0d47a1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(47, 128, 237, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .back_to_setting:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(47, 128, 237, 0.3);
+        }
+        
+        .back_to_setting i {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .back_to_setting:hover i {
+            transform: translateX(-2px);
+        }
+        
+        /* RTL Support for Arabic */
+        html[dir="rtl"] .back_to_setting {
+            left: auto;
+            right: 2rem;
+            flex-direction: row-reverse;
+        }
+        
+        html[dir="rtl"] .back_to_setting i {
+            transform: scaleX(-1); /* Flip arrow for RTL */
+        }
+        
+        html[dir="rtl"] .back_to_setting:hover i {
+            transform: scaleX(-1) translateX(2px);
+        }
+        
+        /* Icon positioning and animation */
+        .back_to_setting i {
+            order: 2; /* Place icon after text */
+            margin-left: 0.3rem;
+        }
+        
+        html[dir="rtl"] .back_to_setting i {
+            order: -1; /* Place icon before text in RTL */
+            margin-left: 0;
+            margin-right: 0.3rem;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .back_to_setting {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.6rem 1.2rem;
+                font-size: 0.8rem;
+            }
+            
+            html[dir="rtl"] .back_to_setting {
+                left: auto;
+                right: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -344,6 +443,14 @@
         </div>
     </header>
     @endguest
+
+
+    @auth
+        @if (auth()->user()->role === 'student')
+            <button class="back_to_setting" onclick="history.back()">
+            </button>
+        @endif
+    @endauth
 
     <!-- Privacy Policy Hero Section -->
     <section class="privacy-hero">

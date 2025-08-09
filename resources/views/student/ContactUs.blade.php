@@ -25,8 +25,8 @@
             </div>
             <div class="card-content">
                 <h3 class="card-title">{{ __('lang.email') }}</h3>
-                <p class="card-detail">admin@example.com</p>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=admin@example.com&su={{ urlencode(__('lang.email_subject', ['email' => auth()->user()->email ?? ''])) }}&body={{ urlencode(__('lang.email_body', ['name' => auth()->user()->username ?? ''])) }}"
+                <p class="card-detail">ihsan.arslan_84@hotmail.com</p>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ihsan.arslan_84@hotmail.com&su={{ urlencode(__('lang.email_subject', ['email' => auth()->user()->email ?? ''])) }}&body={{ urlencode(__('lang.email_body', ['name' => auth()->user()->username ?? ''])) }}"
                    class="action-btn email-btn">
                     <span>{{ __('lang.send_email') }}</span>
                     <i class="bi bi-arrow-left"></i>
@@ -42,8 +42,8 @@
             </div>
             <div class="card-content">
                 <h3 class="card-title">{{ __('lang.whatsapp') }}</h3>
-                <p class="card-detail">+201024102574</p>
-                <a href="https://wa.me/201024102574?text={{ urlencode(__('lang.whatsapp_msg', ['name' => auth()->user()->username ?? '', 'email' => auth()->user()->email ?? ''])) }}" 
+                <p class="card-detail">0016193544916</p>
+                <a href="https://wa.me/0016193544916?text={{ urlencode(__('lang.whatsapp_msg', ['name' => auth()->user()->username ?? '', 'email' => auth()->user()->email ?? ''])) }}" 
                    class="action-btn whatsapp-btn">
                     <span>{{ __('lang.start_chat') }}</span>
                     <i class="bi bi-arrow-left"></i>
