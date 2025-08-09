@@ -32,7 +32,7 @@ class LoginController extends Controller
             if ($isFirstTime) {
                 $user->first_visit= false;
                 $user->save();
-                return redirect()->route('index');
+                return redirect()->route('student.index');
             }else{
                 return redirect()->route('student.sections');
             }
