@@ -489,9 +489,10 @@ class AdminController extends Controller
         $request->validate([
             'text' => 'required|string|max:255',
             'description' => 'required|string|max:200',
+            'description_ar' => 'required|string|max:200',
         ]);
 
-        Domain::create($request->only(['text', 'description']));
+        Domain::create($request->only(['text', 'description', 'description_ar']));
 
         return redirect()->route('admin.domains')->with('success', 'Domain created successfully.');
     }
@@ -506,9 +507,10 @@ class AdminController extends Controller
         $request->validate([
             'text' => 'required|string|max:255',
             'description' => 'required|string|max:200',
+            'description_ar' => 'required|string|max:200',
         ]);
 
-        $domain->update($request->only(['text', 'description']));
+        $domain->update($request->only(['text', 'description', 'description_ar']));
 
         return redirect()->route('admin.domains')->with('success', 'Domain updated successfully.');
     }
