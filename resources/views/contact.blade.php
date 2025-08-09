@@ -269,7 +269,7 @@
                 <div class="footer-content">
                     <div class="footer-column">
                         <h3>Sprint Skills</h3>
-                        <p>{{ __('about.Footer Text') }}</p>
+                        <p>{{ __('about.The most comprehensive management education platform with personalized study plans, AI-driven analytics, and bilingual support for Arabic-speaking professionals.') }}</p>
                         <div class="footer-social">
                             <a href="https://www.facebook.com/pmarabchapter/" target="_blank" rel="noopener noreferrer">
                                 <i class="fab fa-facebook-f"></i>
