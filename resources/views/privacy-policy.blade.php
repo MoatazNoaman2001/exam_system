@@ -15,6 +15,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/root-welcome.css') }}">
     <style>
+        * {
+            /* Prevent text selection */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+
+            /* Prevent drag */
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+
+            /* Prevent right-click context menu */
+            -webkit-touch-callout: none;
+
+            /* Disable highlighting */
+            -webkit-tap-highlight-color: transparent;
+        }
         html[dir="rtl"] body { 
             direction: rtl; 
             text-align: right; 
