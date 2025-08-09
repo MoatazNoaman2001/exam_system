@@ -372,7 +372,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2023 {{ __('Sprint Skills') }}. {{ __('lang.All rights reserved.') }} | <a href="#">{{ __('lang.Privacy Policy') }}</a> | <a href="#">{{ __('lang.Terms of Service') }}</a></p>
+                <p>&copy; 2023 {{ __('Sprint Skills') }}. {{ __('lang.All rights reserved.') }} | <a href="{{route('privacy-policy')}}">{{ __('lang.Privacy Policy') }}</a> | <a href="{{route('privacy-policy')}}">{{ __('lang.Terms of Service') }}</a></p>
             </div>
         </div>
     </footer>

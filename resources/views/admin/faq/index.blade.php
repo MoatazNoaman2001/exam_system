@@ -25,7 +25,7 @@
                     @if($faqs->count() > 0)
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                <thead class="table-dark">
+                                <thead class="table-white">
                                     <tr>
                                         <th width="50">#</th>
                                         <th>Question (EN)</th>
@@ -63,9 +63,7 @@
                                             </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <a href="{{ route('admin.faq.show', $faq) }}" class="btn btn-sm btn-info" title="View">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
+                                                    
                                                     <a href="{{ route('admin.faq.edit', $faq) }}" class="btn btn-sm btn-warning" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>

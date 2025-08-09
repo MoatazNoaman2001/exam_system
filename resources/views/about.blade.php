@@ -1,23 +1,363 @@
-<div>
-    <!-- Simplicity is an acquired taste. - Katharine Gerould -->
-</div>
+{{-- resources/views/about.blade.php --}}
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ __('about.About Sprint Skills - Where Purpose Meets Performance in Modern Management') }}</title>
-    <link rel="shortcut icon" href="{{asset('images/Sprint_Skills.ico')}}" type="image/x-icon">
+    <title>{{ __('lang.About Us') }} - Sprint Skills</title>
+    <link rel="shortcut icon" href="{{asset('images/Sprint_Skills.ico')}}" type="image/x-icon"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    @if(app()->getLocale() == 'ar')
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    @endif
     <link rel="stylesheet" href="{{ asset('css/root-welcome.css') }}">
+    <style>
+        html[dir="rtl"] body { 
+            direction: rtl; 
+            text-align: right; 
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+        }
+        
+        .about-hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #2980b9 100%);
+            color: white;
+            padding: 140px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.8) 0%, rgba(52, 152, 219, 0.6) 50%, rgba(41, 128, 185, 0.8) 100%);
+            z-index: 1;
+        }
+        
+        .about-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .about-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .about-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .about-content {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .about-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .about-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            border-left: 5px solid #2F80ED;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(47, 128, 237, 0.1), rgba(21, 101, 192, 0.05));
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+        
+        html[dir="rtl"] .about-section {
+            border-left: none;
+            border-right: 5px solid #2F80ED;
+        }
+        
+        html[dir="rtl"] .about-section::before {
+            right: auto;
+            left: 0;
+            transform: translate(-30px, -30px);
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2F80ED, #1565C0);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 8px 20px rgba(47, 128, 237, 0.3);
+        }
+        
+        .section-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .section-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-content ul {
+            margin: 1.5rem 0;
+            padding-left: 0;
+            list-style: none;
+        }
+        
+        .section-content li {
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        html[dir="rtl"] .section-content li {
+            padding-left: 0;
+            padding-right: 2rem;
+        }
+        
+        .section-content li::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #2F80ED, #1565C0);
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 0.5rem;
+            position: absolute;
+            left: 0;
+        }
+        
+        html[dir="rtl"] .section-content li::before {
+            left: auto;
+            right: 0;
+        }
+        
+        .highlight-text {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid #2196f3;
+            margin: 2rem 0;
+            font-weight: 600;
+            color: #1976d2;
+        }
+        
+        html[dir="rtl"] .highlight-text {
+            border-left: none;
+            border-right: 4px solid #2196f3;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .value-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .value-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #2F80ED, #1565C0);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .value-item:hover {
+            border-color: #2F80ED;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(47, 128, 237, 0.2);
+        }
+        
+        .value-item:hover::before {
+            opacity: 0.05;
+        }
+        
+        .value-title {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: #2F80ED;
+        }
+        
+        .feature-title {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .feature-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #2980b9 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            margin-top: 3rem;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.8) 0%, rgba(52, 152, 219, 0.6) 50%, rgba(41, 128, 185, 0.8) 100%);
+            z-index: 1;
+        }
+        
+        .cta-section .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .about-hero {
+                padding: 120px 0 60px;
+            }
+            
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content {
+                padding: 60px 0;
+            }
+            
+            .about-section {
+                padding: 2rem;
+                margin: 0 1rem 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .section-content {
+                font-size: 1rem;
+            }
+            
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
+
     @guest
-            <!-- Header -->
     <header id="header">
         <div class="container">
             <nav>
@@ -26,21 +366,19 @@
                     <span style="color: rgb(26, 89, 123); font-size: 22px">{{ __('Sprint Skills') }}</span>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="{{ url('/') }}">{{ __('lang.home') }}</a></li>
-                    <li><a href="{{ url('/about') }}" class="active">{{ __('lang.about') }}</a></li>
-                    <li><a href="{{ url('/contact') }}">{{ __('lang.Contact Us') }}</a></li>
-                    <li><a href="#features">{{ __('lang.Features') }}</a></li>
-                    <li><a href="#testimonials">{{ __('lang.Testimonials') }}</a></li>
+                    <li><a href="{{ route('welcome') }}">{{ __('lang.Home') }}</a></li>
+                    <li><a href="{{ route('about') }}" class="active">{{ __('lang.About') }}</a></li>
+                    <li><a href="{{ route('contact') }}">{{ __('lang.Contact') }}</a></li>
+                    <li><a href="{{ route('faq') }}">{{ __('lang.FAQ') }}</a></li>
                 </ul>
-                
-                 <div class="header-actions">
+                <div class="header-actions">
                     <div class="language-switcher">
                         <a href="{{ route('locale.set', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
                         <a href="{{ route('locale.set', 'ar') }}" class="{{ app()->getLocale() == 'ar' ? 'active' : '' }}">AR</a>
                     </div>
                     <form action="{{route('login')}}" method="GET">
                         @csrf
-                        <button class="cta-button" type="submit">{{ __('contact.Get Started') }}</button>
+                        <button class="cta-button" type="submit">{{ __('lang.Get Started') }}</button>
                     </form>
                 </div>
                 <div class="mobile-menu">
@@ -54,431 +392,426 @@
     <!-- About Hero Section -->
     <section class="about-hero">
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1>{{ __('about.About Sprint Skills') }}</h1>
-                    <p class="text-white">{{ __('about.Where purpose meets performance in modern management') }}</p>
-                </div>
-            </div>
+            <h1>{{ __('lang.About Us') }}</h1>
+            <p>
+                @if(app()->getLocale() == 'en')
+                    Learn more about Sprint Skills and our mission to transform project management education
+                @else
+                    تعرّف أكثر على Sprint Skills ورسالتنا في تطوير تعليم إدارة المشاريع
+                @endif
+            </p>
         </div>
     </section>
 
-    <!-- Our Genesis Section -->
-    <section class="our-story" id="genesis">
+    <!-- About Content -->
+    <section class="about-content">
         <div class="container">
-            <div class="section-title">
-                <h2>{{ __('about.Our Genesis') }}</h2>
-                <p>{{ __('about.How Sprint Skills became the leading management education platform') }}</p>
-            </div>
-            <div class="story-timeline">
-                <div class="timeline-item">
-                    <div class="timeline-year">{{ __('about.Genesis') }}</div>
-                    <div class="timeline-content">
-                        <h3>{{ __('about.Conceived by Multidisciplinary Experts') }}</h3>
-                        <p>{{ __('about.Sprint Skills was conceived by a multidisciplinary team of engineers-turned-managers, humanitarian program leaders, and tech educators who spent years guiding NGOs, startups, and corporate projects across the Middle East and beyond. They discovered that most learning platforms focus on isolated certificates, while real managers must juggle strategy, stakeholders, quality, finance, and social impact simultaneously.') }}</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">{{ __('about.Evolution') }}</div>
-                    <div class="timeline-content">
-                        <h3>{{ __('about.From Certification Prep to Holistic Mastery') }}</h3>
-                        <p>{{ __('about.Early success with PMP-prep cohorts revealed a broader need for an all-in-one space where professionals could build project, program, portfolio, and business skills—supported by adaptive technology and bilingual resources.') }}</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">{{ __('about.Today') }}</div>
-                    <div class="timeline-content">
-                        <h3>{{ __('about.Where We Stand Today') }}</h3>
-                        <p>{{ __('about.Sprint Skills hosts modular courses, AI-driven progress analytics, peer forums, and practical toolkits covering leadership, strategy execution, quality systems, risk, change, and digital transformation. New content is peer-reviewed by certified experts and field practitioners before release.') }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Challenges Section -->
-    <section class="mission-section" id="challenges">
-        <div class="container">
-            <div class="mission-content">
-                <div class="mission-text">
-                    <h2>{{ __('about.Challenges That Shaped Us') }}</h2>
-                    <div class="challenges-list">
-                        <div class="challenge-item">
-                            <i class="fas fa-cogs"></i>
-                            <p>{{ __('about.Integrating agile, hybrid, and predictive methods into one coherent learning path') }}</p>
+            <div class="about-container">
+                
+                @if(app()->getLocale() == 'en')
+                    <!-- English Content -->
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            Who We Are
                         </div>
-                        <div class="challenge-item">
-                            <i class="fas fa-globe"></i>
-                            <p>{{ __('about.Delivering a bilingual Arabic–English interface that runs smoothly on low-bandwidth networks common in our region') }}</p>
-                        </div>
-                        <div class="challenge-item">
-                            <i class="fas fa-balance-scale"></i>
-                            <p>{{ __('about.Sustaining an open-access model while securing funding for continuous content quality and platform innovation') }}</p>
+                        <div class="section-content">
+                            <p>Sprint Skills is a digital learning platform built by certified trainers with over a decade of experience delivering project-, program-, and portfolio-management workshops across the MENA region and beyond. We've distilled that classroom expertise into bite-sized e-lessons, ready-to-use tools, and an active peer community that goes straight to what managers need—no fluff.</p>
                         </div>
                     </div>
-                    <p class="challenge-conclusion">{{ __('about.Each obstacle refined our architecture, pedagogy, and community culture.') }}</p>
-                </div>
-                <div class="mission-image">
-                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="{{ __('about.Team working together') }}">
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Vision & Mission Section -->
-    <section class="vision-mission-section" id="vision-mission">
-        <div class="container">
-            <div class="vm-grid">
-                <div class="vm-item">
-                    <div class="vm-icon">
-                        <i class="fas fa-eye"></i>
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            What We Offer
+                        </div>
+                        <div class="section-content">
+                            <div class="features-list">
+                                <div class="feature-item">
+                                    <div class="feature-title">Focused courses</div>
+                                    <div class="feature-description">7–12-minute lessons, each ending with a real-world task.</div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-title">Arabic–English parity</div>
+                                    <div class="feature-description">Identical rigor and depth in both languages.</div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-title">Downloadable templates</div>
+                                    <div class="feature-description">Excel, PowerPoint, and Miro files for instant application.</div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-title">Peer support hub</div>
+                                    <div class="feature-description">Fast Q&A forum plus peer review on project plans.</div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-title">Clear progress tracker</div>
+                                    <div class="feature-description">Shows completed units and suggests next steps.</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h3>{{ __('about.Vision') }}</h3>
-                    <p>{{ __('about.To democratize world-class management education for every Arabic-speaking professional and their global peers.') }}</p>
-                </div>
-                <div class="vm-item">
-                    <div class="vm-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h3>{{ __('about.Mission') }}</h3>
-                    <p>{{ __('about.Equip leaders with actionable knowledge, adaptive tools, and a supportive community so they can deliver initiatives that improve lives and economies.') }}</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Core Values Section -->
-    <section class="values-section" id="values">
-        <div class="container">
-            <div class="section-title">
-                <h2>{{ __('about.Core Values') }}</h2>
-                <p>{{ __('about.The principles that guide everything we do') }}</p>
-            </div>
-            <div class="values-grid">
-                <div class="value-item">
-                    <div class="value-icon">
-                        <i class="fas fa-shield-alt"></i>
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            Our Vision
+                        </div>
+                        <div class="section-content">
+                            <div class="highlight-text">
+                                To make modern management skills practical and accessible for professionals in the Arab world and beyond.
+                            </div>
+                        </div>
                     </div>
-                    <h3>{{ __('about.Integrity') }}</h3>
-                </div>
-                <div class="value-item">
-                    <div class="value-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <h3>{{ __('about.Practical Excellence') }}</h3>
-                </div>
-                <div class="value-item">
-                    <div class="value-icon">
-                        <img class="logo-img" src="{{asset('images/Sprint_Skills_logo.png')}}" alt="logo">
-                    </div>
-                    <h3>{{ __('about.Continuous Learning') }}</h3>
-                </div>
-                <div class="value-item">
-                    <div class="value-icon">
-                        <i class="fas fa-handshake"></i>
-                    </div>
-                    <h3>{{ __('about.Collaboration') }}</h3>
-                </div>
-                <div class="value-item">
-                    <div class="value-icon">
-                        <i class="fas fa-lightbulb"></i>
-                    </div>
-                    <h3>{{ __('about.Impact-Driven Innovation') }}</h3>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Team Section -->
-    <section class="team-section" id="team">
-        <div class="container">
-            <div class="section-title">
-                <h2>{{ __('about.Meet Our Team') }}</h2>
-                <p>{{ __('about.The experts behind Sprint Skills success') }}</p>
-            </div>
-            <div class="team-grid">
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="https://avatars.githubusercontent.com/u/99621213?v=4" alt="Moataz Noaman">
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            Our Mission
+                        </div>
+                        <div class="section-content">
+                            <p>Deliver continuously updated, PMI-aligned content—rooted in regional case studies—and pair it with tools that shorten the gap between learning and doing.</p>
+                            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                                <i class="fas fa-external-link-alt me-1"></i>
+                                Learn more at <a href="https://pmi.org" target="_blank" style="color: #2F80ED; text-decoration: none;">pmi.org</a>
+                            </p>
+                        </div>
                     </div>
-                    <h3>{{ __('about.Moataz Noaman') }}</h3>
-                    <p class="member-title">{{ __('about.Software Engineer') }}</p>
-                    <p class="member-bio">{{ __('about.PMP, Engineer Responsible for Design and Development of the Platform.') }}</p>
-                    <div class="member-social">
-                        <a href="https://www.linkedin.com/in/moataz-noaman/"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="team-member">
-                    <div class="member-photo">
-                        <img src="https://avatars.githubusercontent.com/u/93217206?v=4" alt="Hager Abd Alaziz">
-                    </div>
-                    <h3>{{ __('about.Hager Abd Alaziz') }}</h3>
-                    <p class="member-title">{{ __('about.Software Engineer') }}</p>
-                    <p class="member-bio">{{ __('about.PMP, Engineer Responsible for Design and Development of the Platform.') }}</p>
-                    <div class="member-social">
-                        <a href="https://www.linkedin.com/in/hager-hussien/"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">10,000+</div>
-                    <div class="stat-label">{{ __('about.Professionals Trained') }}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">95%</div>
-                    <div class="stat-label">{{ __('about.Success Rate') }}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">100+</div>
-                    <div class="stat-label">{{ __('about.Modular Courses') }}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">2</div>
-                    <div class="stat-label">{{ __('about.Languages Supported') }}</div>
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            Core Values
+                        </div>
+                        <div class="section-content">
+                            <div class="values-grid">
+                                <div class="value-item">
+                                    <div class="value-title">Clarity</div>
+                                </div>
+                                <div class="value-item">
+                                    <div class="value-title">Practicality</div>
+                                </div>
+                                <div class="value-item">
+                                    <div class="value-title">Lifelong Learning</div>
+                                </div>
+                                <div class="value-item">
+                                    <div class="value-title">Collaboration</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            What Sets Us Apart
+                        </div>
+                        <div class="section-content">
+                            <ul>
+                                <li>Every lesson ends with a "do-today" action item.</li>
+                                <li>Content is refreshed after each PMI standards update or shift in best practice.</li>
+                                <li>Flexible pricing: monthly subscription or one-off track purchase—no long-term lock-ins.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                @else
+                    <!-- Arabic Content -->
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            من نحن؟
+                        </div>
+                        <div class="section-content">
+                            <p>Sprint Skills منصّة تعليمية رقمية أسّسها مدرّبون معتمدون في إدارة المشاريع، البرامج، والمحافظ ويتمتّعون بخبرة تتجاوز عشر سنوات في قاعات التدريب المباشر والافتراضي على امتداد الشرق الأوسط وخارجه. حولنا هذه الخبرة إلى محتوى إلكتروني قصير، أدوات عمل جاهزة، ومجتمع مساعدة يركّز على ما يحتاجه المدير اليوم، بلا حشو أو تعقيد.</p>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            ماذا نقدّم؟
+                        </div>
+                        <div class="section-content">
+                            <div class="features-list">
+                                <div class="feature-item">
+                                    <div class="feature-title">دورات مركّزة</div>
+                                    <div class="feature-description">مقاطع من 7–12 دقيقة، ينتهي كل مقطع بمثال عملي وتمرين قصير.</div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-title">ثنائية اللغة</div>
+                                    <div class="feature-description">كل درس متاح بالعربية والإنجليزية بنفس العمق والجودة.</div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-title">قوالب جاهزة للتنزيل</div>
+                                    <div class="feature-description">ملفات Excel و PowerPoint و Miro تطبّق بها ما تعلّمته فوراً.</div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-title">مجتمع تفاعلي</div>
+                                    <div class="feature-description">منتدى أسئلة وأجوبة سريع مع مراجعات أقران لخطط المشاريع.</div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-title">لوحة تقدّم مبسّطة</div>
+                                    <div class="feature-description">تعرض إنجازك وتقترح الخطوة التالية.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            رؤيتنا
+                        </div>
+                        <div class="section-content">
+                            <div class="highlight-text">
+                                نشر المهارات الإدارية الحديثة بأسلوب عملي يسهُل تطبيقه في بيئات العمل العربية والعالمية.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            رسالتنا
+                        </div>
+                        <div class="section-content">
+                            <p>توفير محتوى موثوق يُحدَّث دوريًّا وفق معايير PMI وشهاداته المعروفة مثل PMP®، مع ربط المحتوى بأمثلة من القطاعات الربحية وغير الربحية في منطقتنا.</p>
+                            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                                <i class="fas fa-external-link-alt me-1"></i>
+                                تعرّف أكثر على <a href="https://pmi.org" target="_blank" style="color: #2F80ED; text-decoration: none;">pmi.org</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            قيمنا
+                        </div>
+                        <div class="section-content">
+                            <div class="values-grid">
+                                <div class="value-item">
+                                    <div class="value-title">الوضوح</div>
+                                </div>
+                                <div class="value-item">
+                                    <div class="value-title">التطبيق العملي</div>
+                                </div>
+                                <div class="value-item">
+                                    <div class="value-title">التعلّم مدى الحياة</div>
+                                </div>
+                                <div class="value-item">
+                                    <div class="value-title">التعاون</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-section">
+                        <div class="section-title">
+                            <div class="section-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            ما الذي يميّزنا؟
+                        </div>
+                        <div class="section-content">
+                            <ul>
+                                <li>كل درس يُختَم بإجراء يمكنك تنفيذه اليوم.</li>
+                                <li>نحدِّث المحتوى بعد كل إصدار جديد من معايير PMI أو تغيّر في أفضل الممارسات.</li>
+                                <li>خطط اشتراك مرنة: شهرية أو شراء مسار واحد، بلا التزام طويل الأمد.</li>
+                            </ul>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- CTA Section -->
+                <div class="cta-section">
+                    <div class="container">
+                        <h2>
+                            @if(app()->getLocale() == 'en')
+                                Join Us
+                            @else
+                                انضمّ إلينا
+                            @endif
+                        </h2>
+                        <p>
+                            @if(app()->getLocale() == 'en')
+                                Start with a free track and see how Sprint Skills streamlines your path to stronger project outcomes.
+                            @else
+                                جرّب أول مسار مجاناً وابداً رحلتك نحو إدارة مشاريع أكثر كفاءة.
+                            @endif
+                        </p>
+                        <form action="{{route('login')}}" method="GET">
+                            @csrf
+                            <button class="cta-button white" type="submit">{{ __('lang.Get Started Today') }}</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta" id="cta">
-        <div class="container">
-            <h2>{{ __('about.Join Our Community') }}</h2>
-            <p>{{ __('about.Whether you aim to earn a certification, scale a nonprofit venture, or steer a multinational portfolio, Sprint Skills is built to sprint with you every step of the way.') }}</p>
-            <form action="{{route('login')}}" method="GET">
-                @csrf
-                <button class="cta-button white" type="submit">{{ __('about.Join Us Today') }}</button>
-            </form>
         </div>
     </section>
 
     @guest
-            <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>{{ __('Sprint Skills') }}</h3>
+                    <h3>Sprint Skills</h3>
                     <p>{{ __('lang.footer_text') }}</p>
                     <div class="footer-social">
-                        <a href="https://www.facebook.com/pmarabchapter/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://t.me/+z_AtT8ZlqehmZDhk" target="_blank"><i class="fab fa-telegram"></i></a>
-                        <a href="https://www.linkedin.com/company/pm-arabcommunity/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://www.instagram.com/pm_arab_chapter/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/pmarabchapter/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://t.me/+z_AtT8ZlqehmZDhk" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.linkedin.com/company/pm-arabcommunity/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/pm_arab_chapter/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">
                     <h3>{{ __('lang.Resources') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="#">{{ __('lang.PMP Exam Guide') }}</a></li>
-                        <li><a href="#">{{ __('lang.Study Tips') }}</a></li>
-                        <li><a href="#">{{ __('lang.PMBOK Summary') }}</a></li>
-                        <li><a href="#">{{ __('lang.FAQ') }}</a></li>
+                        <li><a href="{{ route('faq') }}">{{ __('lang.FAQ') }}</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>{{ __('lang.Company') }}</h3>
                     <ul class="footer-links">
-                        <li><a href="{{route('about')}}">{{ __('lang.About Us') }}</a></li>
-                        <li><a href="#">{{ __('lang.Our Instructors') }}</a></li>
-                        <li><a href="{{route('contact')}}">{{ __('lang.Contact Us') }}</a></li>
+                        <li><a href="{{ route('about') }}">{{ __('lang.About Us') }}</a></li>
+                        <li><a href="{{ route('contact') }}">{{ __('lang.Contact Us') }}</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Sprint Skills. {{ __('about.All rights reserved.') }} | <a href="#">{{ __('about.Privacy Policy') }}</a> | <a href="#">{{ __('about.Terms of Service') }}</a></p>
+                <p>&copy; 2025 Sprint Skills. {{ __('lang.All rights reserved.') }}</p>
             </div>
         </div>
     </footer>
     @endguest
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <script>
-        // Mobile Menu Toggle
-        $('.mobile-menu').click(function() {
-            $('.nav-links').toggleClass('active');
-        });
-        
-        // Smooth Scrolling
-        $('a[href*="#"]').on('click', function(e) {
-            e.preventDefault();
-            $('html, body').animate(
-                {
-                    scrollTop: $($(this).attr('href')).offset().top - 80,
-                },
-                500,
-                'linear'
-            );
-        });
-        
-        // Header Scroll Effect
-        $(window).scroll(function() {
-            if ($(this).scrollTop() > 50) {
-                $('header').addClass('scrolled');
-            } else {
-                $('header').removeClass('scrolled');
-            }
-        });
-        
-        // Animate Stats on Scroll
-        $(window).scroll(function() {
-            var position = $('.stats-section').offset().top;
-            var scroll = $(window).scrollTop();
-            var windowHeight = $(window).height();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const navLinks = document.querySelector('.nav-links');
             
-            if (scroll > position - windowHeight + 100) {
-                $('.stat-number').each(function() {
-                    var $this = $(this);
-                    var target = $this.text();
-                    $this.text('0');
-                    $({countNum: 0}).animate({countNum: target.replace('+', '')}, {
-                        duration: 2000,
-                        easing: 'swing',
-                        step: function() {
-                            $this.text(Math.floor(this.countNum) + (target.includes('+') ? '+' : ''));
-                        }
-                    });
+            if (mobileMenu) {
+                mobileMenu.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
                 });
             }
-        });
-    </script>
 
-    <style>
-        /* Additional styles for new sections */
-        .challenges-list {
-            margin: 2rem 0;
-        }
-        
-        .challenge-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .challenge-item i {
-            font-size: 1.5rem;
-            margin-right: 1rem;
-            color: var(--primary-color);
-            min-width: 2rem;
-        }
-        
-        [dir="rtl"] .challenge-item i {
-            margin-right: 0;
-            margin-left: 1rem;
-        }
-        
-        .challenge-conclusion {
-            font-style: italic;
-            text-align: center;
-            margin-top: 2rem;
-            font-size: 1.1rem;
-        }
-        
-        .vision-mission-section {
-            padding: 5rem 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .vm-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-        
-        .vm-item {
-            text-align: center;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .vm-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #fff;
-        }
-        
-        .values-section {
-            padding: 5rem 0;
-            background: #f8f9fa;
-        }
-        
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .value-item {
-            text-align: center;
-            padding: 2rem 1rem;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .value-item:hover {
-            transform: translateY(-5px);
-        }
-        
-        .value-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-        
-        /* Arabic font support */
-        [lang="ar"] {
-            font-family: 'Cairo', 'Poppins', sans-serif;
-        }
-        
-        /* RTL adjustments */
-        [dir="rtl"] .timeline-item {
-            text-align: right;
-        }
-        
-        [dir="rtl"] .mission-content {
-            flex-direction: row-reverse;
-        }
-        
-        @media (max-width: 768px) {
-            .vm-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections for animation
+            document.querySelectorAll('.about-section').forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = `all 0.6s ease ${index * 0.1}s`;
+                observer.observe(section);
+            });
+
+            // Add hover effects to feature items
+            document.querySelectorAll('.feature-item').forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(-3px) scale(1)';
+                });
+            });
+
+            // Add click effects to value items
+            document.querySelectorAll('.value-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Add ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.style.cssText = `
+                        position: absolute;
+                        border-radius: 50%;
+                        background: rgba(47, 128, 237, 0.3);
+                        transform: scale(0);
+                        animation: ripple 0.6s linear;
+                        pointer-events: none;
+                    `;
+                    
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = (rect.width / 2 - size / 2) + 'px';
+                    ripple.style.top = (rect.height / 2 - size / 2) + 'px';
+                    
+                    this.style.position = 'relative';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => ripple.remove(), 600);
+                });
+            });
+
+            // Parallax effect for hero section
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.about-hero');
+                if (hero) {
+                    hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                }
+            });
+        });
+
+        // Add CSS for ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to { transform: scale(4); opacity: 0; }
             }
-            
-            .values-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 1rem;
-            }
-            
-            .challenge-item {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .challenge-item i {
-                margin-right: 0;
-                margin-bottom: 0.5rem;
-            }
-        }
-    </style>
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>

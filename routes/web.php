@@ -214,6 +214,8 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
+Route::view('/privacy-policy', 'privacy-policy')->name('privacy-policy');
+
 // Admin routes (protected by admin middleware)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     

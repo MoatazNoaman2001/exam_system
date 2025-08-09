@@ -1274,6 +1274,64 @@ From project and program management to leadership and strategy, our tools and re
     'Features' => 'Features',
     'Testimonials' => 'Testimonials',
 
+    'Privacy Policy' => 'Privacy Policy',
+'Your privacy and data protection are our top priorities' => 'Your privacy and data protection are our top priorities',
+'Last Updated' => 'Last Updated',
+'January 2025' => 'January 2025',
+'Questions About Privacy?' => 'Questions About Privacy?',
+
+'Frequently Asked Questions' => 'Frequently Asked Questions',
+    'Find answers to common questions about our platform and services' => 'Find answers to common questions about our platform and services',
+    'Search FAQs...' => 'Search FAQs...',
+    'No FAQs Available' => 'No FAQs Available',
+    'We are working on adding more frequently asked questions.' => 'We are working on adding more frequently asked questions.',
+    'No Results Found' => 'No Results Found',
+    'Try different keywords or contact us directly.' => 'Try different keywords or contact us directly.',
+    'Clear Search' => 'Clear Search',
+    'Still Have Questions?' => 'Still Have Questions?',
+    'Can\'t find what you\'re looking for? Get in touch with our support team.' => 'Can\'t find what you\'re looking for? Get in touch with our support team.',
+// Contact Form
+'Send Us a Message' => 'Send Us a Message',
+'Your Name' => 'Your Name',
+'Enter your full name' => 'Enter your full name',
+'Email Address' => 'Email Address',
+'Enter your email address' => 'Enter your email address',
+'Subject' => 'Subject',
+'Select Subject' => 'Select Subject',
+'General Inquiry' => 'General Inquiry',
+'Technical Support' => 'Technical Support',
+'Billing Question' => 'Billing Question',
+'Feedback' => 'Feedback',
+'Other' => 'Other',
+'Your Message' => 'Your Message',
+'Please describe your inquiry in detail...' => 'Please describe your inquiry in detail...',
+'Send Message' => 'Send Message',
+'Sending...' => 'Sending...',
+
+// Contact Information
+'Contact Information' => 'Contact Information',
+'Phone' => 'Phone',
+'Phone 2' => 'Phone (Alternative)',
+'Email' => 'Email',
+'Support Hours' => 'Support Hours',
+'Work Hours' => 'Monday - Friday: 9:00 AM - 6:00 PM GMT',
+'Tech 24/7' => 'Technical Support Available 24/7',
+
+// FAQ Section
+'FAQ Title' => 'Frequently Asked Questions',
+'FAQ Subtitle' => 'Quick answers to questions you may have',
+'View All FAQs' => 'View All FAQs',
+
+// CTA Section
+'CTA Title' => 'Ready to Start Your Journey?',
+'CTA Text' => 'Join thousands of professionals who have advanced their careers with Sprint Skills',
+'Get Started' => 'Get Started',
+'Get Started Today' => 'Get Started Today',
+
+// Success/Error Messages
+'Message sent successfully!' => 'Thank you! Your message has been sent successfully. We will get back to you soon.',
+'Error sending message' => 'Sorry, there was an error sending your message. Please try again or contact us directly.',
+
 ];
 
 

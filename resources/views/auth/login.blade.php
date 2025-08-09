@@ -1039,6 +1039,9 @@
         border-radius: 6px;
         font-size: 14px;
     }
+    .top-bar {
+        margin-top: 400px;
+    }
 }
 
 </style>
@@ -1083,6 +1086,7 @@
 
         <!-- Form Half -->
         <div class="form-half">
+            
             <div class="top-bar">
                 <a href="{{ route('welcome') }}" 
                    class="backcontainer {{ Route::currentRouteName() == 'welcome' ? 'active' : '' }}">

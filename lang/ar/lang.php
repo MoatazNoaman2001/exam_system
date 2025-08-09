@@ -1346,14 +1346,63 @@ return [
     'Contact' => 'اتصل بنا',
     'Features' => 'الميزات',
     'Testimonials' => 'آراء العملاء',
+    'Privacy Policy' => 'سياسة الخصوصية',
+'Your privacy and data protection are our top priorities' => 'خصوصيتك وحماية البيانات أولويتنا القصوى',
+'Last Updated' => 'آخر تحديث',
+'January 2025' => 'يناير 2025',
+'Questions About Privacy?' => 'أسئلة حول الخصوصية؟',
+ // FAQ Page
+ 'Frequently Asked Questions' => 'الأسئلة الأكثر شيوعاً',
+ 'Find answers to common questions about our platform and services' => 'ابحث عن إجابات للأسئلة الشائعة حول منصتنا وخدماتنا',
+ 'Search FAQs...' => 'البحث في الأسئلة الشائعة...',
+ 'No FAQs Available' => 'لا توجد أسئلة شائعة متاحة',
+ 'We are working on adding more frequently asked questions.' => 'نحن نعمل على إضافة المزيد من الأسئلة الشائعة.',
+ 'No Results Found' => 'لم يتم العثور على نتائج',
+ 'Try different keywords or contact us directly.' => 'جرب كلمات مفتاحية مختلفة أو تواصل معنا مباشرة.',
+ 'Clear Search' => 'مسح البحث',
+ 'Still Have Questions?' => 'لا تزال لديك أسئلة؟',
+ 'Can\'t find what you\'re looking for? Get in touch with our support team.' => 'لا يمكنك العثور على ما تبحث عنه؟ تواصل مع فريق الدعم لدينا.',
+  // Contact Form
+  'Send Us a Message' => 'أرسل لنا رسالة',
+  'Your Name' => 'اسمك الكامل',
+  'Enter your full name' => 'أدخل اسمك الكامل',
+  'Email Address' => 'عنوان البريد الإلكتروني',
+  'Enter your email address' => 'أدخل عنوان بريدك الإلكتروني',
+  'Subject' => 'الموضوع',
+  'Select Subject' => 'اختر الموضوع',
+  'General Inquiry' => 'استفسار عام',
+  'Technical Support' => 'الدعم الفني',
+  'Billing Question' => 'سؤال حول الفواتير',
+  'Feedback' => 'ملاحظات',
+  'Other' => 'أخرى',
+  'Your Message' => 'رسالتك',
+  'Please describe your inquiry in detail...' => 'يرجى وصف استفسارك بالتفصيل...',
+  'Send Message' => 'إرسال الرسالة',
+  'Sending...' => 'جاري الإرسال...',
 
+  // Contact Information
+  'Contact Information' => 'معلومات التواصل',
+  'Phone' => 'الهاتف',
+  'Phone 2' => 'الهاتف (البديل)',
+  'Email' => 'البريد الإلكتروني',
+  'Support Hours' => 'ساعات الدعم',
+  'Work Hours' => 'الاثنين - الجمعة: 9:00 صباحاً - 6:00 مساءً بتوقيت جرينتش',
+  'Tech 24/7' => 'الدعم الفني متاح على مدار الساعة',
+
+  // FAQ Section
+  'FAQ Title' => 'الأسئلة الأكثر شيوعاً',
+  'FAQ Subtitle' => 'إجابات سريعة للأسئلة التي قد تكون لديك',
+  'View All FAQs' => 'عرض جميع الأسئلة الشائعة',
+
+  // CTA Section
+  'CTA Title' => 'هل أنت مستعد لبدء رحلتك؟',
+  'CTA Text' => 'انضم إلى آلاف المهنيين الذين طوروا مسيرتهم المهنية مع Sprint Skills',
+  'Get Started' => 'ابدأ الآن',
+  'Get Started Today' => 'ابدأ اليوم',
+
+  // Success/Error Messages
+  'Message sent successfully!' => 'شكراً لك! تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.',
+  'Error sending message' => 'عذراً، حدث خطأ في إرسال رسالتك. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.',
 ];
-
-
-
-
-
-
-
 
 ?>
