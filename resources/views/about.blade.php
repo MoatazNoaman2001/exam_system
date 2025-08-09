@@ -478,10 +478,7 @@
                         </div>
                         <div class="section-content">
                             <p>Deliver continuously updated, PMI-aligned content—rooted in regional case studies—and pair it with tools that shorten the gap between learning and doing.</p>
-                            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                                <i class="fas fa-external-link-alt me-1"></i>
-                                Learn more at <a href="https://pmi.org" target="_blank" style="color: #2F80ED; text-decoration: none;">pmi.org</a>
-                            </p>
+                           
                         </div>
                     </div>
 

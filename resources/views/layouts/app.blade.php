@@ -215,14 +215,15 @@
                 </div>
             @endif
 
+
             @if (Auth::user()->role === 'student' &&
-                    !array_key_exists(request()->route()->getName(), ['student.index', 'student.feature', 'login']))
+                    !in_array(request()->route()->getName(), ['student.index', 'student.feature', 'login' , 'student.welcome', 'student.exams.take', ]))
                 <!-- Toggle Button -->
                 <button class="sidebar-toggle {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" id="studentSidebarToggleBtn"
                     title="Toggle Sidebar">
                     <i class="fas fa-bars"></i>
                 </button>
-
+                {{-- <p>{{request()->route()->getName()}}</p> --}}
                 <div class="overlay" id="studentOverlay"></div>
                 <div class="sidebar student-sidebar {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" id="studentSidebar">
                     <div class="sidebar-header">
@@ -233,7 +234,6 @@
                         <p class="sidebar-subtitle">مرحباً {{ Auth::user()->username }}</p>
                     </div>
                     <div class="sidebar-menu">
-
                         <a href="{{ route('student.sections') }}"
                             class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}"
                             data-title="{{ __('lang.sections') }}">

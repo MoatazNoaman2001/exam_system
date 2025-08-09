@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Logo')
+@section('title', __('lang.logo'))
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/logo.css') }}">
@@ -10,11 +10,11 @@
         <img src="/images/70e80d344c1c52645d9005d789c5a192bb7f2c85.png" alt="Background" class="background-img" />
         <div class="frame10">
             <div class="frame8">
-                <h1 class="logo-text">Logo</h1>
-                <p class="ready">جاهز للانطلاق؟</p>
-                <p class="start">.ابدأ اﻵن رحلتك نحو الاحترافية</p>
+                <h1 class="logo-text">{{ __('lang.logo') }}</h1>
+                <p class="ready">{{ __('lang.ready_to_start') }}</p>
+                <p class="start">{{ __('lang.start_journey') }}</p>
                 <button class="use" onclick="window.location.href='{{ route('student.feature') }}'">
-                    بدء الاستخدام
+                    {{ __('lang.start_using') }}
                 </button>    
             </div>
         </div>

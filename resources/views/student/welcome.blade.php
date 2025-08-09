@@ -27,7 +27,7 @@
         </div>
         
         <!-- Next Button -->
-        <a href="{{ route('student.sections.index') }}" class="next-btn btn btn-primary" data-aos="fade-up" data-aos-delay="400">
+        <a href="{{ route('student.sections') }}" class="next-btn btn btn-primary" data-aos="fade-up" data-aos-delay="400">
             {{ __('lang.next') }}
         </a>
     </div>

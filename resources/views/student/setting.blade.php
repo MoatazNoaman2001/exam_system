@@ -157,7 +157,7 @@
                 <h3 class="card-title">{{ __('lang.support_help') }}</h3>
             </div>
             <div class="card-body">
-                <a href="{{ route('student.terms.conditions') }}" class="settings-item">
+                <a href="{{ route('privacy-policy') }}" class="settings-item">
                     <div class="item-content">
                         <i class="fas fa-file-contract item-icon"></i>
                         <span class="item-text">{{ __('lang.terms_conditions') }}</span>

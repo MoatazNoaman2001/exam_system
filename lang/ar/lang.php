@@ -1403,6 +1403,25 @@ return [
   // Success/Error Messages
   'Message sent successfully!' => 'شكراً لك! تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.',
   'Error sending message' => 'عذراً، حدث خطأ في إرسال رسالتك. يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.',
+   // Registration
+   'join_our_community' => 'انضم إلى مجتمعنا',
+   'create_account_advance_career' => 'أنشئ حسابك وطور مسيرتك المهنية',
+   'professional_training' => 'تدريب مهني',
+   'industry_certifications' => 'شهادات الصناعة',
+   'expert_community' => 'مجتمع الخبراء',
+   'create_professional_account' => 'إنشاء حساب مهني',
+   'join_community' => 'انضم إلى آلاف المهنيين الذين يطورون مسيرتهم المهنية',
+   'username' => 'اسم المستخدم',
+   'logo' => 'الشعار',
+'ready_to_start' => 'جاهز للانطلاق؟',
+'start_journey' => 'ابدأ الآن رحلتك نحو الاحترافية.',
+'start_using' => 'بدء الاستخدام',
+'features' => 'الميزات',
+'learn_test_progress' => 'تعلم، اختبر، وتقدم بثقة',
+'updated_content_exercises' => 'محتوى محدث، تمارين واقعية، وتتبع لتقدمك خطوة بخطوة.',
+'next' => 'التالي',
+'previous' => 'السابق', 
+'skip' => 'تخطي',
 ];
 
 ?>
