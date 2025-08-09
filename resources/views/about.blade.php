@@ -593,10 +593,7 @@
                         </div>
                         <div class="section-content">
                             <p>توفير محتوى موثوق يُحدَّث دوريًّا وفق معايير PMI وشهاداته المعروفة مثل PMP®، مع ربط المحتوى بأمثلة من القطاعات الربحية وغير الربحية في منطقتنا.</p>
-                            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                                <i class="fas fa-external-link-alt me-1"></i>
-                                تعرّف أكثر على <a href="https://pmi.org" target="_blank" style="color: #2F80ED; text-decoration: none;">pmi.org</a>
-                            </p>
+                           
                         </div>
                     </div>
 
