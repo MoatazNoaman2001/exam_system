@@ -1,6 +1,6 @@
 <?php
 return [
-    'Page Title' => 'Contact PMP Master - Your Complete PMP Exam Preparation System',
+    'Page Title' => 'Contact - Sprint Skills',
     'Contact PMP Master' => 'Contact PMP Master',
     'We are here to help' => "We're here to help you with any questions about our platform or your PMP exam preparation.",
     'Send Us a Message' => 'Send Us a Message',
