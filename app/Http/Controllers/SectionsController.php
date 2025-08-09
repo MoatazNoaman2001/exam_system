@@ -112,7 +112,7 @@ class SectionsController extends Controller
             $completedSlidesCount = $completedSlidesPerChapter[$chapter->id] ?? 0;
 
             $meta = $chapterMetadata[$chapter->id] ?? [
-                'name' => 'Chapter ' . $chapter->text,
+                'name' => $chapter->text,
             ];
 
             $chapterData[] = [
@@ -167,7 +167,7 @@ class SectionsController extends Controller
             $completedSlidesCount = $completedSlidesPerDomain[$domain->id] ?? 0;
 
             $meta = $domainMetadata[$domain->id] ?? [
-                'name' => 'Domain ' . $domain->text,
+                'name' => $domain->text,
             ];
 
             $domainData[] = [

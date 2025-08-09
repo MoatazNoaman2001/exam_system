@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', __('exams.edit.page_title'))
+@section('title', __('Edit Exam'))
 
-@section('page-title', __('exams.edit.page_title'))
+@section('page-title', __('Edit Exam'))
 
 @section('content')
 
@@ -12,15 +12,19 @@
     <div class="page-header">
         <div class="header-content">
             <div class="header-left">
-                <h1 class="page-title">{{ __('exams.edit.page_title') }}</h1>
+                <h1 class="page-title">{{ __('Edit Exam') }}</h1>
                 <div class="breadcrumb">
-                    <span class="exam-id">{{ __('exams.edit.exam_id') }}: {{ $exam->id }}</span>
+                    <span class="exam-id">{{ __('Exam ID') }}: {{ Str::limit($exam->id, 8) }}</span>
                 </div>
             </div>
             <div class="header-actions">
-                <a href="{{ route('admin.exams') }}" class="btn btn-secondary">
+                <a href="{{ route('admin.exams.questions.index', $exam->id) }}" class="btn btn-success">
+                    <i class="fas fa-question-circle"></i>
+                    {{ __('Manage Questions') }}
+                </a>
+                <a href="{{ route('admin.exams.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }}"></i>
-                    {{ __('exams.edit.back_to_exams') }}
+                    {{ __('Back to Exams') }}
                 </a>
             </div>
         </div>
@@ -31,14 +35,14 @@
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <div class="alert-header">
                 <i class="fas fa-exclamation-triangle"></i>
-                <h6 class="alert-title">{{ __('exams.edit.errors.validation_title') }}</h6>
+                <h6 class="alert-title">{{ __('Please correct the following errors:') }}</h6>
             </div>
             <ul class="alert-list">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('exams.edit.close') }}"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Close') }}"></button>
         </div>
     @endif
 
@@ -48,7 +52,7 @@
                 <i class="fas fa-check-circle"></i>
                 <span>{{ session('success') }}</span>
             </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('exams.edit.close') }}"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Close') }}"></button>
         </div>
     @endif
 
@@ -62,7 +66,7 @@
             <div class="card-header">
                 <div class="card-header-content">
                     <i class="fas fa-info-circle"></i>
-                    <h3 class="card-title">{{ __('exams.edit.basic_information') }}</h3>
+                    <h3 class="card-title">{{ __('Basic Information') }}</h3>
                 </div>
             </div>
             <div class="card-body">
@@ -70,14 +74,14 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="title_en" class="form-label required">
-                            {{ __('exams.edit.fields.title_en') }}
+                            {{ __('Title (English)') }}
                         </label>
                         <input type="text" 
                                class="form-control @error('title_en') is-invalid @enderror"
                                id="title_en" 
                                name="title_en" 
                                value="{{ old('title_en', $exam->text) }}"
-                               placeholder="{{ __('exams.edit.placeholders.title_en') }}" 
+                               placeholder="{{ __('Enter exam title in English') }}" 
                                required>
                         @error('title_en')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -86,14 +90,14 @@
 
                     <div class="form-group">
                         <label for="title_ar" class="form-label required">
-                            {{ __('exams.edit.fields.title_ar') }}
+                            {{ __('Title (Arabic)') }}
                         </label>
                         <input type="text" 
                                class="form-control @error('title_ar') is-invalid @enderror"
                                id="title_ar" 
                                name="title_ar" 
                                value="{{ old('title_ar', $exam->{'text-ar'}) }}"
-                               placeholder="{{ __('exams.edit.placeholders.title_ar') }}" 
+                               placeholder="{{ __('Enter exam title in Arabic') }}" 
                                dir="rtl" 
                                required>
                         @error('title_ar')
@@ -106,13 +110,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="description_en" class="form-label">
-                            {{ __('exams.edit.fields.description_en') }}
+                            {{ __('Description (English)') }}
                         </label>
                         <textarea class="form-control @error('description_en') is-invalid @enderror" 
                                   id="description_en" 
                                   name="description_en"
                                   rows="4" 
-                                  placeholder="{{ __('exams.edit.placeholders.description_en') }}">{{ old('description_en', $exam->description) }}</textarea>
+                                  placeholder="{{ __('Enter exam description in English (optional)') }}">{{ old('description_en', $exam->description) }}</textarea>
                         @error('description_en')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -120,13 +124,13 @@
 
                     <div class="form-group">
                         <label for="description_ar" class="form-label">
-                            {{ __('exams.edit.fields.description_ar') }}
+                            {{ __('Description (Arabic)') }}
                         </label>
                         <textarea class="form-control @error('description_ar') is-invalid @enderror" 
                                   id="description_ar" 
                                   name="description_ar"
                                   rows="4" 
-                                  placeholder="{{ __('exams.edit.placeholders.description_ar') }}" 
+                                  placeholder="{{ __('Enter exam description in Arabic (optional)') }}" 
                                   dir="rtl">{{ old('description_ar', $exam->{'description-ar'}) }}</textarea>
                         @error('description_ar')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -138,7 +142,7 @@
                 <div class="form-row">
                     <div class="form-group form-group-quarter">
                         <label for="duration" class="form-label required">
-                            {{ __('exams.edit.fields.duration') }}
+                            {{ __('Duration') }}
                         </label>
                         <div class="input-group">
                             <input type="number" 
@@ -150,9 +154,9 @@
                                    max="300" 
                                    placeholder="30" 
                                    required>
-                            <span class="input-group-text">{{ __('exams.edit.minutes') }}</span>
+                            <span class="input-group-text">{{ __('minutes') }}</span>
                         </div>
-                        <div class="form-help">{{ __('exams.edit.hints.duration') }}</div>
+                        <div class="form-help">{{ __('Set the time limit for this exam (1-300 minutes)') }}</div>
                         @error('duration')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -161,213 +165,52 @@
             </div>
         </div>
 
-        <!-- Questions Section -->
-        <div class="form-card">
+        <!-- Exam Statistics -->
+        <div class="form-card info-card">
             <div class="card-header">
                 <div class="card-header-content">
-                    <i class="fas fa-question-circle"></i>
-                    <h3 class="card-title">{{ __('exams.edit.questions_section') }}</h3>
-                    <span class="questions-count">{{ count($exam->examQuestions) }} {{ __('exams.edit.questions') }}</span>
-                </div>
-                <div class="card-actions">
-                    <button type="button" class="btn btn-success" id="add-question">
-                        <i class="fas fa-plus"></i>
-                        {{ __('exams.edit.buttons.add_question') }}
-                    </button>
+                    <i class="fas fa-chart-bar"></i>
+                    <h3 class="card-title">{{ __('Exam Statistics') }}</h3>
                 </div>
             </div>
             <div class="card-body">
-                <p class="section-help">{{ __('exams.edit.questions_help') }}</p>
-                
-                <!-- Questions Container -->
-                <div id="questions-container" class="questions-container">
-                    <!-- Pre-populate existing questions -->
-                    @foreach($exam->examQuestions as $questionIndex => $question)
-                        <div class="question-card" data-question-index="{{ $questionIndex }}">
-                            <div class="question-header">
-                                <div class="question-info">
-                                    <h4 class="question-title">
-                                        <span class="question-number">{{ $questionIndex + 1 }}</span>
-                                        {{ __('exams.edit.question') }}
-                                    </h4>
-                                </div>
-                                <div class="question-actions">
-                                    <button type="button" class="btn btn-sm btn-danger remove-question">
-                                        <i class="fas fa-trash"></i>
-                                        {{ __('exams.edit.buttons.remove_question') }}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="question-body">
-                                <!-- Question Type and Points Row -->
-                                <div class="form-row">
-                                    <div class="form-group form-group-half">
-                                        <label for="questions[{{ $questionIndex }}][type]" class="form-label required">
-                                            {{ __('exams.edit.fields.question_type') }}
-                                        </label>
-                                        <select class="form-control question-type @error('questions.'.$questionIndex.'.type') is-invalid @enderror" 
-                                                name="questions[{{ $questionIndex }}][type]" required>
-                                            <option value="">{{ __('exams.edit.select_type') }}</option>
-                                            <option value="single_choice" {{ old('questions.'.$questionIndex.'.type', $question->type) == 'single_choice' ? 'selected' : '' }}>
-                                                {{ __('exams.edit.single_choice') }}
-                                            </option>
-                                            <option value="multiple_choice" {{ old('questions.'.$questionIndex.'.type', $question->type) == 'multiple_choice' ? 'selected' : '' }}>
-                                                {{ __('exams.edit.multiple_choice') }}
-                                            </option>
-                                        </select>
-                                        @error('questions.'.$questionIndex.'.type')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group form-group-quarter">
-                                        <label for="questions[{{ $questionIndex }}][points]" class="form-label required">
-                                            {{ __('exams.edit.fields.points') }}
-                                        </label>
-                                        <input type="number" 
-                                               class="form-control question-points @error('questions.'.$questionIndex.'.points') is-invalid @enderror"
-                                               name="questions[{{ $questionIndex }}][points]" 
-                                               value="{{ old('questions.'.$questionIndex.'.points', $question->marks) }}" 
-                                               min="1" 
-                                               max="100" 
-                                               placeholder="1" 
-                                               required>
-                                        @error('questions.'.$questionIndex.'.points')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <!-- Question Text -->
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="questions[{{ $questionIndex }}][text_en]" class="form-label required">
-                                            {{ __('exams.edit.fields.question_text_en') }}
-                                        </label>
-                                        <textarea class="form-control question-text-en @error('questions.'.$questionIndex.'.text_en') is-invalid @enderror"
-                                                  name="questions[{{ $questionIndex }}][text_en]" 
-                                                  rows="3" 
-                                                  placeholder="{{ __('exams.edit.placeholders.question_text_en') }}" 
-                                                  required>{{ old('questions.'.$questionIndex.'.text_en', $question->question) }}</textarea>
-                                        @error('questions.'.$questionIndex.'.text_en')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="questions[{{ $questionIndex }}][text_ar]" class="form-label required">
-                                            {{ __('exams.edit.fields.question_text_ar') }}
-                                        </label>
-                                        <textarea class="form-control question-text-ar @error('questions.'.$questionIndex.'.text_ar') is-invalid @enderror"
-                                                  name="questions[{{ $questionIndex }}][text_ar]" 
-                                                  rows="3" 
-                                                  placeholder="{{ __('exams.edit.placeholders.question_text_ar') }}" 
-                                                  dir="rtl" 
-                                                  required>{{ old('questions.'.$questionIndex.'.text_ar', $question->{'question-ar'}) }}</textarea>
-                                        @error('questions.'.$questionIndex.'.text_ar')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <!-- Options Section -->
-                                <div class="options-section">
-                                    <div class="options-header">
-                                        <h5 class="options-title">{{ __('exams.edit.answer_options') }}</h5>
-                                        <button type="button" class="btn btn-sm btn-outline-primary add-option">
-                                            <i class="fas fa-plus"></i>
-                                            {{ __('exams.edit.buttons.add_option') }}
-                                        </button>
-                                    </div>
-
-                                    <div class="options-container {{ $question->type === 'single_choice' ? 'single-choice-mode' : 'multiple-choice-mode' }}">
-                                        @foreach($question->answers as $optionIndex => $answer)
-                                            <div class="option-card">
-                                                <div class="option-header">
-                                                    <span class="option-number">{{ $optionIndex + 1 }}</span>
-                                                    <div class="option-actions">
-                                                        <div class="form-check">
-                                                            @if($question->type === 'single_choice')
-                                                                <input type="radio" 
-                                                                       class="form-check-input is-correct" 
-                                                                       name="questions[{{ $questionIndex }}][correct_answer]" 
-                                                                       value="{{ $optionIndex }}"
-                                                                       id="correct-option-{{ $questionIndex }}-{{ $optionIndex }}"
-                                                                       {{ $answer->is_correct ? 'checked' : '' }}>
-                                                            @else
-                                                                <input type="checkbox" 
-                                                                       class="form-check-input is-correct" 
-                                                                       name="questions[{{ $questionIndex }}][options][{{ $optionIndex }}][is_correct]" 
-                                                                       value="1"
-                                                                       id="correct-option-{{ $questionIndex }}-{{ $optionIndex }}"
-                                                                       {{ $answer->is_correct ? 'checked' : '' }}>
-                                                            @endif
-                                                            <label class="form-check-label" for="correct-option-{{ $questionIndex }}-{{ $optionIndex }}">
-                                                                {{ __('exams.edit.correct') }}
-                                                            </label>
-                                                        </div>
-                                                        <button type="button" class="btn btn-sm btn-outline-danger remove-option">
-                                                            <i class="fas fa-trash"></i>
-                                                            {{ __('exams.edit.buttons.remove_option') }}
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                                <div class="option-body">
-                                                    <!-- Option Text -->
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label class="form-label">{{ __('exams.edit.fields.option_text_en') }}</label>
-                                                            <input type="text" 
-                                                                   class="form-control option-text-en"
-                                                                   name="questions[{{ $questionIndex }}][options][{{ $optionIndex }}][text_en]" 
-                                                                   value="{{ old('questions.'.$questionIndex.'.options.'.$optionIndex.'.text_en', $answer->answer) }}"
-                                                                   placeholder="{{ __('exams.edit.placeholders.option_text_en') }}" 
-                                                                   required>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label class="form-label">{{ __('exams.edit.fields.option_text_ar') }}</label>
-                                                            <input type="text" 
-                                                                   class="form-control option-text-ar"
-                                                                   name="questions[{{ $questionIndex }}][options][{{ $optionIndex }}][text_ar]" 
-                                                                   value="{{ old('questions.'.$questionIndex.'.options.'.$optionIndex.'.text_ar', $answer->{'answer-ar'}) }}"
-                                                                   placeholder="{{ __('exams.edit.placeholders.option_text_ar') }}" 
-                                                                   dir="rtl" 
-                                                                   required>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Reason Text -->
-                                                    <div class="form-row">
-                                                        <div class="form-group">
-                                                            <label class="form-label">{{ __('exams.edit.fields.reason_en') }}</label>
-                                                            <textarea class="form-control reason-text-en"
-                                                                      name="questions[{{ $questionIndex }}][options][{{ $optionIndex }}][reason]" 
-                                                                      rows="2"
-                                                                      maxlength="2000"
-                                                                      placeholder="{{ __('exams.edit.placeholders.reason_en') }}">{{ old('questions.'.$questionIndex.'.options.'.$optionIndex.'.reason', $answer->reason) }}</textarea>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label class="form-label">{{ __('exams.edit.fields.reason_ar') }}</label>
-                                                            <textarea class="form-control reason-text-ar"
-                                                                      name="questions[{{ $questionIndex }}][options][{{ $optionIndex }}][reason_ar]" 
-                                                                      rows="2"
-                                                                      maxlength="2000"
-                                                                      placeholder="{{ __('exams.edit.placeholders.reason_ar') }}" 
-                                                                      dir="rtl">{{ old('questions.'.$questionIndex.'.options.'.$optionIndex.'.reason_ar', $answer->{'reason-ar'}) }}</textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-question-circle"></i>
                         </div>
-                    @endforeach
+                        <div class="stat-content">
+                            <h4>{{ $exam->number_of_questions }}</h4>
+                            <p>{{ __('Questions') }}</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>{{ $exam->created_at->format('M d, Y') }}</h4>
+                            <p>{{ __('Created') }}</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>{{ $exam->updated_at->format('M d, Y') }}</h4>
+                            <p>{{ __('Last Modified') }}</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-{{ $exam->is_completed ? 'check-circle' : 'play-circle' }}"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>{{ $exam->is_completed ? __('Completed') : __('Active') }}</h4>
+                            <p>{{ __('Status') }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -376,59 +219,66 @@
         <div class="form-actions">
             <button type="submit" class="btn btn-primary btn-lg">
                 <i class="fas fa-save"></i>
-                {{ __('exams.edit.buttons.update_exam') }}
+                {{ __('Update Exam') }}
             </button>
-            <a href="{{ route('admin.exams') }}" class="btn btn-secondary btn-lg">
+            <a href="{{ route('admin.exams.questions.index', $exam->id) }}" class="btn btn-success btn-lg">
+                <i class="fas fa-question-circle"></i>
+                {{ __('Manage Questions') }}
+            </a>
+            <a href="{{ route('admin.exams.index') }}" class="btn btn-secondary btn-lg">
                 <i class="fas fa-times"></i>
-                {{ __('exams.edit.buttons.cancel') }}
+                {{ __('Cancel') }}
             </a>
         </div>
     </form>
 </div>
 
-@include('admin.exams.partials.question-templates')
+<style>
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
 
-<script src="{{ asset('js/exam-create.js') }}" defer></script>
-<script>
-    // Pass localized strings to JavaScript
-    window.examCreateTranslations = {
-        question: '{{ __('exams.edit.question') }}',
-        removeQuestion: '{{ __('exams.edit.buttons.remove_question') }}',
-        addOption: '{{ __('exams.edit.buttons.add_option') }}',
-        removeOption: '{{ __('exams.edit.buttons.remove_option') }}',
-        correct: '{{ __('exams.edit.correct') }}',
-        questionNumber: '{{ __('exams.edit.question_number') }}',
-        noQuestionsTitle: '{{ __('exams.edit.empty_state.title') }}',
-        noQuestionsText: '{{ __('exams.edit.empty_state.text') }}',
-        validationErrors: {
-            minOptions: '{{ __('exams.edit.validation.min_options') }}',
-            minQuestions: '{{ __('exams.edit.validation.min_questions') }}',
-            requiredField: '{{ __('exams.edit.validation.required_field') }}',
-            singleCorrectAnswer: '{{ __('exams.edit.validation.single_correct_answer') }}',
-            atLeastOneCorrect: '{{ __('exams.edit.validation.at_least_one_correct') }}'
-        }
-    };
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
 
-    // Initialize the form with existing data
-    document.addEventListener('DOMContentLoaded', function() {
-        // Update question count for existing questions
-        const existingQuestions = document.querySelectorAll('.question-card');
-        if (window.ExamQuestionManager && existingQuestions.length > 0) {
-            // Set the question count to match existing questions
-            const manager = new ExamQuestionManager();
-            manager.questionCount = existingQuestions.length;
-            
-            // Setup event listeners for existing questions
-            existingQuestions.forEach(questionCard => {
-                manager.setupQuestionEvents(questionCard);
-                
-                // Setup character counters for existing options
-                const options = questionCard.querySelectorAll('.option-card');
-                options.forEach(option => {
-                    manager.setupCharacterCounters(option);
-                });
-            });
-        }
-    });
-</script>
-@endsection 
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #0d6efd;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+}
+
+.stat-content h4 {
+    margin: 0 0 0.25rem 0;
+    color: #333;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.stat-content p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.info-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+}
+</style>
+@endsection

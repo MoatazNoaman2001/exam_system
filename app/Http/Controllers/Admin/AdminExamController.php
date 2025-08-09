@@ -63,12 +63,19 @@ class AdminExamController extends Controller
     }
 
     /**
-     * Store a newly created exam
+     * Store a newly created exam (basic info only)
      */
-    public function store(StoreExamRequest $request)
+    public function store(Request $request)
     {
-        $exam = DB::transaction(function () use ($request) {
-            // Create exam
+        $request->validate([
+            'title_en' => 'required|string|max:255',
+            'title_ar' => 'required|string|max:255',
+            'description_en' => 'nullable|string|max:1000',
+            'description_ar' => 'nullable|string|max:1000',
+            'duration' => 'required|integer|min:1|max:300',
+        ]);
+
+        try {
             $exam = Exam::create([
                 'id' => Str::uuid(),
                 'text' => $request->title_en,
@@ -76,20 +83,18 @@ class AdminExamController extends Controller
                 'description' => $request->description_en,
                 'description-ar' => $request->description_ar,
                 'time' => $request->duration,
-                'number_of_questions' => count($request->questions ?? []),
+                'number_of_questions' => 0,
                 'is_completed' => false,
             ]);
 
-            // Process questions
-            if ($request->has('questions')) {
-                $this->processQuestions($exam, $request->questions);
-            }
-
-            return $exam;
-        });
-
-        return redirect()->route('admin.exams', $exam->id)
-            ->with('success', 'Exam created successfully!');
+            return redirect()->route('admin.exams.questions.index', $exam->id)
+                ->with('success', 'Exam created successfully! Now add questions to complete your exam.');
+        } catch (\Exception $e) {
+            Log::error('Exam creation failed', ['error' => $e->getMessage()]);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'An error occurred while creating the exam.');
+        }
     }
 
     /**
@@ -98,7 +103,7 @@ class AdminExamController extends Controller
     public function show($examId)
     {
         try {
-            $exam = Exam::with(['examQuestions.questionExamAnswers'])
+            $exam = Exam::with(['examQuestions.answers'])
                 ->findOrFail($examId);
 
             return view('admin.exams.show', compact('exam'));
@@ -109,52 +114,42 @@ class AdminExamController extends Controller
     }
 
     /**
-     * Show the form for editing the specified exam
+     * Show the form for editing the specified exam (basic info only)
      */
     public function edit($examId)
     {
         try {
-            $exam = Exam::with(['examQuestions.answers'])
-                ->findOrFail($examId);
-
-            // dd(strval($exam));
+            $exam = Exam::findOrFail($examId);
             return view('admin.exams.edit', compact('exam'));
         } catch (\Exception $e) {
             Log::error('Error loading exam for edit', ['exam_id' => $examId, 'error' => $e->getMessage()]);
-            return redirect()->route('admin.exams')->with('error', 'Exam not found.');
+            return redirect()->route('admin.exams.index')->with('error', 'Exam not found.');
         }
     }
 
     /**
-     * Update the specified exam
+     * Update the specified exam (basic info only)
      */
-    public function update(UpdateExamRequest $request, $examId)
+    public function update(Request $request, $examId)
     {
+        $request->validate([
+            'title_en' => 'required|string|max:255',
+            'title_ar' => 'required|string|max:255',
+            'description_en' => 'nullable|string|max:1000',
+            'description_ar' => 'nullable|string|max:1000',
+            'duration' => 'required|integer|min:1|max:300',
+        ]);
+
         try {
-            $exam = DB::transaction(function () use ($request, $examId) {
-                $exam = Exam::findOrFail($examId);
+            $exam = Exam::findOrFail($examId);
 
-                // Update exam basic info
-                $exam->update([
-                    'text' => $request->title_en,
-                    'text-ar' => $request->title_ar,
-                    'description' => $request->description_en,
-                    'description-ar' => $request->description_ar,
-                    'time' => $request->duration,
-                    'number_of_questions' => count($request->questions ?? []),
-                ]);
-
-                // Update questions if provided
-                if ($request->has('questions')) {
-                    // Delete existing questions and answers
-                    $exam->examQuestions()->delete();
-                    
-                    // Process new questions
-                    $this->processQuestions($exam, $request->questions);
-                }
-
-                return $exam;
-            });
+            $exam->update([
+                'text' => $request->title_en,
+                'text-ar' => $request->title_ar,
+                'description' => $request->description_en,
+                'description-ar' => $request->description_ar,
+                'time' => $request->duration,
+            ]);
 
             return redirect()->route('admin.exams.show', $exam->id)
                 ->with('success', 'Exam updated successfully!');
@@ -209,97 +204,5 @@ class AdminExamController extends Controller
         }
     }
 
-    /**
-     * Process questions data
-     */
-    protected function processQuestions(Exam $exam, array $questionsData)
-    {
-        foreach ($questionsData as $index => $questionData) {
-
-            // Validate basic question data
-            if (empty($questionData['text_en']) || empty($questionData['text_ar'])) {
-                throw new \Exception("Question " . ($index + 1) . " is missing required text.");
-            }
-
-            if (empty($questionData['type']) || !in_array($questionData['type'], ['single_choice', 'multiple_choice'])) {
-                throw new \Exception("Question " . ($index + 1) . " has invalid type.");
-            }
-
-            // Create question
-            $question = ExamQuestions::create([
-                'id' => Str::uuid(),
-                'exam_id' => $exam->id,
-                'question' => $questionData['text_en'],
-                'question-ar' => $questionData['text_ar'],
-                'text-ar' => $questionData['text_ar'],
-                'type' => $questionData['type'],
-                'marks' => $questionData['points'] ?? 1,
-            ]);
-
-            // Process answers
-            if (isset($questionData['options']) && is_array($questionData['options'])) {
-                $this->processAnswers($question, $questionData['options'], $questionData['type'], $questionData['correct_answer'] ?? null);
-            }
-        }
-    }
-
-    /**
-     * Process answers data
-     */
-    protected function processAnswers(ExamQuestions $question, array $answersData, string $questionType, $correctAnswer = null)
-    {
-        if (count($answersData) < 2) {
-            throw new \Exception("Question must have at least 2 answer options.");
-        }
-
-        $hasCorrectAnswer = false;
-
-        foreach ($answersData as $index => $answerData) {
-            // Validate answer data
-            if (empty($answerData['text_en']) || empty($answerData['text_ar'])) {
-                throw new \Exception("Answer option " . ($index + 1) . " is missing required text.");
-            }
-
-            $isCorrect = false;
-
-            // Determine if this answer is correct based on question type
-            if ($questionType === 'single_choice') {
-                $isCorrect = $correctAnswer == $index;
-            } elseif ($questionType === 'multiple_choice') {
-                $isCorrect = isset($answerData['is_correct']) && $answerData['is_correct'];
-            }
-
-            if ($isCorrect) {
-                $hasCorrectAnswer = true;
-            }
-
-            // dd($answerData);
-
-            ExamQuestionAnswer::create([
-                'id' => Str::uuid(),
-                'exam_question_id' => $question->id,
-                'answer' => $answerData['text_en'],
-                'answer-ar' => $answerData['text_ar'],
-                'is_correct' => $isCorrect,
-                'reason' => $answerData['reason'] ?? null,
-                'reason-ar' => $answerData['reason_ar'] ?? null,
-            ]);
-        }
-
-        // Validate that at least one correct answer exists
-        if (!$hasCorrectAnswer) {
-            throw new \Exception("Question must have at least one correct answer.");
-        }
-
-        // For single choice, validate only one correct answer
-        if ($questionType === 'single_choice') {
-            $correctAnswers = collect($answersData)->filter(function ($answer, $index) use ($correctAnswer) {
-                return $correctAnswer == $index;
-            });
-
-            if ($correctAnswers->count() !== 1) {
-                throw new \Exception("Single choice questions must have exactly one correct answer.");
-            }
-        }
-    }
+   
 }

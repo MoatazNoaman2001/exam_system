@@ -108,7 +108,14 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="badge badge-info">{{ $exam->number_of_questions }} {{ __('Questions') }}</span>
+                                    <div class="questions-info">
+                                        <span class="badge badge-{{ $exam->number_of_questions > 0 ? 'info' : 'warning' }}">
+                                            {{ $exam->number_of_questions }} {{ __('Questions') }}
+                                        </span>
+                                        @if($exam->number_of_questions == 0)
+                                            <small class="text-muted d-block">{{ __('No questions added') }}</small>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="duration-badge">
@@ -117,15 +124,15 @@
                                     </span>
                                 </td>
                                 <td>
-                                    @if($exam->is_completed)
-                                        <span class="status-badge status-completed">
+                                    @if($exam->number_of_questions > 0)
+                                        <span class="status-badge status-active">
                                             <i class="fas fa-check-circle"></i>
-                                            {{ __('Completed') }}
+                                            {{ __('Ready') }}
                                         </span>
                                     @else
-                                        <span class="status-badge status-active">
-                                            <i class="fas fa-play-circle"></i>
-                                            {{ __('Active') }}
+                                        <span class="status-badge status-draft">
+                                            <i class="fas fa-edit"></i>
+                                            {{ __('Draft') }}
                                         </span>
                                     @endif
                                 </td>
@@ -135,12 +142,22 @@
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="{{ route('admin.exams.edit', $exam) }}" 
+                                        <a href="{{ route('admin.exams.questions.index', $exam->id) }}" 
+                                           class="btn btn-sm btn-success" 
+                                           title="Manage Questions">
+                                            <i class="fas fa-question-circle"></i>
+                                        </a>
+                                        <a href="{{ route('admin.exams.edit', $exam->id) }}" 
                                            class="btn btn-sm btn-primary" 
-                                           title="Edit Exam">
+                                           title="Edit Exam Info">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('admin.exams.destroy', $exam) }}" 
+                                        <a href="{{ route('admin.exams.show', $exam->id) }}" 
+                                           class="btn btn-sm btn-info" 
+                                           title="View Exam">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <form action="{{ route('admin.exams.destroy', $exam->id) }}" 
                                               method="POST" 
                                               style="display: inline;"
                                               onsubmit="return confirmDelete('{{ $exam->text }}')">
@@ -297,31 +314,66 @@
     </div>
 </div>
 
-<!-- View Exam Modal -->
-<div class="modal fade" id="viewExamModal" tabindex="-1" role="dialog" aria-labelledby="viewExamModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewExamModalLabel">
-                    <i class="fas fa-eye"></i>
-                    Exam Details
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="examDetailsContent">
-                <!-- Content will be loaded dynamically -->
-            </div>
-        </div>
-    </div>
-</div>
+<style>
+.questions-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.status-badge.status-draft {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-badge.status-active {
+    background-color: #28a745;
+    color: white;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+    min-width: 32px;
+}
+
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+</style>
 
 <script src="{{ asset('js/exam-index.js') }}"></script>
+<script>
+function confirmDelete(examTitle) {
+    return confirm(`Are you sure you want to delete the exam: "${examTitle}"?\n\nThis will also delete all questions and cannot be undone.`);
+}
+
+// Search functionality
+document.getElementById('searchExams').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const tableRows = document.querySelectorAll('#examsTable tbody tr');
+    
+    tableRows.forEach(row => {
+        const examTitle = row.querySelector('.exam-title').textContent.toLowerCase();
+        const examTitleAr = row.querySelector('.exam-title-ar')?.textContent.toLowerCase() || '';
+        
+        if (examTitle.includes(searchTerm) || examTitleAr.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+</script>
 @endsection
-
-@push('styles')
-@endpush
-
-@push('scripts')
-@endpush

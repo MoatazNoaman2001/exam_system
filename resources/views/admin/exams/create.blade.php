@@ -12,12 +12,13 @@
     <div class="page-header">
         <div class="header-content">
             <div class="header-left">
-                <h1 class="page-title">{{ __('exams.create.page_title') }}</h1>
+                <h1 class="page-title">{{ __('Create New Exam') }}</h1>
+                <p class="page-subtitle">Start by setting up the basic exam information</p>
             </div>
             <div class="header-actions">
-                <a href="{{ route('admin.exams') }}" class="btn btn-secondary">
+                <a href="{{ route('admin.exams.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }}"></i>
-                    {{ __('exams.create.back_to_exams') }}
+                    {{ __('Back to Exams') }}
                 </a>
             </div>
         </div>
@@ -28,14 +29,14 @@
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <div class="alert-header">
                 <i class="fas fa-exclamation-triangle"></i>
-                <h6 class="alert-title">{{ __('exams.create.errors.validation_title') }}</h6>
+                <h6 class="alert-title">{{ __('Please correct the following errors:') }}</h6>
             </div>
             <ul class="alert-list">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('exams.create.close') }}"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Close') }}"></button>
         </div>
     @endif
 
@@ -45,7 +46,7 @@
                 <i class="fas fa-check-circle"></i>
                 <span>{{ session('success') }}</span>
             </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('exams.create.close') }}"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Close') }}"></button>
         </div>
     @endif
 
@@ -58,7 +59,7 @@
             <div class="card-header">
                 <div class="card-header-content">
                     <i class="fas fa-info-circle"></i>
-                    <h3 class="card-title">{{ __('exams.create.basic_information') }}</h3>
+                    <h3 class="card-title">{{ __('Basic Information') }}</h3>
                 </div>
             </div>
             <div class="card-body">
@@ -66,14 +67,14 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="title_en" class="form-label required">
-                            {{ __('exams.create.fields.title_en') }}
+                            {{ __('Title (English)') }}
                         </label>
                         <input type="text" 
                                class="form-control @error('title_en') is-invalid @enderror"
                                id="title_en" 
                                name="title_en" 
                                value="{{ old('title_en') }}"
-                               placeholder="{{ __('exams.create.placeholders.title_en') }}" 
+                               placeholder="{{ __('Enter exam title in English') }}" 
                                required>
                         @error('title_en')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -82,14 +83,14 @@
 
                     <div class="form-group">
                         <label for="title_ar" class="form-label required">
-                            {{ __('exams.create.fields.title_ar') }}
+                            {{ __('Title (Arabic)') }}
                         </label>
                         <input type="text" 
                                class="form-control @error('title_ar') is-invalid @enderror"
                                id="title_ar" 
                                name="title_ar" 
                                value="{{ old('title_ar') }}"
-                               placeholder="{{ __('exams.create.placeholders.title_ar') }}" 
+                               placeholder="{{ __('Enter exam title in Arabic') }}" 
                                dir="rtl" 
                                required>
                         @error('title_ar')
@@ -102,13 +103,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="description_en" class="form-label">
-                            {{ __('exams.create.fields.description_en') }}
+                            {{ __('Description (English)') }}
                         </label>
                         <textarea class="form-control @error('description_en') is-invalid @enderror" 
                                   id="description_en" 
                                   name="description_en"
                                   rows="4" 
-                                  placeholder="{{ __('exams.create.placeholders.description_en') }}">{{ old('description_en') }}</textarea>
+                                  placeholder="{{ __('Enter exam description in English (optional)') }}">{{ old('description_en') }}</textarea>
                         @error('description_en')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -116,13 +117,13 @@
 
                     <div class="form-group">
                         <label for="description_ar" class="form-label">
-                            {{ __('exams.create.fields.description_ar') }}
+                            {{ __('Description (Arabic)') }}
                         </label>
                         <textarea class="form-control @error('description_ar') is-invalid @enderror" 
                                   id="description_ar" 
                                   name="description_ar"
                                   rows="4" 
-                                  placeholder="{{ __('exams.create.placeholders.description_ar') }}" 
+                                  placeholder="{{ __('Enter exam description in Arabic (optional)') }}" 
                                   dir="rtl">{{ old('description_ar') }}</textarea>
                         @error('description_ar')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -134,7 +135,7 @@
                 <div class="form-row">
                     <div class="form-group form-group-quarter">
                         <label for="duration" class="form-label required">
-                            {{ __('exams.create.fields.duration') }}
+                            {{ __('Duration') }}
                         </label>
                         <div class="input-group">
                             <input type="number" 
@@ -146,9 +147,9 @@
                                    max="300" 
                                    placeholder="30" 
                                    required>
-                            <span class="input-group-text">{{ __('exams.create.minutes') }}</span>
+                            <span class="input-group-text">{{ __('minutes') }}</span>
                         </div>
-                        <div class="form-help">{{ __('exams.create.hints.duration') }}</div>
+                        <div class="form-help">{{ __('Set the time limit for this exam (1-300 minutes)') }}</div>
                         @error('duration')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -157,26 +158,43 @@
             </div>
         </div>
 
-        <!-- Questions Section -->
-        <div class="form-card">
+        <!-- Next Steps Info -->
+        <div class="form-card info-card">
             <div class="card-header">
                 <div class="card-header-content">
-                    <i class="fas fa-question-circle"></i>
-                    <h3 class="card-title">{{ __('exams.create.questions_section') }}</h3>
-                </div>
-                <div class="card-actions">
-                    <button type="button" class="btn btn-success" id="add-question">
-                        <i class="fas fa-plus"></i>
-                        {{ __('exams.create.buttons.add_question') }}
-                    </button>
+                    <i class="fas fa-lightbulb"></i>
+                    <h3 class="card-title">{{ __('What\'s Next?') }}</h3>
                 </div>
             </div>
             <div class="card-body">
-                <p class="section-help">{{ __('exams.create.questions_help') }}</p>
-                
-                <!-- Questions Container -->
-                <div id="questions-container" class="questions-container">
-                    <!-- Questions will be dynamically added here -->
+                <div class="next-steps">
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="step-content">
+                            <h6>{{ __('Step 1: Create Exam') }}</h6>
+                            <p>{{ __('Set up basic exam information (title, description, duration)') }}</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="step-content">
+                            <h6>{{ __('Step 2: Add Questions') }}</h6>
+                            <p>{{ __('After creating the exam, you\'ll be redirected to add questions one by one') }}</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="step-content">
+                            <h6>{{ __('Step 3: Publish') }}</h6>
+                            <p>{{ __('Once you\'ve added all questions, your exam will be ready for students') }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -184,38 +202,70 @@
         <!-- Submit Section -->
         <div class="form-actions">
             <button type="submit" class="btn btn-primary btn-lg">
-                <i class="fas fa-save"></i>
-                {{ __('exams.create.buttons.create_exam') }}
+                <i class="fas fa-arrow-right"></i>
+                {{ __('Create Exam & Add Questions') }}
             </button>
-            <a href="{{ route('admin.exams') }}" class="btn btn-secondary btn-lg">
+            <a href="{{ route('admin.exams.index') }}" class="btn btn-secondary btn-lg">
                 <i class="fas fa-times"></i>
-                {{ __('exams.create.buttons.cancel') }}
+                {{ __('Cancel') }}
             </a>
         </div>
     </form>
 </div>
 
-@include('admin.exams.partials.question-templates')
+<style>
+.info-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+}
 
-<script src="{{ asset('js/exam-create.js') }}" defer></script>
-<script>
-    // Pass localized strings to JavaScript
-    window.examCreateTranslations = {
-        question: '{{ __('exams.create.question') }}',
-        removeQuestion: '{{ __('exams.create.buttons.remove_question') }}',
-        addOption: '{{ __('exams.create.buttons.add_option') }}',
-        removeOption: '{{ __('exams.create.buttons.remove_option') }}',
-        correct: '{{ __('exams.create.correct') }}',
-        questionNumber: '{{ __('exams.create.question_number') }}',
-        noQuestionsTitle: '{{ __('exams.create.empty_state.title') }}',
-        noQuestionsText: '{{ __('exams.create.empty_state.text') }}',
-        validationErrors: {
-            minOptions: '{{ __('exams.create.validation.min_options') }}',
-            minQuestions: '{{ __('exams.create.validation.min_questions') }}',
-            requiredField: '{{ __('exams.create.validation.required_field') }}',
-            singleCorrectAnswer: '{{ __('exams.create.validation.single_correct_answer') }}',
-            atLeastOneCorrect: '{{ __('exams.create.validation.at_least_one_correct') }}'
-        }
-    };
-</script>
+.next-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #0d6efd;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-content h6 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.step-content p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+    .next-steps {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    
+    .step {
+        flex: 1;
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
 @endsection

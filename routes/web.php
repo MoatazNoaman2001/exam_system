@@ -45,6 +45,7 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Admin\AdminExamQuestionController;
 
 // App::setLocale('ar'); // Removed - this was preventing language switching
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
@@ -143,13 +144,23 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', SetLocale::class])->
     
     
     // Exams Management
-    Route::get('/exams', [AdminExamController::class, 'index'])->name('exams');
+    Route::get('/exams', [AdminExamController::class, 'index'])->name('exams.index');
     Route::get('/exams/create', [AdminExamController::class, 'create'])->name('exams.create');
     Route::post('/exams', [AdminExamController::class, 'store'])->name('exams.store');
+    Route::get('/exams/{exam}', [AdminExamController::class, 'show'])->name('exams.show');
     Route::get('/exams/{exam}/edit', [AdminExamController::class, 'edit'])->name('exams.edit');
     Route::put('/exams/{exam}', [AdminExamController::class, 'update'])->name('exams.update');
     Route::delete('/exams/{exam}', [AdminExamController::class, 'destroy'])->name('exams.destroy');
-    Route::post('/exams/import', [AdminExamController::class, 'import'])->name('exams.import');
+    
+    // Exam Questions Management
+    Route::get('/exams/{exam}/questions', [AdminExamQuestionController::class, 'index'])->name('exams.questions.index');
+    Route::get('/exams/{exam}/questions/create', [AdminExamQuestionController::class, 'create'])->name('exams.questions.create');
+    Route::post('/exams/{exam}/questions', [AdminExamQuestionController::class, 'store'])->name('exams.questions.store');
+    Route::get('/exams/{exam}/questions/{question}/edit', [AdminExamQuestionController::class, 'edit'])->name('exams.questions.edit');
+    Route::put('/exams/{exam}/questions/{question}', [AdminExamQuestionController::class, 'update'])->name('exams.questions.update');
+    Route::delete('/exams/{exam}/questions/{question}', [AdminExamQuestionController::class, 'destroy'])->name('exams.questions.destroy');
+    
+    // Route::post('/exams/import', [AdminExamController::class, 'import'])->name('exams.import');
 
     // Excel Import routes
     Route::get('/exams/import', [ExamImportController::class, 'showImportForm'])->name('exams.import.form');

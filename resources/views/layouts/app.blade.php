@@ -170,7 +170,7 @@
                             <i class="fas fa-images"></i>
                             <span class="link-text">{{ __('lang.slides') }}</span>
                         </a>
-                        <a href="{{ route('admin.exams') }}"
+                        <a href="{{ route('admin.exams.index') }}"
                             class="sidebar-link {{ request()->routeIs('admin.exams*') ? 'active' : '' }}">
                             <i class="fas fa-file-alt"></i>
                             <span class="link-text">{{ __('lang.exams') }}</span>

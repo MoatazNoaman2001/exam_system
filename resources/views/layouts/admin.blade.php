@@ -78,7 +78,7 @@
             </a>
             <div id="collapseAssessments" class="collapse {{ request()->routeIs('admin.exams*') || request()->routeIs('admin.quiz-attempts*') || request()->routeIs('admin.test-attempts*') ? 'show' : '' }}" aria-labelledby="headingAssessments" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item {{ request()->routeIs('admin.exams*') ? 'active' : '' }}" href="{{ route('admin.exams') }}">Exams</a>
+                    {{-- <a class="collapse-item {{ request()->routeIs('admin.exams.index') ? 'active' : '' }}" href="{{ route('admin.exams') }}">Exams</a> --}}
                     <a class="collapse-item {{ request()->routeIs('admin.quiz-attempts*') ? 'active' : '' }}" href="{{ route('admin.quiz-attempts') }}">Quiz Attempts</a>
                     <a class="collapse-item {{ request()->routeIs('admin.test-attempts*') ? 'active' : '' }}" href="{{ route('admin.test-attempts') }}">Test Attempts</a>
                 </div>

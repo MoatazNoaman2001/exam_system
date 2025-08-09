@@ -335,7 +335,8 @@
                             <div class="chapter-icon">
                                 <i class="fas fa-book"></i>
                             </div>
-                            <h3 class="chapter-title">{{ __($chapter['name']) }}</h3>
+                            <p>{{$chapter['name']}}</p>
+                            <h3 class="chapter-title">{{ $chapter['name'] }}</h3>
                             <div class="chapter-progress">
                                 <div class="progress-header">
                                     <span class="progress-title">{{ __('lang.chapter_progress') }}</span>
@@ -360,7 +361,7 @@
                             <div class="chapter-icon">
                                 <i class="fas fa-book"></i>
                             </div>
-                            <h3 class="chapter-title">{{ __($chapter['name']) }}</h3>
+                            <h3 class="chapter-title">{{ $chapter['name'] }}</h3>
                             <div class="chapter-progress">
                                 <div class="progress-header">
                                     <span class="progress-title">{{ __('Chapter Progress') }}</span>
