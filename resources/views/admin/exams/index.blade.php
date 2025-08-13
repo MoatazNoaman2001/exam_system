@@ -20,10 +20,10 @@
                     <i class="fas fa-plus"></i>
                     Create New Exam
                 </a>
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importModal">
+                <a href="{{ route('admin.exams.import.form') }}" class="btn btn-success">
                     <i class="fas fa-file-excel"></i>
                     Import from Excel
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -193,10 +193,10 @@
                             <i class="fas fa-plus"></i>
                             Create First Exam
                         </a>
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#importModal">
+                        <a href="{{ route('admin.exams.import.form') }}" class="btn btn-success">
                             <i class="fas fa-file-excel"></i>
                             Import from Excel
-                        </button>
+                        </a>
                     </div>
                 </div>
             @endif
@@ -273,7 +273,7 @@
                             <div class="upload-placeholder">
                                 <i class="fas fa-cloud-upload-alt"></i>
                                 <p>Click to select file or drag and drop</p>
-                                <small>Maximum file size: 10MB. Formats: .xlsx, .xls, .csv</small>
+                                <small>Maximum /admin/file size: 10MB. Formats: .xlsx, .xls, .csv</small>
                             </div>
                         </div>
                     </div>

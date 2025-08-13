@@ -2,24 +2,32 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
-use App\Models\Exam;
-use Illuminate\Support\Str;
-use App\Models\ExamQuestion;
-use Illuminate\Http\Request;
-use App\Models\ExamQuestionAnswer;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Exam;
+use App\Models\ExamQuestions;
+use App\Models\ExamQuestionAnswer;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use Illuminate\Support\Facades\Validator;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ExamImportController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->role !== 'admin') {
+                abort(403, 'Unauthorized action.');
+            }
+            return $next($request);
+        });
+    }
+
     /**
-     * Show the import form
+     * Show import form
      */
     public function showImportForm()
     {
@@ -27,31 +35,64 @@ class ExamImportController extends Controller
     }
 
     /**
+     * Generate and download Excel template
+     */
+    public function generateTemplateRoute()
+    {
+        try {
+            // Generate the template
+            $templatePath = $this->generateTemplate();
+            
+            // Check if file was actually created
+            if (!file_exists($templatePath)) {
+                throw new \Exception('Template file was not created successfully.');
+            }
+            
+            // Return success response
+            return redirect()->route('admin.exams.import.form')
+                ->with('success', 'Excel template generated successfully! File saved to: ' . basename($templatePath));
+                
+        } catch (\Exception $e) {
+            Log::error('Template generation failed', [
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->route('admin.exams.import.form')
+                ->with('error', 'Failed to generate template: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Download Excel template
      */
     public function downloadTemplate()
     {
-        $spreadsheet = new Spreadsheet();
+        $templatePath = storage_path('app/templates/exam_template.xlsx');
         
-        // Create Instructions sheet
-        $this->createInstructionsSheet($spreadsheet);
-        
-        // Create Template sheet
-        $this->createTemplateSheet($spreadsheet);
-        
-        // Create Example sheet
-        $this->createExampleSheet($spreadsheet);
-        
-        // Set active sheet to template
-        $spreadsheet->setActiveSheetIndex(1);
-        
-        $writer = new Xlsx($spreadsheet);
-        $filename = 'exam_import_template_' . date('Y-m-d') . '.xlsx';
-        $tempFile = tempnam(sys_get_temp_dir(), 'exam_template');
-        
-        $writer->save($tempFile);
-        
-        return response()->download($tempFile, $filename)->deleteFileAfterSend(true);
+        // Generate template if it doesn't exist
+        if (!file_exists($templatePath)) {
+            try {
+                Log::info('Template not found, generating new one', ['path' => $templatePath]);
+                $this->generateTemplate();
+            } catch (\Exception $e) {
+                Log::error('Template generation failed during download', [
+                    'error' => $e->getMessage(),
+                    'path' => $templatePath
+                ]);
+                return redirect()->route('admin.exams.import.form')
+                    ->with('error', 'Template file not found and generation failed: ' . $e->getMessage());
+            }
+        }
+
+        // Final check
+        if (!file_exists($templatePath)) {
+            return redirect()->route('admin.exams.import.form')
+                ->with('error', 'Template file not found at: ' . $templatePath . '. Please generate the template first.');
+        }
+
+        return response()->download($templatePath, 'exam_template.xlsx');
     }
 
     /**
@@ -59,426 +100,348 @@ class ExamImportController extends Controller
      */
     public function import(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls,csv|max:10240', // 10MB max
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->with('error', 'Please upload a valid Excel file (max 10MB).');
-        }
-
         try {
-            DB::beginTransaction();
-
             $file = $request->file('excel_file');
             $spreadsheet = IOFactory::load($file->getPathname());
             $worksheet = $spreadsheet->getActiveSheet();
             
-            // Parse the Excel data
-            $examData = $this->parseExcelData($worksheet);
-            
-            // Validate the parsed data
-            $validation = $this->validateExamData($examData);
-            if (!$validation['valid']) {
-                throw new \Exception('Validation failed: ' . implode(', ', $validation['errors']));
-            }
-            
-            // Create the exam
-            $exam = $this->createExam($examData);
-            
-            // Create questions and answers
-            $this->createQuestionsAndAnswers($exam, $examData['questions']);
-            
-            DB::commit();
-            
-            return redirect()->route('admin.exams')
-                ->with('success', "Exam '{$exam->text}' imported successfully with " . count($examData['questions']) . " questions.");
-                
+            // Parse exam data
+            $examData = $this->parseExamInfo($worksheet);
+            $questionsData = $this->parseQuestions($worksheet);
+
+            // Validate data
+            $this->validateImportData($examData, $questionsData);
+
+            // Create exam and questions in transaction
+            $exam = DB::transaction(function () use ($examData, $questionsData) {
+                // Create exam
+                $exam = Exam::create([
+                    'id' => Str::uuid(),
+                    'text' => $examData['title_en'],
+                    'text-ar' => $examData['title_ar'],
+                    'description' => $examData['description_en'],
+                    'description-ar' => $examData['description_ar'],
+                    'time' => $examData['duration'],
+                    'number_of_questions' => count($questionsData),
+                    'is_completed' => false,
+                ]);
+
+                // Create questions
+                foreach ($questionsData as $questionData) {
+                    $this->createQuestion($exam, $questionData);
+                }
+
+                return $exam;
+            });
+
+            return redirect()->route('admin.exams.questions.index', $exam->id)
+                ->with('success', "Exam '{$exam->text}' imported successfully with " . count($questionsData) . " questions!");
+
         } catch (\Exception $e) {
-            DB::rollBack();
-            
+            Log::error('Excel import failed', [
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return redirect()->back()
+                ->withInput()
                 ->with('error', 'Import failed: ' . $e->getMessage());
         }
     }
 
     /**
-     * Create instructions sheet
+     * Parse exam information from Excel
      */
-    private function createInstructionsSheet($spreadsheet)
+    private function parseExamInfo($worksheet)
     {
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Instructions');
+        $examData = [];
         
-        // Header
-        $sheet->setCellValue('A1', 'Exam Import Template - Instructions');
-        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16);
-        $sheet->mergeCells('A1:E1');
-        
-        // Instructions
-        $instructions = [
-            '',
-            'HOW TO USE THIS TEMPLATE:',
-            '',
-            '1. Fill in the exam details in the "Template" sheet',
-            '2. Add your questions starting from row 2',
-            '3. Each question can have 2-6 answer options',
-            '4. Mark correct answers with "1" in the is_correct columns',
-            '5. Save the file and upload it to the system',
-            '',
-            'COLUMN EXPLANATIONS:',
-            '',
-            'exam_title_en: Exam title in English (required)',
-            'exam_title_ar: Exam title in Arabic (required)',
-            'exam_description_en: Exam description in English (optional)',
-            'exam_description_ar: Exam description in Arabic (optional)',
-            'duration_minutes: Exam duration in minutes (required)',
-            'question_text_en: Question text in English (required)',
-            'question_text_ar: Question text in Arabic (required)',
-            'question_type: "single_choice" or "multiple_choice" (required)',
-            'question_points: Points for this question (default: 1)',
-            'option_X_text_en: Answer option text in English',
-            'option_X_text_ar: Answer option text in Arabic',
-            'option_X_is_correct: 1 if correct, 0 if incorrect',
-            'option_X_reason_en: Explanation in English (optional)',
-            'option_X_reason_ar: Explanation in Arabic (optional)',
-            '',
-            'IMPORTANT NOTES:',
-            '',
-            '• All questions must have the same exam details (title, description, duration)',
-            '• Single choice questions can have only ONE correct answer',
-            '• Multiple choice questions can have multiple correct answers',
-            '• Each question must have at least 2 answer options',
-            '• Maximum 6 answer options per question',
-            '• Reason fields support up to 2000 characters',
-        ];
-        
-        foreach ($instructions as $index => $instruction) {
-            $row = $index + 2;
-            $sheet->setCellValue('A' . $row, $instruction);
-            
-            if (strpos($instruction, ':') !== false && !empty(trim($instruction))) {
-                $sheet->getStyle('A' . $row)->getFont()->setBold(true);
-            }
-        }
-        
-        // Auto-size columns
-        $sheet->getColumnDimension('A')->setWidth(80);
+        // Expected format: Exam info in first few rows
+        $examData['title_en'] = $this->getCellValue($worksheet, 'B2') ?: 'Imported Exam';
+        $examData['title_ar'] = $this->getCellValue($worksheet, 'C2') ?: '';
+        $examData['description_en'] = $this->getCellValue($worksheet, 'B3') ?: '';
+        $examData['description_ar'] = $this->getCellValue($worksheet, 'C3') ?: '';
+        $examData['duration'] = (int)($this->getCellValue($worksheet, 'B4') ?: 30);
+
+        return $examData;
     }
 
     /**
-     * Create template sheet
+     * Parse questions from Excel
      */
-    private function createTemplateSheet($spreadsheet)
+    private function parseQuestions($worksheet)
     {
-        $sheet = $spreadsheet->createSheet();
-        $sheet->setTitle('Template');
-        
-        // Headers
-        $headers = [
-            'exam_title_en', 'exam_title_ar', 'exam_description_en', 'exam_description_ar', 'duration_minutes',
-            'question_text_en', 'question_text_ar', 'question_type', 'question_points',
-            'option_1_text_en', 'option_1_text_ar', 'option_1_is_correct', 'option_1_reason_en', 'option_1_reason_ar',
-            'option_2_text_en', 'option_2_text_ar', 'option_2_is_correct', 'option_2_reason_en', 'option_2_reason_ar',
-            'option_3_text_en', 'option_3_text_ar', 'option_3_is_correct', 'option_3_reason_en', 'option_3_reason_ar',
-            'option_4_text_en', 'option_4_text_ar', 'option_4_is_correct', 'option_4_reason_en', 'option_4_reason_ar',
-            'option_5_text_en', 'option_5_text_ar', 'option_5_is_correct', 'option_5_reason_en', 'option_5_reason_ar',
-            'option_6_text_en', 'option_6_text_ar', 'option_6_is_correct', 'option_6_reason_en', 'option_6_reason_ar',
-        ];
-        
-        foreach ($headers as $index => $header) {
-            $column = chr(65 + $index); // A, B, C, etc.
-            if ($index >= 26) {
-                $column = 'A' . chr(65 + ($index - 26)); // AA, AB, AC, etc.
-            }
-            $sheet->setCellValue($column . '1', $header);
-            $sheet->getStyle($column . '1')->getFont()->setBold(true);
-            $sheet->getColumnDimension($column)->setWidth(20);
-        }
-        
-        // Freeze first row
-        $sheet->freezePane('A2');
-        
-        // Add data validation for question_type column
-        $validation = $sheet->getCell('H2')->getDataValidation();
-        $validation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);
-        $validation->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION);
-        $validation->setAllowBlank(false);
-        $validation->setShowInputMessage(true);
-        $validation->setShowErrorMessage(true);
-        $validation->setShowDropDown(true);
-        $validation->setErrorTitle('Invalid Question Type');
-        $validation->setError('Please select either "single_choice" or "multiple_choice"');
-        $validation->setPromptTitle('Question Type');
-        $validation->setPrompt('Select the question type');
-        $validation->setFormula1('"single_choice,multiple_choice"');
-        
-        // Apply validation to entire column
-        $sheet->setDataValidation('H2:H1000', clone $validation);
-    }
-
-    /**
-     * Create example sheet
-     */
-    private function createExampleSheet($spreadsheet)
-    {
-        $sheet = $spreadsheet->createSheet();
-        $sheet->setTitle('Example');
-        
-        // Copy headers from template
-        $templateSheet = $spreadsheet->getSheet(1);
-        $headers = [];
-        for ($col = 'A'; $col <= 'AX'; $col++) {
-            $value = $templateSheet->getCell($col . '1')->getValue();
-            if (empty($value)) break;
-            $headers[] = $value;
-            $sheet->setCellValue($col . '1', $value);
-            $sheet->getStyle($col . '1')->getFont()->setBold(true);
-            $sheet->getColumnDimension($col)->setWidth(20);
-        }
-        
-        // Add example data
-        $exampleData = [
-            // Question 1
-            [
-                'Programming Fundamentals Quiz', 'اختبار أساسيات البرمجة', 'Basic programming concepts test', 'اختبار أساسيات مفاهيم البرمجة', '30',
-                'What is a variable in programming?', 'ما هو المتغير في البرمجة؟', 'single_choice', '2',
-                'A storage location with a name', 'موقع تخزين له اسم', '1', 'Variables store data values', 'المتغيرات تخزن قيم البيانات',
-                'A function that executes code', 'دالة تنفذ الكود', '0', 'This describes a function, not a variable', 'هذا يصف دالة، وليس متغير',
-                'A loop structure', 'هيكل حلقة تكرار', '0', 'This describes a loop, not a variable', 'هذا يصف حلقة تكرار، وليس متغير',
-                'A conditional statement', 'عبارة شرطية', '0', 'This describes a condition, not a variable', 'هذا يصف شرط، وليس متغير',
-                '', '', '', '', '',
-                '', '', '', '', '',
-            ],
-            // Question 2
-            [
-                'Programming Fundamentals Quiz', 'اختبار أساسيات البرمجة', 'Basic programming concepts test', 'اختبار أساسيات مفاهيم البرمجة', '30',
-                'Which of the following are programming languages?', 'أي من التالي لغات برمجة؟', 'multiple_choice', '3',
-                'Python', 'بايثون', '1', 'Python is a popular programming language', 'بايثون لغة برمجة شائعة',
-                'JavaScript', 'جافا سكريبت', '1', 'JavaScript is used for web development', 'جافا سكريبت تستخدم لتطوير الويب',
-                'HTML', 'إتش تي إم إل', '0', 'HTML is a markup language, not programming', 'إتش تي إم إل لغة ترميز، وليست برمجة',
-                'Java', 'جافا', '1', 'Java is an object-oriented programming language', 'جافا لغة برمجة كائنية التوجه',
-                '', '', '', '', '',
-                '', '', '', '', '',
-            ],
-        ];
-        
-        foreach ($exampleData as $rowIndex => $rowData) {
-            $row = $rowIndex + 2;
-            foreach ($rowData as $colIndex => $value) {
-                $column = chr(65 + $colIndex);
-                if ($colIndex >= 26) {
-                    $column = 'A' . chr(65 + ($colIndex - 26));
-                }
-                $sheet->setCellValue($column . $row, $value);
-            }
-        }
-        
-        // Freeze first row
-        $sheet->freezePane('A2');
-    }
-
-    /**
-     * Parse Excel data
-     */
-    private function parseExcelData($worksheet)
-    {
-        $highestRow = $worksheet->getHighestRow();
         $questions = [];
-        $examData = null;
-        
-        for ($row = 2; $row <= $highestRow; $row++) {
-            // Skip empty rows
-            if (empty(trim($worksheet->getCell('F' . $row)->getValue()))) {
-                continue;
-            }
-            
-            // Extract exam data (from first row)
-            if ($examData === null) {
-                $examData = [
-                    'title_en' => trim($worksheet->getCell('A' . $row)->getValue()),
-                    'title_ar' => trim($worksheet->getCell('B' . $row)->getValue()),
-                    'description_en' => trim($worksheet->getCell('C' . $row)->getValue()),
-                    'description_ar' => trim($worksheet->getCell('D' . $row)->getValue()),
-                    'duration' => (int) $worksheet->getCell('E' . $row)->getValue(),
-                ];
-            }
-            
-            // Extract question data
-            $question = [
-                'text_en' => trim($worksheet->getCell('F' . $row)->getValue()),
-                'text_ar' => trim($worksheet->getCell('G' . $row)->getValue()),
-                'type' => trim($worksheet->getCell('H' . $row)->getValue()),
-                'points' => (int) ($worksheet->getCell('I' . $row)->getValue() ?: 1),
+        $startRow = 7; // Questions start from row 7
+        $row = $startRow;
+
+        while ($this->getCellValue($worksheet, 'A' . $row)) {
+            $questionData = [
+                'question_en' => $this->getCellValue($worksheet, 'B' . $row),
+                'question_ar' => $this->getCellValue($worksheet, 'C' . $row),
+                'type' => $this->getCellValue($worksheet, 'D' . $row),
+                'points' => (int)($this->getCellValue($worksheet, 'E' . $row) ?: 1),
                 'options' => []
             ];
-            
-            // Extract options (up to 6 options)
-            for ($optionIndex = 1; $optionIndex <= 6; $optionIndex++) {
-                $baseCol = 9 + (($optionIndex - 1) * 5); // J, O, T, Y, AD, AI
-                
-                $optionTextEn = trim($worksheet->getCell($this->getColumnLetter($baseCol) . $row)->getValue());
-                $optionTextAr = trim($worksheet->getCell($this->getColumnLetter($baseCol + 1) . $row)->getValue());
-                
-                if (empty($optionTextEn)) {
-                    break; // No more options
+
+            // Parse options (F to Q columns for 6 options max)
+            $optionColumns = ['F', 'G', 'H', 'I', 'J', 'K']; // Option texts
+            $optionArColumns = ['L', 'M', 'N', 'O', 'P', 'Q']; // Arabic option texts
+            $correctColumns = ['R', 'S', 'T', 'U', 'V', 'W']; // Correct flags
+            $reasonColumns = ['X', 'Y', 'Z', 'AA', 'AB', 'AC']; // Reasons
+            $reasonArColumns = ['AD', 'AE', 'AF', 'AG', 'AH', 'AI']; // Arabic reasons
+
+            for ($i = 0; $i < 6; $i++) {
+                $optionText = $this->getCellValue($worksheet, $optionColumns[$i] . $row);
+                if (!empty($optionText)) {
+                    $questionData['options'][] = [
+                        'text_en' => $optionText,
+                        'text_ar' => $this->getCellValue($worksheet, $optionArColumns[$i] . $row) ?: '',
+                        'is_correct' => $this->getCellValue($worksheet, $correctColumns[$i] . $row) == '1',
+                        'reason' => $this->getCellValue($worksheet, $reasonColumns[$i] . $row) ?: '',
+                        'reason_ar' => $this->getCellValue($worksheet, $reasonArColumns[$i] . $row) ?: '',
+                    ];
                 }
-                
-                $option = [
-                    'text_en' => $optionTextEn,
-                    'text_ar' => $optionTextAr,
-                    'is_correct' => (bool) $worksheet->getCell($this->getColumnLetter($baseCol + 2) . $row)->getValue(),
-                    'reason_en' => trim($worksheet->getCell($this->getColumnLetter($baseCol + 3) . $row)->getValue()),
-                    'reason_ar' => trim($worksheet->getCell($this->getColumnLetter($baseCol + 4) . $row)->getValue()),
-                ];
-                
-                $question['options'][] = $option;
             }
-            
-            $questions[] = $question;
+
+            $questions[] = $questionData;
+            $row++;
         }
-        
-        return [
-            'exam' => $examData,
-            'questions' => $questions
-        ];
+
+        return $questions;
     }
 
     /**
-     * Get column letter by index
+     * Validate imported data
      */
-    private function getColumnLetter($index)
+    private function validateImportData($examData, $questionsData)
     {
-        $letter = '';
-        while ($index > 0) {
-            $index--;
-            $letter = chr(65 + ($index % 26)) . $letter;
-            $index = intval($index / 26);
-        }
-        return $letter;
-    }
-
-    /**
-     * Validate exam data
-     */
-    private function validateExamData($data)
-    {
-        $errors = [];
-        
         // Validate exam data
-        if (empty($data['exam']['title_en'])) {
-            $errors[] = 'Exam title (English) is required';
+        if (empty($examData['title_en'])) {
+            throw new \Exception('Exam title (English) is required.');
         }
-        
-        if (empty($data['exam']['title_ar'])) {
-            $errors[] = 'Exam title (Arabic) is required';
+
+        if ($examData['duration'] < 1 || $examData['duration'] > 300) {
+            throw new \Exception('Exam duration must be between 1 and 300 minutes.');
         }
-        
-        if (empty($data['exam']['duration']) || $data['exam']['duration'] < 1) {
-            $errors[] = 'Exam duration must be at least 1 minute';
-        }
-        
+
         // Validate questions
-        if (empty($data['questions'])) {
-            $errors[] = 'At least one question is required';
+        if (empty($questionsData)) {
+            throw new \Exception('No questions found in the Excel file.');
         }
-        
-        foreach ($data['questions'] as $index => $question) {
+
+        foreach ($questionsData as $index => $question) {
             $questionNum = $index + 1;
-            
-            if (empty($question['text_en'])) {
-                $errors[] = "Question {$questionNum}: English text is required";
+
+            if (empty($question['question_en'])) {
+                throw new \Exception("Question {$questionNum}: English text is required.");
             }
-            
-            if (empty($question['text_ar'])) {
-                $errors[] = "Question {$questionNum}: Arabic text is required";
-            }
-            
+
             if (!in_array($question['type'], ['single_choice', 'multiple_choice'])) {
-                $errors[] = "Question {$questionNum}: Invalid question type";
+                throw new \Exception("Question {$questionNum}: Invalid question type. Use 'single_choice' or 'multiple_choice'.");
             }
-            
+
             if (count($question['options']) < 2) {
-                $errors[] = "Question {$questionNum}: At least 2 options are required";
+                throw new \Exception("Question {$questionNum}: Must have at least 2 answer options.");
             }
-            
-            $correctAnswers = array_filter($question['options'], function($option) {
-                return $option['is_correct'];
-            });
-            
-            if (empty($correctAnswers)) {
-                $errors[] = "Question {$questionNum}: At least one correct answer is required";
+
+            if (count($question['options']) > 6) {
+                throw new \Exception("Question {$questionNum}: Cannot have more than 6 answer options.");
             }
+
+            // Validate correct answers
+            $correctCount = count(array_filter($question['options'], fn($opt) => $opt['is_correct']));
             
-            if ($question['type'] === 'single_choice' && count($correctAnswers) > 1) {
-                $errors[] = "Question {$questionNum}: Single choice questions can have only one correct answer";
+            if ($correctCount === 0) {
+                throw new \Exception("Question {$questionNum}: Must have at least one correct answer.");
             }
-            
-            foreach ($question['options'] as $optionIndex => $option) {
-                $optionNum = $optionIndex + 1;
-                
+
+            if ($question['type'] === 'single_choice' && $correctCount > 1) {
+                throw new \Exception("Question {$questionNum}: Single choice questions can only have one correct answer.");
+            }
+
+            // Validate option texts
+            foreach ($question['options'] as $optIndex => $option) {
                 if (empty($option['text_en'])) {
-                    $errors[] = "Question {$questionNum}, Option {$optionNum}: English text is required";
-                }
-                
-                if (empty($option['text_ar'])) {
-                    $errors[] = "Question {$questionNum}, Option {$optionNum}: Arabic text is required";
+                    throw new \Exception("Question {$questionNum}, Option " . ($optIndex + 1) . ": English text is required.");
                 }
             }
         }
-        
-        return [
-            'valid' => empty($errors),
-            'errors' => $errors
-        ];
     }
 
     /**
-     * Create exam
+     * Create question with answers
      */
-    private function createExam($data)
+    private function createQuestion(Exam $exam, array $questionData)
     {
-        return Exam::create([
+        $question = ExamQuestions::create([
             'id' => Str::uuid(),
-            'text' => $data['exam']['title_en'],
-            'text-ar' => $data['exam']['title_ar'],
-            'description' => $data['exam']['description_en'],
-            'description-ar' => $data['exam']['description_ar'],
-            'number_of_questions' => count($data['questions']),
-            'time' => $data['exam']['duration'],
-            'is_completed' => false,
+            'exam_id' => $exam->id,
+            'question' => $questionData['question_en'],
+            'question-ar' => $questionData['question_ar'],
+            'text-ar' => $questionData['question_ar'],
+            'type' => $questionData['type'],
+            'marks' => $questionData['points'],
         ]);
+
+        foreach ($questionData['options'] as $optionData) {
+            ExamQuestionAnswer::create([
+                'id' => Str::uuid(),
+                'exam_question_id' => $question->id,
+                'answer' => $optionData['text_en'],
+                'answer-ar' => $optionData['text_ar'],
+                'is_correct' => $optionData['is_correct'],
+                'reason' => $optionData['reason'],
+                'reason-ar' => $optionData['reason_ar'],
+            ]);
+        }
     }
 
     /**
-     * Create questions and answers
+     * Get cell value safely
      */
-    private function createQuestionsAndAnswers($exam, $questions)
+    private function getCellValue($worksheet, $cell)
     {
-        foreach ($questions as $questionData) {
-            $question = ExamQuestion::create([
-                'id' => Str::uuid(),
-                'exam_id' => $exam->id,
-                'question' => $questionData['text_en'],
-                'question-ar' => $questionData['text_ar'],
-                'type' => $questionData['type'],
-                'marks' => $questionData['points'],
-                'text-ar' => $questionData['text_ar'], // For compatibility
-            ]);
+        try {
+            $value = $worksheet->getCell($cell)->getValue();
             
-            foreach ($questionData['options'] as $optionData) {
-                ExamQuestionAnswer::create([
-                    'id' => Str::uuid(),
-                    'exam_question_id' => $question->id,
-                    'answer' => $optionData['text_en'],
-                    'answer-ar' => $optionData['text_ar'],
-                    'reason' => $optionData['reason_en'] ?: null,
-                    'reason-ar' => $optionData['reason_ar'] ?: null,
-                    'is_correct' => $optionData['is_correct'],
-                ]);
+            // Handle date values
+            if (Date::isDateTime($worksheet->getCell($cell))) {
+                return Date::excelToDateTimeObject($value)->format('Y-m-d H:i:s');
             }
+            
+            return is_null($value) ? '' : trim((string)$value);
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Generate Excel template
+     */
+    private function generateTemplate()
+    {
+        $templateDir = storage_path('app/templates');
+        $templatePath = $templateDir . '/exam_template.xlsx';
+
+        try {
+            // Create directory if it doesn't exist
+            if (!file_exists($templateDir)) {
+                if (!mkdir($templateDir, 0755, true)) {
+                    throw new \Exception('Failed to create templates directory: ' . $templateDir);
+                }
+                Log::info('Created templates directory', ['path' => $templateDir]);
+            }
+
+            // Check if directory is writable
+            if (!is_writable($templateDir)) {
+                throw new \Exception('Templates directory is not writable: ' . $templateDir);
+            }
+
+            Log::info('Generating Excel template', ['path' => $templatePath]);
+
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            // Set exam info headers
+            $worksheet->setCellValue('A1', 'Exam Information');
+            $worksheet->setCellValue('A2', 'Title:');
+            $worksheet->setCellValue('B2', 'Sample Exam Title');
+            $worksheet->setCellValue('C2', 'عنوان الاختبار النموذجي');
+            $worksheet->setCellValue('A3', 'Description:');
+            $worksheet->setCellValue('B3', 'Sample exam description');
+            $worksheet->setCellValue('C3', 'وصف الاختبار النموذجي');
+            $worksheet->setCellValue('A4', 'Duration (minutes):');
+            $worksheet->setCellValue('B4', '30');
+
+            // Set questions headers
+            $worksheet->setCellValue('A6', 'Questions');
+            $headers = [
+                'A7' => 'Q#', 'B7' => 'Question (EN)', 'C7' => 'Question (AR)', 
+                'D7' => 'Type', 'E7' => 'Points',
+                'F7' => 'Option1(EN)', 'G7' => 'Option2(EN)', 'H7' => 'Option3(EN)', 
+                'I7' => 'Option4(EN)', 'J7' => 'Option5(EN)', 'K7' => 'Option6(EN)',
+                'L7' => 'Option1(AR)', 'M7' => 'Option2(AR)', 'N7' => 'Option3(AR)', 
+                'O7' => 'Option4(AR)', 'P7' => 'Option5(AR)', 'Q7' => 'Option6(AR)',
+                'R7' => 'Correct1', 'S7' => 'Correct2', 'T7' => 'Correct3', 
+                'U7' => 'Correct4', 'V7' => 'Correct5', 'W7' => 'Correct6',
+                'X7' => 'Reason1(EN)', 'Y7' => 'Reason2(EN)', 'Z7' => 'Reason3(EN)', 
+                'AA7' => 'Reason4(EN)', 'AB7' => 'Reason5(EN)', 'AC7' => 'Reason6(EN)',
+                'AD7' => 'Reason1(AR)', 'AE7' => 'Reason2(AR)', 'AF7' => 'Reason3(AR)', 
+                'AG7' => 'Reason4(AR)', 'AH7' => 'Reason5(AR)', 'AI7' => 'Reason6(AR)',
+            ];
+
+            foreach ($headers as $cell => $value) {
+                $worksheet->setCellValue($cell, $value);
+            }
+
+            // Add sample question
+            $sampleData = [
+                'A8' => '1',
+                'B8' => 'What is the capital of France?',
+                'C8' => 'ما هي عاصمة فرنسا؟',
+                'D8' => 'single_choice',
+                'E8' => '1',
+                'F8' => 'Paris', 'G8' => 'London', 'H8' => 'Berlin', 'I8' => 'Madrid',
+                'L8' => 'باريس', 'M8' => 'لندن', 'N8' => 'برلين', 'O8' => 'مدريد',
+                'R8' => '1', 'S8' => '0', 'T8' => '0', 'U8' => '0',
+                'X8' => 'Paris is the capital city of France',
+                'Y8' => 'London is the capital of UK',
+                'Z8' => 'Berlin is the capital of Germany',
+                'AA8' => 'Madrid is the capital of Spain',
+            ];
+
+            foreach ($sampleData as $cell => $value) {
+                $worksheet->setCellValue($cell, $value);
+            }
+
+            // Style the headers
+            $headerStyle = [
+                'font' => ['bold' => true],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 
+                    'startColor' => ['rgb' => 'E2EFDA']
+                ],
+            ];
+            $worksheet->getStyle('A1:AI7')->applyFromArray($headerStyle);
+
+            // Auto-size columns
+            foreach (range('A', 'AI') as $col) {
+                $worksheet->getColumnDimension($col)->setAutoSize(true);
+            }
+
+            // Save the file
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer->save($templatePath);
+
+            // Verify the file was created
+            if (!file_exists($templatePath)) {
+                throw new \Exception('Template file was not saved successfully to: ' . $templatePath);
+            }
+
+            $fileSize = filesize($templatePath);
+            Log::info('Excel template generated successfully', [
+                'path' => $templatePath,
+                'size' => $fileSize . ' bytes'
+            ]);
+
+            return $templatePath;
+
+        } catch (\Exception $e) {
+            Log::error('Error generating Excel template', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'template_dir' => $templateDir,
+                'template_path' => $templatePath,
+                'dir_exists' => file_exists($templateDir),
+                'dir_writable' => is_writable($templateDir)
+            ]);
+            throw new \Exception('Failed to generate Excel template: ' . $e->getMessage());
         }
     }
 }

@@ -309,7 +309,7 @@
                     </a>
 
                     <!-- Mobile Language Switcher: Simple and always visible -->
-                    <div id='mobileLanguageSwitcher' class="mobile-nav-icon" title="{{ __('lang.language') }}">
+                    {{-- <div id='mobileLanguageSwitcher' class="mobile-nav-icon" title="{{ __('lang.language') }}">
                         <span class="icon-bg"><i class="fas fa-language"></i></span>
                         <div id='mobileLanguageDropdown' class="d-flex flex-column gap-1 mt-2"
                             style="position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: white; padding: 1rem;  border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 3000;">
@@ -318,13 +318,13 @@
                                 style="width: 100px;">
                                 العربية
                             </a>
-                            <a href="{{ route('locale.set', 'en') }}"
+                            <a href="{{ ro  ute('locale.set', 'en') }}"
                                 class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-primary' : 'btn-outline-primary' }}"
                                 style="width: 100px;">
                                 English
                             </a>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <a href="{{ route('student.notifications.show') }}"
                         class="mobile-nav-icon {{ request()->routeIs('student.notifications*') ? 'active' : '' }}"

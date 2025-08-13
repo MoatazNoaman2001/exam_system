@@ -1,467 +1,368 @@
-<!-- Debug: Add this at the very top of your blade file to check routes -->
-@if(config('app.debug'))
-<div class="alert alert-info small">
-    <strong>Debug Info:</strong><br>
-    Import Route: {{ route('admin.exams.import') ?? 'NOT FOUND' }}<br>
-    Template Route: {{ route('admin.exams.download-template') ?? 'NOT FOUND' }}
-</div>
-@endif
+@extends('layouts.admin')
 
-<!-- Your existing content -->
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Exams Management</h1>
-        <div>
-            <a href="{{ route('admin.exams.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-2">
-                <i class="fas fa-plus fa-sm text-white-50"></i> Create New Exam
-            </a>
-            <!-- Debug: Check if button triggers modal -->
-            <button type="button" 
-                    class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" 
-                    data-toggle="modal" 
-                    data-target="#importModal"
-                    onclick="console.log('Import button clicked')">
-                <i class="fas fa-file-excel fa-sm text-white-50"></i> Import from Excel
-            </button>
+@section('title', __('Import Exam from Excel'))
+
+@section('page-title', __('Import Exam'))
+
+@section('content')
+
+<link rel="stylesheet" href="{{ asset('css/exam-create.css') }}">
+<link rel="stylesheet" href=" {{asset('css/import.css')}} ">
+<div class="exam-create-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="page-title">{{ __('Import Exam from Excel') }}</h1>
+                <p class="page-subtitle">Upload an Excel file to create a new exam with questions</p>
+            </div>
+            <div class="header-actions">
+                <a href="{{ route('admin.exams.generate-template') }}" class="btn btn-warning">
+                    <i class="fas fa-cog"></i>
+                    {{ __('Generate Template') }}
+                </a>
+                <a href="{{ route('admin.exams.download-template') }}" class="btn btn-success" target="_blank">
+                    <i class="fas fa-download"></i>
+                    {{ __('Download Template') }}
+                </a>
+                <a href="{{ route('admin.exams.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }}"></i>
+                    {{ __('Back to Exams') }}
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Display any session messages -->
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-        </div>
-    @endif
-
-    @if($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
+    <!-- Alert Messages -->
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h6 class="alert-title">{{ __('Please correct the following errors:') }}</h6>
+            </div>
+            <ul class="alert-list">
+                @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Close') }}"></button>
         </div>
     @endif
 
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">All Exams</h6>
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert-header">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ __('Close') }}"></button>
+        </div>
+    @endif
+
+    <!-- Instructions Card -->
+    <div class="form-card info-card">
+        <div class="card-header">
+            <div class="card-header-content">
+                <i class="fas fa-info-circle"></i>
+                <h3 class="card-title">{{ __('Import Instructions') }}</h3>
+            </div>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Questions</th>
-                            <th>Duration (min)</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($exams as $exam)
-                        <tr>
-                            <td>{{ Str::limit($exam->id, 8) }}</td>
-                            <td>{{ $exam->text }}</td>
-                            <td>{{ $exam->number_of_questions }}</td>
-                            <td>{{ $exam->time }}</td>
-                            <td>
-                                @if($exam->is_completed)
-                                    <span class="badge badge-success">Completed</span>
-                                @else
-                                    <span class="badge badge-warning">Active</span>
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ route('admin.exams.edit', $exam) }}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('admin.exams.destroy', $exam) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div class="instructions-grid">
+                <div class="instruction-item">
+                    <div class="instruction-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div class="instruction-content">
+                        <h6>{{ __('Step 1: Download Template') }}</h6>
+                        <p>{{ __('Download the Excel template and fill in your exam data following the provided format.') }}</p>
+                    </div>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="instruction-content">
+                        <h6>{{ __('Step 2: Fill Your Data') }}</h6>
+                        <p>{{ __('Add exam information, questions, and answer options in both English and Arabic.') }}</p>
+                    </div>
+                </div>
+                <div class="instruction-item">
+                    <div class="instruction-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <div class="instruction-content">
+                        <h6>{{ __('Step 3: Upload File') }}</h6>
+                        <p>{{ __('Upload your completed Excel file to automatically create the exam.') }}</p>
+                    </div>
+                </div>
             </div>
-            {{ $exams->links() }}
+
+            <div class="format-requirements">
+                <h6>{{ __('Format Requirements:') }}</h6>
+                <ul>
+                    <li>{{ __('Exam title and duration are required') }}</li>
+                    <li>{{ __('Each question must have at least 2 answer options') }}</li>
+                    <li>{{ __('Mark correct answers with "1" in the correct columns') }}</li>
+                    <li>{{ __('Question types: "single_choice" or "multiple_choice"') }}</li>
+                    <li>{{ __('Single choice questions can only have one correct answer') }}</li>
+                    <li>{{ __('File formats: .xlsx, .xls, .csv (max 10MB)') }}</li>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- FIXED Import Modal -->
-<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-gradient-primary text-white">
-                <h5 class="modal-title" id="importModalLabel">
-                    <i class="fas fa-file-excel mr-2"></i>
-                    Import Exam from Excel
-                </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <!-- Template Download Card -->
+    <div class="form-card">
+        <div class="card-header">
+            <div class="card-header-content">
+                <i class="fas fa-file-excel"></i>
+                <h3 class="card-title">{{ __('Excel Template') }}</h3>
             </div>
-            
-            <form action="{{ route('admin.exams.import') }}" method="POST" enctype="multipart/form-data" id="importForm">
-                @csrf
-                <div class="modal-body">
-                    <!-- Instructions -->
-                    <div class="alert alert-info border-left-info">
-                        <div class="text-info">
-                            <i class="fas fa-info-circle mr-2"></i>
-                            <strong>Instructions:</strong>
-                        </div>
-                        <ul class="mb-0 mt-2">
-                            <li>Download the template file and fill in your exam data</li>
-                            <li>Each question can have 2-6 answer options</li>
-                            <li>Mark correct answers with "1" in the is_correct columns</li>
-                            <li>All questions must belong to the same exam</li>
-                            <li>Supported formats: .xlsx, .xls, .csv (max 10MB)</li>
-                        </ul>
+        </div>
+        <div class="card-body">
+            <div class="template-download">
+                <div class="template-preview">
+                    <div class="template-icon">
+                        <i class="fas fa-file-excel"></i>
                     </div>
-
-                    <!-- Template Download -->
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="card border-left-success">
-                                <div class="card-body">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <h6 class="text-success font-weight-bold mb-1">
-                                                <i class="fas fa-download mr-2"></i>
-                                                Excel Template
-                                            </h6>
-                                            <p class="text-muted mb-0">
-                                                Download the template file with example data and detailed instructions
-                                            </p>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="{{ route('admin.exams.download-template') }}" 
-                                               class="btn btn-success btn-sm shadow-sm"
-                                               target="_blank">
-                                                <i class="fas fa-download mr-1"></i>
-                                                Download Template
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="template-info">
+                        <h5>{{ __('Exam Import Template') }}</h5>
+                        <p>{{ __('Pre-formatted Excel template with sample data and instructions') }}</p>
+                        <div class="template-features">
+                            <span class="feature-tag">{{ __('Bilingual Support') }}</span>
+                            <span class="feature-tag">{{ __('Sample Questions') }}</span>
+                            <span class="feature-tag">{{ __('Format Guide') }}</span>
                         </div>
-                    </div>
-
-                    <!-- File Upload -->
-                    <div class="form-group">
-                        <label for="excel_file" class="font-weight-bold text-gray-800">
-                            <i class="fas fa-upload mr-2"></i>
-                            Select Excel File
-                        </label>
-                        <div class="custom-file">
-                            <input type="file" 
-                                   class="custom-file-input" 
-                                   id="excel_file" 
-                                   name="excel_file" 
-                                   required 
-                                   accept=".xlsx,.xls,.csv">
-                            <label class="custom-file-label" for="excel_file">
-                                Choose file...
-                            </label>
-                        </div>
-                        <small class="form-text text-muted">
-                            <i class="fas fa-info-circle mr-1"></i>
-                            Maximum file size: 10MB. Supported formats: Excel (.xlsx, .xls) and CSV (.csv)
-                        </small>
-                    </div>
-
-                    <!-- File Preview (will be populated by JavaScript) -->
-                    <div id="filePreview" class="d-none">
-                        <div class="card border-left-primary">
-                            <div class="card-body">
-                                <h6 class="text-primary font-weight-bold mb-2">
-                                    <i class="fas fa-file-alt mr-2"></i>
-                                    Selected File
-                                </h6>
-                                <div id="fileInfo"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar (hidden by default) -->
-                    <div id="uploadProgress" class="d-none">
-                        <div class="progress mb-3">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                                 role="progressbar" 
-                                 style="width: 0%">
-                                Uploading...
-                            </div>
+                        <div class="template-note">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                {{ __('Generate creates a new template file. Download gets the existing template.') }}
+                            </small>
                         </div>
                     </div>
                 </div>
+                <div class="template-actions">
+                    <a href="{{ route('admin.exams.generate-template') }}" 
+                       class="btn btn-warning btn-lg" 
+                       onclick="return confirm('{{ __('This will create a fresh template file. Continue?') }}')">
+                        <i class="fas fa-cog"></i>
+                        {{ __('Generate New Template') }}
+                    </a>
+                    <a href="{{ route('admin.exams.download-template') }}" 
+                       class="btn btn-success btn-lg" 
+                       target="_blank">
+                        <i class="fas fa-download"></i>
+                        {{ __('Download Template') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Form Card -->
+    <div class="form-card">
+        <div class="card-header">
+            <div class="card-header-content">
+                <i class="fas fa-upload"></i>
+                <h3 class="card-title">{{ __('Upload Excel File') }}</h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ route('admin.exams.import') }}" enctype="multipart/form-data" id="importForm">
+                @csrf
                 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        <i class="fas fa-times mr-1"></i>
-                        Cancel
+                <!-- File Upload Area -->
+                <div class="file-upload-section">
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <input type="file" 
+                               class="file-input" 
+                               id="excel_file" 
+                               name="excel_file" 
+                               required 
+                               accept=".xlsx,.xls,.csv">
+                        <div class="upload-placeholder" id="uploadPlaceholder">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h5>{{ __('Drop Excel file here or click to browse') }}</h5>
+                            <p>{{ __('Supported formats: .xlsx, .xls, .csv') }}</p>
+                            <small>{{ __('Maximum file size: 10MB') }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Preview -->
+                <div id="filePreview" class="file-preview" style="display: none;">
+                    <div class="preview-header">
+                        <i class="fas fa-file-alt"></i>
+                        <h6>{{ __('Selected File') }}</h6>
+                    </div>
+                    <div id="fileInfo" class="file-info"></div>
+                    <button type="button" class="btn btn-sm btn-outline-danger" id="removeFile">
+                        <i class="fas fa-times"></i>
+                        {{ __('Remove File') }}
                     </button>
-                    <button type="submit" class="btn btn-primary" id="importBtn">
-                        <i class="fas fa-upload mr-1"></i>
-                        Import Exam
+                </div>
+
+                <!-- Progress Bar -->
+                <div id="uploadProgress" class="upload-progress" style="display: none;">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" 
+                             style="width: 0%">
+                            <span class="progress-text">{{ __('Processing...') }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Section -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-lg" id="importBtn" disabled>
+                        <i class="fas fa-upload"></i>
+                        {{ __('Import Exam') }}
                     </button>
+                    <a href="{{ route('admin.exams.index') }}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-times"></i>
+                        {{ __('Cancel') }}
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- DEBUGGING: Add at the very end before closing body tag -->
 <script>
-// Debug: Check if jQuery and Bootstrap are loaded
-console.log('jQuery loaded:', typeof $ !== 'undefined');
-console.log('Bootstrap loaded:', typeof $.fn.modal !== 'undefined');
-
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded');
-    console.log('Modal element exists:', document.getElementById('importModal') !== null);
-    
     const fileInput = document.getElementById('excel_file');
-    const fileLabel = document.querySelector('.custom-file-label');
+    const fileUploadArea = document.getElementById('fileUploadArea');
+    const uploadPlaceholder = document.getElementById('uploadPlaceholder');
     const filePreview = document.getElementById('filePreview');
     const fileInfo = document.getElementById('fileInfo');
-    const importForm = document.getElementById('importForm');
+    const removeFileBtn = document.getElementById('removeFile');
     const importBtn = document.getElementById('importBtn');
+    const importForm = document.getElementById('importForm');
     const uploadProgress = document.getElementById('uploadProgress');
-    const progressBar = document.querySelector('.progress-bar');
-
-    // Debug modal show/hide events
-    $('#importModal').on('show.bs.modal', function (e) {
-        console.log('Modal is showing');
+    
+    // File input change handler
+    fileInput.addEventListener('change', function(e) {
+        handleFileSelect(e.target.files[0]);
     });
-
-    $('#importModal').on('shown.bs.modal', function (e) {
-        console.log('Modal is shown');
+    
+    // Drag and drop handlers
+    fileUploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        fileUploadArea.classList.add('dragover');
     });
-
-    $('#importModal').on('hide.bs.modal', function (e) {
-        console.log('Modal is hiding');
+    
+    fileUploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        fileUploadArea.classList.remove('dragover');
     });
-
-    // Handle file selection
-    if (fileInput) {
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            
-            if (file) {
-                console.log('File selected:', file.name);
-                
-                // Update label
-                fileLabel.textContent = file.name;
-                
-                // Show file preview
-                filePreview.classList.remove('d-none');
-                
-                // Format file size
-                const fileSize = (file.size / 1024 / 1024).toFixed(2);
-                const fileSizeClass = fileSize > 5 ? 'text-warning' : 'text-success';
-                
-                fileInfo.innerHTML = `
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <strong>Name:</strong> ${file.name}
-                        </div>
-                        <div class="col-sm-6">
-                            <strong>Size:</strong> <span class="${fileSizeClass}">${fileSize} MB</span>
-                        </div>
-                        <div class="col-sm-6">
-                            <strong>Type:</strong> ${file.type || 'Unknown'}
-                        </div>
-                        <div class="col-sm-6">
-                            <strong>Last Modified:</strong> ${new Date(file.lastModified).toLocaleDateString()}
-                        </div>
-                    </div>
-                `;
-            } else {
-                // Reset if no file
-                fileLabel.textContent = 'Choose file...';
-                filePreview.classList.add('d-none');
-            }
-        });
-    }
-
-    // Handle form submission
-    if (importForm) {
-        importForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            console.log('Form submitted');
-            
-            const formData = new FormData(this);
-            
-            // Show loading state
-            importBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Importing...';
-            importBtn.disabled = true;
-            uploadProgress.classList.remove('d-none');
-            
-            // Submit form normally (not using fetch for debugging)
-            this.submit();
-        });
-    }
-
-    // Reset form when modal is closed
-    $('#importModal').on('hidden.bs.modal', function() {
-        console.log('Modal closed, resetting form');
-        if (importForm) {
-            importForm.reset();
-            fileLabel.textContent = 'Choose file...';
-            filePreview.classList.add('d-none');
-            uploadProgress.classList.add('d-none');
-            progressBar.style.width = '0%';
-            importBtn.innerHTML = '<i class="fas fa-upload mr-1"></i> Import Exam';
-            importBtn.disabled = false;
+    
+    fileUploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        fileUploadArea.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileSelect(files[0]);
         }
     });
-});
-
-// Test modal manually
-function testModal() {
-    $('#importModal').modal('show');
-}
-
-// Add test button (remove after debugging)
-document.addEventListener('DOMContentLoaded', function() {
-    if (document.querySelector('.container-fluid')) {
-        const testBtn = document.createElement('button');
-        testBtn.innerHTML = 'Test Modal';
-        testBtn.className = 'btn btn-warning btn-sm';
-        testBtn.onclick = testModal;
-        document.querySelector('.container-fluid').prepend(testBtn);
+    
+    // Remove file handler
+    removeFileBtn.addEventListener('click', function() {
+        clearFile();
+    });
+    
+    // Form submit handler
+    importForm.addEventListener('submit', function(e) {
+        if (!fileInput.files[0]) {
+            e.preventDefault();
+            alert('Please select a file to import.');
+            return;
+        }
+        
+        // Show progress
+        importBtn.disabled = true;
+        uploadProgress.style.display = 'block';
+        
+        // Simulate progress (you can replace this with actual upload progress)
+        let progress = 0;
+        const progressBar = uploadProgress.querySelector('.progress-bar');
+        const progressText = uploadProgress.querySelector('.progress-text');
+        
+        const interval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress > 90) {
+                progress = 90;
+                clearInterval(interval);
+                progressText.textContent = 'Processing file...';
+            }
+            progressBar.style.width = progress + '%';
+        }, 200);
+    });
+    
+    function handleFileSelect(file) {
+        if (!file) return;
+        
+        // Validate file type
+        const allowedTypes = [
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+            'application/vnd.ms-excel', // .xls
+            'text/csv' // .csv
+        ];
+        
+        if (!allowedTypes.includes(file.type)) {
+            alert('Please select a valid Excel file (.xlsx, .xls, or .csv)');
+            return;
+        }
+        
+        // Validate file size (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size must be less than 10MB');
+            return;
+        }
+        
+        // Update file input
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files = dt.files;
+        
+        // Show file info
+        showFilePreview(file);
+        
+        // Enable import button
+        importBtn.disabled = false;
+    }
+    
+    function showFilePreview(file) {
+        uploadPlaceholder.style.display = 'none';
+        filePreview.style.display = 'block';
+        
+        fileInfo.innerHTML = `
+            <div><strong>File Name:</strong> ${file.name}</div>
+            <div><strong>File Size:</strong> ${formatFileSize(file.size)}</div>
+            <div><strong>File Type:</strong> ${file.type}</div>
+            <div><strong>Last Modified:</strong> ${new Date(file.lastModified).toLocaleString()}</div>
+        `;
+    }
+    
+    function clearFile() {
+        fileInput.value = '';
+        uploadPlaceholder.style.display = 'block';
+        filePreview.style.display = 'none';
+        importBtn.disabled = true;
+        uploadProgress.style.display = 'none';
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 });
 </script>
-
-<style>
-/* Your existing styles */
-.modal-lg {
-    max-width: 800px;
-}
-
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.border-left-info {
-    border-left: 4px solid #36b9cc !important;
-}
-
-.border-left-success {
-    border-left: 4px solid #1cc88a !important;
-}
-
-.border-left-primary {
-    border-left: 4px solid #4e73df !important;
-}
-
-.custom-file-label::after {
-    content: "Browse";
-    background: #4e73df;
-    border-color: #4e73df;
-    color: white;
-}
-
-.progress {
-    height: 0.5rem;
-}
-
-.modal-content {
-    border: none;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-
-.modal-header {
-    border-radius: 0.5rem 0.5rem 0 0;
-}
-
-.custom-file {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    height: calc(1.5em + 0.75rem + 2px);
-    margin-bottom: 0;
-}
-
-.custom-file-input:focus ~ .custom-file-label {
-    border-color: #4e73df;
-    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
-}
-
-.custom-file-label {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1;
-    height: calc(1.5em + 0.75rem + 2px);
-    padding: 0.375rem 0.75rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #6e707e;
-    background-color: #fff;
-    border: 1px solid #d1d3e2;
-    border-radius: 0.35rem;
-    cursor: pointer;
-}
-
-@media (max-width: 768px) {
-    .modal-lg {
-        max-width: 90%;
-        margin: 1rem auto;
-    }
-    
-    .modal-dialog {
-        margin: 1rem;
-    }
-    
-    #fileInfo .row .col-sm-6 {
-        margin-bottom: 0.5rem;
-    }
-}
-
-#filePreview {
-    animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.fa-spinner {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-</style>
+@endsection

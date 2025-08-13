@@ -1,0 +1,248 @@
+.info-card {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    border: 1px solid #bbdefb;
+}
+
+.instructions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.instruction-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.instruction-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #2196f3;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+}
+
+.instruction-content h6 {
+    margin: 0 0 0.5rem 0;
+    color: #1976d2;
+    font-weight: 600;
+}
+
+.instruction-content p {
+    margin: 0;
+    color: #424242;
+    font-size: 0.9rem;
+}
+
+.format-requirements {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.format-requirements h6 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.format-requirements ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.format-requirements li {
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.template-download {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.template-preview {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex: 1;
+}
+
+.template-icon {
+    width: 60px;
+    height: 60px;
+    background: #28a745;
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.template-info h5 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+}
+
+.template-info p {
+    margin: 0 0 1rem 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.template-features {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.feature-tag {
+    background: #e8f5e8;
+    color: #2e7d32;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.file-upload-area {
+    border: 2px dashed #d1d3e2;
+    border-radius: 8px;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: #f8f9fc;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.file-upload-area:hover {
+    border-color: #4e73df;
+    background: #eef2ff;
+}
+
+.file-upload-area.dragover {
+    border-color: #4e73df;
+    background: #eef2ff;
+    transform: scale(1.02);
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: #858796;
+    margin-bottom: 1rem;
+}
+
+.upload-placeholder h5 {
+    color: #5a5c69;
+    margin-bottom: 0.5rem;
+}
+
+.upload-placeholder p {
+    color: #858796;
+    margin-bottom: 0.5rem;
+}
+
+.upload-placeholder small {
+    color: #6c757d;
+}
+
+.file-preview {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: #155724;
+    font-weight: 600;
+}
+
+.file-info {
+    background: white;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.upload-progress {
+    margin-top: 1rem;
+}
+
+.progress {
+    height: 20px;
+    border-radius: 10px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+.progress-text {
+    color: white;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .instructions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .template-download {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+    
+    .template-preview {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .template-actions {
+        width: 100%;
+    }
+    
+    .template-actions .btn {
+        width: 100%;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}

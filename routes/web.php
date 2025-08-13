@@ -99,7 +99,7 @@ Route::view("/home", "home")->middleware('auth')->name('home');
 //     ->middleware(['auth', 'verified', 'admin'])
 //     ->name('admin.dashboard');
 // Admin Routes Group
-Route::prefix('admin')->name('admin.')->middleware(['auth', SetLocale::class])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth','admin', SetLocale::class])->group(function () {
     
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -163,9 +163,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', SetLocale::class])->
     // Route::post('/exams/import', [AdminExamController::class, 'import'])->name('exams.import');
 
     // Excel Import routes
-    Route::get('/exams/import', [ExamImportController::class, 'showImportForm'])->name('exams.import.form');
-    Route::post('/exams/import', [ExamImportController::class, 'import'])->name('exams.import');
-    Route::get('/exams/download-template', [ExamImportController::class, 'downloadTemplate'])->name('exams.download-template');
+    Route::get('/admin/exams/import', [ExamImportController::class, 'showImportForm'])->name('exams.import.form');
+    Route::post('/admin/exams/import', [ExamImportController::class, 'import'])->name('exams.import');
+    Route::get('/admin/exams/import/template', [ExamImportController::class, 'downloadTemplate'])->name('exams.import.template');
+    Route::get('/admin/exams/generate-template', [ExamImportController::class, 'generateTemplateRoute'])->name('exams.generate-template');
+    Route::get('/admin/exams/download-template', [ExamImportController::class, 'downloadTemplate'])->name('exams.download-template');
+
     // Route::view('/exams/creat', 'components.exam.basic-info-create')->name('exams.partials.basic-info-create');
 
     // Quiz Attempts

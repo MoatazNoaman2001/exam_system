@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
@@ -399,7 +399,7 @@
     </section>
 
     <!-- Footer -->
-    <footer>
+    <footer dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
@@ -418,10 +418,7 @@
                 <div class="footer-column">
                     <h3>{{ __('lang.Resources') }}</h3>
                     <ul class="footer-links">
-
-                        <ul class="footer-links">
-                            <li><a href="{{ route('faq') }}">{{ __('lang.FAQ') }}</a></li>
-                        </ul>
+                        <li><a href="{{ route('faq') }}">{{ __('lang.FAQ') }}</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
