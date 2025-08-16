@@ -27,25 +27,36 @@ use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\FeaturesController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EarnPointsController;
 use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\Admin\SlideController;
 use App\Http\Controllers\LeaderBoardController;
 use App\Http\Controllers\NewPasswordController;
+use App\Http\Controllers\Admin\DomainController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Admin\AttemptController;
+use App\Http\Controllers\Admin\ChapterController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\certificationController;
 use App\Http\Controllers\ChangPasswordController;
 use App\Http\Controllers\Admin\AdminExamController;
+use App\Http\Controllers\CertificateHomeController;
 use App\Http\Controllers\CompletedActionController;
 use App\Http\Controllers\AchievementPointController;
 use App\Http\Controllers\Admin\ExamImportController;
 use App\Http\Controllers\VerificationCodeController;
+
+
+use App\Http\Controllers\Admin\CertificateController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\TermsAndConditionsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminExamQuestionController;
+use App\Http\Controllers\Admin\NotificationController as NC;
 
 // App::setLocale('ar'); // Removed - this was preventing language switching
 Route::get('/locale/{locale}', [LocaleController::class, 'setLocale'])->name('locale.set');
@@ -102,48 +113,52 @@ Route::view("/home", "home")->middleware('auth')->name('home');
 Route::prefix('admin')->name('admin.')->middleware(['auth','admin', SetLocale::class])->group(function () {
     
     // Dashboard
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/stats', [AdminDashboardController::class, 'getStats'])->name('stats');
+    Route::get('/chart-data', [AdminDashboardController::class, 'getChartData'])->name('chart-data');
     
-    // Users Management
-    Route::get('/users', [AdminController::class, 'users'])->name('users');
-    Route::get('/users/create', [AdminController::class, 'createUser'])->name('users.create');
-    Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
-    Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
-    Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
-    Route::patch('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
-    Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('users.destroy');
+    // Users Management - Updated to new controller
+    Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     
-    // Domains Management
-    Route::get('/domains', [AdminController::class, 'domains'])->name('domains');
-    Route::get('/domains/create', [AdminController::class, 'createDomain'])->name('domains.create');
-    Route::post('/domains', [AdminController::class, 'storeDomain'])->name('domains.store');
-    Route::get('/domains/{domain}/edit', [AdminController::class, 'editDomain'])->name('domains.edit');
-    Route::put('/domains/{domain}', [AdminController::class, 'updateDomain'])->name('domains.update');
-    Route::delete('/domains/{domain}', [AdminController::class, 'destroyDomain'])->name('domains.destroy');
 
-    // Chapters Management
-    Route::get('/chapters', [AdminController::class, 'chapters'])->name('chapters');
-    Route::get('/chapters/create', [AdminController::class, 'createChapter'])->name('chapters.create');
-    Route::post('/chapters', [AdminController::class, 'storeChapter'])->name('chapters.store');
-    Route::get('/chapters/{chapter}/edit', [AdminController::class, 'editChapter'])->name('chapters.edit');
-    Route::put('/chapters/{chapter}', [AdminController::class, 'updateChapter'])->name('chapters.update');
-    Route::delete('/chapters/{chapter}', [AdminController::class, 'destroyChapter'])->name('chapters.destroy');
+    // Domains Management - Updated to new controller
+    Route::get('/domains', [DomainController::class, 'index'])->name('domains');
+    Route::get('/domains/create', [DomainController::class, 'create'])->name('domains.create');
+    Route::post('/domains', [DomainController::class, 'store'])->name('domains.store');
+    Route::get('/domains/{domain}', [DomainController::class, 'show'])->name('domains.show');
+    Route::get('/domains/{domain}/edit', [DomainController::class, 'edit'])->name('domains.edit');
+    Route::put('/domains/{domain}', [DomainController::class, 'update'])->name('domains.update');
+    Route::delete('/domains/{domain}', [DomainController::class, 'destroy'])->name('domains.destroy');
+    Route::get('/domains/certificate/{certificate}', [DomainController::class, 'getByCertificate'])->name('domains.by-certificate');
+
+    // Chapters Management - Updated to new controller
+    Route::get('/chapters', [ChapterController::class, 'index'])->name('chapters');
+    Route::get('/chapters/create', [ChapterController::class, 'create'])->name('chapters.create');
+    Route::post('/chapters', [ChapterController::class, 'store'])->name('chapters.store');
+    Route::get('/chapters/{chapter}', [ChapterController::class, 'show'])->name('chapters.show');
+    Route::get('/chapters/{chapter}/edit', [ChapterController::class, 'edit'])->name('chapters.edit');
+    Route::put('/chapters/{chapter}', [ChapterController::class, 'update'])->name('chapters.update');
+    Route::delete('/chapters/{chapter}', [ChapterController::class, 'destroy'])->name('chapters.destroy');
+    Route::get('/chapters/certificate/{certificate}', [ChapterController::class, 'getByCertificate'])->name('chapters.by-certificate');
     
-    // Slides Management
-    Route::get('/slides', [AdminController::class, 'slides'])->name('slides');
-    Route::get('/slides/create', [AdminController::class, 'createSlide'])->name('slides.create');
-    Route::post('/slides', [AdminController::class, 'storeSlide'])->name('slides.store');
-    Route::get('/slides/{slide}/edit', [AdminController::class, 'editSlide'])->name('slides.edit');
-    Route::put('/slides/{slide}', [AdminController::class, 'updateSlide'])->name('slides.update');
-    Route::delete('/slides/{slide}', [AdminController::class, 'destroySlide'])->name('slides.destroy');
+    // Slides Management - Updated to new controller
+    Route::get('/slides', [SlideController::class, 'index'])->name('slides');
+    Route::get('/slides/create', [SlideController::class, 'create'])->name('slides.create');
+    Route::post('/slides', [SlideController::class, 'store'])->name('slides.store');
+    Route::get('/slides/{slide}', [SlideController::class, 'show'])->name('slides.show');
+    Route::get('/slides/{slide}/edit', [SlideController::class, 'edit'])->name('slides.edit');
+    Route::put('/slides/{slide}', [SlideController::class, 'update'])->name('slides.update');
+    Route::delete('/slides/{slide}', [SlideController::class, 'destroy'])->name('slides.destroy');
+    Route::get('/slides/{slide}/download', [SlideController::class, 'downloadPdf'])->name('slides.download');
+    Route::get('/slides/{slide}/questions', [SlideController::class, 'getQuestions'])->name('slides.questions');
     
-    // Additional routes for the new functionality
-    Route::get('/slides/{slide}', [AdminController::class, 'showSlide'])->name('slides.show');
-    Route::get('/slides/{slide}/download', [AdminController::class, 'downloadSlidePdf'])->name('slides.download');
-    Route::get('/slides/{slide}/questions', [AdminController::class, 'getSlideQuestions'])->name('slides.questions');
-    
-    
-    // Exams Management
+    // Exams Management - Keep existing exam controllers (unchanged)
     Route::get('/exams', [AdminExamController::class, 'index'])->name('exams.index');
     Route::get('/exams/create', [AdminExamController::class, 'create'])->name('exams.create');
     Route::post('/exams', [AdminExamController::class, 'store'])->name('exams.store');
@@ -152,7 +167,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','admin', SetLocale::c
     Route::put('/exams/{exam}', [AdminExamController::class, 'update'])->name('exams.update');
     Route::delete('/exams/{exam}', [AdminExamController::class, 'destroy'])->name('exams.destroy');
     
-    // Exam Questions Management
+    // Exam Questions Management - Keep existing (unchanged)
     Route::get('/exams/{exam}/questions', [AdminExamQuestionController::class, 'index'])->name('exams.questions.index');
     Route::get('/exams/{exam}/questions/create', [AdminExamQuestionController::class, 'create'])->name('exams.questions.create');
     Route::post('/exams/{exam}/questions', [AdminExamQuestionController::class, 'store'])->name('exams.questions.store');
@@ -160,40 +175,41 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','admin', SetLocale::c
     Route::put('/exams/{exam}/questions/{question}', [AdminExamQuestionController::class, 'update'])->name('exams.questions.update');
     Route::delete('/exams/{exam}/questions/{question}', [AdminExamQuestionController::class, 'destroy'])->name('exams.questions.destroy');
     
-    // Route::post('/exams/import', [AdminExamController::class, 'import'])->name('exams.import');
-
-    // Excel Import routes
+    // Excel Import routes - Keep existing (unchanged)
     Route::get('/admin/exams/import', [ExamImportController::class, 'showImportForm'])->name('exams.import.form');
     Route::post('/admin/exams/import', [ExamImportController::class, 'import'])->name('exams.import');
     Route::get('/admin/exams/import/template', [ExamImportController::class, 'downloadTemplate'])->name('exams.import.template');
     Route::get('/admin/exams/generate-template', [ExamImportController::class, 'generateTemplateRoute'])->name('exams.generate-template');
     Route::get('/admin/exams/download-template', [ExamImportController::class, 'downloadTemplate'])->name('exams.download-template');
 
-    // Route::view('/exams/creat', 'components.exam.basic-info-create')->name('exams.partials.basic-info-create');
-
-    // Quiz Attempts
-    Route::get('/quiz-attempts', [AdminController::class, 'quizAttempts'])->name('quiz-attempts');
-    Route::get('/quiz-attempts/{quizAttempt}', [AdminController::class, 'showQuizAttempt'])->name('quiz-attempts.show');
+    // Quiz Attempts - Updated to new controller
+    Route::get('/quiz-attempts', [AttemptController::class, 'quizAttempts'])->name('quiz-attempts');
+    Route::get('/quiz-attempts/{quizAttempt}', [AttemptController::class, 'showQuizAttempt'])->name('quiz-attempts.show');
+    Route::delete('/quiz-attempts/{quizAttempt}', [AttemptController::class, 'destroyQuizAttempt'])->name('quiz-attempts.destroy');
+    Route::get('/quiz-attempts/export', [AttemptController::class, 'exportQuizAttempts'])->name('quiz-attempts.export');
     
-    // Test Attempts
-    Route::get('/test-attempts', [AdminController::class, 'testAttempts'])->name('test-attempts');
-    Route::get('/test-attempts/{testAttempt}', [AdminController::class, 'showTestAttempt'])->name('test-attempts.show');
+    // Test Attempts - Updated to new controller
+    Route::get('/test-attempts', [AttemptController::class, 'testAttempts'])->name('test-attempts');
+    Route::get('/test-attempts/{testAttempt}', [AttemptController::class, 'showTestAttempt'])->name('test-attempts.show');
+    Route::delete('/test-attempts/{testAttempt}', [AttemptController::class, 'destroyTestAttempt'])->name('test-attempts.destroy');
+    Route::get('/test-attempts/export', [AttemptController::class, 'exportTestAttempts'])->name('test-attempts.export');
     
-    // // Job Applications
-    // Route::get('/applications', [AdminController::class, 'applications'])->name('applications');
-    // Route::get('/applications/{application}', [AdminController::class, 'showApplication'])->name('applications.show');
-    // Route::put('/applications/{application}/status', [AdminController::class, 'updateApplicationStatus'])->name('applications.status');
+    // Notifications - Updated to new controller
+    Route::get('/notifications', [NC::class, 'index'])->name('notifications');
+    Route::get('/notifications/create', [NC::class, 'create'])->name('notifications.create');
+    Route::post('/notifications', [NC::class, 'store'])->name('notifications.store');
+    Route::get('/notifications/{notification}', [NC::class, 'show'])->name('notifications.show');
+    Route::get('/notifications/{notification}/edit', [NC::class, 'edit'])->name('notifications.edit');
+    Route::put('/notifications/{notification}', [NC::class, 'update'])->name('notifications.update');
+    Route::delete('/notifications/{notification}', [NC::class, 'destroy'])->name('notifications.destroy');
+    Route::patch('/notifications/{notification}/mark-read', [NC::class, 'markAsRead'])->name('notifications.mark-read');
+    Route::patch('/users/{user}/notifications/mark-all-read', [NC::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::get('/users/{user}/notifications/unread-count', [NC::class, 'getUnreadCount'])->name('notifications.unread-count');
     
-    // Notifications
-    Route::get('/notifications', [AdminController::class, 'notifications'])->name('notifications');
-    Route::get('/notifications/create', [AdminController::class, 'createNotification'])->name('notifications.create');
-    Route::post('/notifications', [AdminController::class, 'storeNotification'])->name('notifications.store');
-    Route::delete('/notifications/{notification}', [AdminController::class, 'destroyNotification'])->name('notifications.destroy');
-    
-    // Analytics & Reports
-    Route::get('/analytics', [AdminController::class, 'analytics'])->name('analytics');
-    Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
-    Route::get('/reports/export', [AdminController::class, 'exportReports'])->name('reports.export');
+    // Analytics & Reports - Updated to new controller
+    Route::get('/analytics', [AdminDashboardController::class, 'analytics'])->name('analytics');
+    Route::get('/reports', [AdminDashboardController::class, 'reports'])->name('reports');
+    Route::get('/reports/export', [AdminDashboardController::class, 'exportReports'])->name('reports.export');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -344,7 +360,7 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'stu
     Route::get('/intro/step/{step}', [IntroController::class, 'step'])->name('intro.step');
     Route::post('/intro/step/{step}', [IntroController::class, 'store'])->name('intro.store');
     Route::get('/intro/complete', [IntroController::class, 'complete'])->name('intro.complete');
-    Route::get('/home',[HomeController::class , 'index'])->name('home');
+    Route::get('/home',[CertificateHomeController::class , 'index'])->name('home');
     Route::get('/sections', [SectionsController::class, 'index'])->name('sections');
     Route::get('/sections/chapters', [SectionsController::class, 'chapters'])->name('sections.chapters');
     Route::get('/sections/domains', [SectionsController::class, 'domains'])->name('sections.domains');
@@ -381,6 +397,10 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'stu
     Route::get('/leaderboard/{userId}', [LeaderBoardController::class, 'showLeaderBoard'])->name('leaderboard');
     Route::get('/certificate/download', [CertificationController::class, 'download'])->name('certificate.download');
     Route::get('/certificate/view', [CertificationController::class, 'view'])->name('certificate.view');
+    
+    // Certificate routes
+    Route::get('/certificates', [CertificateHomeController::class, 'index'])->name('certificate.index');
+    Route::get('/certificates/{certificateId}', [CertificateHomeController::class, 'show'])->name('certificate.show');
 
     Route::get('/terms-and-conditions', [TermsAndConditionsController::class, 'showTermsAndConditions'])->name('terms.conditions');
 

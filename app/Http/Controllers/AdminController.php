@@ -475,13 +475,14 @@ class AdminController extends Controller
      */
     public function domains()
     {
-        $domains = Domain::withCount('slides')->latest()->paginate(20);
+        $domains = Domain::withCount('slides')->with('certificate')->latest()->paginate(20);
         return view('admin.domains.index', compact('domains'));
     }
 
     public function createDomain()
     {
-        return view('admin.domains.create');
+        $certificates = \App\Models\Certificate::active()->ordered()->get();
+        return view('admin.domains.create', compact('certificates'));
     }
 
     public function storeDomain(Request $request)
@@ -490,16 +491,18 @@ class AdminController extends Controller
             'text' => 'required|string|max:255',
             'description' => 'required|string|max:200',
             'description_ar' => 'required|string|max:200',
+            'certificate_id' => 'required|exists:certificates,id',
         ]);
 
-        Domain::create($request->only(['text', 'description', 'description_ar']));
+        Domain::create($request->only(['text', 'description', 'description_ar', 'certificate_id']));
 
         return redirect()->route('admin.domains')->with('success', 'Domain created successfully.');
     }
 
     public function editDomain(Domain $domain)
     {
-        return view('admin.domains.edit', compact('domain'));
+        $certificates = \App\Models\Certificate::active()->ordered()->get();
+        return view('admin.domains.edit', compact('domain', 'certificates'));
     }
 
     public function updateDomain(Request $request, Domain $domain)
@@ -508,9 +511,10 @@ class AdminController extends Controller
             'text' => 'required|string|max:255',
             'description' => 'required|string|max:200',
             'description_ar' => 'required|string|max:200',
+            'certificate_id' => 'required|exists:certificates,id',
         ]);
 
-        $domain->update($request->only(['text', 'description', 'description_ar']));
+        $domain->update($request->only(['text', 'description', 'description_ar', 'certificate_id']));
 
         return redirect()->route('admin.domains')->with('success', 'Domain updated successfully.');
     }
@@ -526,38 +530,42 @@ class AdminController extends Controller
      */
     public function chapters()
     {
-        $chapters = Chapter::withCount('slides')->latest()->paginate(20);
+        $chapters = Chapter::withCount('slides')->with('certificate')->latest()->paginate(20);
         return view('admin.chapter.index', compact('chapters'));
     }
 
     public function createChapter()
     {
-        return view('admin.chapter.create');
+        $certificates = \App\Models\Certificate::active()->ordered()->get();
+        return view('admin.chapter.create', compact('certificates'));
     }
 
     public function storeChapter(Request $request)
     {
         $request->validate([
             'text' => 'required|string|max:255',
+            'certificate_id' => 'required|exists:certificates,id',
         ]);
 
-        Chapter::create($request->only(['text']));
+        Chapter::create($request->only(['text', 'certificate_id']));
 
         return redirect()->route('admin.chapters')->with('success', 'Chapter created successfully.');
     }
 
     public function editChapter(Chapter $chapter)
     {
-        return view('admin.chapter.edit', compact('chapter'));
+        $certificates = \App\Models\Certificate::active()->ordered()->get();
+        return view('admin.chapter.edit', compact('chapter', 'certificates'));
     }
 
     public function updateChapter(Request $request, Chapter $chapter)
     {
         $request->validate([
             'text' => 'required|string|max:255',
+            'certificate_id' => 'required|exists:certificates,id',
         ]);
 
-        $chapter->update($request->only(['text']));
+        $chapter->update($request->only(['text', 'certificate_id']));
 
         return redirect()->route('admin.chapters')->with('success', 'Chapter updated successfully.');
     }

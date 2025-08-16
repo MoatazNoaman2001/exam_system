@@ -20,6 +20,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
+                            <th>Certificate</th>
                             <th>Slides Count</th>
                             <th>Actions</th>
                         </tr>
@@ -29,6 +30,15 @@
                         <tr>
                             <td>{{ substr($domain->id, 20) }}</td>
                             <td>{{ $domain->text }}</td>
+                            <td>
+                                @if($domain->certificate)
+                                    <span class="badge" style="background-color: {{ $domain->certificate->color }}20; color: {{ $domain->certificate->color }}; border: 1px solid {{ $domain->certificate->color }};">
+                                        {{ $domain->certificate->code }}
+                                    </span>
+                                @else
+                                    <span class="badge badge-secondary">No Certificate</span>
+                                @endif
+                            </td>
                             <td>{{ $domain->slides_count }}</td>
                             <td>
                                 <a href="{{ route('admin.domains.edit', $domain) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>

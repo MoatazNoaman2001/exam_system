@@ -26,6 +26,23 @@
                     @enderror
                 </div>
 
+                <div class="form-group">
+                    <label for="certificate_id">Certificate</label>
+                    <select class="form-control @error('certificate_id') is-invalid @enderror" id="certificate_id" name="certificate_id" required>
+                        <option value="">Select a certificate</option>
+                        @foreach($certificates as $certificate)
+                            <option value="{{ $certificate->id }}" {{ old('certificate_id') == $certificate->id ? 'selected' : '' }}>
+                                {{ $certificate->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('certificate_id')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+
                 <br/>
 
             

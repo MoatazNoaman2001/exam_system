@@ -87,6 +87,10 @@ class Exam extends Model
         return $this->hasMany(UserProgress::class, 'exam_id');
     }
 
+    public function certificate()
+    {
+        return $this->belongsTo(Certificate::class);
+    }
     /**
      * Calculate total marks for the exam
      */

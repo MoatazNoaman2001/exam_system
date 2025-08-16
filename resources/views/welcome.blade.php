@@ -174,11 +174,11 @@
                     </form>
                 </div>
                 <div class="hero-image">
-                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173"
+                    <img srcset="https://images.unsplash.com/photo-1434030216411-0b793f4b4173"
                         alt="{{ __('lang.PMP Exam Dashboard') }}" class="hero-img hero-img-1">
-                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b"
+                    <img srcset="https://images.unsplash.com/photo-1503676260728-1c00da094a0b"
                         alt="{{ __('lang.PMP Study Materials') }}" class="hero-img hero-img-2">
-                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40"
+                    <img srcset="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40"
                         alt="{{ __('lang.PMP Progress Tracking') }}" class="hero-img hero-img-3">
                 </div>
             </div>
@@ -232,9 +232,9 @@
             </div>
             <div class="plan-container">
                 <div class="plan-image">
-                    <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d"
+                    <img srcset="https://images.unsplash.com/photo-1546410531-bb4caa6b424d"
                         alt="{{ __('lang.Study Plan') }}" class="plan-img plan-img-main">
-                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4"
+                    <img srcset="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4"
                         alt="{{ __('lang.Study Plan Background') }}" class="plan-img plan-img-bg">
                 </div>
                 <div class="plan-content">
@@ -281,7 +281,7 @@
             <div class="exams-grid">
                 <div class="exam-card">
                     <div class="exam-image">
-                        <img src="https://images.unsplash.com/photo-1551269901-5c5e14c25df7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                        <img srcset="https://images.unsplash.com/photo-1699858946479-e5577e2b7dcc?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             alt="{{ __('lang.Full-Length Exam') }}">
                         {{-- <div class="exam-tag">200 {{ __('lang.Questions') }}</div> --}}
                     </div>
@@ -303,7 +303,7 @@
                 </div>
                 <div class="exam-card">
                     <div class="exam-image">
-                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                        <img srcset="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
                             alt="{{ __('lang.Knowledge Area Exam') }}">
                         {{-- <div class="exam-tag">50 {{ __('lang.Questions') }}</div> --}}
                     </div>
@@ -324,7 +324,7 @@
                 </div>
                 <div class="exam-card">
                     <div class="exam-image">
-                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                        <img srcset="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
                             alt="{{ __('lang.Quick Quiz') }}">
                         {{-- <div class="exam-tag">20 {{ __('lang.Questions') }}</div> --}}
                     </div>

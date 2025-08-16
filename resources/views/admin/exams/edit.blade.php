@@ -70,6 +70,33 @@
                 </div>
             </div>
             <div class="card-body">
+                <!-- Certificate Selection -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="certificate_id" class="form-label required">
+                            {{ __('Certificate') }}
+                        </label>
+                        <select class="form-control @error('certificate_id') is-invalid @enderror" 
+                                id="certificate_id" 
+                                name="certificate_id" 
+                                required>
+                            <option value="">{{ __('Select a certificate...') }}</option>
+                            @foreach($certificates as $certificate)
+                                <option value="{{ $certificate->id }}" 
+                                        {{ old('certificate_id', $exam->certificate_id) == $certificate->id ? 'selected' : '' }}
+                                        data-color="{{ $certificate->color }}">
+                                    {{ app()->getLocale() == 'ar' ? $certificate->name_ar : $certificate->name }} 
+                                    ({{ $certificate->code }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="form-help">{{ __('Select the certificate this exam belongs to') }}</div>
+                        @error('certificate_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
                 <!-- Bilingual Titles -->
                 <div class="form-row">
                     <div class="form-group">
@@ -160,6 +187,58 @@
                         @error('duration')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Certificate Info (if assigned) -->
+        @if($exam->certificate)
+        <div class="form-card certificate-current">
+            <div class="card-header">
+                <div class="card-header-content">
+                    <i class="fas fa-certificate"></i>
+                    <h3 class="card-title">{{ __('Current Certificate') }}</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="certificate-info">
+                    <div class="certificate-badge">
+                        <div class="certificate-icon" style="background: {{ $exam->certificate->color }};">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="certificate-details">
+                            <h4>{{ app()->getLocale() == 'ar' ? $exam->certificate->name_ar : $exam->certificate->name }}</h4>
+                            <p><strong>{{ __('Code') }}:</strong> {{ $exam->certificate->code }}</p>
+                            @if($exam->certificate->description)
+                                <p>{{ app()->getLocale() == 'ar' ? $exam->certificate->description_ar : $exam->certificate->description }}</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <!-- Certificate Preview Card (will appear when certificate is changed) -->
+        <div class="form-card certificate-preview" id="certificatePreview" style="display: none;">
+            <div class="card-header">
+                <div class="card-header-content">
+                    <i class="fas fa-certificate"></i>
+                    <h3 class="card-title">{{ __('New Certificate Selection') }}</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="certificate-info">
+                    <div class="certificate-badge">
+                        <div class="certificate-icon" id="certificateIcon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="certificate-details">
+                            <h4 id="certificateName">-</h4>
+                            <p id="certificateCode">-</p>
+                            <p id="certificateDescription">-</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -280,5 +359,104 @@
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border: 1px solid #dee2e6;
 }
+
+.certificate-current {
+    background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+    border: 2px solid #28a745;
+}
+
+.certificate-preview {
+    background: linear-gradient(135deg, #fff8f0 0%, #fff2e6 100%);
+    border: 2px solid #ffc107;
+}
+
+.certificate-info {
+    display: flex;
+    justify-content: center;
+}
+
+.certificate-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.certificate-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #ffc107;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.certificate-details h4 {
+    margin: 0 0 0.25rem 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.certificate-details p {
+    margin: 0 0 0.25rem 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.certificate-details p:last-child {
+    margin-bottom: 0;
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const certificateSelect = document.getElementById('certificate_id');
+    const certificatePreview = document.getElementById('certificatePreview');
+    const certificateIcon = document.getElementById('certificateIcon');
+    const certificateName = document.getElementById('certificateName');
+    const certificateCode = document.getElementById('certificateCode');
+    const certificateDescription = document.getElementById('certificateDescription');
+
+    // Certificate data from PHP
+    const certificates = @json($certificates->keyBy('id'));
+    const currentCertificateId = '{{ $exam->certificate_id }}';
+
+    certificateSelect.addEventListener('change', function() {
+        const selectedId = this.value;
+        
+        // Only show preview if selection is different from current certificate
+        if (selectedId && selectedId !== currentCertificateId && certificates[selectedId]) {
+            const certificate = certificates[selectedId];
+            const locale = '{{ app()->getLocale() }}';
+            
+            // Update preview
+            certificateIcon.style.background = certificate.color || '#ffc107';
+            certificateName.textContent = locale === 'ar' ? certificate.name_ar : certificate.name;
+            certificateCode.textContent = '{{ __("Code") }}: ' + certificate.code;
+            certificateDescription.textContent = locale === 'ar' ? certificate.description_ar : certificate.description;
+            
+            // Show preview
+            certificatePreview.style.display = 'block';
+            certificatePreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+            // Hide preview
+            certificatePreview.style.display = 'none';
+        }
+    });
+
+    // Trigger change event if there's a different pre-selected value
+    if (certificateSelect.value && certificateSelect.value !== currentCertificateId) {
+        certificateSelect.dispatchEvent(new Event('change'));
+    }
+});
+</script>
 @endsection

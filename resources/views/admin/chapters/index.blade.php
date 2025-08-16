@@ -20,6 +20,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
+                            <th>Certificate</th>
                             <th>Slides Count</th>
                             <th>Actions</th>
                         </tr>
@@ -29,6 +30,15 @@
                         <tr>
                             <td>{{ substr($chapter->id, 20) }}</td>
                             <td>{{ $chapter->text }}</td>
+                            <td>
+                                @if($chapter->certificate)
+                                    <span class="badge" style="background-color: {{ $chapter->certificate->color }}20; color: {{ $chapter->certificate->color }}; border: 1px solid {{ $chapter->certificate->color }};">
+                                        {{ $chapter->certificate->code }}
+                                    </span>
+                                @else
+                                    <span class="badge badge-secondary">No Certificate</span>
+                                @endif
+                            </td>
                             <td>{{ $chapter->slides_count }}</td>
                             <td>
                                 <a href="{{ route('admin.chapters.edit', $chapter) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>

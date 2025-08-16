@@ -1373,6 +1373,8 @@ From project and program management to leadership and strategy, our tools and re
 'next' => 'Next',
 'previous' => 'Previous',
 'skip' => 'Skip',
+
+'contacts' => 'Contacts'
 ];
 
 

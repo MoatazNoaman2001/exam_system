@@ -86,6 +86,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Title</th>
+                                <th>Certificate</th>
                                 <th>Questions</th>
                                 <th>Duration</th>
                                 <th>Status</th>
@@ -106,6 +107,15 @@
                                             <p class="exam-title-ar">{{ $exam->{'text-ar'} }}</p>
                                         @endif
                                     </div>
+                                </td>
+                                <td>
+                                    @if($exam->certificate)
+                                        <span class="badge" style="background-color: {{ $exam->certificate->color }}20; color: {{ $exam->certificate->color }}; border: 1px solid {{ $exam->certificate->color }};">
+                                            {{ $exam->certificate->code }}
+                                        </span>
+                                    @else
+                                        <span class="badge badge-secondary">No Certificate</span>
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="questions-info">

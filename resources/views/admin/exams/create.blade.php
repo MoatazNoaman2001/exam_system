@@ -63,6 +63,33 @@
                 </div>
             </div>
             <div class="card-body">
+                <!-- Certificate Selection -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="certificate_id" class="form-label required">
+                            {{ __('Certificate') }}
+                        </label>
+                        <select class="form-control @error('certificate_id') is-invalid @enderror" 
+                                id="certificate_id" 
+                                name="certificate_id" 
+                                required>
+                            <option value="">{{ __('Select a certificate...') }}</option>
+                            @foreach($certificates as $certificate)
+                                <option value="{{ $certificate->id }}" 
+                                        {{ old('certificate_id') == $certificate->id ? 'selected' : '' }}
+                                        data-color="{{ $certificate->color }}">
+                                    {{ app()->getLocale() == 'ar' ? $certificate->name_ar : $certificate->name }} 
+                                    ({{ $certificate->code }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="form-help">{{ __('Select the certificate this exam belongs to') }}</div>
+                        @error('certificate_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+
                 <!-- Bilingual Titles -->
                 <div class="form-row">
                     <div class="form-group">
@@ -158,6 +185,30 @@
             </div>
         </div>
 
+        <!-- Certificate Preview Card (will appear when certificate is selected) -->
+        <div class="form-card certificate-preview" id="certificatePreview" style="display: none;">
+            <div class="card-header">
+                <div class="card-header-content">
+                    <i class="fas fa-certificate"></i>
+                    <h3 class="card-title">{{ __('Selected Certificate') }}</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="certificate-info">
+                    <div class="certificate-badge">
+                        <div class="certificate-icon" id="certificateIcon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="certificate-details">
+                            <h4 id="certificateName">-</h4>
+                            <p id="certificateCode">-</p>
+                            <p id="certificateDescription">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Next Steps Info -->
         <div class="form-card info-card">
             <div class="card-header">
@@ -174,7 +225,7 @@
                         </div>
                         <div class="step-content">
                             <h6>{{ __('Step 1: Create Exam') }}</h6>
-                            <p>{{ __('Set up basic exam information (title, description, duration)') }}</p>
+                            <p>{{ __('Set up basic exam information (certificate, title, description, duration)') }}</p>
                         </div>
                     </div>
                     <div class="step">
@@ -217,6 +268,57 @@
 .info-card {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     border: 1px solid #dee2e6;
+}
+
+.certificate-preview {
+    background: linear-gradient(135deg, #fff8f0 0%, #fff2e6 100%);
+    border: 2px solid #ffc107;
+}
+
+.certificate-info {
+    display: flex;
+    justify-content: center;
+}
+
+.certificate-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.certificate-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #ffc107;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.certificate-details h4 {
+    margin: 0 0 0.25rem 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.certificate-details p {
+    margin: 0 0 0.25rem 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.certificate-details p:last-child {
+    margin-bottom: 0;
 }
 
 .next-steps {
@@ -268,4 +370,45 @@
     }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const certificateSelect = document.getElementById('certificate_id');
+    const certificatePreview = document.getElementById('certificatePreview');
+    const certificateIcon = document.getElementById('certificateIcon');
+    const certificateName = document.getElementById('certificateName');
+    const certificateCode = document.getElementById('certificateCode');
+    const certificateDescription = document.getElementById('certificateDescription');
+
+    // Certificate data from PHP
+    const certificates = @json($certificates->keyBy('id'));
+
+    certificateSelect.addEventListener('change', function() {
+        const selectedId = this.value;
+        
+        if (selectedId && certificates[selectedId]) {
+            const certificate = certificates[selectedId];
+            const locale = '{{ app()->getLocale() }}';
+            
+            // Update preview
+            certificateIcon.style.background = certificate.color || '#ffc107';
+            certificateName.textContent = locale === 'ar' ? certificate.name_ar : certificate.name;
+            certificateCode.textContent = certificate.code;
+            certificateDescription.textContent = locale === 'ar' ? certificate.description_ar : certificate.description;
+            
+            // Show preview
+            certificatePreview.style.display = 'block';
+            certificatePreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+            // Hide preview
+            certificatePreview.style.display = 'none';
+        }
+    });
+
+    // Trigger change event if there's a pre-selected value
+    if (certificateSelect.value) {
+        certificateSelect.dispatchEvent(new Event('change'));
+    }
+});
+</script>
 @endsection

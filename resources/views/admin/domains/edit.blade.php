@@ -91,6 +91,52 @@
                     </div>
                 </div>
 
+                <!-- Certificate Selection Row -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="certificate_id" class="form-label required">
+                                <i class="fas fa-certificate"></i> Certificate
+                            </label>
+                            <select class="form-control @error('certificate_id') is-invalid @enderror" 
+                                    id="certificate_id" 
+                                    name="certificate_id" 
+                                    required>
+                                <option value="">Select a certificate</option>
+                                @foreach($certificates as $certificate)
+                                    <option value="{{ $certificate->id }}" 
+                                            {{ old('certificate_id', $domain->certificate_id) == $certificate->id ? 'selected' : '' }}
+                                            data-color="{{ $certificate->color }}">
+                                        {{ $certificate->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('certificate_id')
+                                <div class="invalid-feedback">
+                                    <strong>{{ $message }}</strong>
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-palette"></i> Certificate Color Preview
+                            </label>
+                            <div id="certificate-color-preview" class="p-3 border rounded" style="min-height: 60px; background-color: #f8f9fa;">
+                                @if($domain->certificate)
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-2" style="width: 20px; height: 20px; background-color: {{ $domain->certificate->color }}; border-radius: 4px;"></div>
+                                        <span style="color: {{ $domain->certificate->color }}; font-weight: 600;">{{ $domain->certificate->name }}</span>
+                                    </div>
+                                @else
+                                    <small class="text-muted">Select a certificate to see its color</small>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Description Row -->
                 <div class="row">
                     <div class="col-md-6">
