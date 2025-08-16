@@ -40,13 +40,13 @@ class AttemptController extends Controller
 
         $quizAttempts = $query->latest()->paginate(20);
         
-        return view('admin.attempts.quiz-attempts.index', compact('quizAttempts'));
+        return view('admin.quiz-attempts.index', compact('quizAttempts'));
     }
 
     public function showQuizAttempt(QuizAttempt $quizAttempt)
     {
         $quizAttempt->load(['user', 'quiz.answers']);
-        return view('admin.attempts.quiz-attempts.show', compact('quizAttempt'));
+        return view('admin.quiz-attempts.show', compact('quizAttempt'));
     }
 
     /**
@@ -75,13 +75,13 @@ class AttemptController extends Controller
 
         $testAttempts = $query->latest()->paginate(20);
         
-        return view('admin.attempts.test-attempts.index', compact('testAttempts'));
+        return view('admin.test-attempts.index', compact('testAttempts'));
     }
 
     public function showTestAttempt(TestAttempt $testAttempt)
     {
         $testAttempt->load(['user', 'test.testAnswers']);
-        return view('admin.attempts.test-attempts.show', compact('testAttempt'));
+        return view('admin.test-attempts.show', compact('testAttempt'));
     }
 
     /**
@@ -90,7 +90,7 @@ class AttemptController extends Controller
     public function destroyQuizAttempt(QuizAttempt $quizAttempt)
     {
         $quizAttempt->delete();
-        return redirect()->route('admin.attempts.quiz-attempts.index')
+        return redirect()->route('admin.quiz-attempts.index')
             ->with('success', 'Quiz attempt deleted successfully.');
     }
 
@@ -100,7 +100,7 @@ class AttemptController extends Controller
     public function destroyTestAttempt(TestAttempt $testAttempt)
     {
         $testAttempt->delete();
-        return redirect()->route('admin.attempts.test-attempts.index')
+        return redirect()->route('admin.test-attempts.index')
             ->with('success', 'Test attempt deleted successfully.');
     }
 
