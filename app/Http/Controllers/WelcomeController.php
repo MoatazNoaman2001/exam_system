@@ -28,7 +28,7 @@ class WelcomeController extends Controller
                     $user->save();
                     return redirect()->route('student.index');
                 }else{
-                    return redirect()->route('student.sections');
+                    return redirect()->route('student.sections.index');
                 }
             }
         }
