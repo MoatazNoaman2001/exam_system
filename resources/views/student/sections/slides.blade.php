@@ -791,9 +791,70 @@
             outline: 2px solid var(--primary-blue);
             outline-offset: 2px;
         }
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        .back-button i {
+            font-size: 0.875rem;
+        }
+
+        /* RTL Support */
+        [dir="rtl"] .back-button i {
+            transform: scaleX(-1);
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .back-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .back-button span {
+                display: none;
+            }
+
+            .back-button {
+                width: 40px;
+                height: 40px;
+                justify-content: center;
+                border-radius: 50%;
+            }
+        }
     </style>
     <div class="container-fluid" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+        
         <div class="slides-container">
+
+            <a href="javascript:void(0)" onclick="goBack()" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>{{ __('lang.Back') }}</span>
+            </a>
             <!-- Chapter/Domain Header -->
             <div class="chapter-header">
                 <h1 class="chapter-title">{{ $title }}</h1>
@@ -915,6 +976,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        function goBack() {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        // Fallback if no history
+        window.location.href = "{{ route('student.sections.index') }}";
+    }
+}
         $(document).ready(function() {
             // Search functionality
             $('#searchSlides').on('input', function() {

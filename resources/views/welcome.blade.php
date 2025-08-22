@@ -136,7 +136,7 @@
                     <li><a href="#features">{{ __('lang.Features') }}</a></li>
                     <li><a href="#study-plan">{{ __('lang.Study Plan') }}</a></li>
                     <li><a href="#practice-exams">{{ __('lang.Practice Exams') }}</a></li>
-                    <li><a href="#progress-tracking">{{ __('lang.Progress') }}</a></li>
+                    {{-- <li><a href="#progress-tracking">{{ __('lang.Progress') }}</a></li> --}}
                     <li><a href="#testimonials">{{ __('lang.Testimonials') }}</a></li>
                 </ul>
                 <div class="header-actions">
@@ -159,7 +159,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" id="home">
+    <section class="hero" id="home" style="background-image: url('{{ asset('images/Hero.svg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
@@ -170,16 +170,17 @@
                     <form action="{{ route('login') }}" method="GET" style="display: inline-block;">
                         @csrf
                         <button class="cta-button"
-                            type="submit">{{ __('lang.Let’s Build Your Future in Management') }}</button>
+                            type="submit">{{__('lang.Let’s Build Your Future in Management') }}</button>
                     </form>
                 </div>
                 <div class="hero-image">
-                    <img srcset="https://images.unsplash.com/photo-1434030216411-0b793f4b4173"
-                        alt="{{ __('lang.PMP Exam Dashboard') }}" class="hero-img hero-img-1">
-                    <img srcset="https://images.unsplash.com/photo-1503676260728-1c00da094a0b"
-                        alt="{{ __('lang.PMP Study Materials') }}" class="hero-img hero-img-2">
-                    <img srcset="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40"
-                        alt="{{ __('lang.PMP Progress Tracking') }}" class="hero-img hero-img-3">
+                    @if(app()->getLocale() == 'ar')
+                        <img src="{{ asset('images/hero_side_image_ar.png') }}"
+                            alt="{{ __('lang.PMP Management Dashboard') }}" class="hero-img">
+                    @else
+                        <img src="{{ asset('images/hero_side_image_en.png') }}"
+                            alt="{{ __('lang.PMP Management Dashboard') }}" class="hero-img">
+                    @endif
                 </div>
             </div>
         </div>
@@ -190,7 +191,6 @@
         <div class="container">
             <div class="section-title">
                 <h2>{{ __('lang.Everything You Need to Succeed') }}</h2>
-                <p>{{ __('lang.Our platform provides all the tools and resources to prepare effectively for the PMP certification exam.') }}
                 </p>
             </div>
             <div class="features-grid">

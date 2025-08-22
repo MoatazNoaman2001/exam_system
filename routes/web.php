@@ -346,10 +346,11 @@ Route::get('/test-verification', function() {
     return $user->getKey();
 });
 
-
-
 Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'student', 'locale'])->group(function () {
 
+    Route::get('certificates', [SectionsController::class, 'showCertificates'])->name('certificates.index');
+    Route::post('certificates/select', [SectionsController::class, 'selectCertificate'])->name('certificates.select');
+    
 
     Route::get('/logo', [LogoController::class, 'index'])->name('index');
     Route::get('/feature', [FeaturesController::class, 'features'])->name('feature');
@@ -361,13 +362,16 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'stu
     Route::post('/intro/step/{step}', [IntroController::class, 'store'])->name('intro.store');
     Route::get('/intro/complete', [IntroController::class, 'complete'])->name('intro.complete');
     Route::get('/home',[CertificateHomeController::class , 'index'])->name('home');
-    Route::get('/sections', [SectionsController::class, 'index'])->name('sections');
+    // Route::get('/sections', [SectionsController::class, 'index'])->name('sections');
     Route::get('/sections/chapters', [SectionsController::class, 'chapters'])->name('sections.chapters');
     Route::get('/sections/domains', [SectionsController::class, 'domains'])->name('sections.domains');
     Route::get('/sections/chapters/{chapterId}/slides', [SectionsController::class , 'chapterShow'])->name('chapter.slides');
-    Route::get('/sections/doamins/{domainId}/slides', [SectionsController::class , 'domainShow'])->name('domain.slides');
+    // Route::get('/sections/doamins/{domainId}/slides', [SectionsController::class , 'domainShow'])->name('domain.slides');
     Route::get('/sections/slides/{slideId}', [SectionsController::class, 'slideShow'])->name('sections.slides');
     Route::post('/slide/attempt', [SectionsController::class, 'recordAttempt'])->name('slide.attempt');
+
+    Route::get('/sections', [SectionsController::class, 'index'])->name('sections.index');
+    Route::get('/sections/domains/{domainId}/slides', [SectionsController::class , 'domainShow'])->name('domain.slides');
   
     Route::get('/setting',[SettingController::class, 'show'])->name('setting');
     Route::get('/contact', [ContactUsController::class, 'index'])->name('contact.us');
@@ -399,7 +403,7 @@ Route::prefix('student')->name('student.')->middleware(['auth', 'verified', 'stu
     Route::get('/certificate/view', [CertificationController::class, 'view'])->name('certificate.view');
     
     // Certificate routes
-    Route::get('/certificates', [CertificateHomeController::class, 'index'])->name('certificate.index');
+    Route::get('/certificates/all', [CertificateHomeController::class, 'index'])->name('certificate.index');
     Route::get('/certificates/{certificateId}', [CertificateHomeController::class, 'show'])->name('certificate.show');
 
     Route::get('/terms-and-conditions', [TermsAndConditionsController::class, 'showTermsAndConditions'])->name('terms.conditions');

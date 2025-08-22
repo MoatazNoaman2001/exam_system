@@ -7,20 +7,78 @@ use App\Models\Plan;
 use App\Models\Slide;
 use App\Models\Domain;
 use App\Models\Chapter;
+use App\Models\Certificate;
 use App\Models\ExamAttempt;
 use App\Models\SlideAttempt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
 
 class SectionsController extends Controller
 {
+    /**
+     * Show certificate selection page
+     */
+    public function showCertificates()
+    {
+        $certificates = Certificate::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+
+        return view('student.sections.certificates', compact('certificates'));
+    }
+
+    /**
+     * Select a certificate and store in session
+     */
+    public function selectCertificate(Request $request)
+    {
+        $request->validate([
+            'certificate_id' => 'required|exists:certificates,id'
+        ]);
+
+        $certificate = Certificate::findOrFail($request->certificate_id);
+        
+        // Store selected certificate in session
+        Session::put('selected_certificate_id', $certificate->id);
+        Session::put('selected_certificate', $certificate);
+
+        return redirect()->route('student.sections.index')
+            ->with('success', __('Certificate selected successfully'));
+    }
+
+    /**
+     * Check if certificate is selected, redirect if not
+     */
+    private function ensureCertificateSelected()
+    {
+        if (!Session::has('selected_certificate_id')) {
+            return redirect()->route('student.certificates.index')
+                ->with('error', __('Please select a certificate first'));
+        }
+        return null;
+    }
+
+    /**
+     * Get the selected certificate ID from session
+     */
+    private function getSelectedCertificateId()
+    {
+        return Session::get('selected_certificate_id');
+    }
+
     public function index()
     {
-        $user = auth()->user();
+        // Check if certificate is selected
+        $redirect = $this->ensureCertificateSelected();
+        if ($redirect) return $redirect;
 
-        if ($user->first_visit){
+        $user = auth()->user();
+        $certificateId = $this->getSelectedCertificateId();
+
+        if ($user->first_visit) {
             $user->first_visit = false;
             $user->save();
         }
@@ -29,15 +87,23 @@ class SectionsController extends Controller
         $completedChapterIds = [];
         $achievedDomainIds = [];
 
-        // Count total chapters and domains (no chunking needed for small datasets)
-        $totalChapters = Chapter::count();
-        $totalDomains = Domain::count();
+        // Count total chapters and domains for selected certificate
+        $totalChapters = Chapter::where('certificate_id', $certificateId)->count();
+        $totalDomains = Domain::where('certificate_id', $certificateId)->count();
 
-        // Chunk slide_attempts to collect chapter and domain IDs
+        // Get chapter and domain IDs for the selected certificate
+        $chapterIds = Chapter::where('certificate_id', $certificateId)->pluck('id');
+        $domainIds = Domain::where('certificate_id', $certificateId)->pluck('id');
+
+        // Chunk slide_attempts to collect chapter and domain IDs for selected certificate
         SlideAttempt::where('user_id', $user->id)
             ->select('slide_id')
             ->join('slides', 'slide_attempts.slide_id', '=', 'slides.id')
             ->selectRaw('slides.chapter_id, slides.domain_id')
+            ->where(function($query) use ($chapterIds, $domainIds) {
+                $query->whereIn('slides.chapter_id', $chapterIds)
+                      ->orWhereIn('slides.domain_id', $domainIds);
+            })
             ->orderBy('slide_attempts.slide_id')
             ->orderBy('slide_attempts.user_id')
             ->chunk(1000, function ($attempts) use (&$completedChapterIds, &$achievedDomainIds) {
@@ -57,11 +123,12 @@ class SectionsController extends Controller
         $completedChapters = count($completedChapterIds);
         $achievedDomains = count($achievedDomainIds);
 
-        // Fetch exams data
-        $totalExams = Exam::count();
-        $achievedExams = Exam::whereHas('attempts', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->count();
+        // Fetch exams data for selected certificate
+        $totalExams = Exam::where('certificate_id', $certificateId)->count();
+        $achievedExams = Exam::where('certificate_id', $certificateId)
+            ->whereHas('attempts', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->count();
 
         return view('student.sections.index', [
             'totalChapters' => $totalChapters,
@@ -70,16 +137,27 @@ class SectionsController extends Controller
             'achievedDomains' => $achievedDomains,
             'totalExams' => $totalExams,
             'achievedExams' => $achievedExams,
+            'selectedCertificate' => Session::get('selected_certificate'),
         ]);
     }
 
-    public function chapters(){
+    public function chapters()
+    {
+        // Check if certificate is selected
+        $redirect = $this->ensureCertificateSelected();
+        if ($redirect) return $redirect;
+
         $user = auth()->user();
-        $chapters = Chapter::all();
+        $certificateId = $this->getSelectedCertificateId();
+        
+        $chapters = Chapter::where('certificate_id', $certificateId)->get();
 
         $chapterData = [];
 
-        $slideCounts = Slide::select('chapter_id', DB::raw('count(*) as total_slides'))
+        $slideCounts = Slide::whereHas('chapter', function($query) use ($certificateId) {
+                $query->where('certificate_id', $certificateId);
+            })
+            ->select('chapter_id', DB::raw('count(*) as total_slides'))
             ->groupBy('chapter_id')
             ->pluck('total_slides', 'chapter_id');
 
@@ -90,34 +168,20 @@ class SectionsController extends Controller
             ->pluck('slide_id');
 
         $completedSlidesPerChapter = Slide::whereIn('id', $completedSlides)
+            ->whereHas('chapter', function($query) use ($certificateId) {
+                $query->where('certificate_id', $certificateId);
+            })
             ->select('chapter_id', DB::raw('count(*) as completed_slides'))
             ->groupBy('chapter_id')
             ->pluck('completed_slides', 'chapter_id');
-
-        // Static chapter metadata (replace with actual data from chapters table if available)
-        $chapterMetadata = [
-            1 => [
-                'name' => 'Chapter: Project Management Fundamentals',
-                'description' => 'Learn the fundamentals and principles of successful project management',
-            ],
-            // Add more chapters as needed
-            2 => [
-                'name' => 'Chapter: Advanced Project Management',
-                'description' => 'Explore advanced techniques for managing complex projects',
-            ],
-        ];
 
         foreach ($chapters as $chapter) {
             $totalSlides = $slideCounts[$chapter->id] ?? 0;
             $completedSlidesCount = $completedSlidesPerChapter[$chapter->id] ?? 0;
 
-            $meta = $chapterMetadata[$chapter->id] ?? [
-                'name' => $chapter->text,
-            ];
-
             $chapterData[] = [
                 'id' => $chapter->id,
-                'name' => $meta['name'],
+                'name' => $chapter->text,
                 'total_slides' => $totalSlides,
                 'completed_slides' => $completedSlidesCount,
             ];
@@ -125,16 +189,27 @@ class SectionsController extends Controller
 
         return view('student.sections.chaptersList', [
             'chapters' => collect($chapterData),
+            'selectedCertificate' => Session::get('selected_certificate'),
         ]);
     }
 
-    public function domains() {
+    public function domains()
+    {
+        // Check if certificate is selected
+        $redirect = $this->ensureCertificateSelected();
+        if ($redirect) return $redirect;
+
         $user = auth()->user();
-        $domains = Domain::all();
+        $certificateId = $this->getSelectedCertificateId();
+        
+        $domains = Domain::where('certificate_id', $certificateId)->get();
 
         $domainData = [];
 
-        $slideCounts = Slide::select('domain_id', DB::raw('count(*) as total_slides'))
+        $slideCounts = Slide::whereHas('domain', function($query) use ($certificateId) {
+                $query->where('certificate_id', $certificateId);
+            })
+            ->select('domain_id', DB::raw('count(*) as total_slides'))
             ->groupBy('domain_id')
             ->pluck('total_slides', 'domain_id');
 
@@ -145,53 +220,49 @@ class SectionsController extends Controller
             ->pluck('slide_id');
 
         $completedSlidesPerDomain = Slide::whereIn('id', $completedSlides)
+            ->whereHas('domain', function($query) use ($certificateId) {
+                $query->where('certificate_id', $certificateId);
+            })
             ->select('domain_id', DB::raw('count(*) as completed_slides'))
             ->groupBy('domain_id')
             ->pluck('completed_slides', 'domain_id');
-
-        // Static chapter metadata (replace with actual data from chapters table if available)
-        $domainMetadata = [
-            1 => [
-                'name' => 'Domain: Project Management Fundamentals',
-                'description' => 'Learn the fundamentals and principles of successful project management',
-            ],
-            // Add more chapters as needed
-            2 => [
-                'name' => 'Domain: Advanced Project Management',
-                'description' => 'Explore advanced techniques for managing complex projects',
-            ],
-        ];
 
         foreach ($domains as $domain) {
             $totalSlides = $slideCounts[$domain->id] ?? 0;
             $completedSlidesCount = $completedSlidesPerDomain[$domain->id] ?? 0;
 
-            $meta = $domainMetadata[$domain->id] ?? [
-                'name' => $domain->text,
-            ];
-
             $domainData[] = [
                 'id' => $domain->id,
-                'name' => $meta['name'],
-                'description' => $domain->description ?? 'No description available',
+                'name' => $domain->text,
+                'description' => app()->getLocale() === 'ar' ? $domain->description_ar : $domain->description,
                 'total_slides' => $totalSlides,
                 'completed_slides' => $completedSlidesCount,
             ];
         }
+        
         return view('student.sections.domainList', [
             'domains' => collect($domainData),
+            'selectedCertificate' => Session::get('selected_certificate'),
         ]);
-    } 
-    public function chapterShow(Request $request){
+    }
+
+    public function chapterShow(Request $request)
+    {
+        // Check if certificate is selected
+        $redirect = $this->ensureCertificateSelected();
+        if ($redirect) return $redirect;
+
         $user = auth()->user();
         $chapterId = $request->chapterId;
+        $certificateId = $this->getSelectedCertificateId();
 
-        // Fetch the chapter
-        $chapter = Chapter::findOrFail($chapterId);
+        // Fetch the chapter and verify it belongs to selected certificate
+        $chapter = Chapter::where('id', $chapterId)
+            ->where('certificate_id', $certificateId)
+            ->firstOrFail();
 
         // Get slides for the chapter
         $slides = Slide::where('chapter_id', $chapterId)->get();
-
 
         // Initialize slide data
         $slideData = [];
@@ -205,52 +276,7 @@ class SectionsController extends Controller
             ->get()
             ->keyBy('slide_id');
 
-        // Static slide metadata (replace with actual data from slides table if available)
-        $slideMetadata = [
-            1 => [
-                'title' => 'Introduction to Project Management',
-                'description' => 'Comprehensive introduction to the concept and importance of project management in modern work',
-                'duration' => 15,
-                'difficulty' => 'Easy',
-                'icon' => 'fa-play-circle',
-            ],
-            2 => [
-                'title' => 'Project Lifecycle',
-                'description' => 'Understanding the different phases of a project lifecycle from start to finish',
-                'duration' => 25,
-                'difficulty' => 'Medium',
-                'icon' => 'fa-presentation',
-            ],
-            3 => [
-                'title' => 'Team Management',
-                'description' => 'How to build and lead an effective and cohesive project team',
-                'duration' => 30,
-                'difficulty' => 'Medium',
-                'icon' => 'fa-users',
-            ],
-            4 => [
-                'title' => 'Risk Management',
-                'description' => 'Identifying, assessing, and managing risks in projects',
-                'duration' => 35,
-                'difficulty' => 'Hard',
-                'icon' => 'fa-lock',
-            ],
-            5 => [
-                'title' => 'Planning and Scheduling',
-                'description' => 'Using planning tools to create effective schedules',
-                'duration' => 40,
-                'difficulty' => 'Medium',
-                'icon' => 'fa-chart-gantt',
-            ],
-            6 => [
-                'title' => 'Budget Management',
-                'description' => 'Planning, monitoring, and controlling the project budget',
-                'duration' => 28,
-                'difficulty' => 'Medium',
-                'icon' => 'fa-dollar-sign',
-            ],
-        ];
-        // Process slides
+        // Process slides (keeping your existing logic)
         foreach ($slides as $index => $slide) {
             $attempt = $attempts->get($slide->id);
             $status = 'not-started';
@@ -270,13 +296,12 @@ class SectionsController extends Controller
                     $completedSlides++;
                 } else {
                     $status = 'in-progress';
-                    $progress = 60; // Placeholder: calculate actual progress if available
+                    $progress = 60;
                     $action = 'Continue';
                     $secondary_action = 'Save';
                     $secondary_icon = 'fa-bookmark';
                 }
             } elseif ($index > $completedSlides) {
-                // Lock slides that come after the last completed slide (sequential access)
                 $locked = true;
                 $status = 'locked';
                 $action = 'Locked';
@@ -284,21 +309,13 @@ class SectionsController extends Controller
                 $secondary_icon = 'fa-question-circle';
             }
 
-            $meta = $slideMetadata[$slide->id] ?? [
+            $slideData[] = [
+                'id' => $slide->id,
                 'title' => 'Slide ' . ($index + 1),
                 'description' => 'Description for slide ' . ($index + 1),
                 'duration' => 20,
                 'difficulty' => 'Medium',
                 'icon' => 'fa-file-alt',
-            ];
-
-            $slideData[] = [
-                'id' => $slide->id,
-                'title' => $meta['title'],
-                'description' => $meta['description'],
-                'duration' => $meta['duration'],
-                'difficulty' => $meta['difficulty'],
-                'icon' => $meta['icon'],
                 'status' => $status,
                 'progress' => $progress,
                 'action' => $action,
@@ -307,6 +324,7 @@ class SectionsController extends Controller
                 'locked' => $locked,
             ];
         }
+
         return view('student.sections.slides', [
             'title' => __('lang.chapter') . " ( " . $chapter->text . " )",
             'subtitle' => __('Learn the fundamentals and principles of successful project management'),
@@ -314,16 +332,24 @@ class SectionsController extends Controller
             'totalSlides' => $totalSlides,
             'isDomain' => false,
             'completedSlides' => $completedSlides,
+            'selectedCertificate' => Session::get('selected_certificate'),
         ]);
-    } 
+    }
 
+    public function domainShow(Request $request)
+    {
+        // Check if certificate is selected
+        $redirect = $this->ensureCertificateSelected();
+        if ($redirect) return $redirect;
 
-    public function domainShow(Request $request){
         $user = auth()->user();
         $domainId = $request->domainId;
-    
-        // Fetch the domain
-        $domain = Domain::findOrFail($domainId);
+        $certificateId = $this->getSelectedCertificateId();
+
+        // Fetch the domain and verify it belongs to selected certificate
+        $domain = Domain::where('id', $domainId)
+            ->where('certificate_id', $certificateId)
+            ->firstOrFail();
 
         // Get slides for the domain
         $slides = Slide::where('domain_id', $domainId)->get();
@@ -340,40 +366,8 @@ class SectionsController extends Controller
             ->get()
             ->keyBy('slide_id');
 
-        // Static slide metadata (replace with actual data from slides table if available)
-        $slideMetadata = [
-            1 => [
-                'title' => 'Introduction to Project Management',
-                'description' => 'Learn the fundamentals of project management',
-                'duration' => '15 min',
-                'difficulty' => 'Beginner',
-                'icon' => 'fas fa-play-circle',
-            ],
-            2 => [
-                'title' => 'Project Lifecycle',
-                'description' => 'Understanding project phases and lifecycle',
-                'duration' => '20 min',
-                'difficulty' => 'Intermediate',
-                'icon' => 'fas fa-chart-line',
-            ],
-            3 => [
-                'title' => 'Stakeholder Management',
-                'description' => 'Managing project stakeholders effectively',
-                'duration' => '18 min',
-                'difficulty' => 'Advanced',
-                'icon' => 'fas fa-users',
-            ],
-        ];
-
         foreach ($slides as $slide) {
             $attempt = $attempts->get($slide->id);
-            $meta = $slideMetadata[$slide->id] ?? [
-                'title' => 'Slide ' . $slide->id,
-                'description' => 'Slide description',
-                'duration' => '15 min',
-                'difficulty' => 'Beginner',
-                'icon' => 'fas fa-play-circle',
-            ];
 
             $status = 'not_started';
             $progress = 0;
@@ -401,11 +395,11 @@ class SectionsController extends Controller
 
             $slideData[] = [
                 'id' => $slide->id,
-                'title' => $meta['title'],
-                'description' => $meta['description'],
-                'duration' => $meta['duration'],
-                'difficulty' => $meta['difficulty'],
-                'icon' => $meta['icon'],
+                'title' => 'Slide ' . $slide->id,
+                'description' => 'Slide description',
+                'duration' => '15 min',
+                'difficulty' => 'Beginner',
+                'icon' => 'fas fa-play-circle',
                 'status' => $status,
                 'progress' => $progress,
                 'action' => $action,
@@ -417,19 +411,24 @@ class SectionsController extends Controller
 
         return view('student.sections.slides', [
             'title' => __('lang.domain') . " ( " . $domain->text . " )",
-            'subtitle' => $domain->description ?? __('Learn the fundamentals and principles of successful project management'),
+            'subtitle' => app()->getLocale() === 'ar' ? $domain->description_ar : $domain->description,
             'slides' => $slideData,
             'totalSlides' => $totalSlides,
             'isDomain' => true,
             'completedSlides' => $completedSlides,
+            'selectedCertificate' => Session::get('selected_certificate'),
         ]);
     }
 
-    public function slideShow($slideId){
+    // Keep the rest of your existing methods (slideShow, recordAttempt, etc.)
+    // just make sure they also check for certificate selection where needed
+
+    public function slideShow($slideId)
+    {
         $user = auth()->user();
-        $slide = Slide::findOrFail($slideId);   
-        // dd($slide);
+        $slide = Slide::findOrFail($slideId);
         $pdfUrl = Storage::url($slide->content);
+        
         return view("student.sections.slideShow", [
             'slide' => [
                 'id' => $slide->id,
@@ -438,22 +437,18 @@ class SectionsController extends Controller
                 'domain_id' => $slide->domain_id,
             ],
             'pdf_url' => $pdfUrl,
-        ]);  
+        ]);
     }
 
     public function recordAttempt(Request $request)
     {
         $user = auth()->user();
         $slideId = $request->slide_id;
-        $action = $request->action; // start, complete, reset
+        $action = $request->action;
 
-        print('action: ' . $action);
-        print('slideId: ' . $slideId);
         $attempt = SlideAttempt::where('user_id', $user->id)
             ->where('slide_id', $slideId)
             ->first();
-
-        print_r('$attempt: ' . $attempt);
 
         if (!$attempt) {
             $attempt = new SlideAttempt();
@@ -474,10 +469,6 @@ class SectionsController extends Controller
                 break;
         }
 
-
-        print_r('$attempt->user_id: ' . $attempt->user_id);
-        print_r('$attempt->slide_id: ' . $attempt->slide_id);
-
         $attempt->save();
 
         return response()->json(['success' => true]);
@@ -488,16 +479,22 @@ class SectionsController extends Controller
      */
     public function checkPlanAndRedirect()
     {
+        // Check if certificate is selected
+        $redirect = $this->ensureCertificateSelected();
+        if ($redirect) return $redirect;
+
         $user = auth()->user();
+        $certificateId = $this->getSelectedCertificateId();
         
-        // Check if user has a plan
-        $hasPlan = $user->progress && $user->progress->plan_duration;
+        // Check if user has a plan for the selected certificate
+        $hasPlan = Plan::where('user_id', $user->id)
+            ->where('certificate_id', $certificateId)
+            ->exists();
         
         if (!$hasPlan) {
             return redirect()->route('student.plan.selection');
         }
         
-        // If user has a plan, redirect to exams list
         return redirect()->route('student.exams.index');
     }
 
@@ -506,13 +503,22 @@ class SectionsController extends Controller
      */
     public function showPlanSelection()
     {
+        // Check if certificate is selected
+        $redirect = $this->ensureCertificateSelected();
+        if ($redirect) return $redirect;
+
         $user = auth()->user();
-        // Check if user already has a plan
-        if (Plan::where('user_id' , $user->id)->exists()) {
+        $certificateId = $this->getSelectedCertificateId();
+        
+        if (Plan::where('user_id', $user->id)
+            ->where('certificate_id', $certificateId)
+            ->exists()) {
             return redirect()->route('student.exams.index');
         }
         
-        return view('student.plan-selection');
+        return view('student.plan-selection', [
+            'selectedCertificate' => Session::get('selected_certificate'),
+        ]);
     }
 
     /**
@@ -520,7 +526,22 @@ class SectionsController extends Controller
      */
     public function storePlan(Request $request)
     {
+        // Check if certificate is selected
+        $redirect = $this->ensureCertificateSelected();
+        if ($redirect) return $redirect;
+
         $user = auth()->user();
+        $certificateId = $this->getSelectedCertificateId();
+
+        $existingPlan = Plan::where('user_id', $user->id)
+            ->where('certificate_id', $certificateId)
+            ->first();
+
+        if ($existingPlan) {
+            return redirect()->route('student.exams.index')
+                ->with('info', __('You already have a plan for this certificate'));
+        }
+    
         
         $request->validate([
             'plan_type' => 'required|in:6_weeks,10_weeks,custom',
@@ -528,25 +549,19 @@ class SectionsController extends Controller
             'end_date' => 'required_if:plan_type,custom|date|after:start_date',
         ]);
 
-        
-
         $startDate = now();
         $endDate = null;
         $planDuration = 0;
 
         switch ($request->plan_type) {
             case '10_weeks':
-                // 8-10 weeks for experienced learners
-                $planDuration = 63; // 9 weeks
+                $planDuration = 63;
                 $endDate = $startDate->copy()->addWeeks(9);
                 break;
-                
             case '6_weeks':
-                // 6-8 weeks for beginners
-                $planDuration = 49; // 7 weeks
+                $planDuration = 49;
                 $endDate = $startDate->copy()->addWeeks(7);
                 break;
-                
             case 'custom':
                 $startDate = \Carbon\Carbon::parse($request->start_date);
                 $endDate = \Carbon\Carbon::parse($request->end_date);
@@ -554,44 +569,49 @@ class SectionsController extends Controller
                 break;
         }
 
-        if (Plan::where('user_id' , $user->id)->exists()){
+        if (Plan::where('user_id', $user->id)
+            ->where('certificate_id', $certificateId)
+            ->exists()) {
             return redirect()->route('student.plan.selection')
                 ->with('error', __('plan_selection.plan_already_exists'));
         }
 
-        // Create a plan record
         $plan = Plan::create([
             'user_id' => $user->id,
+            'certificate_id' => $certificateId,
             'plan_type' => $request->plan_type,
             'start_date' => $startDate,
             'end_date' => $endDate,
         ]);
 
-        // Get or create user progress
-        $progress = $user->progress ?? $user->progress()->create([
-            'plan_id' => $plan->id,
-            'points' => 0,
-            'current_level' => 'مبتدئ',
-            'points_to_next_level' => 100,
-            'days_left' => 0,
-            'plan_duration' => 0,
-            'plan_end_date' => null,
-            'progress' => 0,
-            'domains_completed' => 0,
-            'domains_total' => 0,
-            'lessons_completed' => 0,
-            'lessons_total' => 0,
-            'exams_completed' => 0,
-            'exams_total' => 0,
-            'questions_completed' => 0,
-            'questions_total' => 0,
-            'lessons_milestone' => 0,
-            'questions_milestone' => 0,
-            'streak_days' => 0,
-        ]);
+         $progress = $user->progress()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'plan_id' => $plan->id,
+                'certificate_id' => $certificateId,
+                'plan_duration' => $planDuration,
+                'plan_end_date' => $endDate,
+                'start_date' => $startDate,
+                'points' => 0,
+                'current_level' => 'مبتدئ',
+                'points_to_next_level' => 100,
+                'days_left' => 0,
+                'progress' => 0,
+                'domains_completed' => 0,
+                'domains_total' => 0,
+                'lessons_completed' => 0,
+                'lessons_total' => 0,
+                'exams_completed' => 0,
+                'exams_total' => 0,
+                'questions_completed' => 0,
+                'questions_total' => 0,
+                'lessons_milestone' => 0,
+                'questions_milestone' => 0,
+                'streak_days' => 0,
+            ]
+        );
 
-         // Update user progress with plan details
-         $progress->update([
+        $progress->update([
             'plan_duration' => $planDuration,
             'plan_end_date' => $endDate,
             'start_date' => $startDate,
@@ -606,17 +626,26 @@ class SectionsController extends Controller
      */
     public function examsIndex()
     {
+        // Check if certificate is selected
+        $redirect = $this->ensureCertificateSelected();
+        if ($redirect) return $redirect;
+
         $user = auth()->user();
+        $certificateId = $this->getSelectedCertificateId();
         
-        // Check if user has a plan
-        if (!Plan::where('user_id' , $user->id)->exists()) {
+        if (!Plan::where('user_id', $user->id)
+            ->where('certificate_id', $certificateId)
+            ->exists()) {
             return redirect()->route('student.plan.selection');
         }
         
-        $exams = Exam::with('examQuestions')->get()->map(function ($exam) {
-            $exam->questions_count = $exam->examQuestions->count();
-            return $exam;
-        });
+        $exams = Exam::where('certificate_id', $certificateId)
+            ->with('examQuestions')
+            ->get()
+            ->map(function ($exam) {
+                $exam->questions_count = $exam->examQuestions->count();
+                return $exam;
+            });
         
         return view('student.exams.index', compact('exams'));
     }
@@ -626,27 +655,35 @@ class SectionsController extends Controller
      */
     public function takeExam(Exam $exam)
     {
+        // Check if certificate is selected
+        $redirect = $this->ensureCertificateSelected();
+        if ($redirect) return $redirect;
+
         $user = auth()->user();
+        $certificateId = $this->getSelectedCertificateId();
         
-        // Check if user has a plan
-        if (!Plan::where('user_id', $user->id)->exists()) {
+        // Verify exam belongs to selected certificate
+        if ($exam->certificate_id !== $certificateId) {
+            abort(404);
+        }
+        
+        if (!Plan::where('user_id', $user->id)
+            ->where('certificate_id', $certificateId)
+            ->exists()) {
             return redirect()->route('student.plan.selection');
         }
         
-        // Load exam with questions and answers
         $exam->load(['examQuestions' => function($query) {
             $query->with('answers');
         }]);
         
-        // Get user's previous attempts for this exam
         $previousAttempts = ExamAttempt::where('user_id', $user->id)
             ->where('exam_id', $exam->id)
             ->orderBy('created_at', 'desc')
             ->get();
         
-        // Calculate exam statistics
         $totalQuestions = $exam->examQuestions->count();
-        $totalDuration = $exam->time ?? ($totalQuestions * 2); // 2 minutes per question default
+        $totalDuration = $exam->time ?? ($totalQuestions * 2);
         $userAttempts = $previousAttempts->count();
         $bestScore = $previousAttempts->max('score') ?? 0;
         

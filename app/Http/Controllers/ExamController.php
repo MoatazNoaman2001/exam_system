@@ -16,7 +16,7 @@ class ExamController extends Controller
 
     public function __construct(ExamService $examService)
     {
-        $this->middleware('auth');
+        $this->middleware(['auth', 'student']);
         $this->examService = $examService;
     }
 

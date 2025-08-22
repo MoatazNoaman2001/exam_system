@@ -21,19 +21,13 @@ class Plan extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'user_id', 'plan_type', 'start_date', 'end_date', 'custom_date'
+        'user_id',
+        'certificate_id',
+        'plan_type',
+        'start_date',
+        'end_date',
+        'custom_date',
     ];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (empty($model->id)) {
-                $model->id = (string) Str::uuid();
-            }
-        });
-    }
 
     protected $casts = [
         'start_date' => 'date',
@@ -41,10 +35,24 @@ class Plan extends Model
         'custom_date' => 'date',
     ];
 
-
-    public function user()
+    // Define the composite unique rule
+    public static function rules()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return [
+            'user_id' => 'required',
+            'certificate_id' => 'required',
+            'plan_type' => 'required|in:6_weeks,10_weeks,custom',
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function certificate(): BelongsTo
+    {
+        return $this->belongsTo(Certificate::class);
     }
 
     public function progress()

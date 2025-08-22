@@ -583,7 +583,7 @@
         <div class="exams-container">
             <div class="exams-header">
                 <h1 class="exams-title">{{ __('lang.Tests') }}</h1>
-                <a href="{{ route('student.sections') }}" class="back-button">
+                <a href="{{ route('student.sections.index') }}" class="back-button">
                     <i class="fas fa-arrow-left"></i>
                     {{ __('lang.back_to_sections') }}
                 </a>

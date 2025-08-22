@@ -80,7 +80,7 @@
                         @endif
                     @endauth
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        <img class="logo-img" src="{{ asset('images/Sprint_Skills_logo.png') }}" alt="logo">
+                        <img class="logo-img" src="{{ asset('images/Sprint_Skills_Logo_NoText.png') }}" alt="logo">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -234,11 +234,11 @@
                         <p class="sidebar-subtitle">مرحباً {{ Auth::user()->username }}</p>
                     </div>
                     <div class="sidebar-menu">
-                        <a href="{{ route('student.sections') }}"
+                        <a href="{{ route('student.certificates.index') }}"
                             class="sidebar-link {{ request()->routeIs('student.sections*') ? 'active' : '' }}"
-                            data-title="{{ __('lang.sections') }}">
+                            data-title="{{ __('lang.certificates') }}">
                             <i class="fas fa-book"></i>
-                            <span class="link-text">{{ __('lang.sections') }}</span>
+                            <span class="link-text">{{ __('lang.certificates') }}</span>
                         </a>
                         <a href="{{ route('student.achievements') }}"
                             class="sidebar-link {{ request()->routeIs('student.achievements*') ? 'active' : '' }}"
@@ -292,7 +292,7 @@
 
                 <!-- Floating Mobile Bottom Nav -->
                 <nav class="mobile-bottom-nav">
-                    <a href="{{ route('student.sections') }}"
+                    <a href="{{ route('student.certificates.index') }}"
                         class="mobile-nav-icon {{ request()->routeIs('student.sections*') ? 'active' : '' }}"
                         title="{{ __('lang.sections') }}">
                         <span class="icon-bg"><i class="fas fa-book"></i></span>

@@ -309,7 +309,9 @@
     </style>
 
     <div class="container-fluid" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+        
         <div class="chapters-container">
+            @include('components.student-navigation')
             <div class="chapters-header">
                 <h1 class="chapters-title">{{ __('lang.all_chapters') }}</h1>
             </div>

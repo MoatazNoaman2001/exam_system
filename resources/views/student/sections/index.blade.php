@@ -279,6 +279,7 @@
     </style>
 
     <div class="container my-4" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+        @include('components.student-navigation')
         <div class="education-container">
             <div class="education-header">
                 <h2 class="education-title">{{ __('lang.Sections') }}</h2>

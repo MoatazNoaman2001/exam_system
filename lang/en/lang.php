@@ -1374,7 +1374,22 @@ From project and program management to leadership and strategy, our tools and re
 'previous' => 'Previous',
 'skip' => 'Skip',
 
-'contacts' => 'Contacts'
+'contacts' => 'Contacts',
+'Select Certificate' => 'اختر الشهادة',
+'Choose the certification program you want to study' => 'اختر برنامج الشهادة الذي تريد دراسته',
+'Start Learning' => 'ابدأ التعلم',
+'Loading...' => 'جاري التحميل...',
+'Back' => 'Back',
+'Home' => 'Home',
+'Certificates' => 'Certificates',
+'Sections' => 'Sections',
+'Chapters' => 'Chapters',
+'Domains' => 'Domains',
+'Chapter' => 'Chapter',
+'Domain' => 'Domain',
+'Switch Certificate' => 'Switch Certificate',
+'Select a different certificate to study' => 'Select a different certificate to study',
+'Choose Certificate' => 'Choose Certificate'
 ];
 
 

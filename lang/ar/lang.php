@@ -1422,7 +1422,22 @@ return [
 'next' => 'التالي',
 'previous' => 'السابق', 
 'skip' => 'تخطي',
-'contacts' => "التواصلات"
+'contacts' => "التواصلات",
+'Select Certificate' => 'Select Certificate',
+'Choose the certification program you want to study' => 'Choose the certification program you want to study',
+'Start Learning' => 'Start Learning',
+'Loading...' => 'Loading...',
+'Back' => 'رجوع',
+'Home' => 'الرئيسية',
+'Certificates' => 'الشهادات',
+'Sections' => 'الأقسام',
+'Chapters' => 'الفصول',
+'Domains' => 'المجالات', 
+'Chapter' => 'فصل',
+'Domain' => 'مجال',
+'Switch Certificate' => 'تغيير الشهادة',
+'Select a different certificate to study' => 'اختر شهادة مختلفة للدراسة',
+'Choose Certificate' => 'اختر الشهادة'
 ];
 
 ?>

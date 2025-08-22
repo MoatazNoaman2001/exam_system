@@ -313,7 +313,9 @@
     </style>
 
     <div class="container-fluid" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+      
         <div class="domains-container">
+            @include('components.student-navigation')
             <div class="domains-header">
                 <h1 class="domains-title">{{ __('lang.all_domains') }}</h1>
             </div>
