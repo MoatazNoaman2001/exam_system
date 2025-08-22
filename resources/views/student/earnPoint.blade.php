@@ -284,7 +284,7 @@
             
 
             <div class="reward-card">
-                                                                      <a href="{{ route('student.sections') }}" class="reward-card-link">
+                                                                      <a href="{{ route('student.sections.index') }}" class="reward-card-link">
 
                 <div class="reward-points">
                     <span>75+</span>

@@ -8,6 +8,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="shortcut icon" href="{{ asset('images/Sprint_Skills.ico') }}" type="image/x-icon">
 
+
     <!-- External Scripts and Fonts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -17,6 +18,7 @@
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700&family=Cairo:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
     <!-- Vite Assets -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 

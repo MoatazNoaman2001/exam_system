@@ -3,6 +3,7 @@
 </div>
 @extends('layouts.app')
 
+
 @section('title', __('Select Certificate'))
 
 @section('content')
