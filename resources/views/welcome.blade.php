@@ -174,13 +174,15 @@
                     </form>
                 </div>
                 <div class="hero-image">
-                    @if(app()->getLocale() == 'ar')
+                    <img src="{{ asset('images/hero_section_side.svg') }}"
+                    alt="{{ __('lang.PMP Management Dashboard') }}" class="hero-img">
+                    {{-- @if(app()->getLocale() == 'ar')
                         <img src="{{ asset('images/hero_side_image_ar.png') }}"
                             alt="{{ __('lang.PMP Management Dashboard') }}" class="hero-img">
                     @else
                         <img src="{{ asset('images/hero_side_image_en.png') }}"
                             alt="{{ __('lang.PMP Management Dashboard') }}" class="hero-img">
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>

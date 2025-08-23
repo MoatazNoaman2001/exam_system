@@ -27,7 +27,7 @@ class SectionsController extends Controller
             ->orderBy('sort_order')
             ->get();
 
-        return view('student.sections.certificates', compact('certificates'));
+        return view('student.certificates.index', compact('certificates'));
     }
 
     /**

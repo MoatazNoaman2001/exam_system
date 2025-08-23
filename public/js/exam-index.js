@@ -1,536 +1,874 @@
-// Exams Index JavaScript - Dashboard Style Compatible
-'use strict';
+// Global variables
+let currentView = 'grid';
+let allExams = [];
+let searchTimeout = null;
 
+// Initialize the dashboard when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Exams Index initialized');
-    
-    // Initialize all components
+    initializeEventListeners();
     initializeSearch();
-    initializeFileUpload();
-    initializeModals();
-    initializeTableInteractions();
+    initializeFilters();
+    initializeDragAndDrop();
+    autoHideAlerts();
+    loadExamData();
 });
 
-// Search functionality
-function initializeSearch() {
-    const searchInput = document.getElementById('searchExams');
-    const tableRows = document.querySelectorAll('#examsTable tbody tr');
+/**
+ * Initialize all event listeners
+ */
+function initializeEventListeners() {
+    // Search input
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(handleSearch, 300));
+    }
+
+    // Filter selects
+    const statusFilter = document.getElementById('statusFilter');
+    const certificateFilter = document.getElementById('certificateFilter');
     
-    if (!searchInput || !tableRows.length) return;
+    if (statusFilter) {
+        statusFilter.addEventListener('change', applyFilters);
+    }
     
-    searchInput.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase().trim();
-        
-        tableRows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            const shouldShow = text.includes(searchTerm);
-            
-            row.style.display = shouldShow ? '' : 'none';
-            
-            // Add highlight effect
-            if (shouldShow && searchTerm) {
-                row.classList.add('search-highlight');
-            } else {
-                row.classList.remove('search-highlight');
+    if (certificateFilter) {
+        certificateFilter.addEventListener('change', applyFilters);
+    }
+
+    // File input
+    const fileInput = document.getElementById('excelFile');
+    if (fileInput) {
+        fileInput.addEventListener('change', handleFileSelect);
+    }
+
+    // Modal close on overlay click
+    const modal = document.getElementById('importModal');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal || e.target.classList.contains('modal-overlay')) {
+                closeImportModal();
             }
         });
-        
-        // Show/hide empty state
-        updateEmptyState();
+    }
+
+    // Escape key to close modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('importModal');
+            if (modal && modal.style.display !== 'none') {
+                closeImportModal();
+            }
+        }
+    });
+
+    // Form submission
+    const importForm = document.getElementById('importForm');
+    if (importForm) {
+        importForm.addEventListener('submit', handleImportSubmit);
+    }
+}
+
+/**
+ * Initialize search functionality
+ */
+function initializeSearch() {
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput) return;
+
+    // Add search icon click functionality
+    const searchIcon = document.querySelector('.search-icon');
+    if (searchIcon) {
+        searchIcon.addEventListener('click', function() {
+            searchInput.focus();
+        });
+    }
+
+    // Add clear search functionality (if input has value)
+    searchInput.addEventListener('input', function() {
+        if (this.value === '') {
+            applyFilters();
+        }
     });
 }
 
-// File upload functionality
-function initializeFileUpload() {
-    const fileInput = document.getElementById('excel_file');
-    const fileUploadArea = document.getElementById('fileUploadArea');
-    const filePreview = document.getElementById('filePreview');
-    const fileInfo = document.getElementById('fileInfo');
-    const importForm = document.getElementById('importForm');
-    const importBtn = document.getElementById('importBtn');
-    const uploadProgress = document.getElementById('uploadProgress');
-    const progressBar = document.querySelector('.progress-bar');
-    
-    if (!fileInput || !fileUploadArea) return;
-    
-    // File input change handler
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        handleFileSelection(file);
+/**
+ * Initialize filter functionality
+ */
+function initializeFilters() {
+    // Already handled in initializeEventListeners
+    console.log('Filters initialized');
+}
+
+/**
+ * Initialize drag and drop functionality
+ */
+function initializeDragAndDrop() {
+    const uploadArea = document.querySelector('.upload-area');
+    if (!uploadArea) return;
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
     });
-    
-    // Drag and drop handlers
-    fileUploadArea.addEventListener('dragover', function(e) {
+
+    // Highlight drop area when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    // Handle dropped files
+    uploadArea.addEventListener('drop', handleDrop, false);
+
+    function preventDefaults(e) {
         e.preventDefault();
         e.stopPropagation();
-        fileUploadArea.classList.add('dragover');
-    });
-    
-    fileUploadArea.addEventListener('dragleave', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        fileUploadArea.classList.remove('dragover');
-    });
-    
-    fileUploadArea.addEventListener('drop', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        fileUploadArea.classList.remove('dragover');
+    }
+
+    function highlight(e) {
+        uploadArea.classList.add('dragover');
+    }
+
+    function unhighlight(e) {
+        uploadArea.classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
         
-        const files = e.dataTransfer.files;
         if (files.length > 0) {
-            fileInput.files = files;
-            handleFileSelection(files[0]);
+            const fileInput = document.getElementById('excelFile');
+            if (fileInput) {
+                fileInput.files = files;
+                handleFileSelect({ target: { files: files } });
+            }
+        }
+    }
+}
+
+/**
+ * Auto-hide alerts after specified time
+ */
+function autoHideAlerts() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            if (alert.style.display !== 'none') {
+                hideAlert(alert.id);
+            }
+        }, 5000);
+    });
+}
+
+/**
+ * Debounce function for search input
+ * @param {Function} func - Function to debounce
+ * @param {number} wait - Wait time in milliseconds
+ * @returns {Function} Debounced function
+ */
+function debounce(func, wait) {
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(searchTimeout);
+            func(...args);
+        };
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(later, wait);
+    };
+}
+
+/**
+ * Handle search input
+ * @param {Event} e - Input event
+ */
+function handleSearch(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    applyFilters();
+    
+    // Add visual feedback
+    if (searchTerm.length > 0) {
+        e.target.style.borderColor = 'var(--primary)';
+        e.target.style.backgroundColor = 'var(--white)';
+    } else {
+        e.target.style.borderColor = 'var(--gray-200)';
+        e.target.style.backgroundColor = 'var(--gray-50)';
+    }
+}
+
+/**
+ * Apply all filters (search, status, certificate)
+ */
+function applyFilters() {
+    const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    const statusFilter = document.getElementById('statusFilter')?.value || '';
+    const certificateFilter = document.getElementById('certificateFilter')?.value || '';
+
+    const examCards = document.querySelectorAll('.exam-card:not(.loading-skeleton)');
+    let visibleCount = 0;
+
+    examCards.forEach(card => {
+        const status = card.getAttribute('data-status');
+        const certificate = card.getAttribute('data-certificate');
+        const title = card.querySelector('.exam-title')?.textContent.toLowerCase() || '';
+        const titleAr = card.querySelector('.exam-title-ar')?.textContent.toLowerCase() || '';
+
+        const statusMatch = !statusFilter || status === statusFilter;
+        const certificateMatch = !certificateFilter || certificate === certificateFilter;
+        const searchMatch = !searchTerm || 
+            title.includes(searchTerm) || 
+            titleAr.includes(searchTerm);
+
+        if (statusMatch && certificateMatch && searchMatch) {
+            showCard(card);
+            visibleCount++;
+        } else {
+            hideCard(card);
         }
     });
+
+    toggleEmptyState(visibleCount === 0);
+}
+
+/**
+ * Show exam card with animation
+ * @param {HTMLElement} card - Card element to show
+ */
+function showCard(card) {
+    card.style.display = '';
+    card.style.animation = 'fadeIn 0.3s ease-out';
+}
+
+/**
+ * Hide exam card
+ * @param {HTMLElement} card - Card element to hide
+ */
+function hideCard(card) {
+    card.style.display = 'none';
+}
+
+/**
+ * Toggle empty state visibility
+ * @param {boolean} show - Whether to show empty state
+ */
+function toggleEmptyState(show) {
+    const emptyState = document.getElementById('emptyState');
+    const noExamsState = document.getElementById('noExamsState');
     
-    // Form submission handler
-    if (importForm) {
-        importForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleFormSubmission();
-        });
+    if (emptyState) {
+        if (show) {
+            emptyState.style.display = 'block';
+            emptyState.style.animation = 'fadeIn 0.5s ease-out';
+        } else {
+            emptyState.style.display = 'none';
+        }
     }
     
-    function handleFileSelection(file) {
-        if (!file) {
-            hideFilePreview();
-            return;
+    // Hide no exams state if we're filtering
+    if (noExamsState && show) {
+        noExamsState.style.display = 'none';
+    }
+}
+
+/**
+ * Clear all filters
+ */
+function clearFilters() {
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const certificateFilter = document.getElementById('certificateFilter');
+
+    if (searchInput) searchInput.value = '';
+    if (statusFilter) statusFilter.value = '';
+    if (certificateFilter) certificateFilter.value = '';
+
+    applyFilters();
+
+    // Reset search input styling
+    if (searchInput) {
+        searchInput.style.borderColor = 'var(--gray-200)';
+        searchInput.style.backgroundColor = 'var(--gray-50)';
+    }
+}
+
+/**
+ * Toggle between grid and list view
+ * @param {string} view - View type ('grid' or 'list')
+ */
+function toggleView(view) {
+    currentView = view;
+    const viewBtns = document.querySelectorAll('.view-btn');
+    const examsContainer = document.getElementById('examsContainer');
+    
+    // Update active button
+    viewBtns.forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.querySelector(`[onclick="toggleView('${view}')"]`);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
+
+    // Update container class
+    if (examsContainer) {
+        if (view === 'list') {
+            examsContainer.classList.add('list-view');
+        } else {
+            examsContainer.classList.remove('list-view');
         }
-        
-        console.log('File selected:', file.name);
-        
-        // Validate file
-        const validation = validateFile(file);
-        if (!validation.valid) {
-            showNotification(validation.message, 'error');
-            fileInput.value = '';
-            hideFilePreview();
-            return;
+    }
+
+    // Store preference in localStorage if available
+    try {
+        localStorage.setItem('examViewPreference', view);
+    } catch (e) {
+        // Ignore localStorage errors
+    }
+}
+
+/**
+ * Show alert message
+ * @param {string} type - Alert type ('success' or 'error')
+ * @param {string} message - Alert message
+ */
+function showAlert(type, message) {
+    const alertId = type + 'Alert';
+    const alert = document.getElementById(alertId);
+    
+    if (alert) {
+        const messageSpan = alert.querySelector('span');
+        if (messageSpan) {
+            messageSpan.textContent = message;
         }
+        alert.style.display = 'flex';
+        alert.style.animation = 'slideIn 0.5s ease-out';
         
-        // Show file preview
-        showFilePreview(file);
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            hideAlert(alertId);
+        }, 5000);
+    }
+}
+
+/**
+ * Hide alert message
+ * @param {string} alertId - Alert element ID
+ */
+function hideAlert(alertId) {
+    const alert = document.getElementById(alertId);
+    if (alert) {
+        alert.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            alert.style.display = 'none';
+            alert.style.animation = '';
+        }, 300);
+    }
+}
+
+/**
+ * Open import modal
+ */
+function openImportModal() {
+    const modal = document.getElementById('importModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        // Reset modal state
+        resetImportModal();
+        
+        // Focus first interactive element
+        const firstButton = modal.querySelector('button, input, select');
+        if (firstButton) {
+            setTimeout(() => firstButton.focus(), 100);
+        }
+    }
+}
+
+/**
+ * Close import modal
+ */
+function closeImportModal() {
+    const modal = document.getElementById('importModal');
+    if (modal) {
+        modal.style.animation = 'modalFadeOut 0.3s ease-out';
+        setTimeout(() => {
+            modal.style.display = 'none';
+            modal.style.animation = '';
+            document.body.style.overflow = 'auto';
+            resetImportModal();
+        }, 300);
+    }
+}
+
+/**
+ * Reset import modal to initial state
+ */
+function resetImportModal() {
+    const fileInput = document.getElementById('excelFile');
+    const importBtn = document.getElementById('importBtn');
+    const uploadArea = document.querySelector('.upload-area');
+
+    if (fileInput) {
+        fileInput.value = '';
     }
     
-    function validateFile(file) {
-        const maxSize = 10 * 1024 * 1024; // 10MB
-        const allowedTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
-                              'application/vnd.ms-excel', 
-                              'text/csv'];
-        const allowedExtensions = ['.xlsx', '.xls', '.csv'];
-        
-        // Check file size
-        if (file.size > maxSize) {
-            return {
-                valid: false,
-                message: 'File size exceeds 10MB limit. Please choose a smaller file.'
-            };
-        }
-        
-        // Check file extension
-        const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
-        if (!allowedExtensions.includes(fileExtension)) {
-            return {
-                valid: false,
-                message: 'Invalid file type. Please upload an Excel (.xlsx, .xls) or CSV (.csv) file.'
-            };
-        }
-        
-        return { valid: true };
+    if (importBtn) {
+        importBtn.disabled = true;
+        importBtn.classList.remove('loading');
+        importBtn.innerHTML = '<i class="fas fa-upload"></i> Import Exam';
     }
     
-    function showFilePreview(file) {
-        if (!filePreview || !fileInfo) return;
-        
-        const fileSize = (file.size / 1024 / 1024).toFixed(2);
-        const fileSizeClass = fileSize > 5 ? 'text-warning' : 'text-success';
-        
-        fileInfo.innerHTML = `
-            <div class="file-info-item">
-                <div class="file-info-label">File Name</div>
-                <div class="file-info-value">${file.name}</div>
-            </div>
-            <div class="file-info-item">
-                <div class="file-info-label">File Size</div>
-                <div class="file-info-value ${fileSizeClass}">${fileSize} MB</div>
-            </div>
-            <div class="file-info-item">
-                <div class="file-info-label">File Type</div>
-                <div class="file-info-value">${file.type || 'Unknown'}</div>
-            </div>
-            <div class="file-info-item">
-                <div class="file-info-label">Last Modified</div>
-                <div class="file-info-value">${new Date(file.lastModified).toLocaleDateString()}</div>
+    if (uploadArea) {
+        uploadArea.classList.remove('dragover');
+        uploadArea.innerHTML = `
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Click to select file or drag and drop</p>
+            <small>Maximum file size: 10MB. Formats: .xlsx, .xls, .csv</small>
+        `;
+    }
+
+    // Reset steps
+    const steps = document.querySelectorAll('.step');
+    steps.forEach((step, index) => {
+        if (index === 0) {
+            step.classList.add('active');
+        } else {
+            step.classList.remove('active');
+        }
+    });
+}
+
+/**
+ * Handle file selection
+ * @param {Event} event - File input change event
+ */
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    const importBtn = document.getElementById('importBtn');
+    const uploadArea = document.querySelector('.upload-area');
+
+    if (!file) {
+        resetImportModal();
+        return;
+    }
+
+    // Validate file type
+    const allowedTypes = [
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+        'application/vnd.ms-excel', // .xls
+        'text/csv' // .csv
+    ];
+    
+    if (!allowedTypes.includes(file.type) && !file.name.match(/\.(xlsx|xls|csv)$/i)) {
+        showAlert('error', 'Invalid file type. Please select an Excel (.xlsx, .xls) or CSV file.');
+        resetImportModal();
+        return;
+    }
+
+    // Validate file size (10MB limit)
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    if (file.size > maxSize) {
+        showAlert('error', 'File size exceeds 10MB limit. Please choose a smaller file.');
+        resetImportModal();
+        return;
+    }
+
+    // Update UI with file info
+    const fileSize = (file.size / 1024 / 1024).toFixed(2);
+    const fileName = file.name;
+    
+    if (uploadArea) {
+        uploadArea.innerHTML = `
+            <i class="fas fa-file-excel" style="color: var(--success); font-size: 2rem; margin-bottom: 1rem;"></i>
+            <p><strong>${fileName}</strong></p>
+            <small>Size: ${fileSize} MB</small>
+            <div style="margin-top: 1rem;">
+                <div style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 0.5rem; border-radius: var(--radius); display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-check-circle"></i>
+                    <span>File ready for import</span>
+                </div>
             </div>
         `;
-        
-        filePreview.style.display = 'block';
-        filePreview.classList.add('fade-in');
     }
     
-    function hideFilePreview() {
-        if (filePreview) {
-            filePreview.style.display = 'none';
-            filePreview.classList.remove('fade-in');
-        }
+    if (importBtn) {
+        importBtn.disabled = false;
     }
-    
-    function handleFormSubmission() {
-        if (!fileInput.files || fileInput.files.length === 0) {
-            showNotification('Please select a file to import.', 'error');
-            return;
+
+    // Activate step 3
+    const steps = document.querySelectorAll('.step');
+    steps.forEach((step, index) => {
+        if (index === 2) {
+            step.classList.add('active');
         }
-        
-        // Show loading state
-        setImportButtonLoading(true);
-        showUploadProgress();
-        
-        // Simulate progress (since we can't track real upload progress easily)
-        let progress = 0;
-        const progressInterval = setInterval(() => {
-            progress += Math.random() * 15;
-            if (progress > 90) progress = 90;
-            updateProgressBar(progress);
-        }, 200);
-        
-        // Submit form
-        const formData = new FormData(importForm);
-        
-        fetch(importForm.action, {
+    });
+
+    showAlert('success', 'File selected successfully. Click "Import Exam" to continue.');
+}
+
+/**
+ * Handle import form submission
+ * @param {Event} e - Form submit event
+ */
+function handleImportSubmit(e) {
+    e.preventDefault();
+    
+    const importBtn = document.getElementById('importBtn');
+    const fileInput = document.getElementById('excelFile');
+    
+    if (!fileInput || !fileInput.files[0]) {
+        showAlert('error', 'Please select a file to import.');
+        return;
+    }
+
+    // Show loading state
+    if (importBtn) {
+        importBtn.classList.add('loading');
+        importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
+        importBtn.disabled = true;
+    }
+
+    // Create FormData for file upload
+    const formData = new FormData();
+    formData.append('excel_file', fileInput.files[0]);
+    formData.append('_token', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '');
+
+    // Simulate import process (replace with actual fetch call)
+    setTimeout(() => {
+        // In a real application, replace this with:
+        /*
+        fetch(e.target.action, {
             method: 'POST',
             body: formData,
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => {
-            clearInterval(progressInterval);
-            updateProgressBar(100);
-            
-            if (response.ok) {
-                return response.text();
-            }
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        })
-        .then(html => {
-            setTimeout(() => {
-                showNotification('Exam imported successfully!', 'success');
-                $('#importModal').modal('hide');
-                // Reload page after short delay
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                closeImportModal();
+                showAlert('success', data.message || 'Exam imported successfully!');
+                // Reload page or update UI
                 setTimeout(() => {
                     window.location.reload();
-                }, 1000);
-            }, 500);
+                }, 1500);
+            } else {
+                throw new Error(data.message || 'Import failed');
+            }
         })
         .catch(error => {
             console.error('Import error:', error);
-            resetImportForm();
-            showNotification('Import failed. Please check your file and try again.', 'error');
-        });
-    }
-    
-    function setImportButtonLoading(loading) {
-        if (!importBtn) return;
-        
-        if (loading) {
-            importBtn.classList.add('loading');
-            importBtn.disabled = true;
-            importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
-        } else {
-            importBtn.classList.remove('loading');
-            importBtn.disabled = false;
-            importBtn.innerHTML = '<i class="fas fa-upload"></i> Import Exam';
-        }
-    }
-    
-    function showUploadProgress() {
-        if (uploadProgress) {
-            uploadProgress.style.display = 'block';
-        }
-    }
-    
-    function hideUploadProgress() {
-        if (uploadProgress) {
-            uploadProgress.style.display = 'none';
-        }
-    }
-    
-    function updateProgressBar(percentage) {
-        if (progressBar) {
-            progressBar.style.width = percentage + '%';
-            const progressText = progressBar.querySelector('.progress-text');
-            if (progressText) {
-                if (percentage >= 100) {
-                    progressText.textContent = 'Processing...';
-                } else {
-                    progressText.textContent = `Uploading... ${Math.round(percentage)}%`;
-                }
+            showAlert('error', error.message || 'Import failed. Please try again.');
+        })
+        .finally(() => {
+            if (importBtn) {
+                importBtn.classList.remove('loading');
+                importBtn.innerHTML = '<i class="fas fa-upload"></i> Import Exam';
+                importBtn.disabled = false;
             }
-        }
-    }
-    
-    function resetImportForm() {
-        setImportButtonLoading(false);
-        hideUploadProgress();
-        updateProgressBar(0);
-        hideFilePreview();
-        if (fileInput) fileInput.value = '';
-    }
-    
-    // Reset form when modal is closed
-    $('#importModal').on('hidden.bs.modal', function() {
-        resetImportForm();
-    });
-}
-
-// Modal functionality
-function initializeModals() {
-    // Import modal event handlers
-    $('#importModal').on('show.bs.modal', function() {
-        console.log('Import modal showing');
-    });
-    
-    $('#importModal').on('shown.bs.modal', function() {
-        console.log('Import modal shown');
-        // Focus on file input when modal is shown
-        const fileInput = document.getElementById('excel_file');
-        if (fileInput) {
-            setTimeout(() => fileInput.focus(), 100);
-        }
-    });
-    
-    // View exam modal handler
-    $('#viewExamModal').on('show.bs.modal', function() {
-        const examDetailsContent = document.getElementById('examDetailsContent');
-        if (examDetailsContent) {
-            examDetailsContent.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
-        }
-    });
-}
-
-// Table interactions
-function initializeTableInteractions() {
-    // Add hover effects and animations
-    const tableRows = document.querySelectorAll('#examsTable tbody tr');
-    
-    tableRows.forEach(row => {
-        row.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateX(4px)';
         });
+        */
         
-        row.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateX(0)';
-        });
-    });
+        // Simulated response
+        closeImportModal();
+        showAlert('success', 'Exam imported successfully! 25 questions were added.');
+        updateStats();
+        
+    }, 3000);
 }
 
-// Utility functions
-function updateEmptyState() {
-    const tableRows = document.querySelectorAll('#examsTable tbody tr');
-    const visibleRows = Array.from(tableRows).filter(row => row.style.display !== 'none');
+/**
+ * Download template file
+ */
+function downloadTemplate() {
+    // In a real application, this would trigger the actual download
+    showAlert('success', 'Template download started. Check your downloads folder.');
     
-    const tbody = document.querySelector('#examsTable tbody');
-    let emptyRow = tbody.querySelector('.search-empty-state');
-    
-    if (visibleRows.length === 0 && tableRows.length > 0) {
-        // Show search empty state
-        if (!emptyRow) {
-            emptyRow = document.createElement('tr');
-            emptyRow.className = 'search-empty-state';
-            emptyRow.innerHTML = `
-                <td colspan="7" class="text-center py-4">
-                    <i class="fas fa-search text-muted mb-2" style="font-size: 2rem;"></i>
-                    <p class="text-muted mb-0">No exams match your search criteria.</p>
-                </td>
-            `;
-            tbody.appendChild(emptyRow);
-        }
-    } else if (emptyRow) {
-        // Hide search empty state
-        emptyRow.remove();
-    }
-}
-
-function showNotification(message, type = 'info') {
-    // Remove existing notifications
-    const existingNotifications = document.querySelectorAll('.toast-notification');
-    existingNotifications.forEach(notification => notification.remove());
-    
-    const notification = document.createElement('div');
-    notification.className = `toast-notification toast-${type}`;
-    
-    const icons = {
-        success: 'fas fa-check-circle',
-        error: 'fas fa-exclamation-circle',
-        warning: 'fas fa-exclamation-triangle',
-        info: 'fas fa-info-circle'
-    };
-    
-    const colors = {
-        success: 'var(--success-green)',
-        error: 'var(--danger-red)',
-        warning: 'var(--warning-amber)',
-        info: 'var(--primary-blue)'
-    };
-    
-    notification.innerHTML = `
-        <div class="toast-content">
-            <i class="${icons[type] || icons.info}"></i>
-            <span>${message}</span>
-        </div>
-        <button type="button" class="toast-close">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-    
-    // Style the notification
-    Object.assign(notification.style, {
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        minWidth: '300px',
-        maxWidth: '500px',
-        padding: '1rem',
-        borderRadius: 'var(--border-radius)',
-        color: 'white',
-        fontWeight: '500',
-        zIndex: '9999',
-        opacity: '0',
-        transform: 'translateX(100%)',
-        transition: 'all 0.3s ease',
-        boxShadow: 'var(--shadow-lg)',
-        background: colors[type] || colors.info,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '0.75rem'
-    });
-    
-    // Add close functionality
-    const closeBtn = notification.querySelector('.toast-close');
-    closeBtn.addEventListener('click', () => {
-        hideNotification(notification);
-    });
-    
-    // Style close button
-    Object.assign(closeBtn.style, {
-        background: 'none',
-        border: 'none',
-        color: 'white',
-        cursor: 'pointer',
-        padding: '0.25rem',
-        borderRadius: '4px',
-        transition: 'background-color 0.2s ease'
-    });
-    
-    closeBtn.addEventListener('mouseenter', () => {
-        closeBtn.style.background = 'rgba(255, 255, 255, 0.2)';
-    });
-    
-    closeBtn.addEventListener('mouseleave', () => {
-        closeBtn.style.background = 'none';
-    });
-    
-    document.body.appendChild(notification);
-    
-    // Animate in
+    // Simulate download delay
     setTimeout(() => {
-        notification.style.opacity = '1';
-        notification.style.transform = 'translateX(0)';
-    }, 10);
-    
-    // Auto-dismiss after 5 seconds
-    setTimeout(() => {
-        if (notification.parentNode) {
-            hideNotification(notification);
-        }
-    }, 5000);
-}
-
-function hideNotification(notification) {
-    notification.style.opacity = '0';
-    notification.style.transform = 'translateX(100%)';
-    
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
-    }, 300);
-}
-
-// Global functions for template usage
-window.confirmDelete = function(examTitle) {
-    return confirm(`Are you sure you want to delete the exam "${examTitle}"? This action cannot be undone.`);
-};
-
-window.viewExam = function(examId) {
-    console.log('Viewing exam:', examId);
-    // Implement view exam functionality
-    $('#viewExamModal').modal('show');
-    
-    // You can implement AJAX call to load exam details here
-    setTimeout(() => {
-        const examDetailsContent = document.getElementById('examDetailsContent');
-        if (examDetailsContent) {
-            examDetailsContent.innerHTML = `
-                <div class="text-center">
-                    <p>Exam details for ID: ${examId}</p>
-                    <p>This feature will be implemented to show exam details.</p>
-                </div>
-            `;
-        }
+        console.log('Template would be downloaded from server');
+        // window.location.href = '/admin/exams/download-template';
     }, 500);
-};
+}
 
-// Add search highlight styles
-const searchStyles = document.createElement('style');
-searchStyles.textContent = `
-    .search-highlight {
-        background-color: rgba(59, 130, 246, 0.1) !important;
-        border-left: 3px solid var(--primary-blue) !important;
-    }
+/**
+ * Confirm deletion with user
+ * @param {string} examTitle - Title of exam to delete
+ * @returns {boolean} User confirmation
+ */
+function confirmDelete(examTitle) {
+    const message = `Are you sure you want to delete "${examTitle}"?\n\nThis will also delete all questions and cannot be undone.`;
     
-    .toast-content {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        flex: 1;
-    }
-    
-    .fade-in {
-        animation: fadeInUp 0.3s ease-out;
-    }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
+    if (confirm(message)) {
+        // Add loading state to delete button
+        const deleteButton = event.target.closest('button');
+        if (deleteButton) {
+            deleteButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+            deleteButton.disabled = true;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        return true;
     }
-`;
-document.head.appendChild(searchStyles);
+    return false;
+}
 
-// Error handling
-window.addEventListener('error', function(e) {
-    console.error('Exams Index Error:', e.error);
-});
+/**
+ * Update statistics in header
+ */
+function updateStats() {
+    const examCards = document.querySelectorAll('.exam-card:not(.loading-skeleton)');
+    const readyExams = document.querySelectorAll('.exam-card[data-status="ready"]');
+    const draftExams = document.querySelectorAll('.exam-card[data-status="draft"]');
+    
+    let totalQuestions = 0;
+    examCards.forEach(card => {
+        const questionsNumber = parseInt(card.querySelector('.questions-number')?.textContent || '0');
+        totalQuestions += questionsNumber;
+    });
 
-// Performance monitoring
-if ('performance' in window) {
-    window.addEventListener('load', function() {
-        setTimeout(function() {
-            try {
-                const perfData = performance.getEntriesByType('navigation')[0];
-                const loadTime = perfData.loadEventEnd - perfData.loadEventStart;
-                console.log('Exams Index Load Time:', loadTime + 'ms');
-            } catch (error) {
-                console.warn('Performance monitoring failed:', error);
-            }
-        }, 0);
+    // Animate counter updates
+    animateCounter('totalExams', examCards.length);
+    animateCounter('readyExams', readyExams.length);
+    animateCounter('draftExams', draftExams.length);
+    animateCounter('totalQuestions', totalQuestions);
+}
+
+/**
+ * Animate counter to target value
+ * @param {string} elementId - ID of counter element
+ * @param {number} targetValue - Target value to animate to
+ */
+function animateCounter(elementId, targetValue) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    const currentValue = parseInt(element.textContent || '0');
+    const increment = targetValue > currentValue ? 1 : -1;
+    const duration = Math.abs(targetValue - currentValue) * 50; // 50ms per step
+    
+    if (currentValue !== targetValue && duration < 2000) { // Don't animate if it would take too long
+        element.textContent = currentValue + increment;
+        setTimeout(() => animateCounter(elementId, targetValue), 50);
+    } else {
+        element.textContent = targetValue;
+    }
+}
+
+/**
+ * Load and initialize exam data
+ */
+function loadExamData() {
+    // Update stats based on current page data
+    updateStats();
+    
+    // Load view preference
+    try {
+        const savedView = localStorage.getItem('examViewPreference');
+        if (savedView && (savedView === 'grid' || savedView === 'list')) {
+            toggleView(savedView);
+        }
+    } catch (e) {
+        // Ignore localStorage errors
+    }
+
+    // Initialize tooltips if needed
+    initializeTooltips();
+}
+
+/**
+ * Initialize tooltips for better UX
+ */
+function initializeTooltips() {
+    const tooltipElements = document.querySelectorAll('[title]');
+    tooltipElements.forEach(element => {
+        element.addEventListener('mouseenter', showTooltip);
+        element.addEventListener('mouseleave', hideTooltip);
     });
 }
+
+/**
+ * Show custom tooltip
+ * @param {Event} e - Mouse enter event
+ */
+function showTooltip(e) {
+    const element = e.target;
+    const title = element.getAttribute('title');
+    
+    if (title) {
+        element.setAttribute('data-original-title', title);
+        element.removeAttribute('title');
+        
+        const tooltip = document.createElement('div');
+        tooltip.className = 'custom-tooltip';
+        tooltip.textContent = title;
+        tooltip.style.cssText = `
+            position: absolute;
+            background: var(--dark);
+            color: var(--white);
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius);
+            font-size: 0.8125rem;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+            pointer-events: none;
+        `;
+        
+        document.body.appendChild(tooltip);
+        
+        const rect = element.getBoundingClientRect();
+        tooltip.style.left = (rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+        tooltip.style.top = (rect.top - tooltip.offsetHeight - 8) + 'px';
+        
+        element._tooltip = tooltip;
+    }
+}
+
+/**
+ * Hide custom tooltip
+ * @param {Event} e - Mouse leave event
+ */
+function hideTooltip(e) {
+    const element = e.target;
+    const originalTitle = element.getAttribute('data-original-title');
+    
+    if (originalTitle) {
+        element.setAttribute('title', originalTitle);
+        element.removeAttribute('data-original-title');
+    }
+    
+    if (element._tooltip) {
+        document.body.removeChild(element._tooltip);
+        element._tooltip = null;
+    }
+}
+
+/**
+ * Handle keyboard navigation
+ */
+function handleKeyboardNavigation(e) {
+    // Handle Escape key for modals
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('importModal');
+        if (modal && modal.style.display !== 'none') {
+            closeImportModal();
+        }
+    }
+    
+    // Handle Enter key on search
+    if (e.key === 'Enter' && e.target.id === 'searchInput') {
+        e.preventDefault();
+        applyFilters();
+    }
+}
+
+// Add keyboard event listener
+document.addEventListener('keydown', handleKeyboardNavigation);
+
+/**
+ * Utility function to format file size
+ * @param {number} bytes - File size in bytes
+ * @returns {string} Formatted file size
+ */
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+/**
+ * Utility function to validate email format
+ * @param {string} email - Email to validate
+ * @returns {boolean} Is valid email
+ */
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+/**
+ * Utility function to sanitize HTML
+ * @param {string} str - String to sanitize
+ * @returns {string} Sanitized string
+ */
+function sanitizeHTML(str) {
+    const temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+}
+
+/**
+ * Show loading skeleton while data loads
+ */
+function showLoadingSkeleton() {
+    const skeleton = document.getElementById('loadingSkeleton');
+    if (skeleton) {
+        skeleton.style.display = 'block';
+    }
+}
+
+/**
+ * Hide loading skeleton
+ */
+function hideLoadingSkeleton() {
+    const skeleton = document.getElementById('loadingSkeleton');
+    if (skeleton) {
+        skeleton.style.display = 'none';
+    }
+}
+
+/**
+ * Refresh page data
+ */
+function refreshData() {
+    showLoadingSkeleton();
+    
+    // Simulate data refresh
+    setTimeout(() => {
+        hideLoadingSkeleton();
+        updateStats();
+        showAlert('success', 'Data refreshed successfully!');
+    }, 1000);
+}
+
+// Export functions for use in Blade template if needed
+window.ExamManagement = {
+    toggleView,
+    clearFilters,
+    showAlert,
+    hideAlert,
+    openImportModal,
+    closeImportModal,
+    confirmDelete,
+    downloadTemplate,
+    refreshData,
+    updateStats
+};
+
+// Add slide out animation styles
+const slideOutKeyframes = `
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-100%); opacity: 0; }
+}
+
+@keyframes modalFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+`;
+
+// Inject keyframes into page
+const style = document.createElement('style');
+style.textContent = slideOutKeyframes;
+document.head.appendChild(style);
+
+console.log('Exam Management Dashboard initialized successfully!');

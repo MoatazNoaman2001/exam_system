@@ -177,7 +177,7 @@ class ExamImportController extends Controller
     private function parseQuestions($worksheet)
     {
         $questions = [];
-        $startRow = 7; // Questions start from row 7
+        $startRow = 8; // Questions start from row 7
         $row = $startRow;
 
         while ($this->getCellValue($worksheet, 'A' . $row)) {

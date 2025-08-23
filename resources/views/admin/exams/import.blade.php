@@ -17,14 +17,6 @@
                 <p class="page-subtitle">Upload an Excel file to create a new exam with questions</p>
             </div>
             <div class="header-actions">
-                <a href="{{ route('admin.exams.generate-template') }}" class="btn btn-warning">
-                    <i class="fas fa-cog"></i>
-                    {{ __('Generate Template') }}
-                </a>
-                <a href="{{ route('admin.exams.download-template') }}" class="btn btn-success" target="_blank">
-                    <i class="fas fa-download"></i>
-                    {{ __('Download Template') }}
-                </a>
                 <a href="{{ route('admin.exams.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }}"></i>
                     {{ __('Back to Exams') }}

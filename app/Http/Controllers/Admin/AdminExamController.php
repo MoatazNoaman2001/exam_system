@@ -176,7 +176,9 @@ class AdminExamController extends Controller
             ]);
 
             // Update new certificate timestamp
-            $exam->certificate->touch();
+            if ($exam->certificate) {
+                $exam->certificate->touch();
+            }
 
             // Update old certificate timestamp if changed
             if ($oldCertificateId && $oldCertificateId !== $exam->certificate_id) {
