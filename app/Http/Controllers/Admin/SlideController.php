@@ -348,9 +348,9 @@ class SlideController extends Controller
 
         // File validation based on create/update
         if ($isCreate) {
-            $rules['content'] = 'required|file|mimes:pdf|max:5120';
+            $rules['content'] = 'required|file|mimes:pdf|max:512000';
         } else {
-            $rules['content'] = 'nullable|file|mimes:pdf|max:5120';
+            $rules['content'] = 'nullable|file|mimes:pdf|max:512000';
         }
 
         $messages = [

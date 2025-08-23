@@ -55,7 +55,7 @@ class DomainController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.domains.index')->with('success', 'Domain created successfully.');
+            return redirect()->route('admin.domains')->with('success', 'Domain created successfully.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -135,11 +135,11 @@ class DomainController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.domains.index')->with('success', 'Domain deleted successfully.');
+            return redirect()->route('admin.domains')->with('success', 'Domain deleted successfully.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('admin.domains.index')->with('error', 'Error deleting domain: ' . $e->getMessage());
+            return redirect()->route('admin.domains')->with('error', 'Error deleting domain: ' . $e->getMessage());
         }
     }
 

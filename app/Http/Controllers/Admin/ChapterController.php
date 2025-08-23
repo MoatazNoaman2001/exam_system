@@ -43,22 +43,13 @@ class ChapterController extends Controller
             'certificate_id' => 'required|exists:certificates,id',
         ]);
 
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            $chapter = Chapter::create($request->only(['text', 'certificate_id']));
-
-            // Update certificate's updated_at timestamp to indicate changes
-            $chapter->certificate()->touch();
-
-            DB::commit();
-
-            return redirect()->route('admin.chapters.index')->with('success', 'Chapter created successfully.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withInput()->with('error', 'Error creating chapter: ' . $e->getMessage());
-        }
+        $chapter = Chapter::create($request->only(['text', 'certificate_id']));
+        // Update certificate's updated_at timestamp to indicate changes
+        $chapter->certificate()->touch();
+        DB::commit();
+        return redirect()->route('admin.chapters')->with('success', 'Chapter created successfully.');
     }
 
     /**
@@ -131,11 +122,11 @@ class ChapterController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.chapters.index')->with('success', 'Chapter deleted successfully.');
+            return redirect()->route('admin.chapters')->with('success', 'Chapter deleted successfully.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('admin.chapters.index')->with('error', 'Error deleting chapter: ' . $e->getMessage());
+            return redirect()->route('admin.chapters')->with('error', 'Error deleting chapter: ' . $e->getMessage());
         }
     }
 
