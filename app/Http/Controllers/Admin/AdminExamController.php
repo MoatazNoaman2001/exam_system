@@ -100,7 +100,9 @@ class AdminExamController extends Controller
             ]);
 
             // Update certificate timestamp to reflect new exam
-            $exam->certificate->touch();
+            if ($exam->certificate) {
+                $exam->certificate->touch();
+            }
 
             DB::commit();
 
