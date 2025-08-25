@@ -12,7 +12,7 @@ class Chapter extends Model
 {
     use HasFactory, SoftDeletes, HasUuids;
 
-    protected $fillable = ['text'];
+    protected $fillable = ['text', 'certificate_id'];
 
     public function slides()
     {

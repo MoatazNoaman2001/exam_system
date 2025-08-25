@@ -80,29 +80,21 @@ class ChapterController extends Controller
             'certificate_id' => 'required|exists:certificates,id',
         ]);
 
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            $oldCertificateId = $chapter->certificate_id;
-            
-            $chapter->update($request->only(['text', 'certificate_id']));
+        $oldCertificateId = $chapter->certificate_id;
+        
+        $chapter->update($request->only(['text', 'certificate_id']));
 
-            // Update the new certificate's timestamp
-            $chapter->certificate()->touch();
-
-            // If certificate changed, also update the old certificate's timestamp
-            if ($oldCertificateId && $oldCertificateId !== $chapter->certificate_id) {
-                Certificate::find($oldCertificateId)?->touch();
-            }
-
-            DB::commit();
-
-            return redirect()->route('admin.chapters.index')->with('success', 'Chapter updated successfully.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withInput()->with('error', 'Error updating chapter: ' . $e->getMessage());
+        // dd('chapter' . strval($chapter));
+        // Update the new certificate's timestamp
+        $chapter->certificate()->touch();
+        // If certificate changed, also update the old certificate's timestamp
+        if ($oldCertificateId && $oldCertificateId !== $chapter->certificate_id) {
+            Certificate::find($oldCertificateId)?->touch();
         }
+        DB::commit();
+        return redirect()->route('admin.chapters')->with('success', 'Chapter updated successfully.');
     }
 
     /**
@@ -110,24 +102,18 @@ class ChapterController extends Controller
      */
     public function destroy(Chapter $chapter)
     {
-        try {
-            DB::beginTransaction();
+        tDB::beginTransaction();
 
-            $certificate = $chapter->certificate;
-            
-            $chapter->delete();
+        $certificate = $chapter->certificate;
+        
+        $chapter->delete();
 
-            // Update certificate's timestamp to reflect the change
-            $certificate?->touch();
+        // Update certificate's timestamp to reflect the change
+        $certificate?->touch();
 
-            DB::commit();
+        DB::commit();
 
-            return redirect()->route('admin.chapters')->with('success', 'Chapter deleted successfully.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('admin.chapters')->with('error', 'Error deleting chapter: ' . $e->getMessage());
-        }
+        return redirect()->route('admin.chapters')->with('success', 'Chapter deleted successfully.');   
     }
 
     /**

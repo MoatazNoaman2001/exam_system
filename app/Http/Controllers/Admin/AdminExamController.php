@@ -166,6 +166,7 @@ class AdminExamController extends Controller
             DB::beginTransaction();
 
             $exam = Exam::findOrFail($examId);
+
             $oldCertificateId = $exam->certificate_id;
 
             $exam->update([
@@ -177,15 +178,16 @@ class AdminExamController extends Controller
                 'time' => $request->duration,
             ]);
 
+            $exam->refresh(); // Refresh to get latest data
             // Update new certificate timestamp
-            if ($exam->certificate) {
-                $exam->certificate->touch();
-            }
+            
+            $exam->certificate->touch();
 
             // Update old certificate timestamp if changed
             if ($oldCertificateId && $oldCertificateId !== $exam->certificate_id) {
                 Certificate::find($oldCertificateId)?->touch();
             }
+
 
             DB::commit();
 

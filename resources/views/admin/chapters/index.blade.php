@@ -5,7 +5,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Chapters Management</h1>
         <a href="{{ route('admin.chapters.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Create New Domain
+            <i class="fas fa-plus fa-sm text-white-50"></i> Create New Chapter
         </a>
     </div>
 

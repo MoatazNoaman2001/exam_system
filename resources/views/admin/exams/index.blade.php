@@ -180,7 +180,7 @@
                     <div class="exam-actions">
                         <a href="{{ route('admin.exams.questions.index', $exam->id) }}" class="action-btn primary">
                             <i class="fas fa-question-circle"></i>
-                            {{ $exam->number_of_questions > 0 ? 'Manage Questions' : 'Add Questions' }}
+                            {{ $exam->number_of_questions > 0 ? 'MQ' : 'AQ' }}
                         </a>
                         <a href="{{ route('admin.exams.edit', $exam->id) }}" class="action-btn">
                             <i class="fas fa-edit"></i>

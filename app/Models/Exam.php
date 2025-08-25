@@ -20,6 +20,7 @@ class Exam extends Model
         'number_of_questions',
         'time',
         'is_completed',
+        'certificate_id'
     ];
 
     protected $casts = [
@@ -89,7 +90,7 @@ class Exam extends Model
 
     public function certificate()
     {
-        return $this->belongsTo(Certificate::class);
+        return $this->belongsTo(Certificate::class, 'certificate_id');
     }
     /**
      * Calculate total marks for the exam

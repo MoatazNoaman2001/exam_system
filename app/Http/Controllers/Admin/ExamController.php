@@ -129,6 +129,8 @@ class ExamController extends Controller
      */
     public function update(Request $request, Exam $exam)
     {
+
+        dd('update validate started');
         $validated = $request->validate([
             'title_en' => 'required|string|max:255',
             'title_ar' => 'required|string|max:255',
@@ -156,6 +158,7 @@ class ExamController extends Controller
             ],
             'questions.*.answers.*.is_correct' => 'boolean'
         ]);
+
     
         DB::transaction(function () use ($request, $exam) {
             // Update exam basic information

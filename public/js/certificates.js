@@ -1,267 +1,299 @@
 class CertificateSelector {
     constructor() {
+        this.loadingOverlay = document.getElementById('loadingOverlay');
+        this.translations = window.translations || {};
+        this.selectedCard = null;
+        
         this.init();
     }
 
     init() {
         this.bindEvents();
-        this.setupKeyboardSupport();
-        this.handlePageShow();
-    }
-
-    selectCertificate(cardElement) {
-        const form = cardElement.closest('.certificate-form');
-        if (form) {
-            // Show loading overlay
-            this.showLoadingOverlay();
-            
-            // Add visual feedback to selected card
-            cardElement.style.opacity = '0.7';
-            cardElement.style.pointerEvents = 'none';
-            
-            // Submit form
-            form.submit();
-        }
-    }
-
-    showLoadingOverlay() {
-        const overlay = document.getElementById('loadingOverlay');
-        if (overlay) {
-            overlay.style.display = 'flex';
-        }
-    }
-
-    hideLoadingOverlay() {
-        const overlay = document.getElementById('loadingOverlay');
-        if (overlay) {
-            overlay.style.display = 'none';
-        }
+        this.initializeAnimations();
+        this.setupAccessibility();
     }
 
     bindEvents() {
-        // Handle form submission with loading states
-        const forms = document.querySelectorAll('.certificate-form');
-        
-        forms.forEach(form => {
-            form.addEventListener('submit', (e) => {
-                const submitBtn = form.querySelector('.select-btn');
-                if (submitBtn) {
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>' + this.getLoadingText();
-                    submitBtn.disabled = true;
-                }
-            });
-        });
-
         // Handle card clicks
-        const cards = document.querySelectorAll('.certificate-card');
-        cards.forEach(card => {
-            card.addEventListener('click', (e) => {
-                // Prevent double submission if button is clicked
-                if (e.target.tagName === 'BUTTON') {
-                    return;
-                }
-                this.selectCertificate(card);
-            });
-        });
-    }
-
-    setupKeyboardSupport() {
-        const cards = document.querySelectorAll('.certificate-card');
-        cards.forEach(card => {
-            card.setAttribute('tabindex', '0');
-            card.setAttribute('role', 'button');
-            card.setAttribute('aria-label', this.getCardAriaLabel(card));
-            
-            card.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.selectCertificate(card);
-                }
-            });
-
-            // Add focus styles
-            card.addEventListener('focus', () => {
-                card.style.outline = '2px solid var(--card-color)';
-                card.style.outlineOffset = '2px';
-            });
-
-            card.addEventListener('blur', () => {
-                card.style.outline = '';
-                card.style.outlineOffset = '';
-            });
-        });
-    }
-
-    getCardAriaLabel(card) {
-        const nameElement = card.querySelector('.certificate-name');
-        const codeElement = card.querySelector('.certificate-code');
-        const name = nameElement ? nameElement.textContent.trim() : '';
-        const code = codeElement ? codeElement.textContent.trim() : '';
-        return `Select ${name} (${code}) certificate`;
-    }
-
-    getLoadingText() {
-        // This should be replaced with actual translation
-        return 'Loading...';
-    }
-
-    handlePageShow() {
-        // Hide loading overlay if page is refreshed/back button
-        window.addEventListener('pageshow', () => {
-            this.hideLoadingOverlay();
-        });
-    }
-
-    // Utility method to equalize card heights (if needed)
-    equalizeCardHeights() {
-        const cards = document.querySelectorAll('.certificate-card');
-        if (cards.length === 0) return;
-
-        // Reset heights
-        cards.forEach(card => {
-            card.style.height = 'auto';
-        });
-
-        // Find max height
-        let maxHeight = 0;
-        cards.forEach(card => {
-            const height = card.offsetHeight;
-            if (height > maxHeight) {
-                maxHeight = height;
+        document.addEventListener('click', (e) => {
+            const card = e.target.closest('.certificate-card');
+            if (card) {
+                this.handleCardClick(card, e);
             }
         });
 
-        // Set all cards to max height
-        cards.forEach(card => {
-            card.style.height = maxHeight + 'px';
+        // Handle keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const card = e.target.closest('.certificate-card');
+            if (card && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                this.handleCardClick(card, e);
+            }
+        });
+
+        // Handle form submissions
+        document.addEventListener('submit', (e) => {
+            if (e.target.classList.contains('certificate-form')) {
+                this.handleFormSubmit(e);
+            }
+        });
+
+        // Handle loading states
+        window.addEventListener('beforeunload', () => {
+            this.hideLoading();
         });
     }
 
-    // Handle responsive behavior
-    handleResize() {
-        // Re-equalize heights on window resize if needed
-        clearTimeout(this.resizeTimeout);
-        this.resizeTimeout = setTimeout(() => {
-            this.equalizeCardHeights();
-        }, 250);
-    }
-}
+    handleCardClick(card, event) {
+        // Prevent double clicks
+        if (card.classList.contains('processing')) {
+            return;
+        }
 
-// Animation utilities
-class CertificateAnimations {
-    static fadeInCards() {
-        const cards = document.querySelectorAll('.certificate-card');
-        cards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
+        // Visual feedback
+        this.selectCard(card);
+
+        // If clicked on button, let form submit naturally
+        if (event.target.closest('.select-btn')) {
+            return;
+        }
+
+        // Otherwise, trigger form submission
+        const form = card.closest('.certificate-form');
+        if (form) {
+            // Add visual feedback
+            this.showCardProcessing(card);
+            
+            // Submit after brief delay for UX
+            setTimeout(() => {
+                form.submit();
+            }, 300);
+        }
+    }
+
+    selectCard(card) {
+        // Remove selection from other cards
+        document.querySelectorAll('.certificate-card').forEach(c => {
+            c.classList.remove('selected');
+            c.setAttribute('aria-pressed', 'false');
+        });
+
+        // Select current card
+        card.classList.add('selected');
+        card.setAttribute('aria-pressed', 'true');
+        this.selectedCard = card;
+
+        // Update button text temporarily
+        const btn = card.querySelector('.select-btn span');
+        if (btn) {
+            const originalText = btn.textContent;
+            btn.textContent = this.translations.selectCertificate || 'Selected!';
             
             setTimeout(() => {
-                card.style.transition = 'all 0.6s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, index * 100);
-        });
+                if (btn.textContent === (this.translations.selectCertificate || 'Selected!')) {
+                    btn.textContent = originalText;
+                }
+            }, 1500);
+        }
     }
 
-    static addHoverEffects() {
-        const cards = document.querySelectorAll('.certificate-card');
-        cards.forEach(card => {
-            const icon = card.querySelector('.certificate-icon i');
+    showCardProcessing(card) {
+        card.classList.add('processing');
+        
+        const btn = card.querySelector('.select-btn');
+        if (btn) {
+            const span = btn.querySelector('span');
+            const icon = btn.querySelector('i');
             
-            card.addEventListener('mouseenter', () => {
-                if (icon) {
-                    icon.style.transform = 'scale(1.1) rotate(5deg)';
-                    icon.style.transition = 'transform 0.3s ease';
-                }
-            });
+            if (span) span.textContent = this.translations.processing || 'Processing...';
+            if (icon) {
+                icon.className = 'fas fa-spinner fa-spin';
+            }
+            
+            btn.disabled = true;
+        }
+    }
 
-            card.addEventListener('mouseleave', () => {
-                if (icon) {
-                    icon.style.transform = 'scale(1) rotate(0deg)';
+    handleFormSubmit(event) {
+        const form = event.target;
+        const card = form.querySelector('.certificate-card');
+        
+        if (card && !card.classList.contains('processing')) {
+            this.showCardProcessing(card);
+            this.showLoading();
+        }
+    }
+
+    showLoading() {
+        if (this.loadingOverlay) {
+            this.loadingOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    hideLoading() {
+        if (this.loadingOverlay) {
+            this.loadingOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    initializeAnimations() {
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
                 }
             });
+        }, observerOptions);
+
+        // Observe all animatable elements
+        document.querySelectorAll('.certificate-card, .section-header').forEach(el => {
+            observer.observe(el);
         });
     }
-}
 
-// Error handling
-class CertificateErrorHandler {
-    static handleFormError(form, error) {
-        console.error('Form submission error:', error);
-        
-        // Re-enable the submit button
-        const submitBtn = form.querySelector('.select-btn');
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = submitBtn.getAttribute('data-original-text') || 'Start Learning';
-        }
+    setupAccessibility() {
+        // Add ARIA labels to cards
+        document.querySelectorAll('.certificate-card').forEach((card, index) => {
+            const name = card.querySelector('.certificate-name')?.textContent || '';
+            const code = card.querySelector('.certificate-code')?.textContent || '';
+            
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', `Select ${name} certification program ${code}`);
+            card.setAttribute('aria-pressed', 'false');
+            card.setAttribute('tabindex', '0');
+        });
 
-        // Hide loading overlay
-        const overlay = document.getElementById('loadingOverlay');
-        if (overlay) {
-            overlay.style.display = 'none';
-        }
-
-        // Show error message
-        this.showErrorMessage('Something went wrong. Please try again.');
+        // Handle focus management
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                this.handleTabNavigation(e);
+            }
+        });
     }
 
-    static showErrorMessage(message) {
-        // Create or update error toast
-        let toast = document.getElementById('error-toast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'error-toast';
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #ef4444;
-                color: white;
-                padding: 1rem;
-                border-radius: 0.5rem;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                z-index: 10000;
-                opacity: 0;
-                transform: translateX(100%);
-                transition: all 0.3s ease;
-            `;
-            document.body.appendChild(toast);
+    handleTabNavigation(event) {
+        const cards = document.querySelectorAll('.certificate-card[tabindex="0"]');
+        const currentIndex = Array.from(cards).indexOf(document.activeElement);
+        
+        if (currentIndex === -1) return;
+
+        let nextIndex;
+        
+        if (event.shiftKey) {
+            // Shift + Tab (backward)
+            nextIndex = currentIndex > 0 ? currentIndex - 1 : cards.length - 1;
+        } else {
+            // Tab (forward)
+            nextIndex = currentIndex < cards.length - 1 ? currentIndex + 1 : 0;
         }
 
-        toast.innerHTML = `<i class="fas fa-exclamation-circle me-2"></i>${message}`;
-        
-        // Show toast
-        setTimeout(() => {
-            toast.style.opacity = '1';
-            toast.style.transform = 'translateX(0)';
-        }, 100);
+        if (nextIndex !== currentIndex) {
+            event.preventDefault();
+            cards[nextIndex].focus();
+        }
+    }
 
-        // Hide toast after 5 seconds
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(100%)';
-        }, 5000);
+    // Public methods for external use
+    static selectCertificate(cardElement) {
+        const instance = window.certificateSelector;
+        if (instance && cardElement) {
+            instance.handleCardClick(cardElement, { target: cardElement });
+        }
+    }
+
+    static showLoading() {
+        const instance = window.certificateSelector;
+        if (instance) instance.showLoading();
+    }
+
+    static hideLoading() {
+        const instance = window.certificateSelector;
+        if (instance) instance.hideLoading();
     }
 }
 
-// Initialize when DOM is loaded
+// Utility functions for global use
+function selectCertificate(cardElement) {
+    CertificateSelector.selectCertificate(cardElement);
+}
+
+function showLoading() {
+    CertificateSelector.showLoading();
+}
+
+function hideLoading() {
+    CertificateSelector.hideLoading();
+}
+
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    const certificateSelector = new CertificateSelector();
+    window.certificateSelector = new CertificateSelector();
     
-    // Add animations
-    CertificateAnimations.fadeInCards();
-    CertificateAnimations.addHoverEffects();
+    // Add custom CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+        .certificate-card.selected {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-2xl);
+            border-color: var(--card-accent);
+        }
+        
+        .certificate-card.processing {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .certificate-card.animate-in {
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+});
 
-    // Handle window resize
-    window.addEventListener('resize', () => {
-        certificateSelector.handleResize();
-    });
-
-    // Handle form errors
-    document.querySelectorAll('.certificate-form').forEach(form => {
-        form.addEventListener('error', (e) => {
-            CertificateErrorHandler.handleFormError(form, e.detail);
-        });
-    });
+// Handle page errors gracefully
+window.addEventListener('error', (e) => {
+    console.error('Certificate selection error:', e.error);
+    hideLoading();
+    
+    // Show user-friendly error message
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'alert alert-danger';
+    errorMessage.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        max-width: 400px;
+        padding: 1rem;
+        background: #fee;
+        border: 1px solid #fcc;
+        border-radius: 0.5rem;
+        color: #c33;
+    `;
+    errorMessage.textContent = window.translations?.error || 'An error occurred. Please refresh the page and try again.';
+    
+    document.body.appendChild(errorMessage);
+    
+    setTimeout(() => {
+        errorMessage.remove();
+    }, 5000);
 });

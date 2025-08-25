@@ -68,6 +68,7 @@ class SlideController extends Controller
             // Store the PDF file
             $filePath = $request->file('content')->store('slides', 'public');
 
+
             // Create the slide
             $slide = Slide::create([
                 'text' => $validatedData['text'],
@@ -79,11 +80,14 @@ class SlideController extends Controller
             // Update associated certificate timestamp
             $this->updateRelatedCertificate($slide);
 
+
+
             // Create questions ONLY if domain is selected and questions are provided
             $questionsCreated = 0;
             if ($slide->domain_id && isset($validatedData['questions']) && is_array($validatedData['questions'])) {
                 $questionsCreated = $this->createQuestionsForSlide($slide, $validatedData['questions']);
             }
+
 
             DB::commit();
 
@@ -91,8 +95,9 @@ class SlideController extends Controller
                 ? "Slide created successfully with {$questionsCreated} questions."
                 : "Slide created successfully.";
 
+
             return redirect()
-                ->route('admin.slides.index')
+                ->route('admin.slides')
                 ->with('success', $message);
 
         } catch (\Exception $e) {
@@ -155,73 +160,83 @@ class SlideController extends Controller
     public function update(Request $request, Slide $slide)
     {
         $validatedData = $this->validateSlideData($request, false);
+        DB::beginTransaction();
 
-        try {
-            DB::beginTransaction();
+        // Store old associations for certificate update
+        $oldDomainId = $slide->domain_id;
+        $oldChapterId = $slide->chapter_id;
 
-            // Store old associations for certificate update
-            $oldDomainId = $slide->domain_id;
-            $oldChapterId = $slide->chapter_id;
-
-            $updateData = [
-                'text' => $validatedData['text'],
-                'domain_id' => $validatedData['domain_id'] ?? null,
-                'chapter_id' => $validatedData['chapter_id'] ?? null,
-            ];
-
-            // Handle PDF file update if new file provided
-            if ($request->hasFile('content')) {
-                // Delete old file
-                if ($slide->content && Storage::disk('public')->exists($slide->content)) {
-                    Storage::disk('public')->delete($slide->content);
-                }
-                
-                $updateData['content'] = $request->file('content')->store('slides', 'public');
-            }
-
-            // Update the slide
-            $slide->update($updateData);
-
-            // Update related certificates (old and new)
-            $this->updateRelatedCertificate($slide, $oldDomainId, $oldChapterId);
-
-            // Handle questions update - ONLY for slides with domains
-            $questionsCreated = 0;
-            if ($slide->domain_id) {
-                // If domain is selected, handle questions
-                if (isset($validatedData['questions']) && is_array($validatedData['questions'])) {
-                    // Delete existing tests and answers
-                    $slide->tests()->delete();
-                    
-                    // Create new questions
-                    $questionsCreated = $this->createQuestionsForSlide($slide, $validatedData['questions']);
-                }
-            } else {
-                // If no domain selected, remove all questions
-                $slide->tests()->delete();
-            }
-
-            DB::commit();
-
-            $message = $questionsCreated > 0 
-                ? "Slide updated successfully with {$questionsCreated} questions."
-                : "Slide updated successfully.";
-
-            return redirect()->route('admin.slides.index')
-                ->with('success', $message);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
+        $updateData = [
+            'text' => $validatedData['text'],
+            'domain_id' => $validatedData['domain_id'] ?? null,
+            'chapter_id' => $validatedData['chapter_id'] ?? null,
+        ];
+        // Handle PDF file update if new file provided
+        if ($request->hasFile('content')) {
             
-            Log::error('Error updating slide: ' . $e->getMessage(), [
-                'slide_id' => $slide->id,
-                'request_data' => $request->except(['content'])
-            ]);
-
-            return back()
-                ->withInput()
-                ->with('error', 'Error updating slide: ' . $e->getMessage());
+            // Delete old file
+            if ($slide->content && Storage::disk('public')->exists($slide->content)) {
+                Storage::disk('public')->delete($slide->content);
+            }
+            
+            $updateData['content'] = $request->file('content')->store('slides', 'public');
         }
+        else{
+
+            $updateData['content'] = $slide['content'];
+        }
+
+        dd('updateDate: ' . json_encode($updateData) . 'content: ' . ($request->hasFile('content') ? 'true': 'false'));
+        
+        // Update the slide
+        $slide->update($updateData);
+
+
+        dd('slide: ' . strval($slide));
+
+
+        // Update related certificates (old and new)
+        $this->updateRelatedCertificate($slide, $oldDomainId, $oldChapterId);
+
+        // Handle questions update - ONLY for slides with domains
+        $questionsCreated = 0;
+        if ($slide->domain_id) {
+            // If domain is selected, handle questions
+            if (isset($validatedData['questions']) && is_array($validatedData['questions'])) {
+                // Delete existing tests and answers
+                $slide->tests()->delete();
+                
+                // Create new questions
+                $questionsCreated = $this->createQuestionsForSlide($slide, $validatedData['questions']);
+            }
+        } else {
+            // If no domain selected, remove all questions
+            $slide->tests()->delete();
+        }
+
+        DB::commit();
+
+        $message = $questionsCreated > 0 
+            ? "Slide updated successfully with {$questionsCreated} questions."
+            : "Slide updated successfully.";
+
+        return redirect()->route('admin.slides')
+            ->with('success', $message);
+        // try {
+            
+
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+            
+        //     Log::error('Error updating slide: ' . $e->getMessage(), [
+        //         'slide_id' => $slide->id,
+        //         'request_data' => $request->except(['content'])
+        //     ]);
+
+        //     return back()
+        //         ->withInput()
+        //         ->with('error', 'Error updating slide: ' . $e->getMessage());
+        // }
     }
 
     /**
@@ -249,7 +264,7 @@ class SlideController extends Controller
             
             DB::commit();
 
-            return redirect()->route('admin.slides.index')
+            return redirect()->route('admin.slides')
                 ->with('success', 'Slide deleted successfully.');
 
         } catch (\Exception $e) {
