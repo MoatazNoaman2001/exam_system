@@ -275,21 +275,21 @@ window.addEventListener('error', (e) => {
     hideLoading();
     
     // Show user-friendly error message
-    const errorMessage = document.createElement('div');
-    errorMessage.className = 'alert alert-danger';
-    errorMessage.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 10000;
-        max-width: 400px;
-        padding: 1rem;
-        background: #fee;
-        border: 1px solid #fcc;
-        border-radius: 0.5rem;
-        color: #c33;
-    `;
-    errorMessage.textContent = window.translations?.error || 'An error occurred. Please refresh the page and try again.';
+    // const errorMessage = document.createElement('div');
+    // errorMessage.className = 'alert alert-danger';
+    // errorMessage.style.cssText = `
+    //     position: fixed;
+    //     top: 20px;
+    //     right: 20px;
+    //     z-index: 10000;
+    //     max-width: 400px;
+    //     padding: 1rem;
+    //     background: #fee;
+    //     border: 1px solid #fcc;
+    //     border-radius: 0.5rem;
+    //     color: #c33;
+    // `;
+    // errorMessage.textContent = window.translations?.error || 'An error occurred. Please refresh the page and try again.';
     
     document.body.appendChild(errorMessage);
     
