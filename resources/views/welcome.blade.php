@@ -174,7 +174,7 @@
                     </form>
                 </div>
                 <div class="hero-image">
-                    <img src="{{ asset('images/hero_section_side.svg') }}"
+                    <img src="{{ asset('images/hero_side_white.png') }}"
                     alt="{{ __('lang.PMP Management Dashboard') }}" class="hero-img">
                     {{-- @if(app()->getLocale() == 'ar')
                         <img src="{{ asset('images/hero_side_image_ar.png') }}"

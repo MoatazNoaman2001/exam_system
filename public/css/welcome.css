@@ -267,7 +267,7 @@ nav {
 /* Dynamic Hero Images */
 .hero-image {
   position: relative;
-  height: 300px;
+  height: 400px;
   animation: slideInRight 1s ease-out;
 }
 
@@ -277,11 +277,10 @@ nav {
 }
 
 .hero-img {
-  position: absolute;
-  width: 100%;
+  position: absolute; 
   height: 400px;
   border-radius: 20px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
@@ -303,7 +302,7 @@ nav {
 
 .hero-img:hover {
   transform: scale(1.08) rotate(2deg);
-  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 35px 20px rgba(0, 0, 0, 0.4);
   z-index: 10;
 }
 
@@ -1413,7 +1412,7 @@ footer::before {
   }
   
   .hero-image {
-      margin-top: 3rem;
+      margin-top: 2rem;
   }
   
 
