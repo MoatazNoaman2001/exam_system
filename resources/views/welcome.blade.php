@@ -197,28 +197,8 @@
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-book-open"></i>
-                    </div>
-                    <h3>{{ __('lang.🧠 Foundational Knowledge') }}</h3>
-                    <p>{{ __('lang.Explore essential concepts and proven frameworks across various management disciplines—from strategic planning to agile leadership—to build a solid foundation for growth.') }}
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-clipboard-check"></i>
-                    </div>
-                    <h3>{{ __('lang.✅ Hands-On Learning') }}</h3>
-                    <p>{{ __('lang.Test your knowledge with full-length, timed practice exams that mimic the actual PMP exam format and difficulty level.') }}
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>{{ __('lang.📊 Personalized Learning Journey') }}</h3>
-                    <p>{{ __('lang.Track your growth with a smart system that adapts to your learning style, highlights areas for improvement, and helps you stay on track to achieve your goals.') }}
-                    </p>
+                    <img src="{{app()->getLocale() == 'ar'? asset('images/learn_stage_ar.svg'): 
+                    asset('images/learn_stage_en.svg')}}" alt="">
                 </div>
             </div>
         </div>
