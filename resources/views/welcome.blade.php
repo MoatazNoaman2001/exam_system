@@ -117,8 +117,8 @@
         }
 
         .logo-img {
-            width: 120px !important;
-            height: 120px !important;
+            width: 90px !important;
+            height: 90px !important;
         }
     </style>
 </head>
