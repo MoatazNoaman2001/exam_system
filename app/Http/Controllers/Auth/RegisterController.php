@@ -43,9 +43,9 @@ class RegisterController extends Controller
             if ($isFirstTime) {
                 $user->first_visit= false;
                 $user->save();
-                return redirect()->route('index');
+                return redirect()->route('student.index');
             }else{
-                return redirect()->route('student.home');
+                return redirect()->route('student.sections.index');
             }
 
             return redirect()->route('completed-action', ['userId' => $user->id]);
@@ -78,7 +78,7 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => $data['password'],
@@ -91,10 +91,9 @@ class RegisterController extends Controller
 
     
         $user->sendEmailVerificationNotification();
-    
 
         if ($user->role === 'student') {
-            return redirect()->route('completedAction');
+            return redirect()->route('student.index');
         }
     }
 

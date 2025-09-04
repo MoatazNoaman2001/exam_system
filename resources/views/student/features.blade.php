@@ -14,12 +14,13 @@
                 <p class="feature-subtitle">{{ __('lang.updated_content_exercises') }}</p>
                 
                 <div class="button-group">
-                    <button class="primary-btn" onclick="window.location.href='{{ route('student.welcome') }}'">
-                        {{ __('lang.next') }}
-                    </button>
                     <button class="secondary-btn" onclick="window.location.href='{{ route('student.index') }}'">
                         {{ __('lang.previous') }}
                     </button>
+                    <button class="primary-btn" onclick="window.location.href='{{ route('student.welcome') }}'">
+                        {{ __('lang.next') }}
+                    </button>
+                   
                 </div>
                 
                 <div class="skip-container" onclick="window.location.href='{{ route('student.splash') }}'">

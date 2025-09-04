@@ -1389,7 +1389,11 @@ From project and program management to leadership and strategy, our tools and re
 'Domain' => 'Domain',
 'Switch Certificate' => 'Switch Certificate',
 'Select a different certificate to study' => 'Select a different certificate to study',
-'Choose Certificate' => 'Choose Certificate'
+'Choose Certificate' => 'Choose Certificate',
+'Professional Certifications' => 'Professional Certifications',
+'Select Certificate' => 'Select Certificate',
+'Choose your certification path and start your journey to professional excellence' => 'Choose your certification path and start your journey to professional excellence',
+
 ];
 
 

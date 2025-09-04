@@ -8,7 +8,8 @@
 
     <link rel="shortcut icon" href="{{ asset('images/Sprint_Skills.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
     {{-- <script src="{{asset('js/welcome.js')}}" defer></script> --}}
@@ -120,6 +121,113 @@
             width: 90px !important;
             height: 90px !important;
         }
+
+        .features {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .features-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .feature-card {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+            background: white;
+            border-radius: 12px;
+            padding: 30px 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card img {
+            width: 100%;
+            height: auto;
+            max-width: 200px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* Tablet styles */
+        @media (max-width: 768px) {
+            .features {
+                padding: 60px 0;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                gap: 20px;
+            }
+
+            .feature-card {
+                min-width: 200px;
+                padding: 25px 15px;
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 480px) {
+            .features {
+                padding: 40px 0;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .section-title h2 {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+
+            .features-grid {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .feature-card {
+                min-width: 100%;
+                max-width: 100%;
+                padding: 20px 15px;
+            }
+
+            .feature-card img {
+                max-width: 150px;
+            }
+        }
     </style>
 </head>
 
@@ -159,7 +267,8 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" id="home" style="background-image: url('{{ asset('images/Hero.svg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <section class="hero" id="home"
+        style="background-image: url('{{ asset('images/Hero.svg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
@@ -170,13 +279,13 @@
                     <form action="{{ route('login') }}" method="GET" style="display: inline-block;">
                         @csrf
                         <button class="cta-button"
-                            type="submit">{{__('lang.Let’s Build Your Future in Management') }}</button>
+                            type="submit">{{ __('lang.Let’s Build Your Future in Management') }}</button>
                     </form>
                 </div>
                 <div class="hero-image">
                     <img src="{{ asset('images/hero_side_white.png') }}"
-                    alt="{{ __('lang.PMP Management Dashboard') }}" class="hero-img">
-                    {{-- @if(app()->getLocale() == 'ar')
+                        alt="{{ __('lang.PMP Management Dashboard') }}" class="hero-img">
+                    {{-- @if (app()->getLocale() == 'ar')
                         <img src="{{ asset('images/hero_side_image_ar.png') }}"
                             alt="{{ __('lang.PMP Management Dashboard') }}" class="hero-img">
                     @else
@@ -193,12 +302,23 @@
         <div class="container">
             <div class="section-title">
                 <h2>{{ __('lang.Everything You Need to Succeed') }}</h2>
-                </p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <img src="{{app()->getLocale() == 'ar'? asset('images/learn_stage_ar.svg'): 
-                    asset('images/learn_stage_en.svg')}}" alt="">
+                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/5.svg') : asset('images/1.svg') }}"
+                        alt="Feature 1">
+                </div>
+                <div class="feature-card">
+                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/6.svg') : asset('images/2.svg') }}"
+                        alt="Feature 2">
+                </div>
+                <div class="feature-card">
+                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/7.svg') : asset('images/3.svg') }}"
+                        alt="Feature 3">
+                </div>
+                <div class="feature-card">
+                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/8.svg') : asset('images/4.svg') }}"
+                        alt="Feature 4">
                 </div>
             </div>
         </div>
@@ -209,35 +329,31 @@
         <div class="container">
             <div class="section-title">
                 <h2 style="color: white !important;">{{ __('lang.Personalized Study Plan') }}</h2>
-                <p>{{ __('lang.Tell us your exam date and we\'ll create a customized study schedule that fits your timeline.') }}
-                </p>
+                <p>{{ __('lang.Tell us your exam date and we\'ll create a customized study schedule that fits your timeline.') }}</p>
             </div>
             <div class="plan-container">
                 <div class="plan-image">
-                    <img srcset="https://images.unsplash.com/photo-1546410531-bb4caa6b424d"
-                        alt="{{ __('lang.Study Plan') }}" class="plan-img plan-img-main">
-                    <img srcset="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4"
-                        alt="{{ __('lang.Study Plan Background') }}" class="plan-img plan-img-bg">
+                    <img src="{{asset('images/work_hard.svg')}}" 
+                         alt="{{ __('lang.Study Plan') }}" 
+                         class="plan-img plan-img-main">
                 </div>
                 <div class="plan-content">
                     <h2>{{ __('lang.Study Smarter, Not Harder') }}</h2>
-                    <p>{{ __('lang.Our adaptive learning system creates a personalized study plan based on your available study time, learning pace, and progress. Focus on what matters most for your exam success.') }}
-                    </p>
+                    <p>{{ __('lang.Our adaptive learning system creates a personalized study plan based on your available study time, learning pace, and progress. Focus on what matters most for your exam success.') }}</p>
+                    
                     <div class="plan-steps">
                         <div class="plan-step">
                             <div class="step-number">1</div>
                             <div class="step-content">
                                 <h4>{{ __('lang.Set Your Exam Date') }}</h4>
-                                <p>{{ __('lang.Tell us when you plan to take the exam and how many hours per week you can study.') }}
-                                    </?p>
+                                <p>{{ __('lang.Tell us when you plan to take the exam and how many hours per week you can study.') }}</p>
                             </div>
                         </div>
                         <div class="plan-step">
                             <div class="step-number">2</div>
                             <div class="step-content">
                                 <h4>{{ __('lang.Take Initial Assessment') }}</h4>
-                                <p>{{ __('lang.Complete our diagnostic test to identify your strengths and weaknesses.') }}
-                                </p>
+                                <p>{{ __('lang.Complete our diagnostic test to identify your strengths and weaknesses.') }}</p>
                             </div>
                         </div>
                         <div class="plan-step">
@@ -263,7 +379,7 @@
             <div class="exams-grid">
                 <div class="exam-card">
                     <div class="exam-image">
-                        <img srcset="https://images.unsplash.com/photo-1699858946479-e5577e2b7dcc?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        <img srcset="{{asset('images/card_imgii.svg')}}"
                             alt="{{ __('lang.Full-Length Exam') }}">
                         {{-- <div class="exam-tag">200 {{ __('lang.Questions') }}</div> --}}
                     </div>
@@ -285,7 +401,7 @@
                 </div>
                 <div class="exam-card">
                     <div class="exam-image">
-                        <img srcset="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                        <img srcset="{{asset('images/card_imgii2.svg')}}"
                             alt="{{ __('lang.Knowledge Area Exam') }}">
                         {{-- <div class="exam-tag">50 {{ __('lang.Questions') }}</div> --}}
                     </div>
@@ -306,8 +422,7 @@
                 </div>
                 <div class="exam-card">
                     <div class="exam-image">
-                        <img srcset="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-                            alt="{{ __('lang.Quick Quiz') }}">
+                        <img srcset="{{asset('images/card_imgii3.svg')}}">
                         {{-- <div class="exam-tag">20 {{ __('lang.Questions') }}</div> --}}
                     </div>
                     <div class="exam-content">

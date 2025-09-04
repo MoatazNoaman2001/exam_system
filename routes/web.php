@@ -270,12 +270,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/faq/reorder', [FaqController::class, 'reorder'])->name('faq.reorder');
 });
 
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/completed-action/{userId}', [CompletedActionController::class, 'completedAction'])->name('completed-action');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/completed-action/{userId}', [CompletedActionController::class, 'completedAction'])->name('completed-action');
 //     Route::post('/tasks', [CompletedActionController::class, 'store']);
 //     Route::patch('/tasks/{id}', [CompletedActionController::class, 'update']);
 //     Route::delete('/tasks/{id}', [CompletedActionController::class, 'destroy']);
-// });
+});
 
 
 

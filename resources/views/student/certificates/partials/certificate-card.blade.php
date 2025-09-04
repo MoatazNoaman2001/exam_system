@@ -114,6 +114,19 @@
     }
     
     $data = $certificateData[$type];
+
+    $splitTitle = function($text) {
+        if (strpos($text, ' - ') !== false) {
+            $parts = explode(' - ', $text, 2);
+            return [
+                'short' => trim($parts[0]),
+                'full' => trim($parts[1])
+            ];
+        }
+        return ['short' => $text, 'full' => ''];
+    };
+    
+    $title = $splitTitle($certificateName);
 @endphp
 
 <form action="{{ route('student.certificates.select') }}" method="POST" class="certificate-form">
@@ -128,7 +141,8 @@
                 <i class="{{ $cardIcon }}"></i>
             </div>
             <div class="certificate-info">
-                <h3 class="certificate-name">{{ $certificateName }}</h3>
+                <h3 class="certificate-name">{{ $title['short'] }}</h3>
+                <h3 class="certificate-name">{{ $title['full'] }}</h3>
                 {{-- <div class="certificate-code">{{ strtoupper($certificate->code) }}</div> --}}
             </div>
         </div>
