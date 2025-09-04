@@ -147,6 +147,7 @@
             </div>
         </div>
         
+        
         {{-- Card Description --}}
         <div class="certificate-description">
             {{ Str::limit($certificateDescription, 120) }}
