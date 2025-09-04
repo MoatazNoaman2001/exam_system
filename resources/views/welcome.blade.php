@@ -127,12 +127,7 @@
             background-color: #f8f9fa;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
+        
         .section-title {
             text-align: center;
             margin-bottom: 60px;
