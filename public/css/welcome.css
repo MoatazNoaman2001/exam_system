@@ -534,11 +534,6 @@ nav {
   z-index: 2;
 }
 
-.plan-image {
-  position: relative;
-  height: 400px;
-}
-
 .plan-img {
   position: absolute;
   border-radius: 25px;
@@ -547,8 +542,8 @@ nav {
 }
 
 .plan-img-main {
-  width: 75%;
-  height: 85%;
+  width: 500px !important;
+  height: 500px !important;
   top: 0;
   left: 0;
   z-index: 2;
@@ -1460,12 +1455,7 @@ footer::before {
       margin: 0 10px;
   }
   
-  /* Plan & Progress Mobile */
-  .plan-image,
-  .progress-image {
-      height: 400px;
-      order: -1;
-  }
+
   
   .plan-content h2,
   .progress-content h2 {
