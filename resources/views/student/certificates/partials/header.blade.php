@@ -3,7 +3,17 @@
 </div>
 
 <div class="header-section">
+    
     <div class="header-content">
+        
+        <!-- Back to Home Button -->
+        <div class="header-nav fade-in">
+            <a href="{{ route('welcome') }}" class="back-home-btn">
+                <span>{{ __('lang.Back to Home') }}</span>
+
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
         
         <div class="header-badge fade-in">
             <i class="fas fa-star"></i>

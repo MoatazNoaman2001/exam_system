@@ -1440,7 +1440,8 @@ return [
 'Switch Certificate' => 'تغيير الشهادة',
 'Select a different certificate to study' => 'اختر شهادة مختلفة للدراسة',
 'Choose Certificate' => 'اختر الشهادة',
-'Professional Certifications' => 'الشهادات المهنية',
+    'Professional Certifications' => 'الشهادات المهنية',
+    'Back to Home' => 'العودة للرئيسية',
 'Select Certificate' => 'اختر الشهادة',
 'Choose your certification path and start your journey to professional excellence' => 'اختر مسار شهادتك وابدأ رحلتك نحو التميز المهني',
 

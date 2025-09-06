@@ -15,23 +15,23 @@ class WelcomeController extends Controller
     }
 
     public function root(Request $request){ 
-        if (Auth::user() != null) {
-            $user = Auth::user(); 
+        // if (Auth::user() != null) {
+        //     $user = Auth::user(); 
     
-            if ($user->role == "admin") {
-                return redirect('/admin/dashboard');
-            } else {
+        //     if ($user->role == "admin") {
+        //         return redirect('/admin/dashboard');
+        //     } else {
                 
-                $isFirstTime = $user->first_visit;
-                if ($isFirstTime) {
-                    $user->first_visit= false;
-                    $user->save();
-                    return redirect()->route('student.index');
-                }else{
-                    return redirect()->route('student.sections.index');
-                }
-            }
-        }
+        //         $isFirstTime = $user->first_visit;
+        //         if ($isFirstTime) {
+        //             $user->first_visit= false;
+        //             $user->save();
+        //             return redirect()->route('student.index');
+        //         }else{
+        //             return redirect()->route('student.sections.index');
+        //         }
+        //     }
+        // }
     
         return view('welcome');
     }
