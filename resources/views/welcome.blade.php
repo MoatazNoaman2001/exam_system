@@ -26,7 +26,6 @@
             -khtml-user-drag: none;
             -moz-user-drag: none;
             -o-user-drag: none;
-            user-drag: none;
 
             /* Prevent right-click context menu */
             -webkit-touch-callout: none;
@@ -178,6 +177,13 @@
             right: 10px;
         }
 
+
+        @media (max-width: 996px){
+            .plan-img,
+            .plan-img-main {
+                display: none;
+            }
+        }
         /* Tablet styles */
         @media (max-width: 768px) {
             .features {
@@ -196,7 +202,9 @@
                 min-width: 200px;
                 padding: 25px 15px;
             }
+           
         }
+
 
         /* Mobile styles */
         @media (max-width: 480px) {
@@ -237,7 +245,7 @@
         <div class="container">
             <nav>
                 <div class="logo">
-                    <img class="logo-img" src="{{ asset('images/Sprint_Skills_Logo_NoText.png') }}" alt="logo">
+                    <img class="logo-img" src="{{ asset('images/hero_final.svg') }}" alt="logo">
                     <span style="color: rgb(26, 89, 123); font-size: 22px">{{ __('Sprint Skills') }}</span>
                 </div>
                 <ul class="nav-links">
