@@ -172,6 +172,11 @@
             margin: 0 auto;
             display: block;
         }
+        .plan-img,
+        .plan-img-main {
+            position: absolute;
+            right: 10px;
+        }
 
         /* Tablet styles */
         @media (max-width: 768px) {
