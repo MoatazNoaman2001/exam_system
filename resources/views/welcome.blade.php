@@ -245,7 +245,7 @@
         <div class="container">
             <nav>
                 <div class="logo">
-                    <img class="logo-img" src="{{ asset('images/hero_final.svg') }}" alt="logo">
+                    <img class="logo-img" src="{{ asset('images/Sprint_Skills_Logo_NoText.png') }}" alt="logo">
                     <span style="color: rgb(26, 89, 123); font-size: 22px">{{ __('Sprint Skills') }}</span>
                 </div>
                 <ul class="nav-links">
@@ -291,7 +291,7 @@
                     </form>
                 </div>
                 <div class="hero-image">
-                    <img src="{{ asset('images/hero_side_white.png') }}"
+                    <img src="{{ asset('images/hero_final.svg') }}"
                         alt="{{ __('lang.PMP Management Dashboard') }}" class="hero-img">
                     {{-- @if (app()->getLocale() == 'ar')
                         <img src="{{ asset('images/hero_side_image_ar.png') }}"
