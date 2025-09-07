@@ -313,19 +313,19 @@
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/5.svg') : asset('images/1.svg') }}"
+                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/1.svg') : asset('images/5.svg') }}"
                         alt="Feature 1">
                 </div>
                 <div class="feature-card">
-                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/6.svg') : asset('images/2.svg') }}"
+                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/2.svg') : asset('images/6.svg') }}"
                         alt="Feature 2">
                 </div>
                 <div class="feature-card">
-                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/7.svg') : asset('images/3.svg') }}"
+                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/3.svg') : asset('images/7.svg') }}"
                         alt="Feature 3">
                 </div>
                 <div class="feature-card">
-                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/8.svg') : asset('images/4.svg') }}"
+                    <img src="{{ app()->getLocale() == 'ar' ? asset('images/4.svg') : asset('images/8.svg') }}"
                         alt="Feature 4">
                 </div>
             </div>
