@@ -8,6 +8,8 @@ export default defineConfig({
             input: [
                 'resources/sass/app.scss',
                 'resources/js/app.js',
+                'resources/sass/register.scss',
+                'resources/js/register.js',
             ],
             refresh: true,
         }),
@@ -18,6 +20,14 @@ export default defineConfig({
     hmr: {
         host: '192.168.1.4',
     },
+
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler'
+            }
+        }
+    }
 },
 
 });

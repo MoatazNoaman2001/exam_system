@@ -1445,6 +1445,10 @@ return [
 'Select Certificate' => 'اختر الشهادة',
 'Choose your certification path and start your journey to professional excellence' => 'اختر مسار شهادتك وابدأ رحلتك نحو التميز المهني',
 
+'email_already_exists' => 'عنوان البريد الإلكتروني هذا مسجل بالفعل.',
+'email_available' => 'البريد الإلكتروني متاح.',
+'invalid_email_format' => 'يرجى إدخال عنوان بريد إلكتروني صالح.',
+'email_required' => 'عنوان البريد الإلكتروني مطلوب.',
 ];
 
 ?>

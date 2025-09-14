@@ -9,6 +9,7 @@
     <link rel="shortcut icon" href="{{ asset('images/Sprint_Skills.ico') }}" type="image/x-icon">
 
 
+    @stack('styles')
     <!-- External Scripts and Fonts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -353,6 +354,8 @@
         <main class="main-content {{ Auth::check() && Auth::user()->role === 'student' ? 'student-layout' : '' }}"
             id="mainContent" style="{{ Auth::check() && Auth::user()->role === 'admin' ? 'margin-top: 80px' : '' }}">
             @yield('content')
+
+            @stack('scripts')
         </main>
     </div>
 

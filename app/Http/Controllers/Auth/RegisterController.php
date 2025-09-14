@@ -94,7 +94,33 @@ class RegisterController extends Controller
 
         return $user;
     }
-
+    public function checkEmail(Request $request)
+    {
+        $email = $request->input('email');
+        
+        if (!$email) {
+            return response()->json([
+                'exists' => false,
+                'message' => 'Email is required'
+            ], 400);
+        }
+        
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json([
+                'exists' => false,
+                'message' => 'Invalid email format'
+            ], 400);
+        }
+        
+        $emailExists = User::where('email', $email)->exists();
+        
+        return response()->json([
+            'exists' => $emailExists,
+            'message' => $emailExists ? 
+                __('lang.email_already_exists') : 
+                __('lang.email_available')
+        ]);
+    }
     protected function registered(Request $request, $user)
     {
         $user->sendEmailVerificationNotification();

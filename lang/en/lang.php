@@ -1395,6 +1395,12 @@ From project and program management to leadership and strategy, our tools and re
 'Select Certificate' => 'Select Certificate',
 'Choose your certification path and start your journey to professional excellence' => 'Choose your certification path and start your journey to professional excellence',
 
+'email_already_exists' => 'This email address is already registered.',
+'email_available' => 'Email is available.',
+'invalid_email_format' => 'Please enter a valid email address.',
+'email_required' => 'Email address is required.',
+
+
 ];
 
 
