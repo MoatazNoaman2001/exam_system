@@ -49,12 +49,12 @@ class AdminController extends Controller
         $activeUsers = User::whereHas('examSessions', function($query) {
             $query->where('last_activity_at', '>=', Carbon::now()->subDays(7));
         })->count();
-        
+
         // PostgreSQL compatible month filter
         $newUsersThisMonth = User::whereRaw('EXTRACT(MONTH FROM created_at) = ?', [Carbon::now()->month])
             ->whereRaw('EXTRACT(YEAR FROM created_at) = ?', [Carbon::now()->year])
             ->count();
-            
+
         $verifiedUsers = User::where('verified', true)->count();
 
         // Content Statistics
@@ -118,11 +118,11 @@ class AdminController extends Controller
                 $totalAttempts = $domain->slides->flatMap(function($slide) {
                     return $slide->tests->flatMap->testAttempts;
                 })->count();
-                
+
                 $avgScore = $domain->slides->flatMap(function($slide) {
                     return $slide->tests->flatMap->testAttempts;
                 })->avg('score') ?? 0;
-                
+
                 return [
                     'name' => $domain->text,
                     'attempts' => $totalAttempts,
@@ -137,13 +137,13 @@ class AdminController extends Controller
             })->count(),
             'medium' => User::whereHas('examSessions', function($query) {
                 $query->whereBetween('last_activity_at', [
-                    Carbon::now()->subDays(7), 
+                    Carbon::now()->subDays(7),
                     Carbon::now()->subDays(3)
                 ]);
             })->count(),
             'low' => User::whereHas('examSessions', function($query) {
                 $query->whereBetween('last_activity_at', [
-                    Carbon::now()->subDays(30), 
+                    Carbon::now()->subDays(30),
                     Carbon::now()->subDays(7)
                 ]);
             })->count(),
@@ -151,7 +151,7 @@ class AdminController extends Controller
 
         // Additional metrics for better dashboard insights
         $todayRegistrations = User::whereDate('created_at', Carbon::today())->count();
-        
+
         // Weekly exam completion rate
         $weeklyExamSessions = ExamSession::where('completed_at', '>=', Carbon::now()->subWeek())->count();
         $weeklyExamCompletions = ExamSession::where('completed_at', '>=', Carbon::now()->subWeek())
@@ -242,7 +242,7 @@ class AdminController extends Controller
                 ->get()
                 ->pluck('count', 'day')
                 ->toArray();
-                
+
                 // Fill missing days with 0 (0 = Sunday, 6 = Saturday)
                 $chartData = [];
                 for ($i = 0; $i <= 6; $i++) {
@@ -261,7 +261,7 @@ class AdminController extends Controller
                 ->get()
                 ->pluck('count', 'month')
                 ->toArray();
-                
+
                 $chartData = [];
                 for ($i = 1; $i <= 12; $i++) {
                     $chartData[] = $data[$i] ?? 0;
@@ -280,7 +280,7 @@ class AdminController extends Controller
                 ->get()
                 ->pluck('count', 'day')
                 ->toArray();
-                
+
                 $chartData = [];
                 $daysInMonth = Carbon::now()->daysInMonth;
                 for ($i = 1; $i <= $daysInMonth; $i++) {
@@ -352,7 +352,7 @@ class AdminController extends Controller
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('profile-images', 'public');
             }
-    
+
             $user = User::create([
                 'username' => $validatedData['username'],
                 'email' => $validatedData['email'],
@@ -364,19 +364,19 @@ class AdminController extends Controller
                 'profile_image' => $imagePath,
                 'is_agree' => true,
             ]);
-    
+
             if (!$request->verified) {
                 $user->sendEmailVerificationNotification();
             }
-    
+
             return redirect()->route('admin.users')
                    ->with('success', 'User created successfully.');
-    
+
         } catch (\Exception $e) {
             if (isset($imagePath) && Storage::disk('public')->exists($imagePath)) {
                 Storage::disk('public')->delete($imagePath);
             }
-    
+
             return back()->withInput()
                    ->with('error', 'Error creating user: '.$e->getMessage());
         }
@@ -437,13 +437,13 @@ class AdminController extends Controller
                 }
                 $validatedData['profile_image'] = $request->file('image')->store('profile-images', 'public');
             }
-    
+
             if (!empty($validatedData['password'])) {
                 $validatedData['password'] = $validatedData['password'];
             } else {
                 unset($validatedData['password']);
             }
-    
+
             $validatedData['email_verified_at'] = $request->verified == "on" ? now() : null;
             $validatedData['verified'] = $request->verified == "on";
             unset($validatedData['email_verified']);
@@ -451,15 +451,15 @@ class AdminController extends Controller
             \Illuminate\Database\Eloquent\Model::unguard();
             $user->update($validatedData);
             \Illuminate\Database\Eloquent\Model::reguard();
-    
+
             return redirect()->route('admin.users')
                    ->with('success', 'User updated successfully.');
-    
+
         } catch (\Exception $e) {
             if (isset($validatedData['profile_image'])) {
                 Storage::delete('public/'.$validatedData['profile_image']);
             }
-    
+
             return back()->withInput()
                    ->with('error', 'Error updating user: '.$e->getMessage());
         }
@@ -586,7 +586,7 @@ class AdminController extends Controller
                 ->withCount('tests')
                 ->latest()
                 ->paginate(20);
-            
+
             return view('admin.slides.index', compact('slides'));
         } catch (\Exception $e) {
             Log::error('Error loading slides: ' . $e->getMessage());
@@ -599,7 +599,7 @@ class AdminController extends Controller
         try {
             $domains = Domain::orderBy('text')->get();
             $chapters = Chapter::orderBy('text')->get();
-            
+
             return view('admin.slides.create', compact('domains', 'chapters'));
         } catch (\Exception $e) {
             Log::error('Error loading create slide form: ' . $e->getMessage());
@@ -637,7 +637,7 @@ class AdminController extends Controller
 
             DB::commit();
 
-            $message = $questionsCreated > 0 
+            $message = $questionsCreated > 0
                 ? "Slide created successfully with {$questionsCreated} questions."
                 : "Slide created successfully.";
 
@@ -647,7 +647,7 @@ class AdminController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             // Clean up uploaded file on error
             if (isset($filePath) && Storage::disk('public')->exists($filePath)) {
                 Storage::disk('public')->delete($filePath);
@@ -669,10 +669,10 @@ class AdminController extends Controller
         try {
             $domains = Domain::orderBy('text')->get();
             $chapters = Chapter::orderBy('text')->get();
-            
+
             // Load existing questions for editing
             $slide->load(['tests.answers']);
-            
+
             return view('admin.slides.edit', compact('slide', 'domains', 'chapters'));
         } catch (\Exception $e) {
             Log::error('Error loading edit slide form: ' . $e->getMessage());
@@ -701,7 +701,7 @@ class AdminController extends Controller
                 if ($slide->content && Storage::disk('public')->exists($slide->content)) {
                     Storage::disk('public')->delete($slide->content);
                 }
-                
+
                 $updateData['content'] = $request->file('content')->store('slides', 'public');
             }
 
@@ -715,7 +715,7 @@ class AdminController extends Controller
                 if (isset($validatedData['questions']) && is_array($validatedData['questions'])) {
                     // Delete existing tests and answers
                     $slide->tests()->delete();
-                    
+
                     // Create new questions
                     $questionsCreated = $this->createQuestionsForSlide($slide, $validatedData['questions']);
                 }
@@ -726,7 +726,7 @@ class AdminController extends Controller
 
             DB::commit();
 
-            $message = $questionsCreated > 0 
+            $message = $questionsCreated > 0
                 ? "Slide updated successfully with {$questionsCreated} questions."
                 : "Slide updated successfully.";
 
@@ -735,7 +735,7 @@ class AdminController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             Log::error('Error updating slide: ' . $e->getMessage(), [
                 'slide_id' => $slide->id,
                 'request_data' => $request->except(['content'])
@@ -759,7 +759,7 @@ class AdminController extends Controller
 
             // Delete the slide (will cascade delete tests and answers)
             $slide->delete();
-            
+
             DB::commit();
 
             return redirect()->route('admin.slides')
@@ -767,7 +767,7 @@ class AdminController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             Log::error('Error deleting slide: ' . $e->getMessage(), [
                 'slide_id' => $slide->id
             ]);
@@ -804,7 +804,7 @@ class AdminController extends Controller
 
             $fileName = $slide->text . '.pdf';
             return Storage::disk('public')->download($slide->content, $fileName);
-            
+
         } catch (\Exception $e) {
             Log::error('Error downloading PDF: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Error downloading PDF file.');
@@ -853,7 +853,7 @@ class AdminController extends Controller
     /**
      * Private helper methods
      */
-    
+
     /**
      * Validate slide data including questions
      */
@@ -863,7 +863,7 @@ class AdminController extends Controller
             'text' => 'required|string|max:255',
             'domain_id' => 'nullable|exists:domains,id',
             'chapter_id' => 'nullable|exists:chapters,id',
-            
+
             // Question validation rules - only when questions are provided
             'questions' => 'nullable|array',
             'questions.*.question_ar' => 'required_with:questions|string|max:1000',
@@ -886,7 +886,7 @@ class AdminController extends Controller
             'content.required' => 'PDF file is required.',
             'content.mimes' => 'File must be a PDF.',
             'content.max' => 'File size must not exceed 5MB.',
-            
+
             // Question validation messages
             'questions.*.question_ar.required_with' => 'Question in Arabic is required.',
             'questions.*.question_en.required_with' => 'Question in English is required.',
@@ -928,7 +928,7 @@ class AdminController extends Controller
         foreach ($questions as $questionData) {
             // Validate correct answer index
             $correctAnswerIndex = (int) $questionData['correct_answer'];
-            
+
             if (!isset($questionData['answers'][$correctAnswerIndex])) {
                 throw new \InvalidArgumentException('Invalid correct answer index for question.');
             }
@@ -998,7 +998,7 @@ class AdminController extends Controller
                 }
             }
         }
-        
+
         DB::transaction(function () use ($request) {
             // Create exam with proper field mapping
             $exam = Exam::create([
@@ -1010,7 +1010,7 @@ class AdminController extends Controller
                 'time' => $request->duration,
                 'is_completed' => $request->is_completed ?? false,
             ]);
-            
+
             foreach ($request->questions as $questionData) {
                 $question = ExamQuestions::create([
                     'question' => $questionData['text_en'],
@@ -1020,7 +1020,7 @@ class AdminController extends Controller
                     'marks' => $questionData['points'],
                     'exam_id' => $exam->id,
                 ]);
-        
+
                 foreach ($questionData['options'] as $optionData) {
                     $question->answers()->create([
                         'answer' => $optionData['text_en'],
@@ -1040,7 +1040,7 @@ class AdminController extends Controller
         $exam->load(['questions' => function($query) {
             $query->with('answers');
         }]);
-        
+
         return view('admin.exams.edit', compact('exam'));
     }
     public function updateExam(Request $request, Exam $exam)
@@ -1074,7 +1074,7 @@ class AdminController extends Controller
             ],
             'questions.*.answers.*.is_correct' => 'boolean'
         ]);
-    
+
         DB::transaction(function () use ($request, $exam) {
             // Update exam basic information
             $exam->update([
@@ -1085,11 +1085,11 @@ class AdminController extends Controller
                 'time' => $request->duration,
                 'number_of_questions' => count($request->questions),
             ]);
-    
+
             // Track existing questions for deletion
             $existingQuestionIds = $exam->questions->pluck('id')->toArray();
             $updatedQuestionIds = [];
-    
+
             foreach ($request->questions as $questionData) {
                 // Create or update question
                 $question = $exam->questions()->updateOrCreate(
@@ -1101,28 +1101,28 @@ class AdminController extends Controller
                         'marks' => $questionData['marks'],
                     ]
                 );
-    
+
                 $updatedQuestionIds[] = $question->id;
-    
+
                 // Handle answers using your table structure
                 $this->updateQuestionAnswers($question, $questionData['answers']);
             }
-    
+
             // Delete removed questions (cascade will handle answers)
             $exam->questions()->whereNotIn('id', $updatedQuestionIds)->delete();
         });
-    
+
         return redirect()
             ->route('admin.exams')
             ->with('success', 'Exam updated successfully.');
     }
-    
+
     private function updateQuestionAnswers($question, $answersData)
     {
         // Get existing answer IDs for this question
         $existingAnswerIds = $question->answers->pluck('id')->toArray();
         $updatedAnswerIds = [];
-    
+
         foreach ($answersData as $answerData) {
             // Create or update answer in question_exam_answer table
             $answer = ExamQuestionAnswer::updateOrCreate(
@@ -1134,16 +1134,16 @@ class AdminController extends Controller
                     'is_correct' => $answerData['is_correct'] ?? false,
                 ]
             );
-    
+
             $updatedAnswerIds[] = $answer->id;
         }
-    
+
         // Delete removed answers
         ExamQuestionAnswer::where('exam_question_id', $question->id)
             ->whereNotIn('id', $updatedAnswerIds)
             ->delete();
     }
-    
+
     // public function updateExam(Request $request, Exam $exam)
     // {
     //     $validated = $request->validate([
@@ -1182,10 +1182,10 @@ class AdminController extends Controller
     //             'time' => $request->duration,
     //             'number_of_questions' => count($request->questions),
     //         ]);
-    
+
     //         $existingQuestionIds = $exam->questions->pluck('id')->toArray();
     //         $updatedQuestionIds = [];
-    
+
     //         foreach ($request->questions as $questionData) {
     //             $question = $exam->questions()->updateOrCreate(
     //                 ['id' => $questionData['id'] ?? null],
@@ -1196,13 +1196,13 @@ class AdminController extends Controller
     //                     'marks' => $questionData['marks'],
     //                 ]
     //             );
-    
+
     //             $updatedQuestionIds[] = $question->id;
-    
+
     //             // Get existing answer IDs for this question
     //             $existingAnswerIds = $question->answers->pluck('id')->toArray();
     //             $updatedAnswerIds = [];
-    
+
     //             foreach ($questionData['answers'] as $optionData) {
     //                 $answer = $question->answers()->updateOrCreate(
     //                     ['id' => $optionData['id'] ?? null],
@@ -1212,16 +1212,16 @@ class AdminController extends Controller
     //                         'is_correct' => $optionData['is_correct'] ?? false,
     //                     ]
     //                 );
-    
+
     //                 $updatedAnswerIds[] = $answer->id;
     //             }
-    
+
     //             $question->answers()->whereNotIn('id', $updatedAnswerIds)->delete();
     //         }
-    
+
     //         $exam->questions()->whereNotIn('id', $updatedQuestionIds)->delete();
     //     });
-    
+
     //     return redirect()->route('admin.exams')->with('success', 'Exam updated successfully.');
     // }
 
@@ -1326,7 +1326,7 @@ class AdminController extends Controller
             'user_id' => 'nullable|exists:users,id',
             'send_to_all' => 'boolean',
         ]);
-  
+
         if ($request->send_to_all) {
             $users = User::all();
             foreach ($users as $user) {

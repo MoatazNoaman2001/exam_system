@@ -13,74 +13,10 @@
 </head>
 
 <body>
-    <!-- Navigation Overlay for Mobile -->
-    <div class="nav-overlay" id="nav-overlay"></div>
-
-    <!-- Mobile Navigation Drawer -->
-    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
-        <div class="drawer-header">
-            <div class="drawer-logo">
-                <img src="{{ asset('images/Sprint_Skills_Logo_NoText.png') }}" alt="Sprint Skills">
-                <span>Sprint Skills</span>
-            </div>
-        </div>
-        <nav class="drawer-nav">
-            <ul>
-                <li><a href="{{ route('welcome') }}">{{ __('lang.Home') }}</a></li>
-                <li><a href="{{ route('about') }}">{{ __('lang.About') }}</a></li>
-                <li><a href="{{ route('contact') }}">{{ __('lang.Contact') }}</a></li>
-                <li><a href="{{ route('faq') }}" class="active">{{ __('lang.FAQ') }}</a></li>
-            </ul>
-        </nav>
-        <div class="drawer-footer">
-            <form action="{{ route('login') }}" method="GET">
-                @csrf
-                <button class="drawer-cta" type="submit">{{ __('lang.Get Started') }}</button>
-            </form>
-            <div class="drawer-language">
-                <div class="drawer-language-title">{{ __('lang.Language') }}</div>
-                <div class="drawer-language-options">
-                    <a href="{{ route('locale.set', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
-                    <a href="{{ route('locale.set', 'ar') }}" class="{{ app()->getLocale() == 'ar' ? 'active' : '' }}">AR</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     @guest
-        <header class="header" id="header">
-            <div class="container">
-                <nav>
-                    <div class="logo">
-                        <img class="logo-img" src="{{ asset('images/Sprint_Skills_Logo_NoText.png') }}" alt="logo">
-                        <span>{{ __('Sprint Skills') }}</span>
-                    </div>
-                    <ul class="nav-links">
-                        <li><a href="{{ route('welcome') }}">{{ __('lang.Home') }}</a></li>
-                        <li><a href="{{ route('about') }}">{{ __('lang.About') }}</a></li>
-                        <li><a href="{{ route('contact') }}">{{ __('lang.Contact') }}</a></li>
-                        <li><a href="{{ route('faq') }}" class="active">{{ __('lang.FAQ') }}</a></li>
-                    </ul>
-                    <div class="header-actions">
-                        <div class="language-switcher">
-                            <a href="{{ route('locale.set', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
-                            <a href="{{ route('locale.set', 'ar') }}" class="{{ app()->getLocale() == 'ar' ? 'active' : '' }}">AR</a>
-                        </div>
-                        <form action="{{ route('login') }}" method="GET">
-                            @csrf
-                            <button class="cta-button" type="submit">{{ __('lang.Get Started') }}</button>
-                        </form>
-                    </div>
-                    <div class="mobile-menu" id="mobile-menu">
-                        <div class="hamburger">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </header>
+        <!-- Shared Navigation -->
+        @include('components.shared-navigation')
     @endguest
 
 

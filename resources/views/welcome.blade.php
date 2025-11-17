@@ -14,6 +14,78 @@
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
     {{-- <script src="{{asset('js/welcome.js')}}" defer></script> --}}
     <style>
+        /* Hide any conflicting header elements */
+        #header {
+            display: none !important;
+        }
+        
+        /* Override any conflicting nav styles from welcome.css */
+        .shared-navbar .navbar-menu {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+        }
+        
+        .shared-navbar .navbar-nav {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 2rem !important;
+        }
+        
+        .shared-navbar .nav-links {
+            position: static !important;
+            top: auto !important;
+            left: auto !important;
+            width: auto !important;
+            height: auto !important;
+            background: none !important;
+            backdrop-filter: none !important;
+            flex-direction: row !important;
+            justify-content: flex-start !important;
+            align-items: center !important;
+            padding-top: 0 !important;
+            transition: none !important;
+            box-shadow: none !important;
+            z-index: auto !important;
+            overflow-x: visible !important;
+        }
+        
+        /* Force horizontal layout on desktop */
+        @media (min-width: 769px) {
+            .shared-navbar .navbar-menu {
+                display: flex !important;
+            }
+            
+            .shared-navbar .navbar-nav {
+                display: flex !important;
+                flex-direction: row !important;
+            }
+            
+            .shared-navbar .mobile-toggle {
+                display: none !important;
+            }
+        }
+        
+        /* Force mobile layout on mobile */
+        @media (max-width: 768px) {
+            .shared-navbar .navbar-menu {
+                display: none !important;
+            }
+            
+            .shared-navbar .language-switcher {
+                display: none !important;
+            }
+            
+            .shared-navbar .cta-wrapper {
+                display: none !important;
+            }
+            
+            .shared-navbar .mobile-toggle {
+                display: flex !important;
+            }
+        }
+        
         * {
             /* Prevent text selection */
             -webkit-user-select: none;
@@ -240,43 +312,12 @@
 </head>
 
 <body>
-    <!-- Header -->
-    <header id="header">
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    <img class="logo-img" src="{{ asset('images/Sprint_Skills_Logo_NoText.png') }}" alt="logo">
-                    <span style="color: rgb(26, 89, 123); font-size: 22px">{{ __('Sprint Skills') }}</span>
-                </div>
-                <ul class="nav-links">
-                    <li><a href="#features">{{ __('lang.Features') }}</a></li>
-                    <li><a href="#study-plan">{{ __('lang.Study Plan') }}</a></li>
-                    <li><a href="#practice-exams">{{ __('lang.Practice Exams') }}</a></li>
-                    {{-- <li><a href="#progress-tracking">{{ __('lang.Progress') }}</a></li> --}}
-                    <li><a href="#testimonials">{{ __('lang.Testimonials') }}</a></li>
-                </ul>
-                <div class="header-actions">
-                    <div class="language-switcher">
-                        <a href="{{ route('locale.set', 'en') }}"
-                            class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
-                        <a href="{{ route('locale.set', 'ar') }}"
-                            class="{{ app()->getLocale() == 'ar' ? 'active' : '' }}">AR</a>
-                    </div>
-                    <form action="{{ route('login') }}" method="GET" style="display: inline-block;">
-                        @csrf
-                        <button class="cta-button" type="submit">{{ __('lang.Get Started') }}</button>
-                    </form>
-                    <div class="mobile-menu">
-                        <i class="fas fa-bars"></i>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </header>
+    <!-- Shared Navigation -->
+    @include('components.shared-navigation')
 
     <!-- Hero Section -->
     <section class="hero" id="home"
-        style="background-image: url('{{ asset('images/Hero.svg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        style="background-image: url('{{ asset('images/Hero.svg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; padding-top: 140px;">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">

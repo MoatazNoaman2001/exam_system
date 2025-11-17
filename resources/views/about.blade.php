@@ -20,7 +20,7 @@
         .about-hero {
             background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #2980b9 100%);
             color: white;
-            padding: 140px 0 80px;
+            padding: 160px 0 80px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -358,35 +358,8 @@
 <body>
 
     @guest
-    <header id="header">
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    <img class="logo-img" src="{{asset('images/Sprint_Skills_Logo_NoText.png')}}" alt="logo">
-                    <span style="color: rgb(26, 89, 123); font-size: 22px">{{ __('Sprint Skills') }}</span>
-                </div>
-                <ul class="nav-links">
-                    <li><a href="{{ route('welcome') }}">{{ __('lang.Home') }}</a></li>
-                    <li><a href="{{ route('about') }}" class="active">{{ __('lang.About') }}</a></li>
-                    <li><a href="{{ route('contact') }}">{{ __('lang.Contact') }}</a></li>
-                    <li><a href="{{ route('faq') }}">{{ __('lang.FAQ') }}</a></li>
-                </ul>
-                <div class="header-actions">
-                    <div class="language-switcher">
-                        <a href="{{ route('locale.set', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'active' : '' }}">EN</a>
-                        <a href="{{ route('locale.set', 'ar') }}" class="{{ app()->getLocale() == 'ar' ? 'active' : '' }}">AR</a>
-                    </div>
-                    <form action="{{route('login')}}" method="GET">
-                        @csrf
-                        <button class="cta-button" type="submit">{{ __('lang.Get Started') }}</button>
-                    </form>
-                </div>
-                <div class="mobile-menu">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </nav>
-        </div>
-    </header>
+        <!-- Shared Navigation -->
+        @include('components.shared-navigation')
     @endguest
 
 
