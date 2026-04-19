@@ -707,8 +707,8 @@ nav {
 }
 
 .exam-card:hover {
-  transform: translateY(-20px) rotateY(5deg) rotateX(5deg);
-  box-shadow: 0 35px 70px rgba(47, 128, 237, 0.2);
+  transform: translateY(-10px);
+  box-shadow: 0 28px 60px rgba(47, 128, 237, 0.18);
 }
 
 .exam-image {
@@ -725,7 +725,7 @@ nav {
 }
 
 .exam-card:hover .exam-image img {
-  transform: scale(1.1);
+  transform: scale(1.04);
 }
 
 .exam-tag {

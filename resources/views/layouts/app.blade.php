@@ -68,70 +68,68 @@
 <body>
     <div id="app">
         @if (Auth::user() !== null && Auth::user()->role !== 'student')
-            <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm px-2">
-                <div class="container-fluid">
-                    @auth
-                        @if (Auth::user()->role === 'admin' && request()->is('admin/*'))
-                            <button class="btn btn-sm me-2 d-lg-none" id="sidebarToggle">
-                                <i class="fas fa-bars"></i>
-                            </button>
-                        @endif
-                        @if (Auth::user()->role === 'student')
-                            <button class="btn btn-sm me-2 d-lg-none" id="studentSidebarToggle">
-                                <i class="fas fa-bars text-primary"></i>
-                            </button>
-                        @endif
-                    @endauth
-                    <a class="navbar-brand" href="{{ url('/') }}">
+            <nav class="navbar navbar-expand-md navbar-light" dir="{{ app()->isLocale('ar') ? 'rtl' : 'ltr' }}">
+                <div class="container-fluid d-flex align-items-center" style="height:var(--navbar-height,60px)">
+
+                    {{-- Hamburger (mobile only) --}}
+                    @if (Auth::user()->role === 'admin' && request()->is('admin/*'))
+                        <button id="sidebarToggle" class="d-lg-none me-3" type="button">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    @endif
+
+                    {{-- Brand --}}
+                    <a class="navbar-brand me-auto" href="{{ url('/') }}">
                         <img class="logo-img" src="{{ asset('images/Sprint_Skills_Logo_NoText.png') }}" alt="logo">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'Sprint Skills') }}
                     </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarCollapse">
-                        <div class="d-flex ms-auto align-items-center">
-                            <!-- Language Switcher for Navbar -->
-                            <div class="navbar-language-switcher mx-4">
-                                <div class="btn-group" role="group">
-                                    <a href="{{ route('locale.set', 'ar') }}"
-                                        class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-primary' }}"
-                                        title="العربية">
-                                        العربية
-                                    </a>
-                                    <a href="{{ route('locale.set', 'en') }}"
-                                        class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-primary' : 'btn-outline-primary' }}"
-                                        title="English">
-                                        EN
-                                    </a>
-                                </div>
+
+                    {{-- Right side --}}
+                    <div class="d-flex align-items-center gap-3">
+
+                        {{-- Language switcher --}}
+                        <div class="navbar-language-switcher">
+                            <div class="btn-group" role="group">
+                                <a href="{{ route('locale.set', 'ar') }}"
+                                   class="btn btn-sm {{ app()->getLocale() == 'ar' ? 'btn-primary' : 'btn-outline-primary' }}">
+                                    AR
+                                </a>
+                                <a href="{{ route('locale.set', 'en') }}"
+                                   class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-primary' : 'btn-outline-primary' }}">
+                                    EN
+                                </a>
+                            </div>
+                        </div>
+
+                        @auth
+                            {{-- Divider --}}
+                            <div class="vr d-none d-sm-block" style="height:20px;opacity:.2"></div>
+
+                            {{-- User info --}}
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-primary text-uppercase" style="font-size:.68rem;padding:.28rem .55rem;border-radius:6px;background:var(--primary-light)!important;color:var(--primary-dark)!important;border:1px solid rgba(59,130,246,.2)">
+                                    {{ Auth::user()->role }}
+                                </span>
+                                <span class="fw-semibold d-none d-sm-block" style="font-size:.875rem;color:var(--gray-700);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                                    {{ Auth::user()->username }}
+                                </span>
                             </div>
 
-                            @guest
-                                @if (Route::has('login'))
-                                    <a class="nav-link me-2" href="{{ route('login') }}">{{ __('lang.login') }}</a>
-                                @endif
-                                @if (Route::has('register'))
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('lang.register') }}</a>
-                                @endif
-                            @else
-                                <div class="d-flex align-items-center gap-2"
-                                    dir="{{ app()->isLocale('ar') ? 'rtl' : 'ltr' }}"
-                                    style="{{ app()->isLocale('ar') ? 'left: 10px' : 'right: 10px' }}">
-                                    <div class="d-flex flex-row align-items-center justify-content-center gap-1">
-                                        <span class="badge bg-primary rounded-pill text-uppercase">
-                                            {{ Auth::user()->role }}
-                                        </span>
-                                        <span class="fw-semibold text-truncate" style="max-width: 100px;">
-                                            {{ Auth::user()->username }}
-                                        </span>
-                                    </div>
-                                    <div class="vr d-none d-sm-inline-block" style="height: 20px;"></div>
+                            {{-- Divider --}}
+                            <div class="vr d-none d-sm-block" style="height:20px;opacity:.2"></div>
 
-                                </div>
-                            @endguest
-                        </div>
+                            {{-- Logout --}}
+                            <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                @csrf
+                                <button type="submit"
+                                    style="background:none;border:1px solid var(--gray-200);border-radius:8px;color:var(--gray-500);font-size:.8rem;font-weight:600;padding:.3rem .7rem;cursor:pointer;transition:background .15s,color .15s;display:flex;align-items:center;gap:.4rem;"
+                                    onmouseover="this.style.background='#fef2f2';this.style.color='#ef4444';this.style.borderColor='rgba(239,68,68,.3)'"
+                                    onmouseout="this.style.background='none';this.style.color='var(--gray-500)';this.style.borderColor='var(--gray-200)'">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span class="d-none d-md-inline">{{ __('lang.logout') }}</span>
+                                </button>
+                            </form>
+                        @endauth
                     </div>
                 </div>
             </nav>

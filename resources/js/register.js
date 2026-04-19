@@ -16,8 +16,6 @@ class RegisterForm {
 
     init() {
         this.bindEvents();
-        this.addEntranceAnimations();
-        this.addParallaxEffect();
         this.addRippleEffect();
         this.autoFocusUsername();
     }
@@ -81,15 +79,6 @@ class RegisterForm {
                 if (input.checkValidity()) {
                     input.classList.remove('is-invalid');
                 }
-            });
-
-            // Enhanced focus effects
-            input.addEventListener('focus', () => {
-                input.parentElement.style.transform = 'translateY(-2px)';
-            });
-
-            input.addEventListener('blur', () => {
-                input.parentElement.style.transform = 'translateY(0)';
             });
 
             // Error handling
@@ -325,43 +314,10 @@ class RegisterForm {
         });
     }
 
-    addEntranceAnimations() {
-        const formElements = document.querySelectorAll('.input-group-modern, .form-check-modern, .btn-register, .signin-link');
-        
-        formElements.forEach((element, index) => {
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(20px)';
-            element.style.transition = 'all 0.6s ease';
-            
-            setTimeout(() => {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-            }, 200 + (index * 80));
-        });
-    }
-
-    addParallaxEffect() {
-        document.addEventListener('mousemove', (e) => {
-            const shapes = document.querySelectorAll('.shape');
-            const mouseX = e.clientX / window.innerWidth;
-            const mouseY = e.clientY / window.innerHeight;
-            
-            shapes.forEach((shape, index) => {
-                const speed = (index + 1) * 0.5;
-                const x = (mouseX - 0.5) * speed * 20;
-                const y = (mouseY - 0.5) * speed * 20;
-                
-                shape.style.transform = `translate(${x}px, ${y}px)`;
-            });
-        });
-    }
-
     autoFocusUsername() {
-        setTimeout(() => {
-            if (this.usernameInput && !this.usernameInput.value) {
-                this.usernameInput.focus();
-            }
-        }, 500);
+        if (this.usernameInput && !this.usernameInput.value) {
+            this.usernameInput.focus();
+        }
     }
 }
 

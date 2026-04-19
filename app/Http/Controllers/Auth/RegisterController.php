@@ -90,8 +90,6 @@ class RegisterController extends Controller
         ]);
 
     
-        $user->sendEmailVerificationNotification();
-
         return $user;
     }
     public function checkEmail(Request $request)
@@ -123,7 +121,6 @@ class RegisterController extends Controller
     }
     protected function registered(Request $request, $user)
     {
-        $user->sendEmailVerificationNotification();
         return redirect()->route('verification.notice');
     }
 }

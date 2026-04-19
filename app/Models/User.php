@@ -32,6 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_agree',
         'preferred_language',
         'verified',
+        'first_visit',
         'reset_password_token',
         'reset_password_expires',
     ];
@@ -91,7 +92,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasVerifiedEmail()
     {
-        return $this->hasOne(UserProgress::class, 'user_id');
+        return !is_null($this->email_verified_at);
     }
 
     public function tasks()
