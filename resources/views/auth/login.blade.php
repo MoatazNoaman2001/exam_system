@@ -102,6 +102,7 @@ body {
 .logo-img {
     width: 140px !important;
     height: 140px !important;
+    object-fit: contain;
     user-select: none;
     -webkit-user-drag: none;
     filter: drop-shadow(0 8px 24px rgba(0,0,0,0.2));

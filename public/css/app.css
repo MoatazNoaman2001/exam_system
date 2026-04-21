@@ -200,7 +200,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1.5rem 1rem 1.125rem;
+    padding: calc(var(--navbar-height) + 0.875rem) 1rem 1.125rem;
     border-bottom: 1px solid var(--adm-divider);
     flex-shrink: 0;
 }
@@ -305,22 +305,7 @@ body {
     color: #fecaca;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   MAIN CONTENT
-   ═══════════════════════════════════════════════════════════════════════════ */
 .main-content { transition: margin var(--transition); padding: 0; }
-
-/* Global logo-img fallback */
-.logo-img {
-    width: 32px !important;
-    height: 32px !important;
-    user-select: none;
-    -webkit-user-drag: none;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   STUDENT SIDEBAR  (collapsible icon rail)
-   ═══════════════════════════════════════════════════════════════════════════ */
 
 .sidebar-toggle {
     position: fixed;

@@ -139,7 +139,7 @@
             @if (Auth::user()->role === 'admin')
                 <div class="overlay" id="overlay"></div>
                 <div class="sidebar {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" id="sidebar">
-                    <div class="sidebar-header mt-5">
+                    <div class="sidebar-header">
                         <div class="sidebar-logo">
                             <i class="fas fa-cog"></i>
                         </div>
@@ -224,7 +224,6 @@
                     title="Toggle Sidebar">
                     <i class="fas fa-bars"></i>
                 </button>
-                {{-- <p>{{request()->route()->getName()}}</p> --}}
                 <div class="overlay" id="studentOverlay"></div>
                 <div class="sidebar student-sidebar {{ app()->getLocale() == 'ar' ? 'rtl' : '' }}" id="studentSidebar">
                     <div class="sidebar-header">
@@ -278,7 +277,6 @@
                                 <span class="link-text">{{ __('lang.english') }}</span>
                             </a>
                         </div>
-
 
                         <form id="logout-form-student" action="{{ route('logout') }}" method="POST" class="d-flex">
                             @csrf

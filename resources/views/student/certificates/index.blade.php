@@ -26,7 +26,7 @@
 
                 {{-- Certificates Grid --}}
                 @if($certificates->count() > 0)
-                    <div class="certificates-grid fade-in">
+                    <div class="certificates-grid">
                         @foreach($certificates as $index => $certificate)
                             @include('student.certificates.partials.certificate-card', [
                                 'certificate' => $certificate,
@@ -60,15 +60,7 @@
             success: @json(__('lang.Certificate selected successfully!'))
         };
         
-        // Initialize animations
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add staggered animation delays to cards
-            const cards = document.querySelectorAll('.certificate-card');
-            cards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-                card.classList.add('slide-up');
-            });
-        });
+        document.addEventListener('DOMContentLoaded', function() {});
     </script>
     <script>
         // Page-specific functionality

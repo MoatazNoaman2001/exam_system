@@ -108,8 +108,9 @@ body {
 }
 
 .logo-img {
-    width: 140px !important;
-    height: 140px !important;
+    width: 120px !important;
+    height: 120px !important;
+    object-fit: contain;
     user-select: none;
     -webkit-user-drag: none;
     filter: drop-shadow(0 8px 24px rgba(0,0,0,0.2));
@@ -646,11 +647,6 @@ body {
 
         .floating-shapes { display: none; }
         &::before { display: none; }
-    }
-
-    .logo-img {
-        width: 90px !important;
-        height: 90px !important;
     }
 
     .brand-name { font-size: 1.5rem; }
